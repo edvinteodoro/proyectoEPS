@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package gt.edu.usac.cunoc.ingenieria;
+package gt.edu.usac.cunoc.ingenieria.eps.user;
 
+import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Basic;
@@ -24,43 +25,43 @@ import javax.validation.constraints.Size;
  * @author teodoro
  */
 @Entity
-@Table(name = "CAREER")
+@Table(name = "ROL")
 @NamedQueries({
-    @NamedQuery(name = "Career.findAll", query = "SELECT c FROM Career c")})
-public class Career implements Serializable {
+    @NamedQuery(name = "Rol.findAll", query = "SELECT r FROM Rol r")})
+public class Rol implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @NotNull
-    @Column(name = "codigo")
-    private Integer codigo;
+    @Column(name = "id")
+    private Integer id;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
     @Column(name = "name")
     private String name;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "cAREERcodigo")
-    private Collection<UserCareer> userCareerCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "rOLid")
+    private Collection<User> userCollection;
 
-    public Career() {
+    public Rol() {
     }
 
-    public Career(Integer codigo) {
-        this.codigo = codigo;
+    public Rol(Integer id) {
+        this.id = id;
     }
 
-    public Career(Integer codigo, String name) {
-        this.codigo = codigo;
+    public Rol(Integer id, String name) {
+        this.id = id;
         this.name = name;
     }
 
-    public Integer getCodigo() {
-        return codigo;
+    public Integer getId() {
+        return id;
     }
 
-    public void setCodigo(Integer codigo) {
-        this.codigo = codigo;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -71,29 +72,29 @@ public class Career implements Serializable {
         this.name = name;
     }
 
-    public Collection<UserCareer> getUserCareerCollection() {
-        return userCareerCollection;
+    public Collection<User> getUserCollection() {
+        return userCollection;
     }
 
-    public void setUserCareerCollection(Collection<UserCareer> userCareerCollection) {
-        this.userCareerCollection = userCareerCollection;
+    public void setUserCollection(Collection<User> userCollection) {
+        this.userCollection = userCollection;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (codigo != null ? codigo.hashCode() : 0);
+        hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Career)) {
+        if (!(object instanceof Rol)) {
             return false;
         }
-        Career other = (Career) object;
-        if ((this.codigo == null && other.codigo != null) || (this.codigo != null && !this.codigo.equals(other.codigo))) {
+        Rol other = (Rol) object;
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
         return true;
@@ -101,7 +102,7 @@ public class Career implements Serializable {
 
     @Override
     public String toString() {
-        return "gt.edu.usac.cunoc.ingenieria.Career[ codigo=" + codigo + " ]";
+        return "gt.edu.usac.cunoc.ingenieria.Rol[ id=" + id + " ]";
     }
     
 }

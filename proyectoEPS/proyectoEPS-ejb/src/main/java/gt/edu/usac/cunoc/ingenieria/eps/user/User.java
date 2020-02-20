@@ -3,8 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package gt.edu.usac.cunoc.ingenieria;
+package gt.edu.usac.cunoc.ingenieria.eps.user;
 
+import gt.edu.usac.cunoc.ingenieria.eps.process.Appointment;
+import gt.edu.usac.cunoc.ingenieria.eps.project.Correction;
+import gt.edu.usac.cunoc.ingenieria.eps.process.DocumentInitialEps;
+import gt.edu.usac.cunoc.ingenieria.eps.user.UserCareer;
 import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Basic;
@@ -27,8 +31,6 @@ import javax.validation.constraints.Size;
  */
 @Entity
 @Table(name = "USER")
-@NamedQueries({
-    @NamedQuery(name = "User.findAll", query = "SELECT u FROM User u")})
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;

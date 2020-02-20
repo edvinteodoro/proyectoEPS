@@ -3,31 +3,31 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package gt.edu.usac.cunoc.ingenieria;
+package gt.edu.usac.cunoc.ingenieria.eps.process;
 
+import gt.edu.usac.cunoc.ingenieria.eps.process.Journal;
 import java.io.Serializable;
-import java.util.Collection;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 /**
  *
  * @author teodoro
  */
 @Entity
-@Table(name = "ROL")
+@Table(name = "EXTRA_FILE")
 @NamedQueries({
-    @NamedQuery(name = "Rol.findAll", query = "SELECT r FROM Rol r")})
-public class Rol implements Serializable {
+    @NamedQuery(name = "ExtraFile.findAll", query = "SELECT e FROM ExtraFile e")})
+public class ExtraFile implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -37,22 +37,23 @@ public class Rol implements Serializable {
     private Integer id;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 45)
-    @Column(name = "name")
-    private String name;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "rOLid")
-    private Collection<User> userCollection;
+    @Lob
+    @Column(name = "file")
+    private byte[] file;
+    @JoinColumn(name = "BINNACLE_id", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private Journal bINNACLEid;
 
-    public Rol() {
+    public ExtraFile() {
     }
 
-    public Rol(Integer id) {
+    public ExtraFile(Integer id) {
         this.id = id;
     }
 
-    public Rol(Integer id, String name) {
+    public ExtraFile(Integer id, byte[] file) {
         this.id = id;
-        this.name = name;
+        this.file = file;
     }
 
     public Integer getId() {
@@ -63,20 +64,20 @@ public class Rol implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public byte[] getFile() {
+        return file;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFile(byte[] file) {
+        this.file = file;
     }
 
-    public Collection<User> getUserCollection() {
-        return userCollection;
+    public Journal getBINNACLEid() {
+        return bINNACLEid;
     }
 
-    public void setUserCollection(Collection<User> userCollection) {
-        this.userCollection = userCollection;
+    public void setBINNACLEid(Journal bINNACLEid) {
+        this.bINNACLEid = bINNACLEid;
     }
 
     @Override
@@ -89,10 +90,10 @@ public class Rol implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Rol)) {
+        if (!(object instanceof ExtraFile)) {
             return false;
         }
-        Rol other = (Rol) object;
+        ExtraFile other = (ExtraFile) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -101,7 +102,7 @@ public class Rol implements Serializable {
 
     @Override
     public String toString() {
-        return "gt.edu.usac.cunoc.ingenieria.Rol[ id=" + id + " ]";
+        return "gt.edu.usac.cunoc.ingenieria.ExtraFile[ id=" + id + " ]";
     }
     
 }

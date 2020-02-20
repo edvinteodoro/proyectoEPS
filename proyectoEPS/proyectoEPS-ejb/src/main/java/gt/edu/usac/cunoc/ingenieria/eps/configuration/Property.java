@@ -3,56 +3,57 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package gt.edu.usac.cunoc.ingenieria;
+package gt.edu.usac.cunoc.ingenieria.eps.configuration;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  *
  * @author teodoro
  */
 @Entity
-@Table(name = "TEXTO")
-@NamedQueries({
-    @NamedQuery(name = "Texto.findAll", query = "SELECT t FROM Texto t")})
-public class Texto implements Serializable {
+@Table(name = "PROPERTY")
+public class Property implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @NotNull
     @Column(name = "id")
     private Integer id;
     @Basic(optional = false)
     @NotNull
-    @Lob
-    @Column(name = "text")
-    private byte[] text;
-    @JoinColumn(name = "TITLE_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Title tITLEid;
+    @Size(min = 1, max = 45)
+    @Column(name = "name")
+    private String name;
+    @Column(name = "valueInt")
+    private Integer valueInt;
+    @Column(name = "valueDate")
+    @Temporal(TemporalType.DATE)
+    private LocalDate valueDate;
 
-    public Texto() {
+    public Property() {
     }
 
-    public Texto(Integer id) {
+    public Property(Integer id) {
         this.id = id;
     }
 
-    public Texto(Integer id, byte[] text) {
+    public Property(Integer id, String name) {
         this.id = id;
-        this.text = text;
+        this.name = name;
     }
 
     public Integer getId() {
@@ -63,20 +64,28 @@ public class Texto implements Serializable {
         this.id = id;
     }
 
-    public byte[] getText() {
-        return text;
+    public String getName() {
+        return name;
     }
 
-    public void setText(byte[] text) {
-        this.text = text;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public Title getTITLEid() {
-        return tITLEid;
+    public Integer getValueInt() {
+        return valueInt;
     }
 
-    public void setTITLEid(Title tITLEid) {
-        this.tITLEid = tITLEid;
+    public void setValueInt(Integer valueInt) {
+        this.valueInt = valueInt;
+    }
+
+    public Date getValueDate() {
+        return valueDate;
+    }
+
+    public void setValueDate(Date valueDate) {
+        this.valueDate = valueDate;
     }
 
     @Override
@@ -89,19 +98,14 @@ public class Texto implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Texto)) {
+        if (!(object instanceof Property)) {
             return false;
         }
-        Texto other = (Texto) object;
+        Property other = (Property) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
         return true;
-    }
-
-    @Override
-    public String toString() {
-        return "gt.edu.usac.cunoc.ingenieria.Texto[ id=" + id + " ]";
     }
     
 }

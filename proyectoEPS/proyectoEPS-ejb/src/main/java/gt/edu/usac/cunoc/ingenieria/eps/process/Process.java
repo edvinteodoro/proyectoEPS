@@ -3,8 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package gt.edu.usac.cunoc.ingenieria;
+package gt.edu.usac.cunoc.ingenieria.eps.process;
 
+import gt.edu.usac.cunoc.ingenieria.eps.process.Requeriment;
+import gt.edu.usac.cunoc.ingenieria.eps.process.Supervision;
+import gt.edu.usac.cunoc.ingenieria.eps.user.UserCareer;
 import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Basic;

@@ -3,15 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package gt.edu.usac.cunoc.ingenieria;
+package gt.edu.usac.cunoc.ingenieria.eps.project;
 
+import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -23,36 +25,40 @@ import javax.validation.constraints.NotNull;
  * @author teodoro
  */
 @Entity
-@Table(name = "EXTRA_FILE")
+@Table(name = "DECIMAL_COORDINATE")
 @NamedQueries({
-    @NamedQuery(name = "ExtraFile.findAll", query = "SELECT e FROM ExtraFile e")})
-public class ExtraFile implements Serializable {
+    @NamedQuery(name = "DecimalCoordinate.findAll", query = "SELECT d FROM DecimalCoordinate d")})
+public class DecimalCoordinate implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @NotNull
     @Column(name = "id")
     private Integer id;
     @Basic(optional = false)
     @NotNull
-    @Lob
-    @Column(name = "file")
-    private byte[] file;
-    @JoinColumn(name = "BINNACLE_id", referencedColumnName = "id")
+    @Column(name = "latitude")
+    private double latitude;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "longitude")
+    private double longitude;
+    @JoinColumn(name = "PROJECT_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private Journal bINNACLEid;
+    private Project pROJECTid;
 
-    public ExtraFile() {
+    public DecimalCoordinate() {
     }
 
-    public ExtraFile(Integer id) {
+    public DecimalCoordinate(Integer id) {
         this.id = id;
     }
 
-    public ExtraFile(Integer id, byte[] file) {
+    public DecimalCoordinate(Integer id, double latitude, double longitude) {
         this.id = id;
-        this.file = file;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public Integer getId() {
@@ -63,20 +69,28 @@ public class ExtraFile implements Serializable {
         this.id = id;
     }
 
-    public byte[] getFile() {
-        return file;
+    public double getLatitude() {
+        return latitude;
     }
 
-    public void setFile(byte[] file) {
-        this.file = file;
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
     }
 
-    public Journal getBINNACLEid() {
-        return bINNACLEid;
+    public double getLongitude() {
+        return longitude;
     }
 
-    public void setBINNACLEid(Journal bINNACLEid) {
-        this.bINNACLEid = bINNACLEid;
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public Project getPROJECTid() {
+        return pROJECTid;
+    }
+
+    public void setPROJECTid(Project pROJECTid) {
+        this.pROJECTid = pROJECTid;
     }
 
     @Override
@@ -89,10 +103,10 @@ public class ExtraFile implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof ExtraFile)) {
+        if (!(object instanceof DecimalCoordinate)) {
             return false;
         }
-        ExtraFile other = (ExtraFile) object;
+        DecimalCoordinate other = (DecimalCoordinate) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -101,7 +115,7 @@ public class ExtraFile implements Serializable {
 
     @Override
     public String toString() {
-        return "gt.edu.usac.cunoc.ingenieria.ExtraFile[ id=" + id + " ]";
+        return "gt.edu.usac.cunoc.ingenieria.DecimalCoordinate[ id=" + id + " ]";
     }
     
 }

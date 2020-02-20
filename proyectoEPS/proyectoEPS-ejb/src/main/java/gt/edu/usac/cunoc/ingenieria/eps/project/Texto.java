@@ -3,61 +3,56 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package gt.edu.usac.cunoc.ingenieria;
+package gt.edu.usac.cunoc.ingenieria.eps.project;
 
 import java.io.Serializable;
-import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 /**
  *
  * @author teodoro
  */
 @Entity
-@Table(name = "PROPERTY")
+@Table(name = "TEXTO")
 @NamedQueries({
-    @NamedQuery(name = "Property.findAll", query = "SELECT p FROM Property p")})
-public class Property implements Serializable {
+    @NamedQuery(name = "Texto.findAll", query = "SELECT t FROM Texto t")})
+public class Texto implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
+    @NotNull
     @Column(name = "id")
     private Integer id;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 45)
-    @Column(name = "name")
-    private String name;
-    @Column(name = "valueInt")
-    private Integer valueInt;
-    @Column(name = "valueDate")
-    @Temporal(TemporalType.DATE)
-    private Date valueDate;
+    @Lob
+    @Column(name = "text")
+    private byte[] text;
+    @JoinColumn(name = "TITLE_id", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private Title tITLEid;
 
-    public Property() {
+    public Texto() {
     }
 
-    public Property(Integer id) {
+    public Texto(Integer id) {
         this.id = id;
     }
 
-    public Property(Integer id, String name) {
+    public Texto(Integer id, byte[] text) {
         this.id = id;
-        this.name = name;
+        this.text = text;
     }
 
     public Integer getId() {
@@ -68,28 +63,20 @@ public class Property implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public byte[] getText() {
+        return text;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setText(byte[] text) {
+        this.text = text;
     }
 
-    public Integer getValueInt() {
-        return valueInt;
+    public Title getTITLEid() {
+        return tITLEid;
     }
 
-    public void setValueInt(Integer valueInt) {
-        this.valueInt = valueInt;
-    }
-
-    public Date getValueDate() {
-        return valueDate;
-    }
-
-    public void setValueDate(Date valueDate) {
-        this.valueDate = valueDate;
+    public void setTITLEid(Title tITLEid) {
+        this.tITLEid = tITLEid;
     }
 
     @Override
@@ -102,10 +89,10 @@ public class Property implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Property)) {
+        if (!(object instanceof Texto)) {
             return false;
         }
-        Property other = (Property) object;
+        Texto other = (Texto) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -114,7 +101,7 @@ public class Property implements Serializable {
 
     @Override
     public String toString() {
-        return "gt.edu.usac.cunoc.ingenieria.Property[ id=" + id + " ]";
+        return "gt.edu.usac.cunoc.ingenieria.Texto[ id=" + id + " ]";
     }
     
 }

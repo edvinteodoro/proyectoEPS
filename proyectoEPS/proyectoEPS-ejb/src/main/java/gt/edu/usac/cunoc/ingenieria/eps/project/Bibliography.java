@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package gt.edu.usac.cunoc.ingenieria;
+package gt.edu.usac.cunoc.ingenieria.eps.project;
 
+import gt.edu.usac.cunoc.ingenieria.eps.project.Correction;
+import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;

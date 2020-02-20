@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package gt.edu.usac.cunoc.ingenieria;
+package gt.edu.usac.cunoc.ingenieria.eps.project;
 
+import gt.edu.usac.cunoc.ingenieria.eps.project.Title;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
@@ -13,7 +14,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -22,16 +22,17 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  *
  * @author teodoro
  */
 @Entity
-@Table(name = "OBJECTIVES")
+@Table(name = "SECTION")
 @NamedQueries({
-    @NamedQuery(name = "Objectives.findAll", query = "SELECT o FROM Objectives o")})
-public class Objectives implements Serializable {
+    @NamedQuery(name = "Section.findAll", query = "SELECT s FROM Section s")})
+public class Section implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -41,35 +42,33 @@ public class Objectives implements Serializable {
     private Integer id;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "state")
-    private short state;
-    @Basic(optional = false)
-    @NotNull
-    @Lob
-    @Column(name = "text")
-    private byte[] text;
+    @Size(min = 1, max = 45)
+    @Column(name = "name")
+    private String name;
     @Basic(optional = false)
     @NotNull
     @Column(name = "lastModificationDate")
     @Temporal(TemporalType.DATE)
     private Date lastModificationDate;
+    @OneToMany(mappedBy = "sECTIONid")
+    private Collection<Correction> correctionCollection;
     @JoinColumn(name = "PROJECT_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Project pROJECTid;
-    @OneToMany(mappedBy = "oBJECTIVESid")
-    private Collection<Correction> correctionCollection;
+    @JoinColumn(name = "TITLE_id", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private Title tITLEid;
 
-    public Objectives() {
+    public Section() {
     }
 
-    public Objectives(Integer id) {
+    public Section(Integer id) {
         this.id = id;
     }
 
-    public Objectives(Integer id, short state, byte[] text, Date lastModificationDate) {
+    public Section(Integer id, String name, Date lastModificationDate) {
         this.id = id;
-        this.state = state;
-        this.text = text;
+        this.name = name;
         this.lastModificationDate = lastModificationDate;
     }
 
@@ -81,20 +80,12 @@ public class Objectives implements Serializable {
         this.id = id;
     }
 
-    public short getState() {
-        return state;
+    public String getName() {
+        return name;
     }
 
-    public void setState(short state) {
-        this.state = state;
-    }
-
-    public byte[] getText() {
-        return text;
-    }
-
-    public void setText(byte[] text) {
-        this.text = text;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Date getLastModificationDate() {
@@ -105,6 +96,14 @@ public class Objectives implements Serializable {
         this.lastModificationDate = lastModificationDate;
     }
 
+    public Collection<Correction> getCorrectionCollection() {
+        return correctionCollection;
+    }
+
+    public void setCorrectionCollection(Collection<Correction> correctionCollection) {
+        this.correctionCollection = correctionCollection;
+    }
+
     public Project getPROJECTid() {
         return pROJECTid;
     }
@@ -113,12 +112,12 @@ public class Objectives implements Serializable {
         this.pROJECTid = pROJECTid;
     }
 
-    public Collection<Correction> getCorrectionCollection() {
-        return correctionCollection;
+    public Title getTITLEid() {
+        return tITLEid;
     }
 
-    public void setCorrectionCollection(Collection<Correction> correctionCollection) {
-        this.correctionCollection = correctionCollection;
+    public void setTITLEid(Title tITLEid) {
+        this.tITLEid = tITLEid;
     }
 
     @Override
@@ -131,10 +130,10 @@ public class Objectives implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Objectives)) {
+        if (!(object instanceof Section)) {
             return false;
         }
-        Objectives other = (Objectives) object;
+        Section other = (Section) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -143,7 +142,7 @@ public class Objectives implements Serializable {
 
     @Override
     public String toString() {
-        return "gt.edu.usac.cunoc.ingenieria.Objectives[ id=" + id + " ]";
+        return "gt.edu.usac.cunoc.ingenieria.Section[ id=" + id + " ]";
     }
     
 }

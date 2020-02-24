@@ -9,6 +9,7 @@ import gt.edu.usac.cunoc.ingenieria.eps.project.Objectives;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Section;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -48,8 +49,7 @@ public class Correction implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "date")
-    @Temporal(TemporalType.DATE)
-    private Date date;
+    private LocalDate date;
     @JoinColumn(name = "BIBLIOGRAPHY_id", referencedColumnName = "id")
     @ManyToOne
     private Bibliography bIBLIOGRAPHYid;
@@ -70,7 +70,7 @@ public class Correction implements Serializable {
         this.id = id;
     }
 
-    public Correction(Integer id, byte[] text, Date date) {
+    public Correction(Integer id, byte[] text, LocalDate date) {
         this.id = id;
         this.text = text;
         this.date = date;
@@ -92,11 +92,11 @@ public class Correction implements Serializable {
         this.text = text;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

@@ -1,76 +1,43 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package gt.edu.usac.cunoc.ingenieria.eps.project;
 
 import gt.edu.usac.cunoc.ingenieria.eps.process.Requeriment;
-import gt.edu.usac.cunoc.ingenieria.eps.project.Section;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Date;
-import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
 
-/**
- *
- * @author teodoro
- */
+
+
 @Entity
 @Table(name = "PROJECT")
-@NamedQueries({
-    @NamedQuery(name = "Project.findAll", query = "SELECT p FROM Project p")})
 public class Project implements Serializable {
 
-    private static final long serialVersionUID = 1L;
     @Id
-    @Basic(optional = false)
-    @NotNull
+    @GeneratedValue( strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
-    @Basic(optional = false)
-    @NotNull
-    @Lob
     @Column(name = "title")
-    private byte[] title;
-    @Basic(optional = false)
-    @NotNull
+    private byte[] title; 
     @Column(name = "state")
     private short state;
-    @Basic(optional = false)
-    @NotNull
-    @Lob
     @Column(name = "schedule")
     private byte[] schedule;
-    @Basic(optional = false)
-    @NotNull
-    @Lob
     @Column(name = "investmentPlan")
     private byte[] investmentPlan;
-    @Basic(optional = false)
-    @NotNull
-    @Lob
     @Column(name = "annexed")
     private byte[] annexed;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "limitReceptionDate")
-    @Temporal(TemporalType.DATE)
-    private Date limitReceptionDate;
+    private LocalDate limitReceptionDate;
     @JoinColumn(name = "BIBLIOGRAPHY_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Bibliography bIBLIOGRAPHYid;
@@ -90,7 +57,7 @@ public class Project implements Serializable {
         this.id = id;
     }
 
-    public Project(Integer id, byte[] title, short state, byte[] schedule, byte[] investmentPlan, byte[] annexed, Date limitReceptionDate) {
+    public Project(Integer id, byte[] title, short state, byte[] schedule, byte[] investmentPlan, byte[] annexed, LocalDate limitReceptionDate) {
         this.id = id;
         this.title = title;
         this.state = state;
@@ -148,11 +115,11 @@ public class Project implements Serializable {
         this.annexed = annexed;
     }
 
-    public Date getLimitReceptionDate() {
+    public LocalDate getLimitReceptionDate() {
         return limitReceptionDate;
     }
 
-    public void setLimitReceptionDate(Date limitReceptionDate) {
+    public void setLimitReceptionDate(LocalDate limitReceptionDate) {
         this.limitReceptionDate = limitReceptionDate;
     }
 
@@ -218,7 +185,7 @@ public class Project implements Serializable {
 
     @Override
     public String toString() {
-        return "gt.edu.usac.cunoc.ingenieria.Project[ id=" + id + " ]";
+        return "gt.edu.usac.cunoc.ingenieria.eps.project.Project[ id=" + id + " ]";
     }
     
 }

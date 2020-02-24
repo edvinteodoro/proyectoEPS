@@ -7,6 +7,7 @@ package gt.edu.usac.cunoc.ingenieria.eps.configuration;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -42,7 +43,7 @@ public class Property implements Serializable {
     private Integer valueInt;
     @Column(name = "valueDate")
     @Temporal(TemporalType.DATE)
-    private LocalDate valueDate;
+    private Date valueDate;
 
     public Property() {
     }

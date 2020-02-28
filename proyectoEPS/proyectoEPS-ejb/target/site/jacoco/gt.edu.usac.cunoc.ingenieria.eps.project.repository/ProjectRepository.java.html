@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProjectRepository.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">proyectoEPS-ejb</a> &gt; <a href="index.source.html" class="el_package">gt.edu.usac.cunoc.ingenieria.eps.project.repository</a> &gt; <span class="el_source">ProjectRepository.java</span></div><h1>ProjectRepository.java</h1><pre class="source lang-java linenums">
+package gt.edu.usac.cunoc.ingenieria.eps.project.repository;
+
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.PERSISTENCE_UNIT_NAME;
+import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
+import java.util.ArrayList;
+import java.util.List;
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
+@Stateless
+@LocalBean
+public class ProjectRepository {
+    
+    private EntityManager entityManager;
+
+<span class="nc" id="L24">    public ProjectRepository() {</span>
+<span class="nc" id="L25">    }</span>
+    
+    @PersistenceContext(name = PERSISTENCE_UNIT_NAME)
+    public void setEntityManager(EntityManager entityManager) {
+<span class="nc" id="L29">        this.entityManager = entityManager;</span>
+<span class="nc" id="L30">    }</span>
+    
+    public List&lt;Project&gt; getProjects(Integer id, String titulo, Short state){
+<span class="nc" id="L33">        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();</span>
+<span class="nc" id="L34">        CriteriaQuery&lt;Project&gt; criteriaQuery = criteriaBuilder.createQuery(Project.class);</span>
+<span class="nc" id="L35">        Root&lt;Project&gt; project = criteriaQuery.from(Project.class);</span>
+<span class="nc" id="L36">        ArrayList&lt;Predicate&gt; predicates = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L37" title="All 2 branches missed.">        if (id != null){</span>
+<span class="nc" id="L38">            predicates.add(criteriaBuilder.like(project.get(&quot;id&quot;), &quot;%&quot; + id + &quot;%&quot;));</span>
+        }
+<span class="nc bnc" id="L40" title="All 2 branches missed.">        if (titulo != null){</span>
+<span class="nc" id="L41">            predicates.add(criteriaBuilder.like(project.get(&quot;title&quot;), &quot;%&quot; + titulo + &quot;%&quot;));</span>
+        }
+<span class="nc bnc" id="L43" title="All 2 branches missed.">        if (state != null){</span>
+<span class="nc" id="L44">            predicates.add(criteriaBuilder.equal(project.get(&quot;state&quot;), state));</span>
+        }
+<span class="nc" id="L46">        criteriaQuery.where(predicates.stream().toArray(Predicate[]::new));</span>
+<span class="nc" id="L47">        TypedQuery&lt;Project&gt; query = entityManager.createQuery(criteriaQuery);</span>
+<span class="nc" id="L48">        return query.getResultList();</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

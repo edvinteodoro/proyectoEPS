@@ -1,75 +1,39 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package gt.edu.usac.cunoc.ingenieria.eps.project;
 
 import gt.edu.usac.cunoc.ingenieria.eps.project.Correction;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Date;
-import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
-/**
- *
- * @author teodoro
- */
+
 @Entity
 @Table(name = "BIBLIOGRAPHY")
-@NamedQueries({
-    @NamedQuery(name = "Bibliography.findAll", query = "SELECT b FROM Bibliography b")})
 public class Bibliography implements Serializable {
 
-    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 100)
     @Column(name = "author")
     private String author;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "publicactionYear")
-    @Temporal(TemporalType.DATE)
-    private Date publicactionYear;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 100)
+    private LocalDate publicactionYear;
     @Column(name = "title")
     private String title;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 45)
     @Column(name = "city")
     private String city;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 45)
     @Column(name = "country")
     private String country;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 45)
     @Column(name = "editorial")
     private String editorial;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "bIBLIOGRAPHYid")
@@ -84,7 +48,7 @@ public class Bibliography implements Serializable {
         this.id = id;
     }
 
-    public Bibliography(Integer id, String author, Date publicactionYear, String title, String city, String country, String editorial) {
+    public Bibliography(Integer id, String author, LocalDate publicactionYear, String title, String city, String country, String editorial) {
         this.id = id;
         this.author = author;
         this.publicactionYear = publicactionYear;
@@ -110,11 +74,11 @@ public class Bibliography implements Serializable {
         this.author = author;
     }
 
-    public Date getPublicactionYear() {
+    public LocalDate getPublicactionYear() {
         return publicactionYear;
     }
 
-    public void setPublicactionYear(Date publicactionYear) {
+    public void setPublicactionYear(LocalDate publicactionYear) {
         this.publicactionYear = publicactionYear;
     }
 
@@ -188,7 +152,7 @@ public class Bibliography implements Serializable {
 
     @Override
     public String toString() {
-        return "gt.edu.usac.cunoc.ingenieria.Bibliography[ id=" + id + " ]";
+        return "gt.edu.usac.cunoc.ingenieria.eps.project.Bibliography[ id=" + id + " ]";
     }
     
 }

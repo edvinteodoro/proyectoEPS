@@ -3,8 +3,10 @@
 /home/crystian/9Semestre/AnalisisSistemas2/proyectoEPS/proyectoEPS/proyectoEPS-ejb/src/main/java/gt/edu/usac/cunoc/ingenieria/eps/process/ExtraFile.java
 /home/crystian/9Semestre/AnalisisSistemas2/proyectoEPS/proyectoEPS/proyectoEPS-ejb/src/main/java/gt/edu/usac/cunoc/ingenieria/eps/process/DocumentInitialEps.java
 /home/crystian/9Semestre/AnalisisSistemas2/proyectoEPS/proyectoEPS/proyectoEPS-ejb/src/main/java/gt/edu/usac/cunoc/ingenieria/eps/configuration/Property.java
+/home/crystian/9Semestre/AnalisisSistemas2/proyectoEPS/proyectoEPS/proyectoEPS-ejb/src/main/java/gt/edu/usac/cunoc/ingenieria/eps/project/repository/ProjectRepository.java
 /home/crystian/9Semestre/AnalisisSistemas2/proyectoEPS/proyectoEPS/proyectoEPS-ejb/src/main/java/gt/edu/usac/cunoc/ingenieria/eps/project/Section.java
 /home/crystian/9Semestre/AnalisisSistemas2/proyectoEPS/proyectoEPS/proyectoEPS-ejb/src/main/java/gt/edu/usac/cunoc/ingenieria/eps/project/DecimalCoordinate.java
+/home/crystian/9Semestre/AnalisisSistemas2/proyectoEPS/proyectoEPS/proyectoEPS-ejb/src/main/java/gt/edu/usac/cunoc/ingenieria/eps/configuration/Constants.java
 /home/crystian/9Semestre/AnalisisSistemas2/proyectoEPS/proyectoEPS/proyectoEPS-ejb/src/main/java/gt/edu/usac/cunoc/ingenieria/eps/process/Journal.java
 /home/crystian/9Semestre/AnalisisSistemas2/proyectoEPS/proyectoEPS/proyectoEPS-ejb/src/main/java/gt/edu/usac/cunoc/ingenieria/eps/project/Correction.java
 /home/crystian/9Semestre/AnalisisSistemas2/proyectoEPS/proyectoEPS/proyectoEPS-ejb/src/main/java/gt/edu/usac/cunoc/ingenieria/eps/user/Rol.java

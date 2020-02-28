@@ -1,13 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package gt.edu.usac.cunoc.ingenieria.eps.project;
 
-import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
 import java.io.Serializable;
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,35 +9,20 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
-/**
- *
- * @author teodoro
- */
 @Entity
 @Table(name = "DECIMAL_COORDINATE")
-@NamedQueries({
-    @NamedQuery(name = "DecimalCoordinate.findAll", query = "SELECT d FROM DecimalCoordinate d")})
 public class DecimalCoordinate implements Serializable {
 
-    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "latitude")
-    private double latitude;
-    @Basic(optional = false)
-    @NotNull
+    private Double latitude;
     @Column(name = "longitude")
-    private double longitude;
+    private Double longitude;
     @JoinColumn(name = "PROJECT_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Project pROJECTid;
@@ -55,7 +34,7 @@ public class DecimalCoordinate implements Serializable {
         this.id = id;
     }
 
-    public DecimalCoordinate(Integer id, double latitude, double longitude) {
+    public DecimalCoordinate(Integer id, Double latitude, Double longitude) {
         this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -73,7 +52,7 @@ public class DecimalCoordinate implements Serializable {
         return latitude;
     }
 
-    public void setLatitude(double latitude) {
+    public void setLatitude(Double latitude) {
         this.latitude = latitude;
     }
 
@@ -81,7 +60,7 @@ public class DecimalCoordinate implements Serializable {
         return longitude;
     }
 
-    public void setLongitude(double longitude) {
+    public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
 
@@ -115,7 +94,7 @@ public class DecimalCoordinate implements Serializable {
 
     @Override
     public String toString() {
-        return "gt.edu.usac.cunoc.ingenieria.DecimalCoordinate[ id=" + id + " ]";
+        return "gt.edu.usac.cunoc.ingenieria.eps.project.DecimalCoordinate[ id=" + id + " ]";
     }
     
 }

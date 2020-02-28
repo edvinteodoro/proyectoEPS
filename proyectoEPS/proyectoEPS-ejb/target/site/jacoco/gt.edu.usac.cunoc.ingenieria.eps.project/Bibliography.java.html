@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Bibliography.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">proyectoEPS-ejb</a> &gt; <a href="index.source.html" class="el_package">gt.edu.usac.cunoc.ingenieria.eps.project</a> &gt; <span class="el_source">Bibliography.java</span></div><h1>Bibliography.java</h1><pre class="source lang-java linenums">
+package gt.edu.usac.cunoc.ingenieria.eps.project;
+
+import gt.edu.usac.cunoc.ingenieria.eps.project.Correction;
+import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.Collection;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+
+@Entity
+@Table(name = &quot;BIBLIOGRAPHY&quot;)
+public class Bibliography implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = &quot;id&quot;)
+    private Integer id;
+    @Column(name = &quot;author&quot;)
+    private String author;
+    @Column(name = &quot;publicactionYear&quot;)
+    private LocalDate publicactionYear;
+    @Column(name = &quot;title&quot;)
+    private String title;
+    @Column(name = &quot;city&quot;)
+    private String city;
+    @Column(name = &quot;country&quot;)
+    private String country;
+    @Column(name = &quot;editorial&quot;)
+    private String editorial;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = &quot;bIBLIOGRAPHYid&quot;)
+    private Collection&lt;Project&gt; projectCollection;
+    @OneToMany(mappedBy = &quot;bIBLIOGRAPHYid&quot;)
+    private Collection&lt;Correction&gt; correctionCollection;
+
+<span class="nc" id="L44">    public Bibliography() {</span>
+<span class="nc" id="L45">    }</span>
+
+<span class="nc" id="L47">    public Bibliography(Integer id) {</span>
+<span class="nc" id="L48">        this.id = id;</span>
+<span class="nc" id="L49">    }</span>
+
+<span class="nc" id="L51">    public Bibliography(Integer id, String author, LocalDate publicactionYear, String title, String city, String country, String editorial) {</span>
+<span class="nc" id="L52">        this.id = id;</span>
+<span class="nc" id="L53">        this.author = author;</span>
+<span class="nc" id="L54">        this.publicactionYear = publicactionYear;</span>
+<span class="nc" id="L55">        this.title = title;</span>
+<span class="nc" id="L56">        this.city = city;</span>
+<span class="nc" id="L57">        this.country = country;</span>
+<span class="nc" id="L58">        this.editorial = editorial;</span>
+<span class="nc" id="L59">    }</span>
+
+    public Integer getId() {
+<span class="nc" id="L62">        return id;</span>
+    }
+
+    public void setId(Integer id) {
+<span class="nc" id="L66">        this.id = id;</span>
+<span class="nc" id="L67">    }</span>
+
+    public String getAuthor() {
+<span class="nc" id="L70">        return author;</span>
+    }
+
+    public void setAuthor(String author) {
+<span class="nc" id="L74">        this.author = author;</span>
+<span class="nc" id="L75">    }</span>
+
+    public LocalDate getPublicactionYear() {
+<span class="nc" id="L78">        return publicactionYear;</span>
+    }
+
+    public void setPublicactionYear(LocalDate publicactionYear) {
+<span class="nc" id="L82">        this.publicactionYear = publicactionYear;</span>
+<span class="nc" id="L83">    }</span>
+
+    public String getTitle() {
+<span class="nc" id="L86">        return title;</span>
+    }
+
+    public void setTitle(String title) {
+<span class="nc" id="L90">        this.title = title;</span>
+<span class="nc" id="L91">    }</span>
+
+    public String getCity() {
+<span class="nc" id="L94">        return city;</span>
+    }
+
+    public void setCity(String city) {
+<span class="nc" id="L98">        this.city = city;</span>
+<span class="nc" id="L99">    }</span>
+
+    public String getCountry() {
+<span class="nc" id="L102">        return country;</span>
+    }
+
+    public void setCountry(String country) {
+<span class="nc" id="L106">        this.country = country;</span>
+<span class="nc" id="L107">    }</span>
+
+    public String getEditorial() {
+<span class="nc" id="L110">        return editorial;</span>
+    }
+
+    public void setEditorial(String editorial) {
+<span class="nc" id="L114">        this.editorial = editorial;</span>
+<span class="nc" id="L115">    }</span>
+
+    public Collection&lt;Project&gt; getProjectCollection() {
+<span class="nc" id="L118">        return projectCollection;</span>
+    }
+
+    public void setProjectCollection(Collection&lt;Project&gt; projectCollection) {
+<span class="nc" id="L122">        this.projectCollection = projectCollection;</span>
+<span class="nc" id="L123">    }</span>
+
+    public Collection&lt;Correction&gt; getCorrectionCollection() {
+<span class="nc" id="L126">        return correctionCollection;</span>
+    }
+
+    public void setCorrectionCollection(Collection&lt;Correction&gt; correctionCollection) {
+<span class="nc" id="L130">        this.correctionCollection = correctionCollection;</span>
+<span class="nc" id="L131">    }</span>
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L135">        int hash = 0;</span>
+<span class="nc bnc" id="L136" title="All 2 branches missed.">        hash += (id != null ? id.hashCode() : 0);</span>
+<span class="nc" id="L137">        return hash;</span>
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+<span class="nc bnc" id="L143" title="All 2 branches missed.">        if (!(object instanceof Bibliography)) {</span>
+<span class="nc" id="L144">            return false;</span>
+        }
+<span class="nc" id="L146">        Bibliography other = (Bibliography) object;</span>
+<span class="nc bnc" id="L147" title="All 8 branches missed.">        if ((this.id == null &amp;&amp; other.id != null) || (this.id != null &amp;&amp; !this.id.equals(other.id))) {</span>
+<span class="nc" id="L148">            return false;</span>
+        }
+<span class="nc" id="L150">        return true;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L155">        return &quot;gt.edu.usac.cunoc.ingenieria.eps.project.Bibliography[ id=&quot; + id + &quot; ]&quot;;</span>
+    }
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

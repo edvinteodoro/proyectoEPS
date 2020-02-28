@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DeliverEpsCompletionDocument.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">proyectoEPS-ejb</a> &gt; <a href="index.source.html" class="el_package">gt.edu.usac.cunoc.ingenieria.eps.process</a> &gt; <span class="el_source">DeliverEpsCompletionDocument.java</span></div><h1>DeliverEpsCompletionDocument.java</h1><pre class="source lang-java linenums">/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package gt.edu.usac.cunoc.ingenieria.eps.process;
+
+import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
+import java.io.Serializable;
+import java.util.Collection;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+/**
+ *
+ * @author teodoro
+ */
+@Entity
+@Table(name = &quot;DELIVER__EPS_COMPLETION_DOCUMENT&quot;)
+@NamedQueries({
+    @NamedQuery(name = &quot;DeliverEpsCompletionDocument.findAll&quot;, query = &quot;SELECT d FROM DeliverEpsCompletionDocument d&quot;)})
+public class DeliverEpsCompletionDocument implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = &quot;id&quot;)
+    private Integer id;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = &quot;deliveryFinalReport&quot;)
+    private short deliveryFinalReport;
+    @Basic(optional = false)
+    @NotNull
+    @Lob
+    @Column(name = &quot;counterpartSettlement&quot;)
+    private byte[] counterpartSettlement;
+    @Basic(optional = false)
+    @NotNull
+    @Lob
+    @Column(name = &quot;reviewerLetter&quot;)
+    private byte[] reviewerLetter;
+    @Basic(optional = false)
+    @NotNull
+    @Lob
+    @Column(name = &quot;adviserLetter&quot;)
+    private byte[] adviserLetter;
+    @OneToMany(mappedBy = &quot;dELIVEREPSCOMPLETIONDOCUMENTid&quot;)
+    private Collection&lt;Process&gt; processCollection;
+
+<span class="nc" id="L60">    public DeliverEpsCompletionDocument() {</span>
+<span class="nc" id="L61">    }</span>
+
+<span class="nc" id="L63">    public DeliverEpsCompletionDocument(Integer id) {</span>
+<span class="nc" id="L64">        this.id = id;</span>
+<span class="nc" id="L65">    }</span>
+
+<span class="nc" id="L67">    public DeliverEpsCompletionDocument(Integer id, short deliveryFinalReport, byte[] counterpartSettlement, byte[] reviewerLetter, byte[] adviserLetter) {</span>
+<span class="nc" id="L68">        this.id = id;</span>
+<span class="nc" id="L69">        this.deliveryFinalReport = deliveryFinalReport;</span>
+<span class="nc" id="L70">        this.counterpartSettlement = counterpartSettlement;</span>
+<span class="nc" id="L71">        this.reviewerLetter = reviewerLetter;</span>
+<span class="nc" id="L72">        this.adviserLetter = adviserLetter;</span>
+<span class="nc" id="L73">    }</span>
+
+    public Integer getId() {
+<span class="nc" id="L76">        return id;</span>
+    }
+
+    public void setId(Integer id) {
+<span class="nc" id="L80">        this.id = id;</span>
+<span class="nc" id="L81">    }</span>
+
+    public short getDeliveryFinalReport() {
+<span class="nc" id="L84">        return deliveryFinalReport;</span>
+    }
+
+    public void setDeliveryFinalReport(short deliveryFinalReport) {
+<span class="nc" id="L88">        this.deliveryFinalReport = deliveryFinalReport;</span>
+<span class="nc" id="L89">    }</span>
+
+    public byte[] getCounterpartSettlement() {
+<span class="nc" id="L92">        return counterpartSettlement;</span>
+    }
+
+    public void setCounterpartSettlement(byte[] counterpartSettlement) {
+<span class="nc" id="L96">        this.counterpartSettlement = counterpartSettlement;</span>
+<span class="nc" id="L97">    }</span>
+
+    public byte[] getReviewerLetter() {
+<span class="nc" id="L100">        return reviewerLetter;</span>
+    }
+
+    public void setReviewerLetter(byte[] reviewerLetter) {
+<span class="nc" id="L104">        this.reviewerLetter = reviewerLetter;</span>
+<span class="nc" id="L105">    }</span>
+
+    public byte[] getAdviserLetter() {
+<span class="nc" id="L108">        return adviserLetter;</span>
+    }
+
+    public void setAdviserLetter(byte[] adviserLetter) {
+<span class="nc" id="L112">        this.adviserLetter = adviserLetter;</span>
+<span class="nc" id="L113">    }</span>
+
+    public Collection&lt;Process&gt; getProcessCollection() {
+<span class="nc" id="L116">        return processCollection;</span>
+    }
+
+    public void setProcessCollection(Collection&lt;Process&gt; processCollection) {
+<span class="nc" id="L120">        this.processCollection = processCollection;</span>
+<span class="nc" id="L121">    }</span>
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L125">        int hash = 0;</span>
+<span class="nc bnc" id="L126" title="All 2 branches missed.">        hash += (id != null ? id.hashCode() : 0);</span>
+<span class="nc" id="L127">        return hash;</span>
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+<span class="nc bnc" id="L133" title="All 2 branches missed.">        if (!(object instanceof DeliverEpsCompletionDocument)) {</span>
+<span class="nc" id="L134">            return false;</span>
+        }
+<span class="nc" id="L136">        DeliverEpsCompletionDocument other = (DeliverEpsCompletionDocument) object;</span>
+<span class="nc bnc" id="L137" title="All 8 branches missed.">        if ((this.id == null &amp;&amp; other.id != null) || (this.id != null &amp;&amp; !this.id.equals(other.id))) {</span>
+<span class="nc" id="L138">            return false;</span>
+        }
+<span class="nc" id="L140">        return true;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L145">        return &quot;gt.edu.usac.cunoc.ingenieria.DeliverEpsCompletionDocument[ id=&quot; + id + &quot; ]&quot;;</span>
+    }
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

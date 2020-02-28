@@ -1,59 +1,34 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package gt.edu.usac.cunoc.ingenieria.eps.project;
 
 import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Date;
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
 
-/**
- *
- * @author teodoro
- */
 @Entity
 @Table(name = "OBJECTIVES")
-@NamedQueries({
-    @NamedQuery(name = "Objectives.findAll", query = "SELECT o FROM Objectives o")})
 public class Objectives implements Serializable {
 
-    private static final long serialVersionUID = 1L;
     @Id
-    @Basic(optional = false)
-    @NotNull
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "state")
-    private short state;
-    @Basic(optional = false)
-    @NotNull
-    @Lob
+    private Short state;
     @Column(name = "text")
-    private byte[] text;
-    @Basic(optional = false)
-    @NotNull
+    private Byte[] text;
     @Column(name = "lastModificationDate")
-    @Temporal(TemporalType.DATE)
-    private Date lastModificationDate;
+    private LocalDate lastModificationDate;
     @JoinColumn(name = "PROJECT_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Project pROJECTid;
@@ -67,7 +42,7 @@ public class Objectives implements Serializable {
         this.id = id;
     }
 
-    public Objectives(Integer id, short state, byte[] text, Date lastModificationDate) {
+    public Objectives(Integer id, Short state, Byte[] text, LocalDate lastModificationDate) {
         this.id = id;
         this.state = state;
         this.text = text;
@@ -82,27 +57,27 @@ public class Objectives implements Serializable {
         this.id = id;
     }
 
-    public short getState() {
+    public Short getState() {
         return state;
     }
 
-    public void setState(short state) {
+    public void setState(Short state) {
         this.state = state;
     }
 
-    public byte[] getText() {
+    public Byte[] getText() {
         return text;
     }
 
-    public void setText(byte[] text) {
+    public void setText(Byte[] text) {
         this.text = text;
     }
 
-    public Date getLastModificationDate() {
+    public LocalDate getLastModificationDate() {
         return lastModificationDate;
     }
 
-    public void setLastModificationDate(Date lastModificationDate) {
+    public void setLastModificationDate(LocalDate lastModificationDate) {
         this.lastModificationDate = lastModificationDate;
     }
 
@@ -144,7 +119,7 @@ public class Objectives implements Serializable {
 
     @Override
     public String toString() {
-        return "gt.edu.usac.cunoc.ingenieria.Objectives[ id=" + id + " ]";
+        return "gt.edu.usac.cunoc.ingenieria.eps.project.Objectives[ id=" + id + " ]";
     }
     
 }

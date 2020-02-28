@@ -1,55 +1,32 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package gt.edu.usac.cunoc.ingenieria.eps.project;
 
 import gt.edu.usac.cunoc.ingenieria.eps.project.Objectives;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Section;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import java.io.Serializable;
-import java.util.Date;
-import javax.persistence.Basic;
+import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
 
-/**
- *
- * @author teodoro
- */
 @Entity
 @Table(name = "CORRECTION")
-@NamedQueries({
-    @NamedQuery(name = "Correction.findAll", query = "SELECT c FROM Correction c")})
 public class Correction implements Serializable {
 
-    private static final long serialVersionUID = 1L;
     @Id
-    @Basic(optional = false)
-    @NotNull
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
-    @Basic(optional = false)
-    @NotNull
-    @Lob
     @Column(name = "text")
-    private byte[] text;
-    @Basic(optional = false)
-    @NotNull
+    private Byte[] text;
     @Column(name = "date")
-    @Temporal(TemporalType.DATE)
-    private Date date;
+    private LocalDate date;
     @JoinColumn(name = "BIBLIOGRAPHY_id", referencedColumnName = "id")
     @ManyToOne
     private Bibliography bIBLIOGRAPHYid;
@@ -70,7 +47,7 @@ public class Correction implements Serializable {
         this.id = id;
     }
 
-    public Correction(Integer id, byte[] text, Date date) {
+    public Correction(Integer id, Byte[] text, LocalDate date) {
         this.id = id;
         this.text = text;
         this.date = date;
@@ -84,19 +61,19 @@ public class Correction implements Serializable {
         this.id = id;
     }
 
-    public byte[] getText() {
+    public Byte[] getText() {
         return text;
     }
 
-    public void setText(byte[] text) {
+    public void setText(Byte[] text) {
         this.text = text;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
@@ -154,7 +131,7 @@ public class Correction implements Serializable {
 
     @Override
     public String toString() {
-        return "gt.edu.usac.cunoc.ingenieria.Correction[ id=" + id + " ]";
+        return "gt.edu.usac.cunoc.ingenieria.eps.project.Correction[ id=" + id + " ]";
     }
     
 }

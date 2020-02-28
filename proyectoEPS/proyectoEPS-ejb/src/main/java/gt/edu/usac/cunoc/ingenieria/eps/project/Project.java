@@ -16,8 +16,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-
-
 @Entity
 @Table(name = "PROJECT")
 public class Project implements Serializable {
@@ -27,15 +25,15 @@ public class Project implements Serializable {
     @Column(name = "id")
     private Integer id;
     @Column(name = "title")
-    private byte[] title; 
+    private String title; 
     @Column(name = "state")
-    private short state;
+    private Short state;
     @Column(name = "schedule")
-    private byte[] schedule;
+    private Byte[] schedule;
     @Column(name = "investmentPlan")
-    private byte[] investmentPlan;
+    private Byte[] investmentPlan;
     @Column(name = "annexed")
-    private byte[] annexed;
+    private Byte[] annexed;
     @Column(name = "limitReceptionDate")
     private LocalDate limitReceptionDate;
     @JoinColumn(name = "BIBLIOGRAPHY_id", referencedColumnName = "id")
@@ -57,7 +55,7 @@ public class Project implements Serializable {
         this.id = id;
     }
 
-    public Project(Integer id, byte[] title, short state, byte[] schedule, byte[] investmentPlan, byte[] annexed, LocalDate limitReceptionDate) {
+    public Project(Integer id, String title, Short state, Byte[] schedule, Byte[] investmentPlan, Byte[] annexed, LocalDate limitReceptionDate) {
         this.id = id;
         this.title = title;
         this.state = state;
@@ -75,11 +73,11 @@ public class Project implements Serializable {
         this.id = id;
     }
 
-    public byte[] getTitle() {
+    public String getTitle() {
         return title;
     }
 
-    public void setTitle(byte[] title) {
+    public void setTitle(String title) {
         this.title = title;
     }
 
@@ -87,31 +85,31 @@ public class Project implements Serializable {
         return state;
     }
 
-    public void setState(short state) {
+    public void setState(Short state) {
         this.state = state;
     }
 
-    public byte[] getSchedule() {
+    public Byte[] getSchedule() {
         return schedule;
     }
 
-    public void setSchedule(byte[] schedule) {
+    public void setSchedule(Byte[] schedule) {
         this.schedule = schedule;
     }
 
-    public byte[] getInvestmentPlan() {
+    public Byte[] getInvestmentPlan() {
         return investmentPlan;
     }
 
-    public void setInvestmentPlan(byte[] investmentPlan) {
+    public void setInvestmentPlan(Byte[] investmentPlan) {
         this.investmentPlan = investmentPlan;
     }
 
-    public byte[] getAnnexed() {
+    public Byte[] getAnnexed() {
         return annexed;
     }
 
-    public void setAnnexed(byte[] annexed) {
+    public void setAnnexed(Byte[] annexed) {
         this.annexed = annexed;
     }
 
@@ -161,6 +159,22 @@ public class Project implements Serializable {
 
     public void setSectionCollection(Collection<Section> sectionCollection) {
         this.sectionCollection = sectionCollection;
+    }
+    
+    public Byte[] convertByteToObject(byte[] byteToConvert){
+        Byte[] converted = new Byte[byteToConvert.length];
+        for (int i = 0; i < byteToConvert.length; i++) {
+            converted[i] = Byte.valueOf(byteToConvert[i]);
+        }
+        return converted;
+    }
+    
+    public byte[] convertByteToPrimitive(Byte[] byteToConvert){
+        byte[] converted = new byte[byteToConvert.length];
+        for (int i = 0; i < byteToConvert.length; i++) {
+            converted[i] = byteToConvert[i];
+        }
+        return converted;
     }
 
     @Override

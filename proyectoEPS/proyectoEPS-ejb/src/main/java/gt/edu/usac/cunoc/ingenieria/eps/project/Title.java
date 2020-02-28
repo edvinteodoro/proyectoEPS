@@ -1,48 +1,30 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package gt.edu.usac.cunoc.ingenieria.eps.project;
 
 import gt.edu.usac.cunoc.ingenieria.eps.project.Texto;
 import java.io.Serializable;
 import java.util.Collection;
-import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
-/**
- *
- * @author teodoro
- */
 @Entity
 @Table(name = "TITLE")
-@NamedQueries({
-    @NamedQuery(name = "Title.findAll", query = "SELECT t FROM Title t")})
 public class Title implements Serializable {
 
-    private static final long serialVersionUID = 1L;
     @Id
-    @Basic(optional = false)
-    @NotNull
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
-    @Basic(optional = false)
-    @NotNull
-    @Lob
     @Column(name = "text")
-    private byte[] text;
+    private Byte[] text;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tITLEid")
     private Collection<Texto> textoCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tITLEid")
@@ -60,7 +42,7 @@ public class Title implements Serializable {
         this.id = id;
     }
 
-    public Title(Integer id, byte[] text) {
+    public Title(Integer id, Byte[] text) {
         this.id = id;
         this.text = text;
     }
@@ -73,11 +55,11 @@ public class Title implements Serializable {
         this.id = id;
     }
 
-    public byte[] getText() {
+    public Byte[] getText() {
         return text;
     }
 
-    public void setText(byte[] text) {
+    public void setText(Byte[] text) {
         this.text = text;
     }
 
@@ -135,7 +117,7 @@ public class Title implements Serializable {
 
     @Override
     public String toString() {
-        return "gt.edu.usac.cunoc.ingenieria.Title[ id=" + id + " ]";
+        return "gt.edu.usac.cunoc.ingenieria.eps.project.Title[ id=" + id + " ]";
     }
     
 }

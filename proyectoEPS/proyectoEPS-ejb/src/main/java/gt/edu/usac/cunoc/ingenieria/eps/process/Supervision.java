@@ -6,6 +6,7 @@
 package gt.edu.usac.cunoc.ingenieria.eps.process;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -42,8 +43,7 @@ public class Supervision implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date date;
+    private LocalDate date;
     @Size(max = 200)
     @Column(name = "annotation")
     private String annotation;
@@ -58,7 +58,7 @@ public class Supervision implements Serializable {
         this.id = id;
     }
 
-    public Supervision(Integer id, Date date) {
+    public Supervision(Integer id, LocalDate date) {
         this.id = id;
         this.date = date;
     }
@@ -71,11 +71,11 @@ public class Supervision implements Serializable {
         this.id = id;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

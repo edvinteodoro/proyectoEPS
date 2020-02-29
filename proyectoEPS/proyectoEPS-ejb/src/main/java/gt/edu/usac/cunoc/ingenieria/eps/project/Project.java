@@ -8,6 +8,7 @@ package gt.edu.usac.cunoc.ingenieria.eps.project;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Requeriment;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Section;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
@@ -69,8 +70,7 @@ public class Project implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "limitReceptionDate")
-    @Temporal(TemporalType.DATE)
-    private Date limitReceptionDate;
+    private LocalDate limitReceptionDate;
     @JoinColumn(name = "BIBLIOGRAPHY_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Bibliography bIBLIOGRAPHYid;
@@ -90,7 +90,7 @@ public class Project implements Serializable {
         this.id = id;
     }
 
-    public Project(Integer id, byte[] title, short state, byte[] schedule, byte[] investmentPlan, byte[] annexed, Date limitReceptionDate) {
+    public Project(Integer id, byte[] title, short state, byte[] schedule, byte[] investmentPlan, byte[] annexed, LocalDate limitReceptionDate) {
         this.id = id;
         this.title = title;
         this.state = state;
@@ -148,11 +148,11 @@ public class Project implements Serializable {
         this.annexed = annexed;
     }
 
-    public Date getLimitReceptionDate() {
+    public LocalDate getLimitReceptionDate() {
         return limitReceptionDate;
     }
 
-    public void setLimitReceptionDate(Date limitReceptionDate) {
+    public void setLimitReceptionDate(LocalDate limitReceptionDate) {
         this.limitReceptionDate = limitReceptionDate;
     }
 

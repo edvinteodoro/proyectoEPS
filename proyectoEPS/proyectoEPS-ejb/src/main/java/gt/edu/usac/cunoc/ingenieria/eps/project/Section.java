@@ -7,6 +7,7 @@ package gt.edu.usac.cunoc.ingenieria.eps.project;
 
 import gt.edu.usac.cunoc.ingenieria.eps.project.Title;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
@@ -48,8 +49,7 @@ public class Section implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "lastModificationDate")
-    @Temporal(TemporalType.DATE)
-    private Date lastModificationDate;
+    private LocalDate lastModificationDate;
     @OneToMany(mappedBy = "sECTIONid")
     private Collection<Correction> correctionCollection;
     @JoinColumn(name = "PROJECT_id", referencedColumnName = "id")
@@ -66,7 +66,7 @@ public class Section implements Serializable {
         this.id = id;
     }
 
-    public Section(Integer id, String name, Date lastModificationDate) {
+    public Section(Integer id, String name, LocalDate lastModificationDate) {
         this.id = id;
         this.name = name;
         this.lastModificationDate = lastModificationDate;
@@ -88,11 +88,11 @@ public class Section implements Serializable {
         this.name = name;
     }
 
-    public Date getLastModificationDate() {
+    public LocalDate getLastModificationDate() {
         return lastModificationDate;
     }
 
-    public void setLastModificationDate(Date lastModificationDate) {
+    public void setLastModificationDate(LocalDate lastModificationDate) {
         this.lastModificationDate = lastModificationDate;
     }
 

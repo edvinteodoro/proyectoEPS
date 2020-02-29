@@ -8,6 +8,7 @@ package gt.edu.usac.cunoc.ingenieria.eps.project;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Correction;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
@@ -50,8 +51,7 @@ public class Bibliography implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "publicactionYear")
-    @Temporal(TemporalType.DATE)
-    private Date publicactionYear;
+    private LocalDate publicactionYear;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 100)
@@ -84,7 +84,7 @@ public class Bibliography implements Serializable {
         this.id = id;
     }
 
-    public Bibliography(Integer id, String author, Date publicactionYear, String title, String city, String country, String editorial) {
+    public Bibliography(Integer id, String author, LocalDate publicactionYear, String title, String city, String country, String editorial) {
         this.id = id;
         this.author = author;
         this.publicactionYear = publicactionYear;
@@ -110,11 +110,11 @@ public class Bibliography implements Serializable {
         this.author = author;
     }
 
-    public Date getPublicactionYear() {
+    public LocalDate getPublicactionYear() {
         return publicactionYear;
     }
 
-    public void setPublicactionYear(Date publicactionYear) {
+    public void setPublicactionYear(LocalDate publicactionYear) {
         this.publicactionYear = publicactionYear;
     }
 

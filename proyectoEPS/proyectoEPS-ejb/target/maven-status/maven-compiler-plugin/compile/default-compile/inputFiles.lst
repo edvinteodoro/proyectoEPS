@@ -5,14 +5,13 @@
 /home/teodoro/Documentos/proyectoEPS/proyectoEPS/proyectoEPS-ejb/src/main/java/gt/edu/usac/cunoc/ingenieria/eps/process/Process.java
 /home/teodoro/Documentos/proyectoEPS/proyectoEPS/proyectoEPS-ejb/src/main/java/gt/edu/usac/cunoc/ingenieria/eps/project/Texto.java
 /home/teodoro/Documentos/proyectoEPS/proyectoEPS/proyectoEPS-ejb/src/main/java/gt/edu/usac/cunoc/ingenieria/eps/user/User.java
-/home/teodoro/Documentos/proyectoEPS/proyectoEPS/proyectoEPS-ejb/src/main/java/gt/edu/usac/cunoc/ingenieria/eps/process/facade/RequerimentFacadeLocal.java
 /home/teodoro/Documentos/proyectoEPS/proyectoEPS/proyectoEPS-ejb/src/main/java/gt/edu/usac/cunoc/ingenieria/eps/process/ExtraFile.java
 /home/teodoro/Documentos/proyectoEPS/proyectoEPS/proyectoEPS-ejb/src/main/java/gt/edu/usac/cunoc/ingenieria/eps/process/Appointment.java
 /home/teodoro/Documentos/proyectoEPS/proyectoEPS/proyectoEPS-ejb/src/main/java/gt/edu/usac/cunoc/ingenieria/eps/project/Title.java
 /home/teodoro/Documentos/proyectoEPS/proyectoEPS/proyectoEPS-ejb/src/main/java/gt/edu/usac/cunoc/ingenieria/eps/config/Constans.java
 /home/teodoro/Documentos/proyectoEPS/proyectoEPS/proyectoEPS-ejb/src/main/java/gt/edu/usac/cunoc/ingenieria/eps/process/Journal.java
-/home/teodoro/Documentos/proyectoEPS/proyectoEPS/proyectoEPS-ejb/src/main/java/gt/edu/usac/cunoc/ingenieria/eps/process/facade/RequerimenteFacade.java
 /home/teodoro/Documentos/proyectoEPS/proyectoEPS/proyectoEPS-ejb/src/main/java/gt/edu/usac/cunoc/ingenieria/eps/process/service/ProcessService.java
+/home/teodoro/Documentos/proyectoEPS/proyectoEPS/proyectoEPS-ejb/src/main/java/gt/edu/usac/cunoc/ingenieria/eps/process/facade/ProcessFacadeLocal.java
 /home/teodoro/Documentos/proyectoEPS/proyectoEPS/proyectoEPS-ejb/src/main/java/gt/edu/usac/cunoc/ingenieria/eps/process/Supervision.java
 /home/teodoro/Documentos/proyectoEPS/proyectoEPS/proyectoEPS-ejb/src/main/java/gt/edu/usac/cunoc/ingenieria/eps/project/Section.java
 /home/teodoro/Documentos/proyectoEPS/proyectoEPS/proyectoEPS-ejb/src/main/java/gt/edu/usac/cunoc/ingenieria/eps/project/DecimalCoordinate.java
@@ -23,6 +22,7 @@
 /home/teodoro/Documentos/proyectoEPS/proyectoEPS/proyectoEPS-ejb/src/main/java/gt/edu/usac/cunoc/ingenieria/eps/configuration/Property.java
 /home/teodoro/Documentos/proyectoEPS/proyectoEPS/proyectoEPS-ejb/src/main/java/gt/edu/usac/cunoc/ingenieria/eps/user/UserCareer.java
 /home/teodoro/Documentos/proyectoEPS/proyectoEPS/proyectoEPS-ejb/src/main/java/gt/edu/usac/cunoc/ingenieria/eps/user/Rol.java
+/home/teodoro/Documentos/proyectoEPS/proyectoEPS/proyectoEPS-ejb/src/main/java/gt/edu/usac/cunoc/ingenieria/eps/process/facade/ProcessFacade.java
 /home/teodoro/Documentos/proyectoEPS/proyectoEPS/proyectoEPS-ejb/src/main/java/gt/edu/usac/cunoc/ingenieria/eps/process/repository/RequerimentRepository.java
 /home/teodoro/Documentos/proyectoEPS/proyectoEPS/proyectoEPS-ejb/src/main/java/gt/edu/usac/cunoc/ingenieria/eps/process/service/RequerimentService.java
 /home/teodoro/Documentos/proyectoEPS/proyectoEPS/proyectoEPS-ejb/src/main/java/gt/edu/usac/cunoc/ingenieria/eps/project/Objectives.java

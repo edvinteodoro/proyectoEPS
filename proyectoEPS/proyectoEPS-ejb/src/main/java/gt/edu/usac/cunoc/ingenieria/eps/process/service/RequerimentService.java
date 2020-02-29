@@ -29,9 +29,6 @@ public class RequerimentService {
         if(requeriment.getInscriptionConstancy()!=null){
             updateRequeriment.setInscriptionConstancy(requeriment.getInscriptionConstancy());
         }
-        if(requeriment.getPREPROJECTid()!=null){
-            updateRequeriment.setPREPROJECTid(requeriment.getPREPROJECTid());
-        }
         if(requeriment.getPensumClosure()!=null){
             updateRequeriment.setPensumClosure(requeriment.getPensumClosure());
         }

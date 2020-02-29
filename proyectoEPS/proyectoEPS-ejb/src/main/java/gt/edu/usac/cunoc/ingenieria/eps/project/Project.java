@@ -74,14 +74,6 @@ public class Project implements Serializable {
     @JoinColumn(name = "BIBLIOGRAPHY_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Bibliography bIBLIOGRAPHYid;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pROJECTid")
-    private Collection<DecimalCoordinate> decimalCoordinateCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pROJECTid")
-    private Collection<Objectives> objectivesCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pREPROJECTid")
-    private Collection<Requeriment> requerimentCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pROJECTid")
-    private Collection<Section> sectionCollection;
 
     public Project() {
     }
@@ -162,38 +154,6 @@ public class Project implements Serializable {
 
     public void setBIBLIOGRAPHYid(Bibliography bIBLIOGRAPHYid) {
         this.bIBLIOGRAPHYid = bIBLIOGRAPHYid;
-    }
-
-    public Collection<DecimalCoordinate> getDecimalCoordinateCollection() {
-        return decimalCoordinateCollection;
-    }
-
-    public void setDecimalCoordinateCollection(Collection<DecimalCoordinate> decimalCoordinateCollection) {
-        this.decimalCoordinateCollection = decimalCoordinateCollection;
-    }
-
-    public Collection<Objectives> getObjectivesCollection() {
-        return objectivesCollection;
-    }
-
-    public void setObjectivesCollection(Collection<Objectives> objectivesCollection) {
-        this.objectivesCollection = objectivesCollection;
-    }
-
-    public Collection<Requeriment> getRequerimentCollection() {
-        return requerimentCollection;
-    }
-
-    public void setRequerimentCollection(Collection<Requeriment> requerimentCollection) {
-        this.requerimentCollection = requerimentCollection;
-    }
-
-    public Collection<Section> getSectionCollection() {
-        return sectionCollection;
-    }
-
-    public void setSectionCollection(Collection<Section> sectionCollection) {
-        this.sectionCollection = sectionCollection;
     }
 
     @Override

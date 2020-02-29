@@ -1,15 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package gt.edu.usac.cunoc.ingenieria.eps.process;
 
-import gt.edu.usac.cunoc.ingenieria.eps.process.Requeriment;
-import gt.edu.usac.cunoc.ingenieria.eps.process.Supervision;
-import gt.edu.usac.cunoc.ingenieria.eps.user.UserCareer;
+
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -17,12 +10,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -42,56 +33,30 @@ public class Process implements Serializable {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "state")
-    private short state;
-    @Basic(optional = false)
-    @NotNull
+    private Boolean state;
     @Column(name = "approvedCareerCoordinator")
-    private short approvedCareerCoordinator;
+    private Boolean approvedCareerCoordinator;
     @Lob
     @Column(name = "documentApprovedCareerCoordinator")
     private byte[] documentApprovedCareerCoordinator;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "DocumentsToEPSCareerSupervisor")
-    private short documentsToEPSCareerSupervisor;
-    @Basic(optional = false)
-    @NotNull
+    private Boolean documentsToEPSCareerSupervisor;
     @Column(name = "DocumentsToEPSCommission")
-    private short documentsToEPSCommission;
-    @Basic(optional = false)
-    @NotNull
+    private Boolean documentsToEPSCommission;
     @Column(name = "PreProjectToEPSCommission")
-    private short preProjectToEPSCommission;
+    private Boolean preProjectToEPSCommission;
     @Column(name = "approvalEPSCommission")
-    private Short approvalEPSCommission;
+    private Boolean approvalEPSCommission;
     @Basic(optional = false)
     @NotNull
     @Column(name = "approvedEPSDevelopment")
-    private short approvedEPSDevelopment;
+    private Boolean approvedEPSDevelopment;
     @Column(name = "progress")
     private Integer progress;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pROCESSid")
-    private Collection<Supervision> supervisionCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pROCESSid")
-    private Collection<DocumentFinalEps> documentFinalEpsCollection;
-    @JoinColumn(name = "APPOINTMENT_id", referencedColumnName = "id")
-    @ManyToOne
-    private Appointment aPPOINTMENTid;
-    @JoinColumn(name = "DELIVER__EPS_COMPLETION_DOCUMENT_id", referencedColumnName = "id")
-    @ManyToOne
-    private DeliverEpsCompletionDocument dELIVEREPSCOMPLETIONDOCUMENTid;
-    @JoinColumn(name = "DOCUMENT_INITIAL_EPS_id", referencedColumnName = "id")
-    @ManyToOne
-    private DocumentInitialEps dOCUMENTINITIALEPSid;
-    @JoinColumn(name = "REQUERIMENT_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Requeriment rEQUERIMENTid;
-    @JoinColumn(name = "USER_CAREER_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private UserCareer uSERCAREERid;
+    @OneToOne(mappedBy="pROCESSid",cascade=CascadeType.PERSIST)
+    private List<Requeriment> requeriments;
+    
 
     public Process() {
     }
@@ -100,13 +65,8 @@ public class Process implements Serializable {
         this.id = id;
     }
 
-    public Process(Integer id, short state, short approvedCareerCoordinator, short documentsToEPSCareerSupervisor, short documentsToEPSCommission, short preProjectToEPSCommission, short approvedEPSDevelopment) {
+    public Process(Integer id, Boolean approvedEPSDevelopment) {
         this.id = id;
-        this.state = state;
-        this.approvedCareerCoordinator = approvedCareerCoordinator;
-        this.documentsToEPSCareerSupervisor = documentsToEPSCareerSupervisor;
-        this.documentsToEPSCommission = documentsToEPSCommission;
-        this.preProjectToEPSCommission = preProjectToEPSCommission;
         this.approvedEPSDevelopment = approvedEPSDevelopment;
     }
 
@@ -118,19 +78,19 @@ public class Process implements Serializable {
         this.id = id;
     }
 
-    public short getState() {
+    public Boolean getState() {
         return state;
     }
 
-    public void setState(short state) {
+    public void setState(Boolean state) {
         this.state = state;
     }
 
-    public short getApprovedCareerCoordinator() {
+    public Boolean getApprovedCareerCoordinator() {
         return approvedCareerCoordinator;
     }
 
-    public void setApprovedCareerCoordinator(short approvedCareerCoordinator) {
+    public void setApprovedCareerCoordinator(Boolean approvedCareerCoordinator) {
         this.approvedCareerCoordinator = approvedCareerCoordinator;
     }
 
@@ -142,43 +102,43 @@ public class Process implements Serializable {
         this.documentApprovedCareerCoordinator = documentApprovedCareerCoordinator;
     }
 
-    public short getDocumentsToEPSCareerSupervisor() {
+    public Boolean getDocumentsToEPSCareerSupervisor() {
         return documentsToEPSCareerSupervisor;
     }
 
-    public void setDocumentsToEPSCareerSupervisor(short documentsToEPSCareerSupervisor) {
+    public void setDocumentsToEPSCareerSupervisor(Boolean documentsToEPSCareerSupervisor) {
         this.documentsToEPSCareerSupervisor = documentsToEPSCareerSupervisor;
     }
 
-    public short getDocumentsToEPSCommission() {
+    public Boolean getDocumentsToEPSCommission() {
         return documentsToEPSCommission;
     }
 
-    public void setDocumentsToEPSCommission(short documentsToEPSCommission) {
+    public void setDocumentsToEPSCommission(Boolean documentsToEPSCommission) {
         this.documentsToEPSCommission = documentsToEPSCommission;
     }
 
-    public short getPreProjectToEPSCommission() {
+    public Boolean getPreProjectToEPSCommission() {
         return preProjectToEPSCommission;
     }
 
-    public void setPreProjectToEPSCommission(short preProjectToEPSCommission) {
+    public void setPreProjectToEPSCommission(Boolean preProjectToEPSCommission) {
         this.preProjectToEPSCommission = preProjectToEPSCommission;
     }
 
-    public Short getApprovalEPSCommission() {
+    public Boolean getApprovalEPSCommission() {
         return approvalEPSCommission;
     }
 
-    public void setApprovalEPSCommission(Short approvalEPSCommission) {
+    public void setApprovalEPSCommission(Boolean approvalEPSCommission) {
         this.approvalEPSCommission = approvalEPSCommission;
     }
 
-    public short getApprovedEPSDevelopment() {
+    public Boolean getApprovedEPSDevelopment() {
         return approvedEPSDevelopment;
     }
 
-    public void setApprovedEPSDevelopment(short approvedEPSDevelopment) {
+    public void setApprovedEPSDevelopment(Boolean approvedEPSDevelopment) {
         this.approvedEPSDevelopment = approvedEPSDevelopment;
     }
 
@@ -188,62 +148,6 @@ public class Process implements Serializable {
 
     public void setProgress(Integer progress) {
         this.progress = progress;
-    }
-
-    public Collection<Supervision> getSupervisionCollection() {
-        return supervisionCollection;
-    }
-
-    public void setSupervisionCollection(Collection<Supervision> supervisionCollection) {
-        this.supervisionCollection = supervisionCollection;
-    }
-
-    public Collection<DocumentFinalEps> getDocumentFinalEpsCollection() {
-        return documentFinalEpsCollection;
-    }
-
-    public void setDocumentFinalEpsCollection(Collection<DocumentFinalEps> documentFinalEpsCollection) {
-        this.documentFinalEpsCollection = documentFinalEpsCollection;
-    }
-
-    public Appointment getAPPOINTMENTid() {
-        return aPPOINTMENTid;
-    }
-
-    public void setAPPOINTMENTid(Appointment aPPOINTMENTid) {
-        this.aPPOINTMENTid = aPPOINTMENTid;
-    }
-
-    public DeliverEpsCompletionDocument getDELIVEREPSCOMPLETIONDOCUMENTid() {
-        return dELIVEREPSCOMPLETIONDOCUMENTid;
-    }
-
-    public void setDELIVEREPSCOMPLETIONDOCUMENTid(DeliverEpsCompletionDocument dELIVEREPSCOMPLETIONDOCUMENTid) {
-        this.dELIVEREPSCOMPLETIONDOCUMENTid = dELIVEREPSCOMPLETIONDOCUMENTid;
-    }
-
-    public DocumentInitialEps getDOCUMENTINITIALEPSid() {
-        return dOCUMENTINITIALEPSid;
-    }
-
-    public void setDOCUMENTINITIALEPSid(DocumentInitialEps dOCUMENTINITIALEPSid) {
-        this.dOCUMENTINITIALEPSid = dOCUMENTINITIALEPSid;
-    }
-
-    public Requeriment getREQUERIMENTid() {
-        return rEQUERIMENTid;
-    }
-
-    public void setREQUERIMENTid(Requeriment rEQUERIMENTid) {
-        this.rEQUERIMENTid = rEQUERIMENTid;
-    }
-
-    public UserCareer getUSERCAREERid() {
-        return uSERCAREERid;
-    }
-
-    public void setUSERCAREERid(UserCareer uSERCAREERid) {
-        this.uSERCAREERid = uSERCAREERid;
     }
 
     @Override
@@ -268,7 +172,7 @@ public class Process implements Serializable {
 
     @Override
     public String toString() {
-        return "gt.edu.usac.cunoc.ingenieria.Process[ id=" + id + " ]";
+        return "gt.edu.usac.cunoc.ingenieria.eps.process.Process[ id=" + id + " ]";
     }
     
 }

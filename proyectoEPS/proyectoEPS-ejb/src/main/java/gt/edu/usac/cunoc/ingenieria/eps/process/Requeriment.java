@@ -1,13 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package gt.edu.usac.cunoc.ingenieria.eps.process;
 
-import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
+
 import java.io.Serializable;
-import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -17,10 +11,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -68,11 +61,9 @@ public class Requeriment implements Serializable {
     @Lob
     @Column(name = "AEIOsettlement")
     private byte[] aEIOsettlement;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "rEQUERIMENTid")
-    private Collection<Process> processCollection;
-    @JoinColumn(name = "PREPROJECT_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Project pREPROJECTid;
+    @OneToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name="PROCESS_id",referencedColumnName = "id")
+    private Process pROCESSid;
 
     public Requeriment() {
     }
@@ -146,21 +137,31 @@ public class Requeriment implements Serializable {
         this.aEIOsettlement = aEIOsettlement;
     }
 
-    public Collection<Process> getProcessCollection() {
-        return processCollection;
+    public byte[] getePSpreproject() {
+        return ePSpreproject;
     }
 
-    public void setProcessCollection(Collection<Process> processCollection) {
-        this.processCollection = processCollection;
+    public void setePSpreproject(byte[] ePSpreproject) {
+        this.ePSpreproject = ePSpreproject;
     }
 
-    public Project getPREPROJECTid() {
-        return pREPROJECTid;
+    public byte[] getaEIOsettlement() {
+        return aEIOsettlement;
     }
 
-    public void setPREPROJECTid(Project pREPROJECTid) {
-        this.pREPROJECTid = pREPROJECTid;
+    public void setaEIOsettlement(byte[] aEIOsettlement) {
+        this.aEIOsettlement = aEIOsettlement;
     }
+
+    public Process getpROCESSid() {
+        return pROCESSid;
+    }
+
+    public void setpROCESSid(Process pROCESSid) {
+        this.pROCESSid = pROCESSid;
+    }
+    
+    
 
     @Override
     public int hashCode() {
@@ -184,7 +185,7 @@ public class Requeriment implements Serializable {
 
     @Override
     public String toString() {
-        return "gt.edu.usac.cunoc.ingenieria.Requeriment[ id=" + id + " ]";
+        return "gt.edu.usac.cunoc.ingenieria.eps.process.Requeriment[ id=" + id + " ]";
     }
     
 }

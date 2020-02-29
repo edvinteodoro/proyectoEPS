@@ -42,8 +42,12 @@ public class Property implements Serializable {
     @Column(name = "valueInt")
     private Integer valueInt;
     @Column(name = "valueDate")
+<<<<<<< HEAD
     @Temporal(TemporalType.DATE)
     private Date valueDate;
+=======
+    private LocalDate valueDate;
+>>>>>>> master
 
     public Property() {
     }
@@ -81,11 +85,11 @@ public class Property implements Serializable {
         this.valueInt = valueInt;
     }
 
-    public Date getValueDate() {
+    public LocalDate getValueDate() {
         return valueDate;
     }
 
-    public void setValueDate(Date valueDate) {
+    public void setValueDate(LocalDate valueDate) {
         this.valueDate = valueDate;
     }
 

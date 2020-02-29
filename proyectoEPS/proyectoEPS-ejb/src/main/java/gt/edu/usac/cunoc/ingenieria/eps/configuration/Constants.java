@@ -1,0 +1,14 @@
+package gt.edu.usac.cunoc.ingenieria.eps.configuration;
+
+
+public class Constants {
+    
+    public static final String PERSISTENCE_UNIT_NAME = "persistence";
+    public static final String JDBC_RESOURCE = "jdbc_poolEPS";
+    public static final String SECRETARIA= "Secretaria";
+    public static final String COORDINADOR_CARRERA= "Coordinador Carrera";
+    public static final String COORDINADOR_EPS= "Coordinador EPS";
+    public static final String SUPERVISOR_EPS= "Supervisor EPS";
+    public static final String ESTUDIANTE= "Estudiante";
+    
+}

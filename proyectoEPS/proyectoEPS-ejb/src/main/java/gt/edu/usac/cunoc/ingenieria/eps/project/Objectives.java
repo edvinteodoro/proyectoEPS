@@ -7,6 +7,7 @@ package gt.edu.usac.cunoc.ingenieria.eps.project;
 
 import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
@@ -52,8 +53,7 @@ public class Objectives implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "lastModificationDate")
-    @Temporal(TemporalType.DATE)
-    private Date lastModificationDate;
+    private LocalDate lastModificationDate;
     @JoinColumn(name = "PROJECT_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Project pROJECTid;
@@ -67,7 +67,7 @@ public class Objectives implements Serializable {
         this.id = id;
     }
 
-    public Objectives(Integer id, short state, byte[] text, Date lastModificationDate) {
+    public Objectives(Integer id, short state, byte[] text, LocalDate lastModificationDate) {
         this.id = id;
         this.state = state;
         this.text = text;
@@ -98,11 +98,11 @@ public class Objectives implements Serializable {
         this.text = text;
     }
 
-    public Date getLastModificationDate() {
+    public LocalDate getLastModificationDate() {
         return lastModificationDate;
     }
 
-    public void setLastModificationDate(Date lastModificationDate) {
+    public void setLastModificationDate(LocalDate lastModificationDate) {
         this.lastModificationDate = lastModificationDate;
     }
 

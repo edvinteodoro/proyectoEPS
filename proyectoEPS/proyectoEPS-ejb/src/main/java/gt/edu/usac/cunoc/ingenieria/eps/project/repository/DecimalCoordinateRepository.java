@@ -22,16 +22,16 @@ import javax.persistence.criteria.Root;
 public class DecimalCoordinateRepository {
     
     private EntityManager entityManager;
-
-    public DecimalCoordinateRepository() {
-    }
        
     @PersistenceContext(name = PERSISTENCE_UNIT_NAME)
     public void setEntityManager(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
     
-    public List<DecimalCoordinate> getDecimalCoordinateByIdProject(Project project) throws MandatoryException{
+    public DecimalCoordinateRepository() {
+    }
+    
+    public List<DecimalCoordinate> getDecimalCoordinatesByProject(Project project) throws MandatoryException{
         if (project.getId()== null){
             throw new MandatoryException("No existe projecto a buscar Coordenadas");
         } else {
@@ -39,12 +39,10 @@ public class DecimalCoordinateRepository {
             CriteriaQuery<DecimalCoordinate> criteriaQuery = criteriaBuilder.createQuery(DecimalCoordinate.class);
             Root<DecimalCoordinate> decimalCoordinate = criteriaQuery.from(DecimalCoordinate.class);
             ArrayList<Predicate> predicates = new ArrayList<>();
-            predicates.add(criteriaBuilder.like(decimalCoordinate.get("id"), "%" + project.getId() + "%"));
+            predicates.add(criteriaBuilder.equal(decimalCoordinate.get("project"), project));
             criteriaQuery.where(predicates.stream().toArray(Predicate[]::new));
             TypedQuery<DecimalCoordinate> query = entityManager.createQuery(criteriaQuery);
             return query.getResultList();
         }
-        
     }
-    
 }

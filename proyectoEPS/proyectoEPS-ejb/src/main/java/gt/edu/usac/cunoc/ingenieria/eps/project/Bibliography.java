@@ -1,17 +1,17 @@
 
 package gt.edu.usac.cunoc.ingenieria.eps.project;
 
-import gt.edu.usac.cunoc.ingenieria.eps.project.Correction;
-import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Collection;
-import javax.persistence.CascadeType;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -36,10 +36,11 @@ public class Bibliography implements Serializable {
     private String country;
     @Column(name = "editorial")
     private String editorial;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "bIBLIOGRAPHYid")
-    private Collection<Project> projectCollection;
-    @OneToMany(mappedBy = "bIBLIOGRAPHYid")
-    private Collection<Correction> correctionCollection;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Project project;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bibliography", orphanRemoval = false)
+    private List<Correction> corrections = new ArrayList<>();
 
     public Bibliography() {
     }
@@ -114,22 +115,32 @@ public class Bibliography implements Serializable {
         this.editorial = editorial;
     }
 
-    public Collection<Project> getProjectCollection() {
-        return projectCollection;
+    public Project getProject() {
+        return project;
     }
 
-    public void setProjectCollection(Collection<Project> projectCollection) {
-        this.projectCollection = projectCollection;
+    public void setProject(Project project) {
+        this.project = project;
     }
 
-    public Collection<Correction> getCorrectionCollection() {
-        return correctionCollection;
+    public List<Correction> getCorrections() {
+        return corrections;
     }
 
-    public void setCorrectionCollection(Collection<Correction> correctionCollection) {
-        this.correctionCollection = correctionCollection;
+    public void setCorrections(List<Correction> corrections) {
+        this.corrections = corrections;
     }
-
+    
+    public void addCorrection(Correction correction){
+        corrections.add(correction);
+        correction.setBibliography(this);
+    }
+    
+    public void removeCorrection(Correction correction){
+        corrections.remove(correction);
+        correction.setBibliography(null);
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

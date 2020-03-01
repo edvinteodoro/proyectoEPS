@@ -1,16 +1,15 @@
 
 package gt.edu.usac.cunoc.ingenieria.eps.project;
 
-import gt.edu.usac.cunoc.ingenieria.eps.project.Texto;
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.ArrayList;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -25,15 +24,18 @@ public class Title implements Serializable {
     private Integer id;
     @Column(name = "text")
     private Byte[] text;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tITLEid")
-    private Collection<Texto> textoCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tITLEid")
-    private Collection<Title> titleCollection;
-    @JoinColumn(name = "TITLE_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Title tITLEid;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tITLEid")
-    private Collection<Section> sectionCollection;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Section section;
+   
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Title titleParent;
+    
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "titleParent", orphanRemoval = true)
+    private ArrayList<Title> titles = new ArrayList<>();
+    
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "title", orphanRemoval = true)
+    private ArrayList<Texto> texts = new ArrayList<>();
 
     public Title() {
     }
@@ -63,38 +65,58 @@ public class Title implements Serializable {
         this.text = text;
     }
 
-    public Collection<Texto> getTextoCollection() {
-        return textoCollection;
+    public Section getSection() {
+        return section;
     }
 
-    public void setTextoCollection(Collection<Texto> textoCollection) {
-        this.textoCollection = textoCollection;
+    public void setSection(Section section) {
+        this.section = section;
     }
 
-    public Collection<Title> getTitleCollection() {
-        return titleCollection;
+    public Title getTitleParent() {
+        return titleParent;
     }
 
-    public void setTitleCollection(Collection<Title> titleCollection) {
-        this.titleCollection = titleCollection;
+    public void setTitleParent(Title titleParent) {
+        this.titleParent = titleParent;
     }
 
-    public Title getTITLEid() {
-        return tITLEid;
+    public ArrayList<Title> getTitles() {
+        return titles;
     }
 
-    public void setTITLEid(Title tITLEid) {
-        this.tITLEid = tITLEid;
+    public void setTitles(ArrayList<Title> titles) {
+        this.titles = titles;
     }
 
-    public Collection<Section> getSectionCollection() {
-        return sectionCollection;
+    public void addChildTitle(Title title){
+        titles.add(title);
+        title.setTitleParent(this);
+    }
+    
+    public void removeChildTitle(Title title){
+        titles.remove(title);
+        title.setTitleParent(null);
     }
 
-    public void setSectionCollection(Collection<Section> sectionCollection) {
-        this.sectionCollection = sectionCollection;
+    public ArrayList<Texto> getTexts() {
+        return texts;
     }
 
+    public void setTexts(ArrayList<Texto> texts) {
+        this.texts = texts;
+    }
+    
+    public void addText(Texto text){
+        texts.add(text);
+        text.setTitle(this);
+    }
+    
+    public void removeText(Texto text){
+        texts.remove(text);
+        text.setTitle(null);
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

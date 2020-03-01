@@ -4,10 +4,10 @@ package gt.edu.usac.cunoc.ingenieria.eps.project;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -21,10 +21,10 @@ public class Texto implements Serializable {
     private Integer id;
     @Column(name = "text")
     private Byte[] text;
-    @JoinColumn(name = "TITLE_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Title tITLEid;
-
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Title title;
+    
     public Texto() {
     }
 
@@ -53,12 +53,12 @@ public class Texto implements Serializable {
         this.text = text;
     }
 
-    public Title getTITLEid() {
-        return tITLEid;
+    public Title getTitle() {
+        return title;
     }
 
-    public void setTITLEid(Title tITLEid) {
-        this.tITLEid = tITLEid;
+    public void setTitle(Title title) {
+        this.title = title;
     }
 
     @Override

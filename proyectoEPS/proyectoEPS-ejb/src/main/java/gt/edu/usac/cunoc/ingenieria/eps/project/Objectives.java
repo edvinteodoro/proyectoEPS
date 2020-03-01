@@ -1,16 +1,16 @@
 
 package gt.edu.usac.cunoc.ingenieria.eps.project;
 
-import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -18,7 +18,10 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "OBJECTIVES")
 public class Objectives implements Serializable {
-
+    
+    public static final Short SPECIFIC_OBJECTIVE = 0;
+    public static final Short GENERAL_OBJETICVE = 1;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -29,11 +32,11 @@ public class Objectives implements Serializable {
     private Byte[] text;
     @Column(name = "lastModificationDate")
     private LocalDate lastModificationDate;
-    @JoinColumn(name = "PROJECT_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Project pROJECTid;
-    @OneToMany(mappedBy = "oBJECTIVESid")
-    private Collection<Correction> correctionCollection;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Project project;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "objective", orphanRemoval = true)
+    private List<Correction> corrections = new ArrayList<>();
 
     public Objectives() {
     }
@@ -81,22 +84,32 @@ public class Objectives implements Serializable {
         this.lastModificationDate = lastModificationDate;
     }
 
-    public Project getPROJECTid() {
-        return pROJECTid;
+    public Project getProject() {
+        return project;
     }
 
-    public void setPROJECTid(Project pROJECTid) {
-        this.pROJECTid = pROJECTid;
+    public void setProject(Project project) {
+        this.project = project;
     }
 
-    public Collection<Correction> getCorrectionCollection() {
-        return correctionCollection;
+    public List<Correction> getCorrections() {
+        return corrections;
     }
 
-    public void setCorrectionCollection(Collection<Correction> correctionCollection) {
-        this.correctionCollection = correctionCollection;
+    public void setCorrections(List<Correction> corrections) {
+        this.corrections = corrections;
     }
 
+    public void addCorrection(Correction correction){
+        corrections.add(correction);
+        correction.setObjective(this);
+    }
+    
+    public void removeCorrection(Correction correction){
+        corrections.remove(correction);
+        correction.setObjective(null);
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

@@ -1,18 +1,17 @@
 
 package gt.edu.usac.cunoc.ingenieria.eps.project;
 
-import gt.edu.usac.cunoc.ingenieria.eps.process.Requeriment;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -36,18 +35,16 @@ public class Project implements Serializable {
     private Byte[] annexed;
     @Column(name = "limitReceptionDate")
     private LocalDate limitReceptionDate;
-    @JoinColumn(name = "BIBLIOGRAPHY_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Bibliography bIBLIOGRAPHYid;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pROJECTid")
-    private Collection<DecimalCoordinate> decimalCoordinateCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pROJECTid")
-    private Collection<Objectives> objectivesCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pREPROJECTid")
-    private Collection<Requeriment> requerimentCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pROJECTid")
-    private Collection<Section> sectionCollection;
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "project", orphanRemoval = true)
+    private List<Bibliography> bibliographies = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "project", orphanRemoval = true)
+    private List<DecimalCoordinate> decimalCoordinates = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "project", orphanRemoval = true)
+    private List<Objectives> objectives = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "project", orphanRemoval = true)
+    private List<Section> sections = new ArrayList<>();
+    
     public Project() {
     }
 
@@ -121,62 +118,78 @@ public class Project implements Serializable {
         this.limitReceptionDate = limitReceptionDate;
     }
 
-    public Bibliography getBIBLIOGRAPHYid() {
-        return bIBLIOGRAPHYid;
+    public List<Bibliography> getBibliographies() {
+        return bibliographies;
     }
 
-    public void setBIBLIOGRAPHYid(Bibliography bIBLIOGRAPHYid) {
-        this.bIBLIOGRAPHYid = bIBLIOGRAPHYid;
+    public void setBibliographies(List<Bibliography> bibliographies) {
+        this.bibliographies = bibliographies;
     }
 
-    public Collection<DecimalCoordinate> getDecimalCoordinateCollection() {
-        return decimalCoordinateCollection;
-    }
-
-    public void setDecimalCoordinateCollection(Collection<DecimalCoordinate> decimalCoordinateCollection) {
-        this.decimalCoordinateCollection = decimalCoordinateCollection;
-    }
-
-    public Collection<Objectives> getObjectivesCollection() {
-        return objectivesCollection;
-    }
-
-    public void setObjectivesCollection(Collection<Objectives> objectivesCollection) {
-        this.objectivesCollection = objectivesCollection;
-    }
-
-    public Collection<Requeriment> getRequerimentCollection() {
-        return requerimentCollection;
-    }
-
-    public void setRequerimentCollection(Collection<Requeriment> requerimentCollection) {
-        this.requerimentCollection = requerimentCollection;
-    }
-
-    public Collection<Section> getSectionCollection() {
-        return sectionCollection;
-    }
-
-    public void setSectionCollection(Collection<Section> sectionCollection) {
-        this.sectionCollection = sectionCollection;
+    public void addBibliography(Bibliography bibliography){
+        bibliographies.add(bibliography);
+        bibliography.setProject(this);
     }
     
-    public Byte[] convertByteToObject(byte[] byteToConvert){
-        Byte[] converted = new Byte[byteToConvert.length];
-        for (int i = 0; i < byteToConvert.length; i++) {
-            converted[i] = Byte.valueOf(byteToConvert[i]);
-        }
-        return converted;
-    }
-    
-    public byte[] convertByteToPrimitive(Byte[] byteToConvert){
-        byte[] converted = new byte[byteToConvert.length];
-        for (int i = 0; i < byteToConvert.length; i++) {
-            converted[i] = byteToConvert[i];
-        }
-        return converted;
+    public void removeBibliography(Bibliography bibliography){
+        bibliographies.remove(bibliography);
+        bibliography.setProject(null);
     }
 
+    public List<DecimalCoordinate> getDecimalCoordinates() {
+        return decimalCoordinates;
+    }
+
+    public void setDecimalCoordinates(List<DecimalCoordinate> decimalCoordinates) {
+        this.decimalCoordinates = decimalCoordinates;
+    }
+    
+    public void addDecimalCoordinates(DecimalCoordinate decimalCoordinate){
+        decimalCoordinates.add(decimalCoordinate);
+        decimalCoordinate.setProject(this);
+    }
+    
+    public void removeDecimalCoordinates(DecimalCoordinate decimalCoordinate){
+        decimalCoordinates.remove(decimalCoordinate);
+        decimalCoordinate.setProject(null);
+    }
+
+    public List<Objectives> getObjectives() {
+        return objectives;
+    }
+
+    public void setObjectives(List<Objectives> objectives) {
+        this.objectives = objectives;
+    }
+    
+    public void addObjective(Objectives objective){
+        objectives.add(objective);
+        objective.setProject(this);
+    }
+    
+    public void removeObjective(Objectives objective){
+        objectives.remove(objective);
+        objective.setProject(null);
+    }
+
+    public List<Section> getSections() {
+        return sections;
+    }
+
+    public void setSections(List<Section> sections) {
+        this.sections = sections;
+    }
+    
+    public void addSection(Section section){
+        sections.add(section);
+        section.setProject(this);
+    }
+    
+    public void removeSection(Section section){
+        sections.remove(section);
+        section.setProject(null);
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

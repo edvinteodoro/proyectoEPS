@@ -4,10 +4,10 @@ package gt.edu.usac.cunoc.ingenieria.eps.project;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -23,9 +23,9 @@ public class DecimalCoordinate implements Serializable {
     private Double latitude;
     @Column(name = "longitude")
     private Double longitude;
-    @JoinColumn(name = "PROJECT_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Project pROJECTid;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Project project;
 
     public DecimalCoordinate() {
     }
@@ -64,12 +64,12 @@ public class DecimalCoordinate implements Serializable {
         this.longitude = longitude;
     }
 
-    public Project getPROJECTid() {
-        return pROJECTid;
+    public Project getProject() {
+        return project;
     }
 
-    public void setPROJECTid(Project pROJECTid) {
-        this.pROJECTid = pROJECTid;
+    public void setProject(Project project) {
+        this.project = project;
     }
 
     @Override

@@ -28,7 +28,7 @@ public class PropertyRepository {
     public Integer CHARACTER_LIMIT_JUSTIFICATION;
     public LocalDate GENERAL_LIMIT_RECEPTION_DATE;
     
-     private EntityManager entityManager;
+    private EntityManager entityManager;
     
     private final Query queryMaximunSupervisorWorload = entityManager.createQuery("SELECT valueInt FROM PROPERTY WHERE name = MAXIMUM_SUPERVISOR_WORKLOAD");
     private final Query queryValidationPercentageExtension =  entityManager.createQuery("SELECT valueInt FROM PROPERTY WHERE name = VALIDATION_PERCENTAGE_EXTENSION");

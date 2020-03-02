@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="../templates/template-one.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:define name="title">
+        Revision Requisitos
+    </ui:define>
+
+    <ui:define name="content">
+        <h:form id="frmLogin">            
+            <p:focus id="focuss" context="frmLogin" />
+            <p:messages  globalOnly="true"/>
+            <fieldset class="center-block">
+                <div class="row">
+                    <div class="form-group col-sm-4">
+                        <p:outputLabel value="Carta de Solicitud EPS Escritas:" /><br></br>
+                        <p:commandButton value="Descargar Documento" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="pi pi-arrow-down">
+                            <p:fileDownload value="#{requerimentReviewView.writtenRequest}" />
+                        </p:commandButton>    
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-4">
+                        <p:outputLabel value="Constancia de Inscripcion:" /><br></br>
+                        <p:commandButton value="Descargar Documento" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="pi pi-arrow-down">
+                            <p:fileDownload value="#{requerimentReviewView.inscriptionConstancy}" />
+                        </p:commandButton>    
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-4">
+                        <p:outputLabel value="Constancia de Cierre de Pensum:" /><br></br>
+                        <p:commandButton value="Descargar Documento" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="pi pi-arrow-down">
+                            <p:fileDownload value="#{requerimentReviewView.pensumeClosure}" />
+                        </p:commandButton>    
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-4">
+                        <p:outputLabel value="Constancia de Propedeutico:" /><br></br>
+                        <p:commandButton value="Descargar Documento" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="pi pi-arrow-down">
+                            <p:fileDownload value="#{requerimentReviewView.propedeuticConstancy}" />
+                        </p:commandButton>    
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-4">
+                        <p:outputLabel value="Constancia de Pre Proyecto:" /><br></br>
+                        <p:commandButton value="Descargar Documento" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="pi pi-arrow-down">
+                            <p:fileDownload value="#{requerimentReviewView.epsPreProject}" />
+                        </p:commandButton>    
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-4">
+                        <p:outputLabel value="Documento Finiquito de AEIO:" /><br></br>
+                        <p:commandButton value="Descargar Documento" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="pi pi-arrow-down">
+                            <p:fileDownload value="#{requerimentReviewView.aeioSettlement}" />
+                        </p:commandButton>    
+                    </div>
+                </div>
+            </fieldset>
+        </h:form>
+    </ui:define>
+
+</ui:composition>
+
+

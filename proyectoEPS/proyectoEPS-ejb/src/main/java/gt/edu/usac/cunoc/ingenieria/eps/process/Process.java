@@ -149,6 +149,30 @@ public class Process implements Serializable {
     public void setProgress(Integer progress) {
         this.progress = progress;
     }
+    
+    public String getApprovedCareerCoordinatorMessage(){
+        if(approvedCareerCoordinator==false){
+            return "No Aprovado";
+        }else{
+            return "Aprovado";
+        }
+    }
+    public String getStateMessage(){
+        if(state==false){
+            return "Desactivado";
+        }else{
+            return "Activo";
+        }
+    }
+    
+    public String getApprovedEPSMessage(){
+        if(approvedEPSDevelopment==false){
+            return "No";
+        }else{
+            return "Si";
+        }
+    }
+    
 
     @Override
     public int hashCode() {

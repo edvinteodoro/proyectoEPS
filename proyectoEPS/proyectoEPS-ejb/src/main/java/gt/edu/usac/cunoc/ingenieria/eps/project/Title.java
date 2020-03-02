@@ -3,6 +3,7 @@ package gt.edu.usac.cunoc.ingenieria.eps.project;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -32,10 +33,10 @@ public class Title implements Serializable {
     private Title titleParent;
     
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "titleParent", orphanRemoval = true)
-    private ArrayList<Title> titles = new ArrayList<>();
+    private List<Title> titles = new ArrayList<>();
     
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "title", orphanRemoval = true)
-    private ArrayList<Texto> texts = new ArrayList<>();
+    private List<Texto> texts = new ArrayList<>();
 
     public Title() {
     }
@@ -81,7 +82,7 @@ public class Title implements Serializable {
         this.titleParent = titleParent;
     }
 
-    public ArrayList<Title> getTitles() {
+    public List<Title> getTitles() {
         return titles;
     }
 
@@ -99,7 +100,7 @@ public class Title implements Serializable {
         title.setTitleParent(null);
     }
 
-    public ArrayList<Texto> getTexts() {
+    public List<Texto> getTexts() {
         return texts;
     }
 

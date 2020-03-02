@@ -54,8 +54,6 @@ public class DeliverEpsCompletionDocument implements Serializable {
     @Lob
     @Column(name = "adviserLetter")
     private byte[] adviserLetter;
-    @OneToMany(mappedBy = "dELIVEREPSCOMPLETIONDOCUMENTid")
-    private Collection<Process> processCollection;
 
     public DeliverEpsCompletionDocument() {
     }
@@ -110,14 +108,6 @@ public class DeliverEpsCompletionDocument implements Serializable {
 
     public void setAdviserLetter(byte[] adviserLetter) {
         this.adviserLetter = adviserLetter;
-    }
-
-    public Collection<Process> getProcessCollection() {
-        return processCollection;
-    }
-
-    public void setProcessCollection(Collection<Process> processCollection) {
-        this.processCollection = processCollection;
     }
 
     @Override

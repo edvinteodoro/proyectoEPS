@@ -6,6 +6,7 @@
 package gt.edu.usac.cunoc.ingenieria.eps.process;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
@@ -48,8 +49,7 @@ public class Journal implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "dateTime")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date dateTime;
+    private LocalDate dateTime;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 200)
@@ -71,7 +71,7 @@ public class Journal implements Serializable {
         this.id = id;
     }
 
-    public Journal(Integer id, String activity, Date dateTime, String description) {
+    public Journal(Integer id, String activity, LocalDate dateTime, String description) {
         this.id = id;
         this.activity = activity;
         this.dateTime = dateTime;
@@ -94,11 +94,11 @@ public class Journal implements Serializable {
         this.activity = activity;
     }
 
-    public Date getDateTime() {
+    public LocalDate getDateTime() {
         return dateTime;
     }
 
-    public void setDateTime(Date dateTime) {
+    public void setDateTime(LocalDate dateTime) {
         this.dateTime = dateTime;
     }
 

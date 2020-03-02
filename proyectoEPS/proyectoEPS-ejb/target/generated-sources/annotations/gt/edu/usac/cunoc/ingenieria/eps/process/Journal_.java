@@ -2,17 +2,17 @@ package gt.edu.usac.cunoc.ingenieria.eps.process;
 
 import gt.edu.usac.cunoc.ingenieria.eps.process.DocumentInitialEps;
 import gt.edu.usac.cunoc.ingenieria.eps.process.ExtraFile;
-import java.util.Date;
+import java.time.LocalDate;
 import javax.annotation.Generated;
 import javax.persistence.metamodel.CollectionAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
-@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2020-02-29T01:20:48")
+@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2020-03-01T20:34:43")
 @StaticMetamodel(Journal.class)
 public class Journal_ { 
 
-    public static volatile SingularAttribute<Journal, Date> dateTime;
+    public static volatile SingularAttribute<Journal, LocalDate> dateTime;
     public static volatile SingularAttribute<Journal, String> annotation;
     public static volatile SingularAttribute<Journal, String> activity;
     public static volatile SingularAttribute<Journal, DocumentInitialEps> dOCUMENTINITIALEPSid;

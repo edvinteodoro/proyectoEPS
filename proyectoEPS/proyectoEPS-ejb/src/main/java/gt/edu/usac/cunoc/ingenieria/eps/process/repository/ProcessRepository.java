@@ -1,8 +1,7 @@
 package gt.edu.usac.cunoc.ingenieria.eps.process.repository;
 
-import static gt.edu.usac.cunoc.ingenieria.eps.config.Constans.PERSISTENCE_UNIT_NAME;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.PERSISTENCE_UNIT_NAME;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
-import gt.edu.usac.cunoc.ingenieria.eps.process.Requeriment;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.LocalBean;

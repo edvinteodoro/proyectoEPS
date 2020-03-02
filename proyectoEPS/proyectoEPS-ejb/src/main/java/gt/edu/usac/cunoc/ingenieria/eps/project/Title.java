@@ -1,57 +1,41 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package gt.edu.usac.cunoc.ingenieria.eps.project;
 
-import gt.edu.usac.cunoc.ingenieria.eps.project.Texto;
 import java.io.Serializable;
-import java.util.Collection;
-import javax.persistence.Basic;
+import java.util.ArrayList;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
-/**
- *
- * @author teodoro
- */
 @Entity
 @Table(name = "TITLE")
-@NamedQueries({
-    @NamedQuery(name = "Title.findAll", query = "SELECT t FROM Title t")})
 public class Title implements Serializable {
 
-    private static final long serialVersionUID = 1L;
     @Id
-    @Basic(optional = false)
-    @NotNull
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
-    @Basic(optional = false)
-    @NotNull
-    @Lob
     @Column(name = "text")
-    private byte[] text;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tITLEid")
-    private Collection<Texto> textoCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tITLEid")
-    private Collection<Title> titleCollection;
-    @JoinColumn(name = "TITLE_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Title tITLEid;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tITLEid")
-    private Collection<Section> sectionCollection;
+    private Byte[] text;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Section section;
+   
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Title titleParent;
+    
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "titleParent", orphanRemoval = true)
+    private ArrayList<Title> titles = new ArrayList<>();
+    
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "title", orphanRemoval = true)
+    private ArrayList<Texto> texts = new ArrayList<>();
 
     public Title() {
     }
@@ -60,7 +44,7 @@ public class Title implements Serializable {
         this.id = id;
     }
 
-    public Title(Integer id, byte[] text) {
+    public Title(Integer id, Byte[] text) {
         this.id = id;
         this.text = text;
     }
@@ -73,46 +57,66 @@ public class Title implements Serializable {
         this.id = id;
     }
 
-    public byte[] getText() {
+    public Byte[] getText() {
         return text;
     }
 
-    public void setText(byte[] text) {
+    public void setText(Byte[] text) {
         this.text = text;
     }
 
-    public Collection<Texto> getTextoCollection() {
-        return textoCollection;
+    public Section getSection() {
+        return section;
     }
 
-    public void setTextoCollection(Collection<Texto> textoCollection) {
-        this.textoCollection = textoCollection;
+    public void setSection(Section section) {
+        this.section = section;
     }
 
-    public Collection<Title> getTitleCollection() {
-        return titleCollection;
+    public Title getTitleParent() {
+        return titleParent;
     }
 
-    public void setTitleCollection(Collection<Title> titleCollection) {
-        this.titleCollection = titleCollection;
+    public void setTitleParent(Title titleParent) {
+        this.titleParent = titleParent;
     }
 
-    public Title getTITLEid() {
-        return tITLEid;
+    public ArrayList<Title> getTitles() {
+        return titles;
     }
 
-    public void setTITLEid(Title tITLEid) {
-        this.tITLEid = tITLEid;
+    public void setTitles(ArrayList<Title> titles) {
+        this.titles = titles;
     }
 
-    public Collection<Section> getSectionCollection() {
-        return sectionCollection;
+    public void addChildTitle(Title title){
+        titles.add(title);
+        title.setTitleParent(this);
+    }
+    
+    public void removeChildTitle(Title title){
+        titles.remove(title);
+        title.setTitleParent(null);
     }
 
-    public void setSectionCollection(Collection<Section> sectionCollection) {
-        this.sectionCollection = sectionCollection;
+    public ArrayList<Texto> getTexts() {
+        return texts;
     }
 
+    public void setTexts(ArrayList<Texto> texts) {
+        this.texts = texts;
+    }
+    
+    public void addText(Texto text){
+        texts.add(text);
+        text.setTitle(this);
+    }
+    
+    public void removeText(Texto text){
+        texts.remove(text);
+        text.setTitle(null);
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;
@@ -135,7 +139,7 @@ public class Title implements Serializable {
 
     @Override
     public String toString() {
-        return "gt.edu.usac.cunoc.ingenieria.Title[ id=" + id + " ]";
+        return "gt.edu.usac.cunoc.ingenieria.eps.project.Title[ id=" + id + " ]";
     }
     
 }

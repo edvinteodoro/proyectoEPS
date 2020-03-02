@@ -1,6 +1,6 @@
 package gt.edu.usac.cunoc.ingenieria.eps.process.service;
 
-import static gt.edu.usac.cunoc.ingenieria.eps.config.Constans.PERSISTENCE_UNIT_NAME;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.PERSISTENCE_UNIT_NAME;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Requeriment;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;

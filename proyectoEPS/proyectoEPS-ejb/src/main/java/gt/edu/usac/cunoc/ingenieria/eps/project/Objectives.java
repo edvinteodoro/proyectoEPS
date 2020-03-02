@@ -1,64 +1,42 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package gt.edu.usac.cunoc.ingenieria.eps.project;
 
-import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.Date;
-import javax.persistence.Basic;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
 
-/**
- *
- * @author teodoro
- */
 @Entity
 @Table(name = "OBJECTIVES")
-@NamedQueries({
-    @NamedQuery(name = "Objectives.findAll", query = "SELECT o FROM Objectives o")})
 public class Objectives implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+    
+    public static final Short SPECIFIC_OBJECTIVE = 0;
+    public static final Short GENERAL_OBJETICVE = 1;
+    
     @Id
-    @Basic(optional = false)
-    @NotNull
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "state")
-    private short state;
-    @Basic(optional = false)
-    @NotNull
-    @Lob
+    private Short state;
     @Column(name = "text")
-    private byte[] text;
-    @Basic(optional = false)
-    @NotNull
+    private Byte[] text;
     @Column(name = "lastModificationDate")
     private LocalDate lastModificationDate;
-    @JoinColumn(name = "PROJECT_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Project pROJECTid;
-    @OneToMany(mappedBy = "oBJECTIVESid")
-    private Collection<Correction> correctionCollection;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Project project;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "objective", orphanRemoval = true)
+    private List<Correction> corrections = new ArrayList<>();
 
     public Objectives() {
     }
@@ -67,7 +45,7 @@ public class Objectives implements Serializable {
         this.id = id;
     }
 
-    public Objectives(Integer id, short state, byte[] text, LocalDate lastModificationDate) {
+    public Objectives(Integer id, Short state, Byte[] text, LocalDate lastModificationDate) {
         this.id = id;
         this.state = state;
         this.text = text;
@@ -82,19 +60,19 @@ public class Objectives implements Serializable {
         this.id = id;
     }
 
-    public short getState() {
+    public Short getState() {
         return state;
     }
 
-    public void setState(short state) {
+    public void setState(Short state) {
         this.state = state;
     }
 
-    public byte[] getText() {
+    public Byte[] getText() {
         return text;
     }
 
-    public void setText(byte[] text) {
+    public void setText(Byte[] text) {
         this.text = text;
     }
 
@@ -106,22 +84,32 @@ public class Objectives implements Serializable {
         this.lastModificationDate = lastModificationDate;
     }
 
-    public Project getPROJECTid() {
-        return pROJECTid;
+    public Project getProject() {
+        return project;
     }
 
-    public void setPROJECTid(Project pROJECTid) {
-        this.pROJECTid = pROJECTid;
+    public void setProject(Project project) {
+        this.project = project;
     }
 
-    public Collection<Correction> getCorrectionCollection() {
-        return correctionCollection;
+    public List<Correction> getCorrections() {
+        return corrections;
     }
 
-    public void setCorrectionCollection(Collection<Correction> correctionCollection) {
-        this.correctionCollection = correctionCollection;
+    public void setCorrections(List<Correction> corrections) {
+        this.corrections = corrections;
     }
 
+    public void addCorrection(Correction correction){
+        corrections.add(correction);
+        correction.setObjective(this);
+    }
+    
+    public void removeCorrection(Correction correction){
+        corrections.remove(correction);
+        correction.setObjective(null);
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;
@@ -144,7 +132,7 @@ public class Objectives implements Serializable {
 
     @Override
     public String toString() {
-        return "gt.edu.usac.cunoc.ingenieria.Objectives[ id=" + id + " ]";
+        return "gt.edu.usac.cunoc.ingenieria.eps.project.Objectives[ id=" + id + " ]";
     }
     
 }

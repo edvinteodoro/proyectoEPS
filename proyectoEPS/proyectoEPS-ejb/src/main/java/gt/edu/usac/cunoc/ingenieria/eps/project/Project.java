@@ -1,80 +1,50 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package gt.edu.usac.cunoc.ingenieria.eps.project;
 
-import gt.edu.usac.cunoc.ingenieria.eps.process.Requeriment;
-import gt.edu.usac.cunoc.ingenieria.eps.project.Section;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.Date;
-import javax.persistence.Basic;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
 
-/**
- *
- * @author teodoro
- */
 @Entity
 @Table(name = "PROJECT")
-@NamedQueries({
-    @NamedQuery(name = "Project.findAll", query = "SELECT p FROM Project p")})
 public class Project implements Serializable {
 
-    private static final long serialVersionUID = 1L;
     @Id
-    @Basic(optional = false)
-    @NotNull
+    @GeneratedValue( strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
-    @Basic(optional = false)
-    @NotNull
-    @Lob
     @Column(name = "title")
-    private byte[] title;
-    @Basic(optional = false)
-    @NotNull
+    private String title; 
     @Column(name = "state")
-    private short state;
-    @Basic(optional = false)
-    @NotNull
-    @Lob
+    private Short state;
     @Column(name = "schedule")
-    private byte[] schedule;
-    @Basic(optional = false)
-    @NotNull
-    @Lob
+    private Byte[] schedule;
     @Column(name = "investmentPlan")
-    private byte[] investmentPlan;
-    @Basic(optional = false)
-    @NotNull
-    @Lob
+    private Byte[] investmentPlan;
     @Column(name = "annexed")
-    private byte[] annexed;
-    @Basic(optional = false)
-    @NotNull
+    private Byte[] annexed;
     @Column(name = "limitReceptionDate")
     private LocalDate limitReceptionDate;
-    @JoinColumn(name = "BIBLIOGRAPHY_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Bibliography bIBLIOGRAPHYid;
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "project", orphanRemoval = true)
+    private List<Bibliography> bibliographies = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "project", orphanRemoval = true)
+    private List<DecimalCoordinate> decimalCoordinates = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "project", orphanRemoval = true)
+    private List<Objectives> objectives = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "project", orphanRemoval = true)
+    private List<Section> sections = new ArrayList<>();
+    
     public Project() {
     }
 
@@ -82,7 +52,7 @@ public class Project implements Serializable {
         this.id = id;
     }
 
-    public Project(Integer id, byte[] title, short state, byte[] schedule, byte[] investmentPlan, byte[] annexed, LocalDate limitReceptionDate) {
+    public Project(Integer id, String title, Short state, Byte[] schedule, Byte[] investmentPlan, Byte[] annexed, LocalDate limitReceptionDate) {
         this.id = id;
         this.title = title;
         this.state = state;
@@ -100,11 +70,11 @@ public class Project implements Serializable {
         this.id = id;
     }
 
-    public byte[] getTitle() {
+    public String getTitle() {
         return title;
     }
 
-    public void setTitle(byte[] title) {
+    public void setTitle(String title) {
         this.title = title;
     }
 
@@ -112,31 +82,31 @@ public class Project implements Serializable {
         return state;
     }
 
-    public void setState(short state) {
+    public void setState(Short state) {
         this.state = state;
     }
 
-    public byte[] getSchedule() {
+    public Byte[] getSchedule() {
         return schedule;
     }
 
-    public void setSchedule(byte[] schedule) {
+    public void setSchedule(Byte[] schedule) {
         this.schedule = schedule;
     }
 
-    public byte[] getInvestmentPlan() {
+    public Byte[] getInvestmentPlan() {
         return investmentPlan;
     }
 
-    public void setInvestmentPlan(byte[] investmentPlan) {
+    public void setInvestmentPlan(Byte[] investmentPlan) {
         this.investmentPlan = investmentPlan;
     }
 
-    public byte[] getAnnexed() {
+    public Byte[] getAnnexed() {
         return annexed;
     }
 
-    public void setAnnexed(byte[] annexed) {
+    public void setAnnexed(Byte[] annexed) {
         this.annexed = annexed;
     }
 
@@ -148,14 +118,78 @@ public class Project implements Serializable {
         this.limitReceptionDate = limitReceptionDate;
     }
 
-    public Bibliography getBIBLIOGRAPHYid() {
-        return bIBLIOGRAPHYid;
+    public List<Bibliography> getBibliographies() {
+        return bibliographies;
     }
 
-    public void setBIBLIOGRAPHYid(Bibliography bIBLIOGRAPHYid) {
-        this.bIBLIOGRAPHYid = bIBLIOGRAPHYid;
+    public void setBibliographies(List<Bibliography> bibliographies) {
+        this.bibliographies = bibliographies;
     }
 
+    public void addBibliography(Bibliography bibliography){
+        bibliographies.add(bibliography);
+        bibliography.setProject(this);
+    }
+    
+    public void removeBibliography(Bibliography bibliography){
+        bibliographies.remove(bibliography);
+        bibliography.setProject(null);
+    }
+
+    public List<DecimalCoordinate> getDecimalCoordinates() {
+        return decimalCoordinates;
+    }
+
+    public void setDecimalCoordinates(List<DecimalCoordinate> decimalCoordinates) {
+        this.decimalCoordinates = decimalCoordinates;
+    }
+    
+    public void addDecimalCoordinates(DecimalCoordinate decimalCoordinate){
+        decimalCoordinates.add(decimalCoordinate);
+        decimalCoordinate.setProject(this);
+    }
+    
+    public void removeDecimalCoordinates(DecimalCoordinate decimalCoordinate){
+        decimalCoordinates.remove(decimalCoordinate);
+        decimalCoordinate.setProject(null);
+    }
+
+    public List<Objectives> getObjectives() {
+        return objectives;
+    }
+
+    public void setObjectives(List<Objectives> objectives) {
+        this.objectives = objectives;
+    }
+    
+    public void addObjective(Objectives objective){
+        objectives.add(objective);
+        objective.setProject(this);
+    }
+    
+    public void removeObjective(Objectives objective){
+        objectives.remove(objective);
+        objective.setProject(null);
+    }
+
+    public List<Section> getSections() {
+        return sections;
+    }
+
+    public void setSections(List<Section> sections) {
+        this.sections = sections;
+    }
+    
+    public void addSection(Section section){
+        sections.add(section);
+        section.setProject(this);
+    }
+    
+    public void removeSection(Section section){
+        sections.remove(section);
+        section.setProject(null);
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;
@@ -178,7 +212,7 @@ public class Project implements Serializable {
 
     @Override
     public String toString() {
-        return "gt.edu.usac.cunoc.ingenieria.Project[ id=" + id + " ]";
+        return "gt.edu.usac.cunoc.ingenieria.eps.project.Project[ id=" + id + " ]";
     }
     
 }

@@ -15,18 +15,18 @@ import javax.persistence.Query;
 @Startup
 public class PropertyRepository {
     
-    public Integer MAXIMUM_SUPERVISOR_WORKLOAD;
-    public Integer VALIDATION_PERCENTAGE_EXTENSION;
-    public Integer REVIEW_TIME_DAYS;
-    public Integer TIME_OF_PROCESS_WITHOUT_MOVEMENT;
-    public LocalDate DEADLINE_TO_SUBMIT_DOCUMENT;
-    public Integer MINIMUN_EXECUTION_MONTHS;
-    public Integer MAXIMUN_EXECUTION_MONTHS;
-    public Integer CHARACTER_LIMIT_TITLE;
-    public Integer LIMIT_GENERAL_OBJECTIVE;
-    public Integer LIMIT_SPECIFIC_OBJECTIVE;
-    public Integer CHARACTER_LIMIT_JUSTIFICATION;
-    public LocalDate GENERAL_LIMIT_RECEPTION_DATE;
+    public static Integer MAXIMUM_SUPERVISOR_WORKLOAD;
+    public static Integer VALIDATION_PERCENTAGE_EXTENSION;
+    public static Integer REVIEW_TIME_DAYS;
+    public static Integer TIME_OF_PROCESS_WITHOUT_MOVEMENT;
+    public static LocalDate DEADLINE_TO_SUBMIT_DOCUMENT;
+    public static Integer MINIMUN_EXECUTION_MONTHS;
+    public static Integer MAXIMUN_EXECUTION_MONTHS;
+    public static Integer CHARACTER_LIMIT_TITLE;
+    public static Integer LIMIT_GENERAL_OBJECTIVE;
+    public static Integer LIMIT_SPECIFIC_OBJECTIVE;
+    public static Integer CHARACTER_LIMIT_JUSTIFICATION;
+    public static LocalDate GENERAL_LIMIT_RECEPTION_DATE;
     
     private EntityManager entityManager;
     

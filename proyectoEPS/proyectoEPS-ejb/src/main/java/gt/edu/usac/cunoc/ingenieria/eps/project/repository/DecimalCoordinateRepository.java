@@ -35,14 +35,8 @@ public class DecimalCoordinateRepository {
         if (project.getId()== null){
             throw new MandatoryException("No existe projecto a buscar Coordenadas");
         } else {
-            CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-            CriteriaQuery<DecimalCoordinate> criteriaQuery = criteriaBuilder.createQuery(DecimalCoordinate.class);
-            Root<DecimalCoordinate> decimalCoordinate = criteriaQuery.from(DecimalCoordinate.class);
-            ArrayList<Predicate> predicates = new ArrayList<>();
-            predicates.add(criteriaBuilder.equal(decimalCoordinate.get("project"), project));
-            criteriaQuery.where(predicates.stream().toArray(Predicate[]::new));
-            TypedQuery<DecimalCoordinate> query = entityManager.createQuery(criteriaQuery);
-            return query.getResultList();
+           return entityManager.createQuery("SELECT d FROM DecimalCoordinate d WHERE d.project.id = :idProject", DecimalCoordinate.class)
+                    .setParameter("idProject", project.getId()).getResultList();
         }
     }
 }

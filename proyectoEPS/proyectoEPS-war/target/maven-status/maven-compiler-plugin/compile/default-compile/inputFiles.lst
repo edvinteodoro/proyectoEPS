@@ -1,2 +1,6 @@
+/home/teodoro/Documentos/proyectoEPS/proyectoEPS/proyectoEPS-war/src/main/java/gt/edu/usac/cunoc/ingenieria/eps/process/view/RequerimentReviewView.java
 /home/teodoro/Documentos/proyectoEPS/proyectoEPS/proyectoEPS-war/src/main/java/gt/edu/usac/cunoc/ingenieria/eps/process/view/CreateProcessView.java
 /home/teodoro/Documentos/proyectoEPS/proyectoEPS/proyectoEPS-war/src/main/java/gt/edu/usac/cunoc/ingenieria/eps/process/view/ProcessesView.java
+/home/teodoro/Documentos/proyectoEPS/proyectoEPS/proyectoEPS-war/src/main/java/gt/edu/usac/cunoc/ingenieria/eps/config/SecurityConfig.java
+/home/teodoro/Documentos/proyectoEPS/proyectoEPS/proyectoEPS-war/src/main/java/gt/edu/usac/cunoc/ingenieria/eps/config/PdfPreviewServlet.java
+/home/teodoro/Documentos/proyectoEPS/proyectoEPS/proyectoEPS-war/src/main/java/gt/edu/usac/cunoc/ingenieria/eps/utils/MessageUtils.java

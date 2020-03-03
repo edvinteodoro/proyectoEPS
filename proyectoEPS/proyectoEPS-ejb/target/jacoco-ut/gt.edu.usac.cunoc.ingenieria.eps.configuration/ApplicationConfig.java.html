@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ApplicationConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">proyectoEPS-ejb</a> &gt; <a href="index.source.html" class="el_package">gt.edu.usac.cunoc.ingenieria.eps.configuration</a> &gt; <span class="el_source">ApplicationConfig.java</span></div><h1>ApplicationConfig.java</h1><pre class="source lang-java linenums">package gt.edu.usac.cunoc.ingenieria.eps.configuration;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Named;
+import javax.security.enterprise.identitystore.DatabaseIdentityStoreDefinition;
+import javax.security.enterprise.identitystore.Pbkdf2PasswordHash;
+
+@DatabaseIdentityStoreDefinition(
+        dataSourceLookup = SecurityConstants.DATASOURCE_LOOKUP,
+        callerQuery = SecurityConstants.CALLER_QUERY,
+        groupsQuery = SecurityConstants.GROUPS_QUERY,
+        hashAlgorithm = Pbkdf2PasswordHash.class,
+        hashAlgorithmParameters = {
+            &quot;${applicationConfig.dyna}&quot;
+        },
+        priority = 10
+)
+@ApplicationScoped
+@Named
+<span class="nc" id="L20">public class ApplicationConfig {</span>
+
+    public String[] getDyna() {
+<span class="nc" id="L23">        return new String[]{</span>
+            SecurityConstants.PBKDF_ITERATIONS,
+            SecurityConstants.PBKDF_ALGORITHM,
+            SecurityConstants.PBKDF_SALT_SIZE
+        };
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

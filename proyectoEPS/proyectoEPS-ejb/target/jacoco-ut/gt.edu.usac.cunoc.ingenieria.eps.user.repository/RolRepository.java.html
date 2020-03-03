@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RolRepository.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">proyectoEPS-ejb</a> &gt; <a href="index.source.html" class="el_package">gt.edu.usac.cunoc.ingenieria.eps.user.repository</a> &gt; <span class="el_source">RolRepository.java</span></div><h1>RolRepository.java</h1><pre class="source lang-java linenums">package gt.edu.usac.cunoc.ingenieria.eps.user.repository;
+
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.PERSISTENCE_UNIT_NAME;
+import gt.edu.usac.cunoc.ingenieria.eps.user.Rol;
+import java.util.ArrayList;
+import java.util.List;
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
+@Stateless
+@LocalBean
+<span class="fc" id="L19">public class RolRepository {</span>
+    
+    @PersistenceContext(name = PERSISTENCE_UNIT_NAME)
+    private EntityManager entityManager;
+    
+    public void setEntityManager(EntityManager entityManager) {
+<span class="fc" id="L25">        this.entityManager = entityManager;</span>
+<span class="fc" id="L26">    }</span>
+
+    public List&lt;Rol&gt; getAllRolUser() {
+<span class="nc" id="L29">        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();</span>
+<span class="nc" id="L30">        CriteriaQuery&lt;Rol&gt; criteriaQuery = criteriaBuilder.createQuery(Rol.class);</span>
+<span class="nc" id="L31">        Root&lt;Rol&gt; rootEntry = criteriaQuery.from(Rol.class);</span>
+<span class="nc" id="L32">        CriteriaQuery&lt;Rol&gt; all = criteriaQuery.select(rootEntry);</span>
+<span class="nc" id="L33">        TypedQuery&lt;Rol&gt; allQuery = entityManager.createQuery(all);</span>
+<span class="nc" id="L34">        return allQuery.getResultList();</span>
+    }
+    public List&lt;Rol&gt; getRoll(Rol rol){
+<span class="fc" id="L37">        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();</span>
+<span class="fc" id="L38">        CriteriaQuery&lt;Rol&gt; criteriaQuery = criteriaBuilder.createQuery(Rol.class);</span>
+<span class="fc" id="L39">        Root&lt;Rol&gt; position = criteriaQuery.from(Rol.class);</span>
+<span class="fc" id="L40">        List&lt;Predicate&gt; predicates = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L41" title="All 2 branches covered.">        if (rol.getId() != null) {</span>
+<span class="fc" id="L42">            predicates.add(criteriaBuilder.equal(position.get(&quot;id&quot;), rol.getId()));</span>
+        }
+<span class="fc bfc" id="L44" title="All 2 branches covered.">        if (rol.getName() != null) {</span>
+<span class="fc" id="L45">            predicates.add(criteriaBuilder.like(position.get(&quot;name&quot;), &quot;%&quot; + rol.getName()+ &quot;%&quot;));</span>
+        }
+<span class="fc" id="L47">        criteriaQuery.where(predicates.stream().toArray(Predicate[]::new));</span>
+<span class="fc" id="L48">        TypedQuery&lt;Rol&gt; query = entityManager.createQuery(criteriaQuery);</span>
+<span class="fc" id="L49">        return query.getResultList();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CareerRepository.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">proyectoEPS-ejb</a> &gt; <a href="index.source.html" class="el_package">gt.edu.usac.cunoc.ingenieria.eps.user.repository</a> &gt; <span class="el_source">CareerRepository.java</span></div><h1>CareerRepository.java</h1><pre class="source lang-java linenums">package gt.edu.usac.cunoc.ingenieria.eps.user.repository;
+
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.PERSISTENCE_UNIT_NAME;
+import gt.edu.usac.cunoc.ingenieria.eps.user.Career;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
+@Stateless
+@LocalBean
+<span class="fc" id="L21">public class CareerRepository {</span>
+    public static final String FIND_BY_ID = &quot;SELECT g FROM Career g WHERE g.codigo = :codigo&quot;;
+    public static final String GET_ALL = &quot;SELECT g FROM Career g&quot;;
+    
+    
+    private EntityManager entityManager;
+    
+    @PersistenceContext(name = PERSISTENCE_UNIT_NAME)
+
+    public void setEntityManager(EntityManager entityManager) {
+<span class="fc" id="L31">        this.entityManager = entityManager;</span>
+<span class="fc" id="L32">    }</span>
+    
+    public Optional&lt;Career&gt; findById(Integer codigo){
+<span class="nc" id="L35">        TypedQuery&lt;Career&gt; typedQuery = entityManager.createQuery(FIND_BY_ID,Career.class).setParameter(&quot;codigo&quot;, codigo);</span>
+        try {
+<span class="nc" id="L37">            return Optional.of(typedQuery.getSingleResult());</span>
+<span class="nc" id="L38">        } catch (NoResultException e) {</span>
+<span class="nc" id="L39">            return Optional.empty();</span>
+<span class="nc" id="L40">        } catch (NullPointerException e){</span>
+<span class="nc" id="L41">            return Optional.empty();</span>
+        }
+ 
+    }
+    
+    public List&lt;Career&gt; getAll(){
+<span class="fc" id="L47">        TypedQuery&lt;Career&gt; typedQuery = entityManager.createQuery(GET_ALL,Career.class);</span>
+<span class="fc" id="L48">        return typedQuery.getResultList();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

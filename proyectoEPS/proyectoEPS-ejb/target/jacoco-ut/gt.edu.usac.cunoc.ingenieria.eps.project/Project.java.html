@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Project.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">proyectoEPS-ejb</a> &gt; <a href="index.source.html" class="el_package">gt.edu.usac.cunoc.ingenieria.eps.project</a> &gt; <span class="el_source">Project.java</span></div><h1>Project.java</h1><pre class="source lang-java linenums">/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package gt.edu.usac.cunoc.ingenieria.eps.project;
+
+import gt.edu.usac.cunoc.ingenieria.eps.process.Requeriment;
+import gt.edu.usac.cunoc.ingenieria.eps.project.Section;
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.Collection;
+import java.util.Date;
+import javax.persistence.Basic;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
+
+/**
+ *
+ * @author teodoro
+ */
+@Entity
+@Table(name = &quot;PROJECT&quot;)
+@NamedQueries({
+    @NamedQuery(name = &quot;Project.findAll&quot;, query = &quot;SELECT p FROM Project p&quot;)})
+public class Project implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = &quot;id&quot;)
+    private Integer id;
+    @Basic(optional = false)
+    @NotNull
+    @Lob
+    @Column(name = &quot;title&quot;)
+    private byte[] title;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = &quot;state&quot;)
+    private short state;
+    @Basic(optional = false)
+    @NotNull
+    @Lob
+    @Column(name = &quot;schedule&quot;)
+    private byte[] schedule;
+    @Basic(optional = false)
+    @NotNull
+    @Lob
+    @Column(name = &quot;investmentPlan&quot;)
+    private byte[] investmentPlan;
+    @Basic(optional = false)
+    @NotNull
+    @Lob
+    @Column(name = &quot;annexed&quot;)
+    private byte[] annexed;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = &quot;limitReceptionDate&quot;)
+    private LocalDate limitReceptionDate;
+    @JoinColumn(name = &quot;BIBLIOGRAPHY_id&quot;, referencedColumnName = &quot;id&quot;)
+    @ManyToOne(optional = false)
+    private Bibliography bIBLIOGRAPHYid;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = &quot;pROJECTid&quot;)
+    private Collection&lt;DecimalCoordinate&gt; decimalCoordinateCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = &quot;pROJECTid&quot;)
+    private Collection&lt;Objectives&gt; objectivesCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = &quot;pREPROJECTid&quot;)
+    private Collection&lt;Requeriment&gt; requerimentCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = &quot;pROJECTid&quot;)
+    private Collection&lt;Section&gt; sectionCollection;
+
+<span class="nc" id="L86">    public Project() {</span>
+<span class="nc" id="L87">    }</span>
+
+<span class="nc" id="L89">    public Project(Integer id) {</span>
+<span class="nc" id="L90">        this.id = id;</span>
+<span class="nc" id="L91">    }</span>
+
+<span class="nc" id="L93">    public Project(Integer id, byte[] title, short state, byte[] schedule, byte[] investmentPlan, byte[] annexed, LocalDate limitReceptionDate) {</span>
+<span class="nc" id="L94">        this.id = id;</span>
+<span class="nc" id="L95">        this.title = title;</span>
+<span class="nc" id="L96">        this.state = state;</span>
+<span class="nc" id="L97">        this.schedule = schedule;</span>
+<span class="nc" id="L98">        this.investmentPlan = investmentPlan;</span>
+<span class="nc" id="L99">        this.annexed = annexed;</span>
+<span class="nc" id="L100">        this.limitReceptionDate = limitReceptionDate;</span>
+<span class="nc" id="L101">    }</span>
+
+    public Integer getId() {
+<span class="nc" id="L104">        return id;</span>
+    }
+
+    public void setId(Integer id) {
+<span class="nc" id="L108">        this.id = id;</span>
+<span class="nc" id="L109">    }</span>
+
+    public byte[] getTitle() {
+<span class="nc" id="L112">        return title;</span>
+    }
+
+    public void setTitle(byte[] title) {
+<span class="nc" id="L116">        this.title = title;</span>
+<span class="nc" id="L117">    }</span>
+
+    public short getState() {
+<span class="nc" id="L120">        return state;</span>
+    }
+
+    public void setState(short state) {
+<span class="nc" id="L124">        this.state = state;</span>
+<span class="nc" id="L125">    }</span>
+
+    public byte[] getSchedule() {
+<span class="nc" id="L128">        return schedule;</span>
+    }
+
+    public void setSchedule(byte[] schedule) {
+<span class="nc" id="L132">        this.schedule = schedule;</span>
+<span class="nc" id="L133">    }</span>
+
+    public byte[] getInvestmentPlan() {
+<span class="nc" id="L136">        return investmentPlan;</span>
+    }
+
+    public void setInvestmentPlan(byte[] investmentPlan) {
+<span class="nc" id="L140">        this.investmentPlan = investmentPlan;</span>
+<span class="nc" id="L141">    }</span>
+
+    public byte[] getAnnexed() {
+<span class="nc" id="L144">        return annexed;</span>
+    }
+
+    public void setAnnexed(byte[] annexed) {
+<span class="nc" id="L148">        this.annexed = annexed;</span>
+<span class="nc" id="L149">    }</span>
+
+    public LocalDate getLimitReceptionDate() {
+<span class="nc" id="L152">        return limitReceptionDate;</span>
+    }
+
+    public void setLimitReceptionDate(LocalDate limitReceptionDate) {
+<span class="nc" id="L156">        this.limitReceptionDate = limitReceptionDate;</span>
+<span class="nc" id="L157">    }</span>
+
+    public Bibliography getBIBLIOGRAPHYid() {
+<span class="nc" id="L160">        return bIBLIOGRAPHYid;</span>
+    }
+
+    public void setBIBLIOGRAPHYid(Bibliography bIBLIOGRAPHYid) {
+<span class="nc" id="L164">        this.bIBLIOGRAPHYid = bIBLIOGRAPHYid;</span>
+<span class="nc" id="L165">    }</span>
+
+    public Collection&lt;DecimalCoordinate&gt; getDecimalCoordinateCollection() {
+<span class="nc" id="L168">        return decimalCoordinateCollection;</span>
+    }
+
+    public void setDecimalCoordinateCollection(Collection&lt;DecimalCoordinate&gt; decimalCoordinateCollection) {
+<span class="nc" id="L172">        this.decimalCoordinateCollection = decimalCoordinateCollection;</span>
+<span class="nc" id="L173">    }</span>
+
+    public Collection&lt;Objectives&gt; getObjectivesCollection() {
+<span class="nc" id="L176">        return objectivesCollection;</span>
+    }
+
+    public void setObjectivesCollection(Collection&lt;Objectives&gt; objectivesCollection) {
+<span class="nc" id="L180">        this.objectivesCollection = objectivesCollection;</span>
+<span class="nc" id="L181">    }</span>
+
+    public Collection&lt;Requeriment&gt; getRequerimentCollection() {
+<span class="nc" id="L184">        return requerimentCollection;</span>
+    }
+
+    public void setRequerimentCollection(Collection&lt;Requeriment&gt; requerimentCollection) {
+<span class="nc" id="L188">        this.requerimentCollection = requerimentCollection;</span>
+<span class="nc" id="L189">    }</span>
+
+    public Collection&lt;Section&gt; getSectionCollection() {
+<span class="nc" id="L192">        return sectionCollection;</span>
+    }
+
+    public void setSectionCollection(Collection&lt;Section&gt; sectionCollection) {
+<span class="nc" id="L196">        this.sectionCollection = sectionCollection;</span>
+<span class="nc" id="L197">    }</span>
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L201">        int hash = 0;</span>
+<span class="nc bnc" id="L202" title="All 2 branches missed.">        hash += (id != null ? id.hashCode() : 0);</span>
+<span class="nc" id="L203">        return hash;</span>
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the id fields are not set
+<span class="nc bnc" id="L209" title="All 2 branches missed.">        if (!(object instanceof Project)) {</span>
+<span class="nc" id="L210">            return false;</span>
+        }
+<span class="nc" id="L212">        Project other = (Project) object;</span>
+<span class="nc bnc" id="L213" title="All 8 branches missed.">        if ((this.id == null &amp;&amp; other.id != null) || (this.id != null &amp;&amp; !this.id.equals(other.id))) {</span>
+<span class="nc" id="L214">            return false;</span>
+        }
+<span class="nc" id="L216">        return true;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L221">        return &quot;gt.edu.usac.cunoc.ingenieria.Project[ id=&quot; + id + &quot; ]&quot;;</span>
+    }
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

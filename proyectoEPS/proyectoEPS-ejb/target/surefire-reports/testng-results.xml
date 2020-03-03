@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results skipped="0" failed="0" ignored="0" total="22" passed="22">
+  <reporter-output>
+  </reporter-output>
+  <suite name="Command line suite" duration-ms="176" started-at="2020-03-02T18:37:42 CST" finished-at="2020-03-02T18:37:42 CST">
+    <groups>
+    </groups>
+    <test name="Command line test" duration-ms="176" started-at="2020-03-02T18:37:42 CST" finished-at="2020-03-02T18:37:42 CST">
+      <class name="User.service.UserServiceTest">
+        <test-method status="PASS" signature="createUserNullTest()[pri:0, instance:User.service.UserServiceTest@7a4d582c]" name="createUserNullTest" duration-ms="1" started-at="2020-03-02T18:37:42 CST" finished-at="2020-03-02T18:37:42 CST">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- createUserNullTest -->
+        <test-method status="PASS" signature="createUserTest()[pri:0, instance:User.service.UserServiceTest@7a4d582c]" name="createUserTest" duration-ms="0" started-at="2020-03-02T18:37:42 CST" finished-at="2020-03-02T18:37:42 CST">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- createUserTest -->
+        <test-method status="PASS" signature="updateUserNullTest()[pri:0, instance:User.service.UserServiceTest@7a4d582c]" name="updateUserNullTest" duration-ms="0" started-at="2020-03-02T18:37:42 CST" finished-at="2020-03-02T18:37:42 CST">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- updateUserNullTest -->
+        <test-method status="PASS" signature="updateUserTest()[pri:0, instance:User.service.UserServiceTest@7a4d582c]" name="updateUserTest" duration-ms="1" started-at="2020-03-02T18:37:42 CST" finished-at="2020-03-02T18:37:42 CST">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- updateUserTest -->
+      </class> <!-- User.service.UserServiceTest -->
+      <class name="User.repository.CareerRepositoryTest">
+        <test-method status="PASS" signature="findByIdWithNoResult()[pri:0, instance:User.repository.CareerRepositoryTest@7ff19c33]" name="findByIdWithNoResult" duration-ms="37" started-at="2020-03-02T18:37:42 CST" finished-at="2020-03-02T18:37:42 CST">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- findByIdWithNoResult -->
+        <test-method status="PASS" signature="getAllEmptyResult()[pri:0, instance:User.repository.CareerRepositoryTest@7ff19c33]" name="getAllEmptyResult" duration-ms="5" started-at="2020-03-02T18:37:42 CST" finished-at="2020-03-02T18:37:42 CST">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- getAllEmptyResult -->
+        <test-method status="PASS" signature="getAllWithResult()[pri:0, instance:User.repository.CareerRepositoryTest@7ff19c33]" name="getAllWithResult" duration-ms="0" started-at="2020-03-02T18:37:42 CST" finished-at="2020-03-02T18:37:42 CST">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- getAllWithResult -->
+      </class> <!-- User.repository.CareerRepositoryTest -->
+      <class name="User.service.CareerServiceTest">
+        <test-method status="PASS" signature="createGroupTest()[pri:0, instance:User.service.CareerServiceTest@35c9a231]" name="createGroupTest" duration-ms="1" started-at="2020-03-02T18:37:42 CST" finished-at="2020-03-02T18:37:42 CST">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- createGroupTest -->
+        <test-method status="PASS" signature="updateGroupInformationTest()[pri:0, instance:User.service.CareerServiceTest@35c9a231]" name="updateGroupInformationTest" duration-ms="4" started-at="2020-03-02T18:37:42 CST" finished-at="2020-03-02T18:37:42 CST">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- updateGroupInformationTest -->
+        <test-method status="PASS" signature="updateGroupSectionTest()[pri:0, instance:User.service.CareerServiceTest@35c9a231]" name="updateGroupSectionTest" duration-ms="1" started-at="2020-03-02T18:37:42 CST" finished-at="2020-03-02T18:37:42 CST">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- updateGroupSectionTest -->
+        <test-method status="PASS" signature="updateGroupSectionAndInformationTest()[pri:0, instance:User.service.CareerServiceTest@35c9a231]" name="updateGroupSectionAndInformationTest" duration-ms="0" started-at="2020-03-02T18:37:42 CST" finished-at="2020-03-02T18:37:42 CST">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- updateGroupSectionAndInformationTest -->
+      </class> <!-- User.service.CareerServiceTest -->
+      <class name="User.repository.RolRepositoryTest">
+        <test-method status="PASS" signature="getRolUser()[pri:0, instance:User.repository.RolRepositoryTest@7cca01a8]" name="getRolUser" duration-ms="1" started-at="2020-03-02T18:37:42 CST" finished-at="2020-03-02T18:37:42 CST">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- getRolUser -->
+        <test-method status="PASS" signature="getRolUserWithId()[pri:0, instance:User.repository.RolRepositoryTest@7cca01a8]" name="getRolUserWithId" duration-ms="1" started-at="2020-03-02T18:37:42 CST" finished-at="2020-03-02T18:37:42 CST">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- getRolUserWithId -->
+        <test-method status="PASS" signature="getRolUserWithName()[pri:0, instance:User.repository.RolRepositoryTest@7cca01a8]" name="getRolUserWithName" duration-ms="1" started-at="2020-03-02T18:37:42 CST" finished-at="2020-03-02T18:37:42 CST">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- getRolUserWithName -->
+      </class> <!-- User.repository.RolRepositoryTest -->
+      <class name="User.service.RolServiceTest">
+        <test-method status="PASS" signature="createCareerNullTest()[pri:0, instance:User.service.RolServiceTest@462abec3]" name="createCareerNullTest" duration-ms="2" started-at="2020-03-02T18:37:42 CST" finished-at="2020-03-02T18:37:42 CST">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- createCareerNullTest -->
+        <test-method status="PASS" signature="createCareerTest()[pri:0, instance:User.service.RolServiceTest@462abec3]" name="createCareerTest" duration-ms="0" started-at="2020-03-02T18:37:42 CST" finished-at="2020-03-02T18:37:42 CST">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- createCareerTest -->
+        <test-method status="PASS" signature="updateCareerNullTest()[pri:0, instance:User.service.RolServiceTest@462abec3]" name="updateCareerNullTest" duration-ms="1" started-at="2020-03-02T18:37:42 CST" finished-at="2020-03-02T18:37:42 CST">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- updateCareerNullTest -->
+        <test-method status="PASS" signature="updateCareerTest()[pri:0, instance:User.service.RolServiceTest@462abec3]" name="updateCareerTest" duration-ms="0" started-at="2020-03-02T18:37:42 CST" finished-at="2020-03-02T18:37:42 CST">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- updateCareerTest -->
+      </class> <!-- User.service.RolServiceTest -->
+      <class name="User.repository.UserRepositoryTest">
+        <test-method status="PASS" signature="getUserByDPITest()[pri:0, instance:User.repository.UserRepositoryTest@52b3bf03]" name="getUserByDPITest" duration-ms="1" started-at="2020-03-02T18:37:42 CST" finished-at="2020-03-02T18:37:42 CST">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- getUserByDPITest -->
+        <test-method status="PASS" signature="getUserTest()[pri:0, instance:User.repository.UserRepositoryTest@52b3bf03]" name="getUserTest" duration-ms="57" started-at="2020-03-02T18:37:42 CST" finished-at="2020-03-02T18:37:42 CST">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- getUserTest -->
+        <test-method status="PASS" signature="getUserWithNameTest()[pri:0, instance:User.repository.UserRepositoryTest@52b3bf03]" name="getUserWithNameTest" duration-ms="6" started-at="2020-03-02T18:37:42 CST" finished-at="2020-03-02T18:37:42 CST">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- getUserWithNameTest -->
+        <test-method status="PASS" signature="getUserWithidRolTest()[pri:0, instance:User.repository.UserRepositoryTest@52b3bf03]" name="getUserWithidRolTest" duration-ms="2" started-at="2020-03-02T18:37:42 CST" finished-at="2020-03-02T18:37:42 CST">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- getUserWithidRolTest -->
+      </class> <!-- User.repository.UserRepositoryTest -->
+    </test> <!-- Command line test -->
+  </suite> <!-- Command line suite -->
+</testng-results>

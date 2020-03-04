@@ -54,8 +54,8 @@ public class Process implements Serializable {
     private Boolean approvedEPSDevelopment;
     @Column(name = "progress")
     private Integer progress;
-    @OneToOne(mappedBy="pROCESSid",cascade=CascadeType.PERSIST)
-    private List<Requeriment> requeriments;
+    @OneToOne(mappedBy="pROCESSid")
+    private Requeriment requeriment;
     
 
     public Process() {
@@ -172,6 +172,16 @@ public class Process implements Serializable {
             return "Si";
         }
     }
+
+    public Requeriment getRequeriment() {
+        return requeriment;
+    }
+
+    public void setRequeriment(Requeriment requeriment) {
+        this.requeriment = requeriment;
+    }
+    
+    
     
 
     @Override

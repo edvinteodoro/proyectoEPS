@@ -19,6 +19,9 @@ import javax.persistence.Table;
 @Table(name = "PROJECT")
 public class Project implements Serializable {
 
+    public static final Short ACTIVE = 1;
+    public static final Short INACTIVE = 0;
+    
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -28,11 +31,11 @@ public class Project implements Serializable {
     @Column(name = "state")
     private Short state;
     @Column(name = "schedule")
-    private Byte[] schedule;
+    private byte[] schedule;
     @Column(name = "investmentPlan")
-    private Byte[] investmentPlan;
+    private byte[] investmentPlan;
     @Column(name = "annexed")
-    private Byte[] annexed;
+    private byte[] annexed;
     @Column(name = "limitReceptionDate")
     private LocalDate limitReceptionDate;
 
@@ -52,7 +55,7 @@ public class Project implements Serializable {
         this.id = id;
     }
 
-    public Project(Integer id, String title, Short state, Byte[] schedule, Byte[] investmentPlan, Byte[] annexed, LocalDate limitReceptionDate) {
+    public Project(Integer id, String title, Short state, byte[] schedule, byte[] investmentPlan, byte[] annexed, LocalDate limitReceptionDate) {
         this.id = id;
         this.title = title;
         this.state = state;
@@ -86,27 +89,27 @@ public class Project implements Serializable {
         this.state = state;
     }
 
-    public Byte[] getSchedule() {
+    public byte[] getSchedule() {
         return schedule;
     }
 
-    public void setSchedule(Byte[] schedule) {
+    public void setSchedule(byte[] schedule) {
         this.schedule = schedule;
     }
 
-    public Byte[] getInvestmentPlan() {
+    public byte[] getInvestmentPlan() {
         return investmentPlan;
     }
 
-    public void setInvestmentPlan(Byte[] investmentPlan) {
+    public void setInvestmentPlan(byte[] investmentPlan) {
         this.investmentPlan = investmentPlan;
     }
 
-    public Byte[] getAnnexed() {
+    public byte[] getAnnexed() {
         return annexed;
     }
 
-    public void setAnnexed(Byte[] annexed) {
+    public void setAnnexed(byte[] annexed) {
         this.annexed = annexed;
     }
 

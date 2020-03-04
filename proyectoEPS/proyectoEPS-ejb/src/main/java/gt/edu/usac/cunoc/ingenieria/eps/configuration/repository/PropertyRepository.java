@@ -29,7 +29,7 @@ public class PropertyRepository {
     
     private EntityManager entityManager;
     
-     @PersistenceContext(name = PERSISTENCE_UNIT_NAME)
+    @PersistenceContext(name = PERSISTENCE_UNIT_NAME)
     public void setEntityManager(EntityManager entityManager) {
         this.entityManager = entityManager;
     }

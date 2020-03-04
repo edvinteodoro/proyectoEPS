@@ -21,36 +21,58 @@
             <p:messages  globalOnly="true"/>
             <fieldset class="center-block">
                 <legend>Crear Proyecto</legend> 
-                <div class="row form-group">
-                    <p:outputLabel for="title" value="Titulo:" styleClass="col-md-4 control-label"/>
-                    <div  class="col-md-8">
+                
+                <div class="row">
+                    <div  class="form-group col-sm-4">
+                        <p:outputLabel for="title" value="Titulo:"/>
                         <p:inputText id="title" styleClass="form-control" pt:placeholder="Titulo del Proyecto"
-                                     pt:required="true" maxlength="45"
-                                     value="#{CreateProjectView.newProject.title}"/>
+                                     pt:required="true"
+                                     value="#{createProjectView.title}"/>
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-sm-4">
-                        <p:outputLabel for="schedule" value="Calendario:" />
+                        <p:outputLabel for="schedule"  value="Calendario:"/>
                         <p:fileUpload id="schedule" fileUploadListener="#{createProjectView.handleSchedule}"
-                                                  required="true" 
-                                                  styleClass="in-dialog"
-                                                  skinSimple="true" auto="true" allowTypes="/(\.|\/)(pdf)$/"
-                                                  update="@parent"
-                                                  label="Seleccionar"/>
+                                      required="true"
+                                      skinSimple="true" auto="true"
+                                      label="Seleccionar"
+                                      >                                       
+                        </p:fileUpload>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-4">
+                        <p:outputLabel for="investmentPlan"  value="Plan de Inversión:"/>
+                        <p:fileUpload id="investmentPlan" fileUploadListener="#{createProjectView.handleInvestmentPlan}"
+                                      required="true"
+                                      skinSimple="true" auto="true"
+                                      label="Seleccionar"
+                                      >                                       
+                        </p:fileUpload>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-4">
+                        <p:outputLabel for="annexed"  value="Anexos:"/>
+                        <p:fileUpload id="annexed" fileUploadListener="#{createProjectView.handleAnnexed}"
+                                      required="true"
+                                      skinSimple="true" auto="true"
+                                      label="Seleccionar"
+                                      >                                       
+                        </p:fileUpload>
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-sm-4">
                         <p:commandLink styleClass="btn btn-primary"
                                        update="@form,:growl" 
-                                       action="#{createProcessView.guardar()}">
-                            <span class="glyphicon glyphicon-log-in"></span> Crear Pre-Proyecto EPS
+                                       action="#{createProjectView.upload()}">
+                            <span class="glyphicon glyphicon-log-in"></span> Crear Proyecto EPS
                         </p:commandLink>
                     </div>
                 </div>
             </fieldset>
         </h:form>
     </ui:define>
-
 </ui:composition>

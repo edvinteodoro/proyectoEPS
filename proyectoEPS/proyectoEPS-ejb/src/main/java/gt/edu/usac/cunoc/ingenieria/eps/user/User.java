@@ -93,8 +93,6 @@ public class User implements Serializable {
     @JoinColumn(name = "ROL_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Rol rOLid;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "uSERuserId")
-    private Collection<Correction> correctionCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "uSERadviser")
     private Collection<Appointment> appointmentCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "uSERreviewer")
@@ -232,14 +230,6 @@ public class User implements Serializable {
 
     public void setROLid(Rol rOLid) {
         this.rOLid = rOLid;
-    }
-
-    public Collection<Correction> getCorrectionCollection() {
-        return correctionCollection;
-    }
-
-    public void setCorrectionCollection(Collection<Correction> correctionCollection) {
-        this.correctionCollection = correctionCollection;
     }
 
     public Collection<Appointment> getAppointmentCollection() {

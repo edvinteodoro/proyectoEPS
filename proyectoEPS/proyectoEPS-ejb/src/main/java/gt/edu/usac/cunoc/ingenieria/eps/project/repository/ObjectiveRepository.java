@@ -55,7 +55,7 @@ public class ObjectiveRepository {
         }
         Short quantitySpecificObjectives = (Short) entityManager.createQuery("SELECT COUNT(*) FROM Objectives o WHERE o.state = :stateObjective")
                     .setParameter("stateObjective", Objectives.SPECIFIC_OBJECTIVE).getSingleResult();
-        if (quantitySpecificObjectives < PropertyRepository.LIMIT_SPECIFIC_OBJECTIVE){
+        if (quantitySpecificObjectives < PropertyRepository.LIMIT_SPECIFIC_OBJECTIVE.getValueInt()){
             return true;
         } else {
             return false;
@@ -68,7 +68,7 @@ public class ObjectiveRepository {
         }
         Short quantityGeneralObjectives = (Short) entityManager.createQuery("SELECT COUNT(*) FROM Objectives o WHERE o.state = :stateObjective")
                     .setParameter("stateObjective", Objectives.GENERAL_OBJETICVE).getSingleResult();
-        if (quantityGeneralObjectives < PropertyRepository.LIMIT_GENERAL_OBJECTIVE){
+        if (quantityGeneralObjectives < PropertyRepository.LIMIT_GENERAL_OBJECTIVE.getValueInt()){
             return true;
         } else {
             return false;

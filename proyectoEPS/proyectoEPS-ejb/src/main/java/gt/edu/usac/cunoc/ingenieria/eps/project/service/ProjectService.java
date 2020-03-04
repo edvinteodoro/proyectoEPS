@@ -2,6 +2,7 @@
 package gt.edu.usac.cunoc.ingenieria.eps.project.service;
 
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.PERSISTENCE_UNIT_NAME;
+import gt.edu.usac.cunoc.ingenieria.eps.configuration.repository.PropertyRepository;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.MandatoryException;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
 import javax.ejb.LocalBean;
@@ -23,16 +24,19 @@ public class ProjectService {
     public ProjectService() {
     }
     
-//    public Project create(Project project) throws MandatoryException{
-//        if (project.getTitle() == null){
-//            throw new MandatoryException("Atributo Titulo Obligatorio");
-//        }
-//        if (project.getSchedule() == null){
-//            throw new MandatoryException("Archivo Calendario Obligatorio");
-//        }
-//        if (project.getInvestmentPlan() == null){
-//            throw new MandatoryException("Archivo Plan de Inversiones Obligatorio");
-//        }
-//        
-//    } 
+    public Project create(Project project) throws MandatoryException{
+        if (project.getTitle() == null){
+            throw new MandatoryException("Atributo Titulo Obligatorio");
+        }
+        if (project.getSchedule() == null){
+            throw new MandatoryException("Archivo Calendario Obligatorio");
+        }
+        if (project.getInvestmentPlan() == null){
+            throw new MandatoryException("Archivo Plan de Inversiones Obligatorio");
+        }
+        project.setState(Project.ACTIVE);
+        project.setLimitReceptionDate(PropertyRepository.GENERAL_LIMIT_RECEPTION_DATE.getValueDate());
+        entityManager.persist(project);
+        return project;
+    } 
 }

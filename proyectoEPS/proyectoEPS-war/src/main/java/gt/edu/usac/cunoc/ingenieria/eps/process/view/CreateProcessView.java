@@ -35,7 +35,14 @@ public class CreateProcessView implements Serializable {
     private Requeriment requeriment;
 
     private Process process;
-
+    
+    String nameWrittenRequest="";
+    String nameInscriptionConstancy="";
+    String namePensumeClosure="";
+    String namePropedeuticConstancy="";
+    String nameEpsPreProjec="";
+    String nameAeioSettlemen="";
+    
     @PostConstruct
     public void init() {
 
@@ -80,28 +87,83 @@ public class CreateProcessView implements Serializable {
         return writtenRequest;
     }
 
+    public String getNameWrittenRequest() {
+        return nameWrittenRequest;
+    }
+
+    public void setNameWrittenRequest(String nameWrittenRequest) {
+        this.nameWrittenRequest = nameWrittenRequest;
+    }
+
+    public String getNameInscriptionConstancy() {
+        return nameInscriptionConstancy;
+    }
+
+    public void setNameInscriptionConstancy(String nameInscriptionConstancy) {
+        this.nameInscriptionConstancy = nameInscriptionConstancy;
+    }
+
+    public String getNamePensumeClosure() {
+        return namePensumeClosure;
+    }
+
+    public void setNamePensumeClosure(String namePensumeClosure) {
+        this.namePensumeClosure = namePensumeClosure;
+    }
+
+    public String getNamePropedeuticConstancy() {
+        return namePropedeuticConstancy;
+    }
+
+    public void setNamePropedeuticConstancy(String namePropedeuticConstancy) {
+        this.namePropedeuticConstancy = namePropedeuticConstancy;
+    }
+
+    public String getNameEpsPreProjec() {
+        return nameEpsPreProjec;
+    }
+
+    public void setNameEpsPreProjec(String nameEpsPreProjec) {
+        this.nameEpsPreProjec = nameEpsPreProjec;
+    }
+
+    public String getNameAeioSettlemen() {
+        return nameAeioSettlemen;
+    }
+
+    public void setNameAeioSettlemen(String nameAeioSettlemen) {
+        this.nameAeioSettlemen = nameAeioSettlemen;
+    }
+    
+    
+
     public void setFileInputStream(final UploadedFile fileInputStream) {
         this.writtenRequest = fileInputStream;
     }
 
     public void handleWrittenRequest(FileUploadEvent event) {
         writtenRequest = event.getFile();
+        nameWrittenRequest= event.getFile().getFileName();
     }
 
     public void handleInscriptionConstancy(FileUploadEvent event) {
         inscriptionConstancy = event.getFile();
+        nameInscriptionConstancy=event.getFile().getFileName();
     }
 
     public void handlePensumeClosure(FileUploadEvent event) {
         pensumeClosure = event.getFile();
+        namePensumeClosure=event.getFile().getFileName();
     }
 
     public void handlePropedeuticConstancy(FileUploadEvent event) {
         propedeuticConstancy = event.getFile();
+        namePropedeuticConstancy=event.getFile().getFileName();
     }
 
     public void handleEpsPreProject(FileUploadEvent event) {
         epsPreProject = event.getFile();
+        nameEpsPreProjec= event.getFile().getFileName();
     }
 
     public void handleAeioSettlement(FileUploadEvent event) {

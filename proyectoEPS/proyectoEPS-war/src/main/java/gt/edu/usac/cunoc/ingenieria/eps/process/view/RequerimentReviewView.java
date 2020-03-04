@@ -30,16 +30,13 @@ public class RequerimentReviewView implements Serializable {
     private StreamedContent epsPreProject;
     private StreamedContent aeioSettlement;
 
-    Requeriment requeriment;
+    private Requeriment requeriment;
+    private Integer processId;
+    private Boolean showAeioSettlement= false;
 
     @PostConstruct
     public void init() {
-        requeriment = processFacade.getRequeriment(new Requeriment()).get(0);
-        writtenRequest = new DefaultStreamedContent(new ByteArrayInputStream(requeriment.getWrittenRequest()), "application/pdf", "Solicitud Escrita.pdf");
-        inscriptionConstancy = new DefaultStreamedContent(new ByteArrayInputStream(requeriment.getInscriptionConstancy()), "application/pdf", "Constancia Inscripcion.pdf");
-        pensumeClosure = new DefaultStreamedContent(new ByteArrayInputStream(requeriment.getWrittenRequest()), "application/pdf", "Solicitud Escrita.pdf");
-        propedeuticConstancy = new DefaultStreamedContent(new ByteArrayInputStream(requeriment.getWrittenRequest()), "application/pdf", "Solicitud Escrita.pdf");
-        epsPreProject = new DefaultStreamedContent(new ByteArrayInputStream(requeriment.getWrittenRequest()), "application/pdf", "Solicitud Escrita.pdf");
+        
     }
 
     public StreamedContent getWrittenRequest() {
@@ -88,6 +85,36 @@ public class RequerimentReviewView implements Serializable {
 
     public void setAeioSettlement(StreamedContent aeioSettlement) {
         this.aeioSettlement = aeioSettlement;
+    }
+
+    public Integer getProcessId() {
+        return processId;
+    }
+
+    public void setProcessId(Integer processId) {
+        this.processId = processId;
+    }
+    
+    public void loadCurrentProcess(){
+        System.out.println("ejemplos");
+        requeriment = processFacade.getRequeriment(new Requeriment(processId)).get(0);
+        writtenRequest = new DefaultStreamedContent(new ByteArrayInputStream(requeriment.getWrittenRequest()), "application/pdf", "Solicitud Escrita.pdf");
+        inscriptionConstancy = new DefaultStreamedContent(new ByteArrayInputStream(requeriment.getInscriptionConstancy()), "application/pdf", "Constancia Inscripcion.pdf");
+        pensumeClosure = new DefaultStreamedContent(new ByteArrayInputStream(requeriment.getPensumClosure()), "application/pdf", "Solicitud Escrita.pdf");
+        propedeuticConstancy = new DefaultStreamedContent(new ByteArrayInputStream(requeriment.getPropedeuticConstancy()), "application/pdf", "Solicitud Escrita.pdf");
+        epsPreProject = new DefaultStreamedContent(new ByteArrayInputStream(requeriment.getEPSpreproject()), "application/pdf", "Solicitud Escrita.pdf");
+        if(requeriment.getAEIOsettlement()!=null){
+            showAeioSettlement=true;
+            aeioSettlement=new DefaultStreamedContent(new ByteArrayInputStream(requeriment.getaEIOsettlement()), "application/pdf", "Solicitud Escrita.pdf");
+        }
+    }
+
+    public Boolean getShowAeioSettlement() {
+        return showAeioSettlement;
+    }
+
+    public void setShowAeioSettlement(Boolean showAeioSettlement) {
+        this.showAeioSettlement = showAeioSettlement;
     }
     
     

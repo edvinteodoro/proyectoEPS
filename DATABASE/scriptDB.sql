@@ -158,8 +158,8 @@ CREATE TABLE IF NOT EXISTS `EPS_SYSTEM`.`PROJECT` (
   `title` VARCHAR(400) NOT NULL,
   `state` TINYINT NOT NULL,
   `schedule` MEDIUMBLOB NOT NULL,
-  `investmentPlan` BLOB NOT NULL,
-  `annexed` BLOB NULL,
+  `investmentPlan` MEDIUMBLOB NOT NULL,
+  `annexed` MEDIUMBLOB NULL,
   `limitReceptionDate` DATE NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;

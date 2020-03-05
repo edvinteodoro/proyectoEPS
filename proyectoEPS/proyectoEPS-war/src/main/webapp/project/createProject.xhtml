@@ -27,7 +27,7 @@
                         <p:outputLabel for="title" value="Titulo:"/>
                         <p:inputText id="title" styleClass="form-control" pt:placeholder="Titulo del Proyecto"
                                      pt:required="true"
-                                     value="#{createProjectView.title}"/>
+                                     value="#{createProjectView.project.title}"/>
                     </div>
                 </div>
                 <div class="row">
@@ -37,8 +37,10 @@
                                       required="true"
                                       skinSimple="true" auto="true"
                                       label="Seleccionar"
+                                      update="labelSchedule"
                                       >                                       
                         </p:fileUpload>
+                        <p:outputLabel id="labelSchedule" value="#{createProjectView.sheduleFileName}" class="text-primary"/>
                     </div>
                 </div>
                 <div class="row">
@@ -48,31 +50,39 @@
                                       required="true"
                                       skinSimple="true" auto="true"
                                       label="Seleccionar"
+                                      update="labelInvestmentPlan"
                                       >                                       
                         </p:fileUpload>
+                        <p:outputLabel id="labelInvestmentPlan" value="#{createProjectView.investmentPlanFileName}" class="text-primary"/>
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-sm-4">
                         <p:outputLabel for="annexed"  value="Anexos:"/>
                         <p:fileUpload id="annexed" fileUploadListener="#{createProjectView.handleAnnexed}"
-                                      required="true"
                                       skinSimple="true" auto="true"
                                       label="Seleccionar"
+                                      update="labelAnnexed"
                                       >                                       
                         </p:fileUpload>
+                        <p:outputLabel id="labelAnnexed" value="#{createProjectView.annexedFileName}" class="text-primary"/>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="form-group col-sm-4">
-                        <p:commandLink styleClass="btn btn-primary"
-                                       update="@form,:growl" 
-                                       action="#{createProjectView.upload()}">
-                            <span class="glyphicon glyphicon-log-in"></span> Crear Proyecto EPS
-                        </p:commandLink>
-                    </div>
-                </div>
+                
             </fieldset>
+            <fieldset class="center-block">
+                <legend>Objetivos</legend>
+            </fieldset>
+            <div class="row">
+                <div class="form-group col-sm-4">
+                    <p:commandLink styleClass="btn btn-primary"
+                                  update="@form,:growl" 
+                                  action="#{createProjectView.upload()}">
+                    <span class="glyphicon glyphicon-log-in"></span> Crear Proyecto EPS
+                    </p:commandLink>
+                </div>
+            </div>
+                
         </h:form>
     </ui:define>
 </ui:composition>

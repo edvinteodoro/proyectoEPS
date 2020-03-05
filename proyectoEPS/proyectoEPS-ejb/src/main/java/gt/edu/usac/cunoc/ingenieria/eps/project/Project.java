@@ -215,7 +215,7 @@ public class Project implements Serializable {
 
     @Override
     public String toString() {
-        return "gt.edu.usac.cunoc.ingenieria.eps.project.Project[ id=" + id + " ]";
+        return "gt.edu.usac.cunoc.ingenieria.eps.project.Project[ id=" + title + " ]";
     }
     
 }

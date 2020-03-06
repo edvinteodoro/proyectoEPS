@@ -1,5 +1,6 @@
 package gt.edu.usac.cunoc.ingenieria.eps.user.repository;
 
+import User.exception.UserException;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.PERSISTENCE_UNIT_NAME;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import java.util.ArrayList;
@@ -18,10 +19,28 @@ import javax.persistence.criteria.Root;
 @Stateless
 @LocalBean
 public class UserRepository {
+    
     @PersistenceContext(name = PERSISTENCE_UNIT_NAME)
     private EntityManager entityManager;
 
-    public List<User> getUser(User user) {
+    public void setEntityManager(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
+
+    public Optional<User> getUserByDPI(String dpi) {
+        TypedQuery<User> typeQuerry = entityManager.createQuery("SELECT u FROM user u WHERE u.dpi = :dpi", User.class);
+        typeQuerry.setParameter("dpi", dpi);
+        try {
+            return Optional.of(typeQuerry.getSingleResult());
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
+    public List<User> getUser(User user) throws UserException {
+        if (user == null) {
+            throw new UserException("User is null");
+        }
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
         Root<User> userR = criteriaQuery.from(User.class);
@@ -66,4 +85,7 @@ public class UserRepository {
         TypedQuery<User> query = entityManager.createQuery(criteriaQuery);
         return query.getResultList();
     }
+    
+    
+    
 }

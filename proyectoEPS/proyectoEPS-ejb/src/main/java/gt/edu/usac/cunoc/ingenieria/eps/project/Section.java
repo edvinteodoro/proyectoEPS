@@ -1,63 +1,47 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package gt.edu.usac.cunoc.ingenieria.eps.project;
 
-import gt.edu.usac.cunoc.ingenieria.eps.project.Title;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.Date;
-import javax.persistence.Basic;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
-/**
- *
- * @author teodoro
- */
 @Entity
 @Table(name = "SECTION")
-@NamedQueries({
-    @NamedQuery(name = "Section.findAll", query = "SELECT s FROM Section s")})
 public class Section implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    public static final Short INTRODUCTION = 0;
+    public static final Short JUSTIFICATION = 1;
+    public static final Short CUSTOM = 2;
+    
     @Id
-    @Basic(optional = false)
-    @NotNull
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 45)
     @Column(name = "name")
     private String name;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "lastModificationDate")
     private LocalDate lastModificationDate;
-    @OneToMany(mappedBy = "sECTIONid")
-    private Collection<Correction> correctionCollection;
-    @JoinColumn(name = "PROJECT_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Project pROJECTid;
-    @JoinColumn(name = "TITLE_id", referencedColumnName = "id")
-    @ManyToOne(optional = false)
-    private Title tITLEid;
+    @Column(name = "type")
+    private Short type;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Project project;
+    
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "section", orphanRemoval = true)
+    private List<Title> titles = new ArrayList<>();
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "section", orphanRemoval = true)
+    private List<Correction> corrections = new ArrayList<>();
 
     public Section() {
     }
@@ -66,10 +50,11 @@ public class Section implements Serializable {
         this.id = id;
     }
 
-    public Section(Integer id, String name, LocalDate lastModificationDate) {
+    public Section(Integer id, String name, LocalDate lastModificationDate, Short type) {
         this.id = id;
         this.name = name;
         this.lastModificationDate = lastModificationDate;
+        this.type = type;
     }
 
     public Integer getId() {
@@ -96,30 +81,57 @@ public class Section implements Serializable {
         this.lastModificationDate = lastModificationDate;
     }
 
-    public Collection<Correction> getCorrectionCollection() {
-        return correctionCollection;
+    public Short getType() {
+        return type;
     }
 
-    public void setCorrectionCollection(Collection<Correction> correctionCollection) {
-        this.correctionCollection = correctionCollection;
+    public void setType(Short type) {
+        this.type = type;
     }
 
-    public Project getPROJECTid() {
-        return pROJECTid;
+    public Project getProject() {
+        return project;
     }
 
-    public void setPROJECTid(Project pROJECTid) {
-        this.pROJECTid = pROJECTid;
+    public void setProject(Project project) {
+        this.project = project;
     }
 
-    public Title getTITLEid() {
-        return tITLEid;
+    public List<Title> getTitles() {
+        return titles;
     }
 
-    public void setTITLEid(Title tITLEid) {
-        this.tITLEid = tITLEid;
+    public void setTitles(List<Title> titles) {
+        this.titles = titles;
+    }
+    
+    public void addTitle(Title title){
+        titles.add(title);
+        title.setSection(this);
+    }
+    
+    public void removeTitle(Title title){
+        titles.remove(title);
+        title.setSection(null);
     }
 
+    public List<Correction> getCorrections() {
+        return corrections;
+    }
+
+    public void setCorrections(List<Correction> corrections) {
+        this.corrections = corrections;
+    }
+    
+    public void addCorrection(Correction correction){
+        corrections.add(correction);
+        correction.setSection(this);
+    }
+    
+    public void removeCorrection(Correction correction){
+        corrections.remove(correction);
+        correction.setSection(null);
+    }
     @Override
     public int hashCode() {
         int hash = 0;
@@ -142,7 +154,7 @@ public class Section implements Serializable {
 
     @Override
     public String toString() {
-        return "gt.edu.usac.cunoc.ingenieria.Section[ id=" + id + " ]";
+        return "gt.edu.usac.cunoc.ingenieria.eps.project.Section[ id=" + id + " ]";
     }
     
 }

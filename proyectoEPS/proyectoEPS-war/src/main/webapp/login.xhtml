@@ -1,41 +1,41 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:p="http://primefaces.org/ui">
-    <h:head>
-        <title>INICIO DE SESION</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    </h:head>
-    
-    
-    <h:body>
-        <h:form>
-            
-            <!--<p:messages autoUpdate="true" /> -->
-            <h:panelGrid columns="2">
-                <p:outputLabel for="txtUsuario" value="Usuario" />
-                <p:inputText id="txtUsuario" required="true" />
-                
-                <p:outputLabel for="txtClave" value="Clave" />
-                <p:inputText id="txtClave" required="true" />
-            
-                <h:column />
-                <p:commandButton icon="ui-icon-key" value="Iniciar Sesion" />
-                
-            </h:panelGrid>
-            <p:separator />
-            
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="templates/template-one.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:define name="title">
+        Login
+    </ui:define>
+
+    <ui:define name="content">
+        <h:form id="frmLogin">            
+            <p:focus id="focuss" context="frmLogin" />
+            <p:messages  globalOnly="true"/>
+            <fieldset class="center-block">
+                <legend>Iniciar sesion</legend>
+
+                <div class="row">
+                    <div class="form-group col-sm-4">
+                        <p:outputLabel for="name" value="Nombre usuario" />
+                        <p:inputText id="name" styleClass="form-control" required="true"
+                                     pt:required="true"
+                                     />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-4">
+                        <p:outputLabel for="pass" value="Password:" />
+                        <p:password id="pass" styleClass="form-control" pt:placeholder="Contrasena" required="true"
+                                    pt:required="true"  pt:type="password"
+                                    requiredMessage="Ingrese contrasena"/>
+                    </div>
+                </div>
+            </fieldset>
         </h:form>
-        
-        
-        <!-- 
-        <div>TODO write content</div> 
-        -->
-    </h:body>
-</html>
+    </ui:define>
+
+</ui:composition>

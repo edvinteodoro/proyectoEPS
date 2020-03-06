@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="../templates/template-one.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:define name="head">
+        Crear Proyecto
+    </ui:define>
+    
+    <ui:define name="title">
+        Crear Proyecto
+    </ui:define>
+    
+    <ui:define name="content">
+        <h:form id="frmLogin">            
+            <p:focus id="focuss" context="frmLogin" />
+            <p:messages  globalOnly="true"/>
+            <fieldset class="center-block">
+                <legend>Crear Proyecto</legend> 
+                
+                <div class="row">
+                    <div  class="form-group col-sm-4">
+                        <p:outputLabel for="title" value="Titulo:"/>
+                        <p:inputText id="title" styleClass="form-control" pt:placeholder="Titulo del Proyecto"
+                                     pt:required="true"
+                                     value="#{createProjectView.title}"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-4">
+                        <p:outputLabel for="schedule"  value="Calendario:"/>
+                        <p:fileUpload id="schedule" fileUploadListener="#{createProjectView.handleSchedule}"
+                                      required="true"
+                                      skinSimple="true" auto="true"
+                                      label="Seleccionar"
+                                      >                                       
+                        </p:fileUpload>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-4">
+                        <p:outputLabel for="investmentPlan"  value="Plan de Inversión:"/>
+                        <p:fileUpload id="investmentPlan" fileUploadListener="#{createProjectView.handleInvestmentPlan}"
+                                      required="true"
+                                      skinSimple="true" auto="true"
+                                      label="Seleccionar"
+                                      >                                       
+                        </p:fileUpload>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-4">
+                        <p:outputLabel for="annexed"  value="Anexos:"/>
+                        <p:fileUpload id="annexed" fileUploadListener="#{createProjectView.handleAnnexed}"
+                                      required="true"
+                                      skinSimple="true" auto="true"
+                                      label="Seleccionar"
+                                      >                                       
+                        </p:fileUpload>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-4">
+                        <p:commandLink styleClass="btn btn-primary"
+                                       update="@form,:growl" 
+                                       action="#{createProjectView.upload()}">
+                            <span class="glyphicon glyphicon-log-in"></span> Crear Proyecto EPS
+                        </p:commandLink>
+                    </div>
+                </div>
+            </fieldset>
+        </h:form>
+    </ui:define>
+</ui:composition>

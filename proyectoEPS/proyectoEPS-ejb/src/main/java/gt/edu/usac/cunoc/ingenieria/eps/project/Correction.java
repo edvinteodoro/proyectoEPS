@@ -1,68 +1,40 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package gt.edu.usac.cunoc.ingenieria.eps.project;
 
-import gt.edu.usac.cunoc.ingenieria.eps.project.Objectives;
-import gt.edu.usac.cunoc.ingenieria.eps.project.Section;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Date;
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
 
-/**
- *
- * @author teodoro
- */
 @Entity
 @Table(name = "CORRECTION")
-@NamedQueries({
-    @NamedQuery(name = "Correction.findAll", query = "SELECT c FROM Correction c")})
 public class Correction implements Serializable {
 
-    private static final long serialVersionUID = 1L;
     @Id
-    @Basic(optional = false)
-    @NotNull
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
-    @Basic(optional = false)
-    @NotNull
-    @Lob
     @Column(name = "text")
-    private byte[] text;
-    @Basic(optional = false)
-    @NotNull
+    private Byte[] text;
     @Column(name = "date")
     private LocalDate date;
-    @JoinColumn(name = "BIBLIOGRAPHY_id", referencedColumnName = "id")
-    @ManyToOne
-    private Bibliography bIBLIOGRAPHYid;
-    @JoinColumn(name = "OBJECTIVES_id", referencedColumnName = "id")
-    @ManyToOne
-    private Objectives oBJECTIVESid;
-    @JoinColumn(name = "SECTION_id", referencedColumnName = "id")
-    @ManyToOne
-    private Section sECTIONid;
-    @JoinColumn(name = "USER_userId", referencedColumnName = "userId")
-    @ManyToOne(optional = false)
-    private User uSERuserId;
-
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Section section;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Bibliography bibliography;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Objectives objective;
+    
     public Correction() {
     }
 
@@ -70,7 +42,7 @@ public class Correction implements Serializable {
         this.id = id;
     }
 
-    public Correction(Integer id, byte[] text, LocalDate date) {
+    public Correction(Integer id, Byte[] text, LocalDate date) {
         this.id = id;
         this.text = text;
         this.date = date;
@@ -84,11 +56,11 @@ public class Correction implements Serializable {
         this.id = id;
     }
 
-    public byte[] getText() {
+    public Byte[] getText() {
         return text;
     }
 
-    public void setText(byte[] text) {
+    public void setText(Byte[] text) {
         this.text = text;
     }
 
@@ -100,36 +72,36 @@ public class Correction implements Serializable {
         this.date = date;
     }
 
-    public Bibliography getBIBLIOGRAPHYid() {
-        return bIBLIOGRAPHYid;
+    public User getUser() {
+        return user;
     }
 
-    public void setBIBLIOGRAPHYid(Bibliography bIBLIOGRAPHYid) {
-        this.bIBLIOGRAPHYid = bIBLIOGRAPHYid;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public Objectives getOBJECTIVESid() {
-        return oBJECTIVESid;
+    public Section getSection() {
+        return section;
     }
 
-    public void setOBJECTIVESid(Objectives oBJECTIVESid) {
-        this.oBJECTIVESid = oBJECTIVESid;
+    public void setSection(Section section) {
+        this.section = section;
     }
 
-    public Section getSECTIONid() {
-        return sECTIONid;
+    public Bibliography getBibliography() {
+        return bibliography;
     }
 
-    public void setSECTIONid(Section sECTIONid) {
-        this.sECTIONid = sECTIONid;
+    public void setBibliography(Bibliography bibliography) {
+        this.bibliography = bibliography;
     }
 
-    public User getUSERuserId() {
-        return uSERuserId;
+    public Objectives getObjective() {
+        return objective;
     }
 
-    public void setUSERuserId(User uSERuserId) {
-        this.uSERuserId = uSERuserId;
+    public void setObjective(Objectives objective) {
+        this.objective = objective;
     }
 
     @Override
@@ -154,7 +126,7 @@ public class Correction implements Serializable {
 
     @Override
     public String toString() {
-        return "gt.edu.usac.cunoc.ingenieria.Correction[ id=" + id + " ]";
+        return "gt.edu.usac.cunoc.ingenieria.eps.project.Correction[ id=" + id + " ]";
     }
     
 }

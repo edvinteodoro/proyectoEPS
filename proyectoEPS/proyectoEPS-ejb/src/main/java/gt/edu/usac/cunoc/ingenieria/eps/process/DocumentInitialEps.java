@@ -45,8 +45,6 @@ public class DocumentInitialEps implements Serializable {
     private byte[] approvalAct;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "dOCUMENTINITIALEPSid")
     private Collection<Journal> journalCollection;
-    @OneToMany(mappedBy = "dOCUMENTINITIALEPSid")
-    private Collection<Process> processCollection;
     @JoinColumn(name = "USER_adviserProposal", referencedColumnName = "userId")
     @ManyToOne(optional = false)
     private User uSERadviserProposal;
@@ -83,14 +81,6 @@ public class DocumentInitialEps implements Serializable {
 
     public void setJournalCollection(Collection<Journal> journalCollection) {
         this.journalCollection = journalCollection;
-    }
-
-    public Collection<Process> getProcessCollection() {
-        return processCollection;
-    }
-
-    public void setProcessCollection(Collection<Process> processCollection) {
-        this.processCollection = processCollection;
     }
 
     public User getUSERadviserProposal() {
@@ -133,5 +123,5 @@ public class DocumentInitialEps implements Serializable {
     public String toString() {
         return "gt.edu.usac.cunoc.ingenieria.DocumentInitialEps[ id=" + id + " ]";
     }
-    
+
 }

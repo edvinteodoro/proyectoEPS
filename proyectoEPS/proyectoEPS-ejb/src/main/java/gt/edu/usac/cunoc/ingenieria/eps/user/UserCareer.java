@@ -44,8 +44,6 @@ public class UserCareer implements Serializable {
     @JoinColumn(name = "USER_userId", referencedColumnName = "userId")
     @ManyToOne(optional = false)
     private User uSERuserId;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "uSERCAREERid")
-    private Collection<Process> processCollection;
 
     public UserCareer() {
     }
@@ -76,14 +74,6 @@ public class UserCareer implements Serializable {
 
     public void setUSERuserId(User uSERuserId) {
         this.uSERuserId = uSERuserId;
-    }
-
-    public Collection<Process> getProcessCollection() {
-        return processCollection;
-    }
-
-    public void setProcessCollection(Collection<Process> processCollection) {
-        this.processCollection = processCollection;
     }
 
     @Override

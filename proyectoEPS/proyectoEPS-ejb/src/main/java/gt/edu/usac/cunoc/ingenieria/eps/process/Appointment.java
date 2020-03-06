@@ -43,8 +43,6 @@ public class Appointment implements Serializable {
     @JoinColumn(name = "USER_reviewer", referencedColumnName = "userId")
     @ManyToOne(optional = false)
     private User uSERreviewer;
-    @OneToMany(mappedBy = "aPPOINTMENTid")
-    private Collection<Process> processCollection;
 
     public Appointment() {
     }
@@ -75,14 +73,6 @@ public class Appointment implements Serializable {
 
     public void setUSERreviewer(User uSERreviewer) {
         this.uSERreviewer = uSERreviewer;
-    }
-
-    public Collection<Process> getProcessCollection() {
-        return processCollection;
-    }
-
-    public void setProcessCollection(Collection<Process> processCollection) {
-        this.processCollection = processCollection;
     }
 
     @Override

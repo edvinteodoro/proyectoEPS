@@ -17,8 +17,13 @@ import javax.persistence.criteria.Root;
 @Stateless
 @LocalBean
 public class RolRepository {
+    
     @PersistenceContext(name = PERSISTENCE_UNIT_NAME)
     private EntityManager entityManager;
+    
+    public void setEntityManager(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
 
     public List<Rol> getAllRolUser() {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();

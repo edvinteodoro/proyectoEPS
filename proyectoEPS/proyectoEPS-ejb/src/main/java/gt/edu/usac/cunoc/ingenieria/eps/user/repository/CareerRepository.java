@@ -4,9 +4,11 @@ import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.PERSISTEN
 import gt.edu.usac.cunoc.ingenieria.eps.user.Career;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -17,30 +19,32 @@ import javax.persistence.criteria.Root;
 @Stateless
 @LocalBean
 public class CareerRepository {
-    @PersistenceContext(name = PERSISTENCE_UNIT_NAME)
+    public static final String FIND_BY_ID = "SELECT g FROM Career g WHERE g.codigo = :codigo";
+    public static final String GET_ALL = "SELECT g FROM Career g";
+    
+    
     private EntityManager entityManager;
+    
+    @PersistenceContext(name = PERSISTENCE_UNIT_NAME)
 
-    public List<Career> getAllCareers() {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Career> criteriaQuery = criteriaBuilder.createQuery(Career.class);
-        Root<Career> rootEntry = criteriaQuery.from(Career.class);
-        CriteriaQuery<Career> all = criteriaQuery.select(rootEntry);
-        TypedQuery<Career> allQuery = entityManager.createQuery(all);
-        return allQuery.getResultList();
+    public void setEntityManager(EntityManager entityManager) {
+        this.entityManager = entityManager;
     }
-    public List<Career> getCareer(Career career){
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<Career> criteriaQuery = criteriaBuilder.createQuery(Career.class);
-        Root<Career> position = criteriaQuery.from(Career.class);
-        List<Predicate> predicates = new ArrayList<>();
-        if (career.getCodigo() != null) {
-            predicates.add(criteriaBuilder.equal(position.get("codigo"), career.getCodigo()));
+    
+    public Optional<Career> findById(Integer codigo){
+        TypedQuery<Career> typedQuery = entityManager.createQuery(FIND_BY_ID,Career.class).setParameter("codigo", codigo);
+        try {
+            return Optional.of(typedQuery.getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
+        } catch (NullPointerException e){
+            return Optional.empty();
         }
-        if (career.getName() != null) {
-            predicates.add(criteriaBuilder.like(position.get("name"), "%" + career.getName()+ "%"));
-        }
-        criteriaQuery.where(predicates.stream().toArray(Predicate[]::new));
-        TypedQuery<Career> query = entityManager.createQuery(criteriaQuery);
-        return query.getResultList();
+ 
+    }
+    
+    public List<Career> getAll(){
+        TypedQuery<Career> typedQuery = entityManager.createQuery(GET_ALL,Career.class);
+        return typedQuery.getResultList();
     }
 }

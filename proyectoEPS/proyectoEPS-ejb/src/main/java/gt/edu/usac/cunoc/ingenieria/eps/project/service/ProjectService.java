@@ -3,6 +3,7 @@ package gt.edu.usac.cunoc.ingenieria.eps.project.service;
 
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.PERSISTENCE_UNIT_NAME;
 import gt.edu.usac.cunoc.ingenieria.eps.configuration.repository.PropertyRepository;
+import gt.edu.usac.cunoc.ingenieria.eps.exception.LimitException;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.MandatoryException;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
 import javax.ejb.LocalBean;
@@ -24,9 +25,12 @@ public class ProjectService {
     public ProjectService() {
     }
     
-    public Project create(Project project) throws MandatoryException{
+    public Project create(Project project) throws MandatoryException, LimitException{
         if (project.getTitle() == null){
             throw new MandatoryException("Atributo Titulo Obligatorio");
+        }
+        if (project.getTitle().length() > PropertyRepository.CHARACTER_LIMIT_TITLE.getValueInt()){
+            throw new LimitException("Titulo fuera de limites, Número de Caracteres Maximo " + PropertyRepository.CHARACTER_LIMIT_TITLE.getValueInt());
         }
         if (project.getSchedule() == null){
             throw new MandatoryException("Archivo Calendario Obligatorio");

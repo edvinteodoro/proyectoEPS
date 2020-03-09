@@ -29,7 +29,7 @@ public class Objectives implements Serializable {
     @Column(name = "state")
     private Short state;
     @Column(name = "text")
-    private Byte[] text;
+    private String text;
     @Column(name = "lastModificationDate")
     private LocalDate lastModificationDate;
     
@@ -45,7 +45,7 @@ public class Objectives implements Serializable {
         this.id = id;
     }
 
-    public Objectives(Integer id, Short state, Byte[] text, LocalDate lastModificationDate) {
+    public Objectives(Integer id, Short state, String text, LocalDate lastModificationDate) {
         this.id = id;
         this.state = state;
         this.text = text;
@@ -68,11 +68,11 @@ public class Objectives implements Serializable {
         this.state = state;
     }
 
-    public Byte[] getText() {
+    public String getText() {
         return text;
     }
 
-    public void setText(Byte[] text) {
+    public void setText(String text) {
         this.text = text;
     }
 

@@ -1,13 +1,16 @@
 
 package gt.edu.usac.cunoc.ingenieria.eps.project.facade;
 
+import gt.edu.usac.cunoc.ingenieria.eps.exception.LimitException;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.MandatoryException;
+import gt.edu.usac.cunoc.ingenieria.eps.project.Objectives;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
+import java.util.List;
 import javax.ejb.Local;
 
 @Local
 public interface ProjectFacadeLocal {
     
-    public Project createProject(Project project) throws MandatoryException;
+    public Project createProject(Project project, List<Objectives> generalObjective, List<Objectives> specificObjective) throws MandatoryException, LimitException;
 
 }

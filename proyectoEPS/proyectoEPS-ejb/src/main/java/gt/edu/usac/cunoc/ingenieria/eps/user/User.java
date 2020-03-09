@@ -87,7 +87,7 @@ public class User implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "state")
-    private short state;
+    private Boolean state;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "uSERuserId")
     private Collection<UserCareer> userCareerCollection;
     @JoinColumn(name = "ROL_id", referencedColumnName = "id")
@@ -109,7 +109,7 @@ public class User implements Serializable {
         this.userId = userId;
     }
 
-    public User(String userId, String dpi, String firstName, String lastName, String email, String phone, String password, short state) {
+    public User(String userId, String dpi, String firstName, String lastName, String email, String phone, String password, Boolean state) {
         this.userId = userId;
         this.dpi = dpi;
         this.firstName = firstName;
@@ -208,11 +208,11 @@ public class User implements Serializable {
         this.direction = direction;
     }
 
-    public short getState() {
+    public Boolean getState() {
         return state;
     }
 
-    public void setState(short state) {
+    public void setState(Boolean state) {
         this.state = state;
     }
 

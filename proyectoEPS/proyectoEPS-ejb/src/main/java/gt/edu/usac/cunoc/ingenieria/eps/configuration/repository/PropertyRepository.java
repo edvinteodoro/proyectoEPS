@@ -34,21 +34,21 @@ public class PropertyRepository {
         this.entityManager = entityManager;
     }
     
-    @PostConstruct
-    public void initialize(){
-        
-        MAXIMUM_SUPERVISOR_WORKLOAD = entityManager.createQuery("SELECT p FROM Property p WHERE p.name = 'MAXIMUM_SUPERVISOR_WORKLOAD'",Property.class).getSingleResult();
-        VALIDATION_PERCENTAGE_EXTENSION =  entityManager.createQuery("SELECT p FROM Property p WHERE p.name = 'VALIDATION_PERCENTAGE_EXTENSION'",Property.class).getSingleResult();
-        REVIEW_TIME_DAYS =  entityManager.createQuery("SELECT p FROM Property p WHERE p.name = 'REVIEW_TIME_DAYS'",Property.class).getSingleResult();
-        TIME_OF_PROCESS_WITHOUT_MOVEMENT =  entityManager.createQuery("SELECT p FROM Property p WHERE p.name = 'TIME_OF_PROCESS_WITHOUT_MOVEMENT'",Property.class).getSingleResult();
-        DEADLINE_TO_SUBMIT_DOCUMENT =  entityManager.createQuery("SELECT p FROM Property p WHERE p.name = 'DEADLINE_TO_SUBMIT_DOCUMENT'",Property.class).getSingleResult();
-        MINIMUN_EXECUTION_MONTHS =  entityManager.createQuery("SELECT p FROM Property p WHERE p.name = 'MINIMUN_EXECUTION_MONTHS'",Property.class).getSingleResult();
-        MAXIMUN_EXECUTION_MONTHS =  entityManager.createQuery("SELECT p FROM Property p WHERE p.name = 'MAXIMUN_EXECUTION_MONTHS'",Property.class).getSingleResult();
-        CHARACTER_LIMIT_TITLE =  entityManager.createQuery("SELECT p FROM Property p WHERE p.name = 'CHARACTER_LIMIT_TITLE'",Property.class).getSingleResult();
-        LIMIT_GENERAL_OBJECTIVE =  entityManager.createQuery("SELECT p FROM Property p WHERE p.name = 'LIMIT_GENERAL_OBJECTIVE'",Property.class).getSingleResult();
-        LIMIT_SPECIFIC_OBJECTIVE =  entityManager.createQuery("SELECT p FROM Property p WHERE p.name = 'LIMIT_SPECIFIC_OBJECTIVE'",Property.class).getSingleResult();
-        CHARACTER_LIMIT_JUSTIFICATION =  entityManager.createQuery("SELECT p FROM Property p WHERE p.name = 'CHARACTER_LIMIT_JUSTIFICATION'",Property.class).getSingleResult();
-        GENERAL_LIMIT_RECEPTION_DATE =  entityManager.createQuery("SELECT p FROM Property p WHERE p.name = 'GENERAL_LIMIT_RECEPTION_DATE'",Property.class).getSingleResult();
-     
-    }   
+//    @PostConstruct
+//    public void initialize(){
+//        
+//        MAXIMUM_SUPERVISOR_WORKLOAD = entityManager.createQuery("SELECT p FROM Property p WHERE p.name = 'MAXIMUM_SUPERVISOR_WORKLOAD'",Property.class).getSingleResult();
+//        VALIDATION_PERCENTAGE_EXTENSION =  entityManager.createQuery("SELECT p FROM Property p WHERE p.name = 'VALIDATION_PERCENTAGE_EXTENSION'",Property.class).getSingleResult();
+//        REVIEW_TIME_DAYS =  entityManager.createQuery("SELECT p FROM Property p WHERE p.name = 'REVIEW_TIME_DAYS'",Property.class).getSingleResult();
+//        TIME_OF_PROCESS_WITHOUT_MOVEMENT =  entityManager.createQuery("SELECT p FROM Property p WHERE p.name = 'TIME_OF_PROCESS_WITHOUT_MOVEMENT'",Property.class).getSingleResult();
+//        DEADLINE_TO_SUBMIT_DOCUMENT =  entityManager.createQuery("SELECT p FROM Property p WHERE p.name = 'DEADLINE_TO_SUBMIT_DOCUMENT'",Property.class).getSingleResult();
+//        MINIMUN_EXECUTION_MONTHS =  entityManager.createQuery("SELECT p FROM Property p WHERE p.name = 'MINIMUN_EXECUTION_MONTHS'",Property.class).getSingleResult();
+//        MAXIMUN_EXECUTION_MONTHS =  entityManager.createQuery("SELECT p FROM Property p WHERE p.name = 'MAXIMUN_EXECUTION_MONTHS'",Property.class).getSingleResult();
+//        CHARACTER_LIMIT_TITLE =  entityManager.createQuery("SELECT p FROM Property p WHERE p.name = 'CHARACTER_LIMIT_TITLE'",Property.class).getSingleResult();
+//        LIMIT_GENERAL_OBJECTIVE =  entityManager.createQuery("SELECT p FROM Property p WHERE p.name = 'LIMIT_GENERAL_OBJECTIVE'",Property.class).getSingleResult();
+//        LIMIT_SPECIFIC_OBJECTIVE =  entityManager.createQuery("SELECT p FROM Property p WHERE p.name = 'LIMIT_SPECIFIC_OBJECTIVE'",Property.class).getSingleResult();
+//        CHARACTER_LIMIT_JUSTIFICATION =  entityManager.createQuery("SELECT p FROM Property p WHERE p.name = 'CHARACTER_LIMIT_JUSTIFICATION'",Property.class).getSingleResult();
+//        GENERAL_LIMIT_RECEPTION_DATE =  entityManager.createQuery("SELECT p FROM Property p WHERE p.name = 'GENERAL_LIMIT_RECEPTION_DATE'",Property.class).getSingleResult();
+//     
+//    }   
 }

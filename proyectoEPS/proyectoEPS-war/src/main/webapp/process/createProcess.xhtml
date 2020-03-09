@@ -25,8 +25,11 @@
                                                   styleClass="in-dialog"
                                                   skinSimple="true" auto="true" allowTypes="/(\.|\/)(pdf)$/"
                                                   update="@parent"
-                                                  label="Seleccionar"/>
-                        <p:outputLabel value="#{createProcessView.nameWrittenRequest}" class="text-primary"/>
+                                                  label="Seleccionar"
+                                                  invalidFileMessage="Solo se puede cargar archivos pdf"/>
+                        <h:commandLink value="#{createProcessView.nameWrittenRequest}"  target="_blank" actionListener="#{createProcessView.reloadWrittenRequest()}">
+                            <p:fileDownload value="#{createProcessView.writtenRequestStream}" contentDisposition="inline"/>
+                        </h:commandLink>
                     </div>
                 </div>
                 <div class="row">
@@ -37,8 +40,11 @@
                                                   styleClass="in-dialog"
                                                   skinSimple="true" auto="true" allowTypes="/(\.|\/)(pdf)$/"
                                                   update="@parent"
-                                                  label="Seleccionar"/>
-                        <p:outputLabel value="#{createProcessView.nameInscriptionConstancy}" class="text-primary"/>
+                                                  label="Seleccionar"
+                                                  invalidFileMessage="Solo se puede cargar archivos pdf"/>
+                        <h:commandLink value="#{createProcessView.nameInscriptionConstancy}"  target="_blank" actionListener="#{createProcessView.reloadInscriptionConstancy()}">
+                            <p:fileDownload value="#{createProcessView.inscriptionConstancyStream}" contentDisposition="inline"/>
+                        </h:commandLink>
                     </div>
                 </div>
                 <div class="row">
@@ -49,8 +55,11 @@
                                                   styleClass="in-dialog"
                                                   skinSimple="true" auto="true" allowTypes="/(\.|\/)(pdf)$/"
                                                   update="@parent"
-                                                  label="Seleccionar"/>
-                        <p:outputLabel value="#{createProcessView.namePensumeClosure}" class="text-primary"/>
+                                                  label="Seleccionar"
+                                                  invalidFileMessage="Solo se puede cargar archivos pdf"/>
+                        <h:commandLink value="#{createProcessView.namePensumeClosure}"  target="_blank" actionListener="#{createProcessView.reloadPensumeClosure()}">
+                            <p:fileDownload value="#{createProcessView.pensumeClosureStream}" contentDisposition="inline"/>
+                        </h:commandLink>
                     </div>
                 </div>
                 <div class="row">
@@ -61,8 +70,11 @@
                                                   styleClass="in-dialog"
                                                   skinSimple="true" auto="true" allowTypes="/(\.|\/)(pdf)$/"
                                                   update="@parent"
-                                                  label="Seleccionar"/>
-                        <p:outputLabel value="#{createProcessView.namePropedeuticConstancy}" class="text-primary"/>
+                                                  label="Seleccionar"
+                                                  invalidFileMessage="Solo se puede cargar archivos pdf"/>
+                        <h:commandLink value="#{createProcessView.namePropedeuticConstancy}"  target="_blank" actionListener="#{createProcessView.reloadPropedeuticConstancy()}">
+                            <p:fileDownload value="#{createProcessView.propedeuticConstancyStream}" contentDisposition="inline"/>
+                        </h:commandLink>    
                     </div>
                 </div>
                 <div class="row">
@@ -73,8 +85,11 @@
                                                   styleClass="in-dialog"
                                                   skinSimple="true" auto="true" allowTypes="/(\.|\/)(pdf)$/"
                                                   update="@parent"
-                                                  label="Seleccionar"/>
-                        <p:outputLabel value="#{createProcessView.nameEpsPreProjec}" class="text-primary"/>
+                                                  label="Seleccionar"
+                                                  invalidFileMessage="Solo se puede cargar archivos pdf"/>
+                        <h:commandLink value="#{createProcessView.nameEpsPreProjec}"  target="_blank" actionListener="#{createProcessView.reloadEpsPreProjec()}">
+                            <p:fileDownload value="#{createProcessView.epsPreProjectStream}" contentDisposition="inline"/>
+                        </h:commandLink>
                     </div>
                 </div>
                 <div class="row">
@@ -84,8 +99,11 @@
                                                   styleClass="in-dialog"
                                                   skinSimple="true" auto="true" allowTypes="/(\.|\/)(pdf)$/"
                                                   update="@parent"
-                                                  label="Seleccionar"/>
-                        <p:outputLabel value="#{createProcessView.nameAeioSettlemen}" class="text-primary"/>
+                                                  label="Seleccionar"
+                                                  invalidFileMessage="Solo se puede cargar archivos pdf"/>
+                        <h:commandLink value="#{createProcessView.nameAeioSettlemen}"  target="_blank" actionListener="#{createProcessView.reloadAeioSettlemen()}">
+                            <p:fileDownload value="#{createProcessView.aeioSettlementStream}" contentDisposition="inline"/>
+                        </h:commandLink>
                     </div>
                 </div>
                 <br></br>

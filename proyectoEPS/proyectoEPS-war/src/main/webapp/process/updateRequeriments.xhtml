@@ -5,20 +5,10 @@
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
-                xmlns:jsf="http://xmlns.jcp.org/jsf"
-                xmlns:f="http://xmlns.jcp.org/jsf/core"
-                xmlns:o="http://omnifaces.org/ui">
-
-    <f:metadata>
-        <o:viewParam name="idRequeriment" required="true" value="#{updateProcessView.processId}"
-                     requiredMessage="Ningun valor">
-            <o:viewParamValidationFailed sendError="404" message="Error parametro"/>
-        </o:viewParam>
-        <o:viewAction action="#{updateProcessView.loadCurrentProcess()}" />
-    </f:metadata>
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <ui:define name="title">
-        Revision Requisitos
+        Modificar Requisitos
     </ui:define>
 
     <ui:define name="content">
@@ -26,112 +16,55 @@
             <p:focus id="focuss" context="frmLogin" />
             <p:messages  globalOnly="true"/>
             <fieldset class="center-block">
-                <legend>Actualizar Requisitos</legend> 
+                <legend>Agregar Requisitos</legend> 
                 <div class="row">
                     <div class="form-group col-sm-4">
-                    <p:outputLabel for="writtenRequest" value="Carta de Solicitud EPS Escritas:" />
-                    <p:fileUpload id="writtenRequest" fileUploadListener="#{updateProcessView.handleWrittenRequest}"
-                                  required="true" 
-                                  styleClass="in-dialog"
-                                  skinSimple="true" auto="true" allowTypes="/(\.|\/)(pdf)$/"
-                                  update="@parent"
-                                  label="Seleccionar"
-                                  invalidFileMessage="Solo se puede cargar archivos pdf"/>
-                    <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{updateProcessView.reloadWrittenRequest()}">
-                        <p:fileDownload value="#{updateProcessView.writtenRequestStream}" contentDisposition="inline"/>
-                    </h:commandLink>  
+                        <p:outputLabel value="Carta de Solicitud EPS Escritas:" />
+                        <p:fileUpload fileUploadListener="#{createProcessView.handleFileUpload}" 
+                                                  styleClass="in-dialog"
+                                                  skinSimple="true" auto="true" allowTypes="/(\.|\/)(pdf)$/"
+                                                  update="@parent"
+                                                  label="Seleccionar"/>
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-sm-4">
-                        <p:outputLabel for="inscriptionConstancy" value="Constancia de Inscripcion:"/>
-                        <p:fileUpload id="inscriptionConstancy" fileUploadListener="#{updateProcessView.handleInscriptionConstancy}" 
-                                      required="true"   
-                                      styleClass="in-dialog"
-                                      skinSimple="true" auto="true" allowTypes="/(\.|\/)(pdf)$/"
-                                      update="@parent"
-                                      label="Seleccionar"
-                                      invalidFileMessage="Solo se puede cargar archivos pdf"/>
-                        <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{updateProcessView.reloadInscriptionConstancy()}">
-                            <p:fileDownload value="#{updateProcessView.inscriptionConstancyStream}" contentDisposition="inline"/>
-                        </h:commandLink>  
+                        <p:outputLabel for="inscriptionConstancy" value="Constancia de Inscripcion:" />
+                        <p:fileUpload id="inscriptionConstancy" value="#{createProcessView.requeriment.inscriptionConstancy}" mode="simple" skinSimple="true" required="true" pt:required="true"/>
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-sm-4">
-                        <p:outputLabel for="pensumeClosure" value="Constancia de Cierre de Pensum:"/>
-                        <p:fileUpload id="pensumeClosure" fileUploadListener="#{updateProcessView.handlePensumeClosure}"
-                                      required="true"   
-                                      styleClass="in-dialog"
-                                      skinSimple="true" auto="true" allowTypes="/(\.|\/)(pdf)$/"
-                                      update="@parent"
-                                      label="Seleccionar"
-                                      invalidFileMessage="Solo se puede cargar archivos pdf"/>
-                        <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{updateProcessView.reloadPensumeClosure()}">
-                            <p:fileDownload value="#{updateProcessView.pensumeClosureStream}" contentDisposition="inline"/>
-                        </h:commandLink>  
+                        <p:outputLabel for="pensumClosure" value="Constancia de Cierre de Pensum:" />
+                        <p:fileUpload id="pensumClosure" value="#{createProcessView.requeriment.pensumClosure}" mode="simple" skinSimple="true" required="true" pt:required="true"/>
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-sm-4">
-                        <p:outputLabel for="propedeuticConstancy" value="Constancia de Propedeutico:"/>
-                        <p:fileUpload id="propedeuticConstancy"  fileUploadListener="#{updateProcessView.handlePropedeuticConstancy}"
-                                      required="true"   
-                                      styleClass="in-dialog"
-                                      skinSimple="true" auto="true" allowTypes="/(\.|\/)(pdf)$/"
-                                      update="@parent"
-                                      label="Seleccionar"
-                                      invalidFileMessage="Solo se puede cargar archivos pdf"/>
-                        <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{updateProcessView.reloadPropedeuticConstancy()}">
-                            <p:fileDownload value="#{updateProcessView.propedeuticConstancyStream}" contentDisposition="inline"/>
-                        </h:commandLink>    
+                        <p:outputLabel for="propedeuticConstancy" value="Constancia de Propedeutico:" />
+                        <p:fileUpload id="propedeuticConstancy" value="#{createProcessView.requeriment.propedeuticConstancy}" mode="simple" skinSimple="true" required="true" pt:required="true"/>
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-sm-4">
-                        <p:outputLabel for="epsPreProject"  value="Constancia de Pre Proyecto:"/>
-                        <p:fileUpload id="epsPreProject" fileUploadListener="#{updateProcessView.handleEpsPreProject}"
-                                      required="true"  
-                                      styleClass="in-dialog"
-                                      skinSimple="true" auto="true" allowTypes="/(\.|\/)(pdf)$/"
-                                      update="@parent"
-                                      label="Seleccionar"
-                                      invalidFileMessage="Solo se puede cargar archivos pdf"/>
-                        <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{updateProcessView.reloadEpsPreProjec()}">
-                            <p:fileDownload value="#{updateProcessView.epsPreProjectStream}" contentDisposition="inline"/>
-                        </h:commandLink>
+                        <p:outputLabel for="EPSpreproject" value="Constancia de Pre Proyecto:" />
+                        <p:fileUpload id="EPSpreproject" value="#{createProcessView.requeriment.EPSpreproject}" mode="simple" skinSimple="true" required="true" pt:required="true"/>
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-sm-4">
-                        <p:outputLabel value="Documento Finiquito de AEIO:"/>
-                        <p:fileUpload fileUploadListener="#{updateProcessView.handleAeioSettlement}" 
-                                      styleClass="in-dialog"
-                                      skinSimple="true" auto="true" allowTypes="/(\.|\/)(pdf)$/"
-                                      update="@parent"
-                                      label="Seleccionar"
-                                      invalidFileMessage="Solo se puede cargar archivos pdf"/>
-                        <h:commandLink value="Ver Documento"  target="_blank" rendered="#{updateProcessView.showAeioSettlement}" actionListener="#{updateProcessView.reloadAeioSettlemen()}">
-                            <p:fileDownload value="#{updateProcessView.aeioSettlementStream}" contentDisposition="inline"/>
-                        </h:commandLink>
+                        <p:outputLabel for="AEIOsettlement" value="Documento Finiquito de AEIO:" />
+                        <p:fileUpload id="AEIOsettlement" value="#{createProcessView.requeriment.AEIOsettlement}" mode="simple" skinSimple="true"/>
                     </div>
                 </div>
                 <br></br>
                 <div class="row">
-                    <div class="form-group col-sm-2">
-                        <button styleClass="btn btn-primary"
+                    <div class="form-group col-sm-4">
+                        <p:commandLink styleClass="btn btn-primary"
                                        update="@form,:growl" 
-                                       jsf:outcome="processes">
-                            <span class="glyphicon glyphicon-floppy-remove"></span> Cancelar
-                        </button>
-                    </div>
-                    <div class="form-group col-sm-2">
-                        <button styleClass="btn btn-primary"
-                                       update="@form,:growl" 
-                                       action="#{updateProcessView.save()}"
-                                       jsf:outcome="processes">
-                            <span class="glyphicon glyphicon-floppy-saved"></span> Guardar Cambios
-                        </button>
+                                       action="#{createProcessView.guardar()}">
+                            <span class="glyphicon glyphicon-log-in"></span> Crear Proceso EPS
+                        </p:commandLink>
                     </div>
                 </div>
             </fieldset>

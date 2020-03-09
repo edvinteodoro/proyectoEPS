@@ -4,7 +4,6 @@ import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Requeriment;
 import gt.edu.usac.cunoc.ingenieria.eps.process.facade.ProcessFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.utils.MessageUtils;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import javax.annotation.PostConstruct;
@@ -14,8 +13,6 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.DefaultStreamedContent;
-import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
 
 @Named
@@ -27,7 +24,6 @@ public class CreateProcessView implements Serializable {
     
     @EJB
     private ProcessFacadeLocal processFacade;
-    
 
     private UploadedFile writtenRequest;
     private UploadedFile inscriptionConstancy;
@@ -35,13 +31,6 @@ public class CreateProcessView implements Serializable {
     private UploadedFile propedeuticConstancy;
     private UploadedFile epsPreProject;
     private UploadedFile aeioSettlement;
-    
-    private StreamedContent writtenRequestStream;
-    private StreamedContent inscriptionConstancyStream;
-    private StreamedContent pensumeClosureStream;
-    private StreamedContent propedeuticConstancyStream;
-    private StreamedContent epsPreProjectStream;
-    private StreamedContent aeioSettlementStream;
 
     private Requeriment requeriment;
 
@@ -56,6 +45,7 @@ public class CreateProcessView implements Serializable {
     
     @PostConstruct
     public void init() {
+
     }
 
     public Process getProcess() {
@@ -154,37 +144,30 @@ public class CreateProcessView implements Serializable {
     public void handleWrittenRequest(FileUploadEvent event) {
         writtenRequest = event.getFile();
         nameWrittenRequest= event.getFile().getFileName();
-        writtenRequestStream = new DefaultStreamedContent(new ByteArrayInputStream(writtenRequest.getContents()), "application/pdf", "Solicitud Escrita.pdf");
     }
 
     public void handleInscriptionConstancy(FileUploadEvent event) {
         inscriptionConstancy = event.getFile();
         nameInscriptionConstancy=event.getFile().getFileName();
-        inscriptionConstancyStream=new DefaultStreamedContent(new ByteArrayInputStream(inscriptionConstancy.getContents()), "application/pdf", "Solicitud Escrita.pdf");
     }
 
     public void handlePensumeClosure(FileUploadEvent event) {
         pensumeClosure = event.getFile();
         namePensumeClosure=event.getFile().getFileName();
-        pensumeClosureStream=new DefaultStreamedContent(new ByteArrayInputStream(pensumeClosure.getContents()), "application/pdf", "Solicitud Escrita.pdf");
     }
 
     public void handlePropedeuticConstancy(FileUploadEvent event) {
         propedeuticConstancy = event.getFile();
         namePropedeuticConstancy=event.getFile().getFileName();
-        propedeuticConstancyStream=new DefaultStreamedContent(new ByteArrayInputStream(propedeuticConstancy.getContents()), "application/pdf", "Solicitud Escrita.pdf");
     }
 
     public void handleEpsPreProject(FileUploadEvent event) {
         epsPreProject = event.getFile();
         nameEpsPreProjec= event.getFile().getFileName();
-        epsPreProjectStream=new DefaultStreamedContent(new ByteArrayInputStream(epsPreProject.getContents()), "application/pdf", "Solicitud Escrita.pdf");
     }
 
     public void handleAeioSettlement(FileUploadEvent event) {
         aeioSettlement = event.getFile();
-        nameAeioSettlemen= event.getFile().getFileName();
-        aeioSettlementStream=new DefaultStreamedContent(new ByteArrayInputStream(aeioSettlement.getContents()), "application/pdf", "Solicitud Escrita.pdf");        
     }
 
     public Boolean nullFiles() {
@@ -198,73 +181,4 @@ public class CreateProcessView implements Serializable {
     private void redirectToProcesses() throws IOException{ 
         externalContext.redirect(externalContext.getRequestContextPath() + "/process/processes.xhtml");
     }
-
-    public StreamedContent getWrittenRequestStream() {
-        return writtenRequestStream;
-    }
-
-    public void setWrittenRequestStream(StreamedContent writtenRequestStream) {
-        this.writtenRequestStream = writtenRequestStream;
-    }
-
-    public StreamedContent getInscriptionConstancyStream() {
-        return inscriptionConstancyStream;
-    }
-
-    public void setInscriptionConstancyStream(StreamedContent inscriptionConstancyStream) {
-        this.inscriptionConstancyStream = inscriptionConstancyStream;
-    }
-
-    public StreamedContent getPensumeClosureStream() {
-        return pensumeClosureStream;
-    }
-
-    public void setPensumeClosureStream(StreamedContent pensumeClosureStream) {
-        this.pensumeClosureStream = pensumeClosureStream;
-    }
-
-    public StreamedContent getPropedeuticConstancyStream() {
-        return propedeuticConstancyStream;
-    }
-
-    public void setPropedeuticConstancyStream(StreamedContent propedeuticConstancyStream) {
-        this.propedeuticConstancyStream = propedeuticConstancyStream;
-    }
-
-    public StreamedContent getEpsPreProjectStream() {
-        return epsPreProjectStream;
-    }
-
-    public void setEpsPreProjectStream(StreamedContent epsPreProjectStream) {
-        this.epsPreProjectStream = epsPreProjectStream;
-    }
-
-    public StreamedContent getAeioSettlementStream() {
-        return aeioSettlementStream;
-    }
-
-    public void setAeioSettlementStream(StreamedContent aeioSettlementStream) {
-        this.aeioSettlementStream = aeioSettlementStream;
-    }
-    
-    public void reloadWrittenRequest(){
-        writtenRequestStream = new DefaultStreamedContent(new ByteArrayInputStream(writtenRequest.getContents()), "application/pdf", "Solicitud Escrita.pdf");
-    }
-    public void reloadInscriptionConstancy(){
-        writtenRequestStream = new DefaultStreamedContent(new ByteArrayInputStream(writtenRequest.getContents()), "application/pdf", "Solicitud Escrita.pdf");
-    }
-    public void reloadPensumeClosure(){
-        writtenRequestStream = new DefaultStreamedContent(new ByteArrayInputStream(writtenRequest.getContents()), "application/pdf", "Solicitud Escrita.pdf");
-    }
-    public void reloadPropedeuticConstancy(){
-        writtenRequestStream = new DefaultStreamedContent(new ByteArrayInputStream(writtenRequest.getContents()), "application/pdf", "Solicitud Escrita.pdf");
-    }
-    public void reloadEpsPreProjec(){
-        writtenRequestStream = new DefaultStreamedContent(new ByteArrayInputStream(writtenRequest.getContents()), "application/pdf", "Solicitud Escrita.pdf");
-    }
-    public void reloadAeioSettlemen(){
-        writtenRequestStream = new DefaultStreamedContent(new ByteArrayInputStream(writtenRequest.getContents()), "application/pdf", "Solicitud Escrita.pdf");
-    }
-    
-    
 }

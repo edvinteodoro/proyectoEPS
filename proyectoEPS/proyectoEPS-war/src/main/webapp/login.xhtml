@@ -22,8 +22,7 @@
                     <div class="form-group col-sm-4">
                         <p:outputLabel for="name" value="Nombre usuario" />
                         <p:inputText id="name" styleClass="form-control" required="true"
-                                     pt:required="true" value="#{loginView.userId}"
-                                     requiredMessage="Ingrese Usuario"
+                                     pt:required="true"
                                      />
                     </div>
                 </div>
@@ -31,19 +30,8 @@
                     <div class="form-group col-sm-4">
                         <p:outputLabel for="pass" value="Password:" />
                         <p:password id="pass" styleClass="form-control" pt:placeholder="Contrasena" required="true"
-                                    pt:required="true"  value="#{loginView.password}" pt:type="password"
+                                    pt:required="true"  pt:type="password"
                                     requiredMessage="Ingrese contrasena"/>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-sm-4">
-                        <p:commandLink styleClass="btn btn-primary"
-                                       update="@form,:growl" 
-                                       validateClient="true"
-                                       action="#{loginView.login}"   
-                                       >
-                            <span class="glyphicon glyphicon-log-in"></span> Ingresar
-                        </p:commandLink>
                     </div>
                 </div>
             </fieldset>

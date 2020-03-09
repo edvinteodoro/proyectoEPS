@@ -18,7 +18,6 @@ public class RequerimentService {
         entityManager.persist(requeriment);
         return requeriment;
     }
-    
     public Requeriment updateRequeriment(Requeriment requeriment) {
         Requeriment updateRequeriment = entityManager.find(Requeriment.class, requeriment.getId());
         if(requeriment.getAEIOsettlement()!=null){

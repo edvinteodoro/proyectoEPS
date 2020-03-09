@@ -1,11 +1,17 @@
 
 package gt.edu.usac.cunoc.ingenieria.eps.project.view;
 
+import gt.edu.usac.cunoc.ingenieria.eps.configuration.repository.PropertyRepository;
+import gt.edu.usac.cunoc.ingenieria.eps.exception.LimitException;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.MandatoryException;
+import gt.edu.usac.cunoc.ingenieria.eps.project.Objectives;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
 import gt.edu.usac.cunoc.ingenieria.eps.project.facade.ProjectFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.utils.MessageUtils;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import javax.ejb.EJB;
@@ -29,6 +35,16 @@ public class CreateProjectView implements Serializable{
     private String annexedFileName = "";
 
     private Project project;
+    
+    private List<Objectives> generalObjectves;
+    private List<Objectives> specificObjectives;
+    
+    @PostConstruct
+    public void init() {
+        project = new Project();
+        generalObjectves = new ArrayList<>();
+        specificObjectives = new ArrayList<>();
+    }
     
     public Project getProject() {
         if (this.project == null){
@@ -79,7 +95,47 @@ public class CreateProjectView implements Serializable{
     public void setAnnexedFileName(String annexedFileName) {
         this.annexedFileName = annexedFileName;
     }
+
+    public List<Objectives> getGeneralObjectves() {
+        return generalObjectves;
+    }
+
+    public void setGeneralObjectves(List<Objectives> generalObjectves) {
+        this.generalObjectves = generalObjectves;
+    }
+    
+    public void addGeneralObjectives(){
+        if (getGeneralObjectves().size() < PropertyRepository.LIMIT_GENERAL_OBJECTIVE.getValueInt()){
+            getGeneralObjectves().add(new Objectives());
+        } else {
+            MessageUtils.addErrorMessage("Número Maximo de Objetivos Generales: " + PropertyRepository.LIMIT_GENERAL_OBJECTIVE.getValueInt());
+        }
+    }
+    
+    public void removeGeneralOBjectives(Integer objectiveIndex){
+        getGeneralObjectves().remove(objectiveIndex.intValue());
+    }
+
+    public List<Objectives> getSpecificObjectives() {
+        return specificObjectives;
+    }
+
+    public void setSpecificObjectives(List<Objectives> specificObjectives) {
+        this.specificObjectives = specificObjectives;
+    }
    
+    public void addSpecificObjectives(){
+        if (getSpecificObjectives().size() < PropertyRepository.LIMIT_SPECIFIC_OBJECTIVE.getValueInt()){
+            getSpecificObjectives().add(new Objectives());
+        } else {
+            MessageUtils.addErrorMessage("Número Maximo de Objetivos Especificos: " + PropertyRepository.LIMIT_SPECIFIC_OBJECTIVE.getValueInt());
+        }
+    }
+    
+    public void removeSpecificOBjectives(Integer objectiveIndex){
+        getSpecificObjectives().remove(objectiveIndex.intValue());
+    }
+    
     public Boolean nullFiles() {
         if (schedule == null || investmentPlan == null) {
             MessageUtils.addErrorMessage("Ingrese los documentos obligatorios *");
@@ -96,10 +152,10 @@ public class CreateProjectView implements Serializable{
                 if (annexed != null) {
                     getProject().setAnnexed(annexed.getContents());
                 }
-                projectFacade.createProject(getProject());
+                projectFacade.createProject(getProject(),getGeneralObjectves(),getSpecificObjectives());
                 MessageUtils.addSuccessMessage("Se ha creado el proyecto exitosamente");
                 clean();
-            } catch (MandatoryException ex) {
+            } catch (MandatoryException | LimitException ex) {
                 MessageUtils.addErrorMessage(ex.getMessage());
             } 
         }
@@ -113,5 +169,8 @@ public class CreateProjectView implements Serializable{
         this.annexedFileName = "";
         this.investmentPlanFileName = "";
         this.sheduleFileName = "";
+        this.generalObjectves.clear();
+        this.specificObjectives.clear();
     }
+   
 }

@@ -5,7 +5,8 @@
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
-                xmlns:f="http://xmlns.jcp.org/jsf/core">
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:c="http://java.sun.com/jsp/jstl/core">
 
     <ui:define name="head">
         Crear Proyecto
@@ -16,14 +17,14 @@
     </ui:define>
     
     <ui:define name="content">
+        <h:outputScript library="js" name="calendar_es.js" />
         <h:form id="frmLogin">            
             <p:focus id="focuss" context="frmLogin" />
             <p:messages  globalOnly="true"/>
-            <fieldset class="center-block">
-                <legend>Crear Proyecto</legend> 
-                
+            <fieldset>
+                <legend>Proyecto</legend> 
                 <div class="row">
-                    <div  class="form-group col-sm-4">
+                    <div  class="form-group col-md-12">
                         <p:outputLabel for="title" value="Titulo:"/>
                         <p:inputText id="title" styleClass="form-control" pt:placeholder="Titulo del Proyecto"
                                      pt:required="true"
@@ -38,12 +39,12 @@
                                       skinSimple="true" auto="true"
                                       label="Seleccionar"
                                       update="labelSchedule"
+                                      sizeLimit="15000000"
+                                      invalidSizeMessage="Archivo demasiado grande, limite de 14MB"
                                       >                                       
                         </p:fileUpload>
                         <p:outputLabel id="labelSchedule" value="#{createProjectView.sheduleFileName}" class="text-primary"/>
                     </div>
-                </div>
-                <div class="row">
                     <div class="form-group col-sm-4">
                         <p:outputLabel for="investmentPlan"  value="Plan de Inversión:"/>
                         <p:fileUpload id="investmentPlan" fileUploadListener="#{createProjectView.handleInvestmentPlan}"
@@ -51,28 +52,174 @@
                                       skinSimple="true" auto="true"
                                       label="Seleccionar"
                                       update="labelInvestmentPlan"
+                                      sizeLimit="15000000"
+                                      invalidSizeMessage="Archivo demasiado grande, limite de 14MB"
                                       >                                       
                         </p:fileUpload>
                         <p:outputLabel id="labelInvestmentPlan" value="#{createProjectView.investmentPlanFileName}" class="text-primary"/>
                     </div>
-                </div>
-                <div class="row">
                     <div class="form-group col-sm-4">
                         <p:outputLabel for="annexed"  value="Anexos:"/>
                         <p:fileUpload id="annexed" fileUploadListener="#{createProjectView.handleAnnexed}"
                                       skinSimple="true" auto="true"
                                       label="Seleccionar"
                                       update="labelAnnexed"
+                                      sizeLimit="15000000"
+                                      invalidSizeMessage="Archivo demasiado grande, limite de 14MB"
                                       >                                       
                         </p:fileUpload>
                         <p:outputLabel id="labelAnnexed" value="#{createProjectView.annexedFileName}" class="text-primary"/>
                     </div>
                 </div>
-                
+                <div class="row" >
+                    <div class="form-group col-md-8" >
+                        <p:panel header="Coordenadas Decimales" id="coordinatesDecimal">
+                            <ui:repeat value="#{createProjectView.project.decimalCoordinates}" var="decimalCoordinate" varStatus="decimalCoordinateStatus">
+                                <div class="row">
+                                    <div class="form-group col-sm-4">
+                                        <p:inputNumber placeholder="Latitud" decimalPlaces="4" value="#{decimalCoordinate.latitude}"></p:inputNumber>
+                                    </div>                                   
+                                    <div class="form-group col-sm-4">
+                                        <p:inputNumber placeholder="Longitud" decimalPlaces="4" value="#{decimalCoordinate.longitude}"></p:inputNumber>
+                                    </div>
+                                    <div class="form-group col-sm-3">
+                                        <p:commandLink  styleClass="btn btn-danger" actionListener="#{createProjectView.project.removeDecimalCoordinates(decimalCoordinateStatus.index)}" 
+                                                        update="#{p:component('coordinatesDecimal')}"
+                                                        process="#{p:component('coordinatesDecimal')}"
+                                                        >
+                                            <span class="glyphicon glyphicon-minus"></span> Eliminar
+                                        </p:commandLink>
+                                    </div>
+                                </div> 
+                            </ui:repeat>
+                            <p:commandLink styleClass="btn btn-success" actionListener="#{createProjectView.project.addDecimalCoordinates()}" update="coordinatesDecimal"
+                                           process="#{p:component('coordinatesDecimal')}"
+                                           >
+                                <span class="glyphicon glyphicon-plus"></span> Agregar
+                            </p:commandLink>
+                        </p:panel>
+                    </div>
+                </div>
             </fieldset>
-            <fieldset class="center-block">
+            <fieldset >
                 <legend>Objetivos</legend>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <p:panel header="Objetivos Generales" id="generalObjectives" >
+                            <ui:repeat value="#{createProjectView.generalObjectves}" var="generalObjective" varStatus="generalObjectiveStatus">
+                                <div class="row">
+                                    <div class="form-group col-sm-10">
+                                        <p:inputText pt:placeholder="Objetivo General" 
+                                                     value="#{generalObjective.text}"
+                                                     class="form-control"
+                                                     >
+                                        </p:inputText>
+                                    </div>
+                                    <div class="form-group col-sm-2">
+                                        <p:commandLink  styleClass="btn btn-danger" actionListener="#{createProjectView.removeGeneralOBjectives(generalObjectiveStatus.index)}" 
+                                                        update="#{p:component('generalObjectives')}"
+                                                        process="#{p:component('generalObjectives')}"
+                                                        >
+                                            <span class="glyphicon glyphicon-minus"></span> Eliminar
+                                        </p:commandLink>
+                                    </div>
+                                </div>
+                            </ui:repeat>
+                            <p:commandLink styleClass="btn btn-success" actionListener="#{createProjectView.addGeneralObjectives()}" update="generalObjectives, growl"
+                                           process="#{p:component('generalObjectives')}"
+                                           >
+                                <span class="glyphicon glyphicon-plus"></span> Agregar
+                            </p:commandLink>
+                        </p:panel>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <p:panel header="Objetivos Especificos" id="specificObjectives" >
+                            <ui:repeat value="#{createProjectView.specificObjectives}" var="specificObjective" varStatus="specificObjectiveStatus">
+                                <div class="row">
+                                    <div class="form-group col-sm-10">
+                                        <p:inputText pt:placeholder="Objetivo Especifico" 
+                                                     value="#{specificObjective.text}"
+                                                     class="form-control"
+                                                     >
+                                        </p:inputText>
+                                    </div>
+                                    <div class="form-group col-sm-2">
+                                        <p:commandLink  styleClass="btn btn-danger" actionListener="#{createProjectView.removeSpecificOBjectives(specificObjectiveStatus.index)}" 
+                                                        update="#{p:component('specificObjectives')}"
+                                                        process="#{p:component('specificObjectives')}"
+                                                        >
+                                            <span class="glyphicon glyphicon-minus"></span> Eliminar
+                                        </p:commandLink>
+                                    </div>
+                                </div>
+                            </ui:repeat>
+                            <p:commandLink styleClass="btn btn-success" actionListener="#{createProjectView.addSpecificObjectives()}" update="specificObjectives, growl"
+                                           process="#{p:component('specificObjectives')}"
+                                           >
+                                <span class="glyphicon glyphicon-plus"></span> Agregar
+                            </p:commandLink>
+                        </p:panel>
+                    </div>
+                </div>
             </fieldset>
+            
+            <fieldset >
+                <legend>Bibliografía</legend>
+                <div class="row">
+                    <div class="form-group col-md-8">
+                        <p:panel id="biblioghraphies" >
+                            <ui:repeat value="#{createProjectView.project.bibliographies}" var="bibliography" varStatus="bibliographyStatus">
+                                <div class="row">
+                                    <div class="form-group col-sm-4">
+                                        <p:inputText placeholder="Autor" value="#{bibliography.author}" size="26"></p:inputText>
+                                    </div>
+                                    <div class="form-group col-sm-4">
+                                        <p:calendar id="expirationDate" pt:placeholder="Fecha Publicación"
+                                                    pattern="dd/MM/yyyy" 
+                                                    locale="es"
+                                                    value="#{bibliography.publicactionYear}"
+                                                    >
+                                                    <f:convertDateTime type="localDate" pattern="dd/MM/yyyy"/>
+                                        </p:calendar>
+                                    </div>
+                                    <div class="form-group col-sm-4">
+                                        <p:commandLink  styleClass="btn btn-danger" actionListener="#{createProjectView.project.removeBibliography(bibliographyStatus.index)}" 
+                                                        update="#{p:component('biblioghraphies')}"
+                                                        process="#{p:component('biblioghraphies')}"
+                                                        >
+                                            <span class="glyphicon glyphicon-minus"></span> Eliminar
+                                        </p:commandLink>
+                                    </div>
+                                </div> 
+                                <div class="row">
+                                    <div class="form-group col-sm-4">
+                                        <p:inputText placeholder="Titulo" value="#{bibliography.title}" size="26"></p:inputText>
+                                    </div>
+                                    <div class="form-group col-sm-4">
+                                        <p:inputText placeholder="Ciudad" value="#{bibliography.city}" size="26"></p:inputText>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-sm-4">
+                                        <p:inputText placeholder="Pais" value="#{bibliography.country}" size="26"></p:inputText>
+                                    </div>
+                                    <div class="form-group col-sm-4">
+                                        <p:inputText placeholder="Editorial" value="#{bibliography.editorial}" size="26"></p:inputText>
+                                    </div>                                    
+                                </div>
+                            </ui:repeat>
+                            <p:commandLink styleClass="btn btn-success" actionListener="#{createProjectView.project.addBibliography}" update="biblioghraphies"
+                                           process="#{p:component('biblioghraphies')}"
+                                           >
+                                <span class="glyphicon glyphicon-plus"></span> Agregar
+                            </p:commandLink>
+                        </p:panel>
+                    </div>
+                </div>
+            </fieldset>
+            
             <div class="row">
                 <div class="form-group col-sm-4">
                     <p:commandLink styleClass="btn btn-primary"

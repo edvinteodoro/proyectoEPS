@@ -1,6 +1,7 @@
 
 package gt.edu.usac.cunoc.ingenieria.eps.project;
 
+import gt.edu.usac.cunoc.ingenieria.eps.exception.LimitException;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -40,29 +41,18 @@ public class Project implements Serializable {
     private LocalDate limitReceptionDate;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "project", orphanRemoval = true)
-    private List<Bibliography> bibliographies = new ArrayList<>();
+    private List<Bibliography> bibliographies;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "project", orphanRemoval = true)
-    private List<DecimalCoordinate> decimalCoordinates = new ArrayList<>();
+    private List<DecimalCoordinate> decimalCoordinates;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "project", orphanRemoval = true)
-    private List<Objectives> objectives = new ArrayList<>();
+    private List<Objectives> objectives;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "project", orphanRemoval = true)
     private List<Section> sections = new ArrayList<>();
     
     public Project() {
-    }
-
-    public Project(Integer id) {
-        this.id = id;
-    }
-
-    public Project(Integer id, String title, Short state, byte[] schedule, byte[] investmentPlan, byte[] annexed, LocalDate limitReceptionDate) {
-        this.id = id;
-        this.title = title;
-        this.state = state;
-        this.schedule = schedule;
-        this.investmentPlan = investmentPlan;
-        this.annexed = annexed;
-        this.limitReceptionDate = limitReceptionDate;
+        this.decimalCoordinates = new ArrayList<>();
+        this.objectives = new ArrayList<>();
+        this.bibliographies = new ArrayList<>();
     }
 
     public Integer getId() {
@@ -129,14 +119,16 @@ public class Project implements Serializable {
         this.bibliographies = bibliographies;
     }
 
-    public void addBibliography(Bibliography bibliography){
+    public void addBibliography(){
+        Bibliography bibliography = new Bibliography();
         bibliographies.add(bibliography);
         bibliography.setProject(this);
     }
     
-    public void removeBibliography(Bibliography bibliography){
-        bibliographies.remove(bibliography);
-        bibliography.setProject(null);
+    public void removeBibliography(Integer bibliographyIndex){
+        bibliographies.get(bibliographyIndex).setProject(null);
+        bibliographies.remove(bibliographyIndex.intValue());
+        
     }
 
     public List<DecimalCoordinate> getDecimalCoordinates() {
@@ -147,14 +139,15 @@ public class Project implements Serializable {
         this.decimalCoordinates = decimalCoordinates;
     }
     
-    public void addDecimalCoordinates(DecimalCoordinate decimalCoordinate){
+    public void addDecimalCoordinates(){
+        DecimalCoordinate decimalCoordinate =  new DecimalCoordinate();
         decimalCoordinates.add(decimalCoordinate);
         decimalCoordinate.setProject(this);
     }
     
-    public void removeDecimalCoordinates(DecimalCoordinate decimalCoordinate){
-        decimalCoordinates.remove(decimalCoordinate);
-        decimalCoordinate.setProject(null);
+    public void removeDecimalCoordinates(Integer decimalCoordinateIndex){
+        decimalCoordinates.get(decimalCoordinateIndex).setProject(null);
+        decimalCoordinates.remove(decimalCoordinateIndex.intValue());
     }
 
     public List<Objectives> getObjectives() {
@@ -165,7 +158,7 @@ public class Project implements Serializable {
         this.objectives = objectives;
     }
     
-    public void addObjective(Objectives objective){
+    public void addObjective(Objectives objective) throws LimitException{
         objectives.add(objective);
         objective.setProject(this);
     }

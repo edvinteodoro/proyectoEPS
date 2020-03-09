@@ -36,7 +36,7 @@ public class ObjetiveService {
         return objective;
     }
     
-    public Objectives update(Objectives objective,Byte[] newText) throws MandatoryException{
+    public Objectives update(Objectives objective,String newText) throws MandatoryException{
         if (newText == null){
             throw new MandatoryException("Atributo Texto Obligatorio");
         }

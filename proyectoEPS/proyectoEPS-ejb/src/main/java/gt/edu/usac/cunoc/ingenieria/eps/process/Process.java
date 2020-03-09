@@ -1,6 +1,7 @@
 package gt.edu.usac.cunoc.ingenieria.eps.process;
 
 
+import gt.edu.usac.cunoc.ingenieria.eps.user.UserCareer;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
@@ -10,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -56,6 +58,9 @@ public class Process implements Serializable {
     private Integer progress;
     @OneToOne(mappedBy="pROCESSid")
     private Requeriment requeriment;
+    @OneToOne
+    @JoinColumn(name="USER_CAREER_id",referencedColumnName = "id")
+    private UserCareer userCareer;
     
 
     public Process() {
@@ -149,6 +154,16 @@ public class Process implements Serializable {
     public void setProgress(Integer progress) {
         this.progress = progress;
     }
+
+    public UserCareer getUserCareer() {
+        return userCareer;
+    }
+
+    public void setUserCareer(UserCareer userCareer) {
+        this.userCareer = userCareer;
+    }
+    
+    
     
     public String getApprovedCareerCoordinatorMessage(){
         if(approvedCareerCoordinator==false){

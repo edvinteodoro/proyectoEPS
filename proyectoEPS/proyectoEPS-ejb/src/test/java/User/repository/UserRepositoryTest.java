@@ -43,7 +43,7 @@ public class UserRepositoryTest {
 
         UserRepository userRepository = new UserRepository();
         userRepository.setEntityManager(entityManager);
-        Optional<User> result = userRepository.getUserByDPI(dpi);
+        Optional<User> result = userRepository.getUserByUserId(dpi);
         Assert.assertEquals(result.get(), user);
     }
 
@@ -140,7 +140,7 @@ public class UserRepositoryTest {
         if (user.getLastName() != null) {
             Mockito.when(criteriaBuilder.like(userR.get(atribute), "%" + user.getLastName() + "%")).thenReturn(predicate);
         }
-        if (user.getState() != 0) {
+        if (user.getState() != null) {
             Mockito.when(criteriaBuilder.equal(userR.get(atribute), user.getState())).thenReturn(predicate);
         }
         if (user.getROLid() != null) {

@@ -55,7 +55,7 @@ public class UserServiceTest {
         String email = "fulanito@mail.com";
         String phone = "88888888";
         String pass = "pass";
-        Short state = 1;
+        Boolean state = false;
         Rol rolUser = new Rol(1, "Estudiante");
         Career career = new Career(1, "Sistemas");
         User user = new User("1", carnet, firstName, lastName, email, phone, "123456", state);

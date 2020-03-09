@@ -40,22 +40,15 @@ public class UserService {
     }
 
     public User createUser(User user) throws UserException {
+        System.out.println("--------------------------------creando");
         if (user == null) {
             throw new UserException("User is null");
         }
+        user.setPassword(encryptPass(user.getPassword()));
         try {
-            char passwordInput[] = user.getPassword().toCharArray();
-            Map<String, String> map = new HashMap<>();
-            map.put("Iterations", PBKDF_ITERATIONS);
-            map.put("Algorithm", PBKDF_ITERATIONS);
-            map.put("SaltSizeBytes", PBKDF_SALT_SIZE);
-            pbkdf2PasswordHash.initialize(map);
-            String passwordOutput = pbkdf2PasswordHash.generate(passwordInput);
-            user.setPassword(passwordOutput);
             entityManager.persist(user);
-
         } catch (NullPointerException e) {
-
+            System.out.println(e);
         }
         return user;
     }
@@ -98,7 +91,7 @@ public class UserService {
             if (user.getDirection() != null) {
                 updateUser.setDirection(user.getDirection());
             }
-            if (user.getState() != 0) {
+            if (user.getState() != null) {
                 updateUser.setState(user.getState());
             }
             if (user.getROLid() != null) {
@@ -110,8 +103,18 @@ public class UserService {
     }
 
     public List<User> getAuthenticatedUser() throws UserException {
-        String dpi = securityContext.getCallerPrincipal().getName();
-        return userRepository.getUser(new User(dpi));
+        String userId = securityContext.getCallerPrincipal().getName();
+        return userRepository.getUser(new User(userId));
+    }
+    
+    private String encryptPass(String pass) {
+        char passwordInput[] = pass.toCharArray();
+        Map<String, String> map = new HashMap<>();
+        map.put("Pbkdf2PasswordHash.Iterations", "3072");
+        map.put("Pbkdf2PasswordHash.Algorithm", "PBKDF2WithHmacSHA256");
+        map.put("Pbkdf2PasswordHash.SaltSizeBytes", "64");
+        pbkdf2PasswordHash.initialize(map);
+        return pbkdf2PasswordHash.generate(passwordInput);
     }
 
 }

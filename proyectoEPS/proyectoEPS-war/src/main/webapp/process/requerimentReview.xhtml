@@ -26,7 +26,6 @@
             <p:focus id="focuss" context="frmLogin" />
             <p:messages  globalOnly="true"/>
             <fieldset class="center-block">
-                <legend>Revisar Requisitos</legend> 
                 <div class="row">
                     <div class="form-group col-sm-4">
                         <p:outputLabel value="Carta de Solicitud EPS Escritas:" /><br></br>
@@ -73,28 +72,6 @@
                         <h:commandLink value="Descargar Documento"  target="_blank" rendered="#{requerimentReviewView.showAeioSettlement}">
                             <p:fileDownload value="#{requerimentReviewView.aeioSettlement}" contentDisposition="inline"/>
                         </h:commandLink>   
-                    </div>
-                </div>
-                <br></br><br></br>
-                <div class="row">
-                    <div class="form-group col-sm-4">
-                        <button styleClass="btn btn-primary"
-                                       update="@form,:growl" 
-                                       jsf:outcome="processes">
-                            <span class="glyphicon glyphicon-remove"></span> Rechazar
-                        </button>
-                        <button styleClass="btn btn-primary"
-                                       oncomplete="PF('dlgEdit').show();"
-                                       jsf:outcome="processes"
-                                       >
-                            <span class="glyphicon glyphicon-ok"></span> Solicitar Cambios
-                        </button>
-                        <button styleClass="btn btn-primary"
-                                       update="@form,:growl" 
-                                       action="#{requerimentReviewView.aceptar()}"
-                                       jsf:outcome="processes">
-                            <span class="glyphicon glyphicon-ok"></span> Aceptar
-                        </button>
                     </div>
                 </div>
             </fieldset>

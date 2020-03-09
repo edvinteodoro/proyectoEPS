@@ -28,20 +28,12 @@
                 <p:column headerText="Progreso">
                     <h:outputText value="#{process.progress}" />
                 </p:column>
-                <p:column headerText="Ir a Requisitos" styleClass="text-center">
+                <p:column headerText="Ir a Proceso" styleClass="text-center">
                     <p data-placement="top" data-toggle="tooltip" title="#{user.messageState}">
-                        <button jsf:outcome="requerimentReview" styleClass="btn btn-success btn-xs" >
-                            <f:param name="idRequeriment" value="#{process.requeriment.id}"/>
-                            <span class="glyphicon glyphicon-log-in"></span>
-                        </button>
-                    </p>
-                </p:column>
-                <p:column headerText="Ir a preproyecto" styleClass="text-center">
-                    <p data-placement="top" data-toggle="tooltip" title="#{user.messageState}">
-                        <button jsf:outcome="createProject" styleClass="btn btn-success btn-xs"
+                        <p:commandLink styleClass="btn btn-success btn-xs"
                                        actionListener="#{processesView.goToProcess(process)}">
                             <span class="glyphicon glyphicon-log-in"></span>
-                        </button>
+                        </p:commandLink>
                     </p>
                 </p:column>
             </p:dataTable>

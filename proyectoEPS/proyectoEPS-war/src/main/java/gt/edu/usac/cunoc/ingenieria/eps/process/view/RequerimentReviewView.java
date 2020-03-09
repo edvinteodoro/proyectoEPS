@@ -38,11 +38,6 @@ public class RequerimentReviewView implements Serializable {
     public void init() {
         
     }
-    
-    public void aceptar(){
-        
-    }
-    
 
     public StreamedContent getWrittenRequest() {
         return writtenRequest;

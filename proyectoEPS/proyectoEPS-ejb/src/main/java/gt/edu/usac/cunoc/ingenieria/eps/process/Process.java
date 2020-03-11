@@ -54,7 +54,7 @@ public class Process implements Serializable {
     private Boolean approvedEPSDevelopment;
     @Column(name = "progress")
     private Integer progress;
-    @OneToOne(mappedBy="pROCESSid")
+    @OneToOne(mappedBy="pROCESSid", cascade = CascadeType.ALL)
     private Requeriment requeriment;
     
 

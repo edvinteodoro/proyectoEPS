@@ -74,10 +74,11 @@ public class CreateProcessView implements Serializable {
             getRequeriment().setPropedeuticConstancy(propedeuticConstancy.getContents());
             getRequeriment().setWrittenRequest(writtenRequest.getContents());
             getRequeriment().setpROCESSid(getProcess());
+            getProcess().setRequeriment(requeriment);
             if (aeioSettlement != null) {
                 getRequeriment().setAEIOsettlement(aeioSettlement.getContents());
             }
-            processFacade.createRequeriment(getRequeriment());
+            processFacade.createProcess(getProcess());
             MessageUtils.addSuccessMessage("Se ha creado registrado el proceso");
             //redirectToProcesses();
         }

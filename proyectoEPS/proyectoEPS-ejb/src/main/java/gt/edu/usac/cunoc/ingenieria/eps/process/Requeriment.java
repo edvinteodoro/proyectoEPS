@@ -61,7 +61,7 @@ public class Requeriment implements Serializable {
     @Lob
     @Column(name = "AEIOsettlement")
     private byte[] aEIOsettlement;
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne
     @JoinColumn(name="PROCESS_id",referencedColumnName = "id")
     private Process pROCESSid;
 

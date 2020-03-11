@@ -25,6 +25,7 @@ import javax.security.enterprise.credential.UsernamePasswordCredential;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+
 @Named
 @ViewScoped
 public class LoginView implements Serializable {

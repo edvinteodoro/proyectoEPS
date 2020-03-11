@@ -33,6 +33,8 @@ public class RequerimentReviewView implements Serializable {
     private Requeriment requeriment;
     private Integer processId;
     private Boolean showAeioSettlement= false;
+    
+    private String observation="";
 
     @PostConstruct
     public void init() {
@@ -116,7 +118,13 @@ public class RequerimentReviewView implements Serializable {
     public void setShowAeioSettlement(Boolean showAeioSettlement) {
         this.showAeioSettlement = showAeioSettlement;
     }
-    
-    
+
+    public String getObservation() {
+        return observation;
+    }
+
+    public void setObservation(String observation) {
+        this.observation = observation;
+    }
 
 }

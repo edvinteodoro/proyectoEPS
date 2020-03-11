@@ -80,7 +80,7 @@ public class CreateProcessView implements Serializable {
             }
             processFacade.createProcess(getProcess());
             MessageUtils.addSuccessMessage("Se ha creado registrado el proceso");
-            redirectToProcesses();
+            //redirectToProcesses();
         }
     }
 
@@ -180,6 +180,6 @@ public class CreateProcessView implements Serializable {
     }
     
     private void redirectToProcesses() throws IOException{ 
-        externalContext.redirect(externalContext.getRequestContextPath() + "/process/processes.xhtml");
+        //externalContext.redirect(externalContext.getRequestContextPath() + "/process/processes.xhtml");
     }
 }

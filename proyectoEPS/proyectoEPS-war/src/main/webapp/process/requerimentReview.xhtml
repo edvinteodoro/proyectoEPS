@@ -79,26 +79,46 @@
                 <div class="row">
                     <div class="form-group col-sm-4">
                         <button styleClass="btn btn-primary"
-                                       update="@form,:growl" 
-                                       jsf:outcome="processes">
+                                update="@form,:growl" 
+                                jsf:outcome="processes">
                             <span class="glyphicon glyphicon-remove"></span> Rechazar
                         </button>
+
+                        <p:commandLink styleClass="btn btn-primary" oncomplete="PF('dlgEdit').show();"
+                                       update=":#{p:component('dlgEdit')}">
+                            <span class="glyphicon glyphicon-pencil"></span>Solicitar Cambios
+                        </p:commandLink>
+
+
                         <button styleClass="btn btn-primary"
-                                       oncomplete="PF('dlgEdit').show();"
-                                       jsf:outcome="processes"
-                                       >
-                            <span class="glyphicon glyphicon-ok"></span> Solicitar Cambios
-                        </button>
-                        <button styleClass="btn btn-primary"
-                                       update="@form,:growl" 
-                                       action="#{requerimentReviewView.aceptar()}"
-                                       jsf:outcome="processes">
+                                update="@form,:growl" 
+                                action="#{requerimentReviewView.aceptar()}"
+                                jsf:outcome="processes">
                             <span class="glyphicon glyphicon-ok"></span> Aceptar
                         </button>
                     </div>
                 </div>
             </fieldset>
         </h:form>
+        <p:dialog header="Observacion" id="dlgEdit" widgetVar="dlgEdit"
+                  fitViewport="true" modal="true" closeOnEscape="true">
+            <h:form>
+                <div class="modal-body">
+                    <fieldset>
+                        <div class="row form-group">
+                            <p:inputTextarea pt:required="true" value="#{requerimentReviewView.observation}" rows="10" cols="50" counter="display" maxlength="500" counterTemplate="{0} characters remaining." autoResize="false" styleClass="form-control" pt:placeholder="Observaciones"/>
+                            <br />
+                            <h:outputText id="display" />
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="modal-footer ">
+                    <p:commandLink styleClass="btn btn-warning btn-lg" style="width: 100%;">
+                        <span class="glyphicon glyphicon-ok-sign"></span>Aceptar
+                    </p:commandLink>
+                </div>
+            </h:form>
+        </p:dialog>
     </ui:define>
 
 </ui:composition>

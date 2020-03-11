@@ -46,9 +46,9 @@ public class LoginView implements Serializable {
     
     @PostConstruct
     public void init(){
-//        User user=new User("estudiante1", "3161529","Antonio","Perez", "aaa@gmail.com", "3161529", "123456", true);
+//        User user=new User("coordinador1", "31615293","Juan","Lopez", "aaa@gmail.com", "3161529", "123456", true);
 //        try {
-//            user.setROLid(userFacade.getRolUser(new Rol(1)).get(0));
+//            user.setROLid(userFacade.getRolUser(new Rol(2)).get(0));
 //            userFacade.createUser(user);
 //        } catch (Exception e) {
 //            System.out.println(e);

@@ -14,7 +14,6 @@ import javax.inject.Named;
 @Named
 @ViewScoped
 public class ProcessesView implements Serializable {
-
     @Inject
     private ExternalContext externalContext;
     

@@ -12,6 +12,7 @@ public class LogoutView {
     @Inject
     private HttpServletRequest request;
 
+    
     public String logout()
             throws ServletException {
         request.logout();

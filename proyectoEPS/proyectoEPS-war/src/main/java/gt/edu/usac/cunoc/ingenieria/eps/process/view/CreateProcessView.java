@@ -28,7 +28,6 @@ public class CreateProcessView implements Serializable {
     @EJB
     private ProcessFacadeLocal processFacade;
     
-
     private UploadedFile writtenRequest;
     private UploadedFile inscriptionConstancy;
     private UploadedFile pensumeClosure;

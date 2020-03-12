@@ -1,6 +1,5 @@
 package gt.edu.usac.cunoc.ingenieria.eps.user.repository;
 
-
 import User.exception.UserException;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.PERSISTENCE_UNIT_NAME;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;

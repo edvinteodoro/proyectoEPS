@@ -1,5 +1,6 @@
 package gt.edu.usac.cunoc.ingenieria.eps.user;
 
+
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import java.io.Serializable;
 import java.util.Collection;

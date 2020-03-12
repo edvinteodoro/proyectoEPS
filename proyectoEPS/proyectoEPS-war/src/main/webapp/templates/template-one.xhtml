@@ -15,7 +15,6 @@
         <h:outputStylesheet library="css" name="bootstrap-theme.css"/>
         <h:outputScript name="jquery/jquery.js" library="primefaces" />
         <h:outputScript name="jquery/jquery-plugins.js" library="primefaces" />
-        <h:outputScript name="bootstrap.js" library="js" />
         <h:outputScript name="core.js" library="primefaces" />
 
         <ui:insert name="head-extras">
@@ -33,38 +32,40 @@
         <p:growl id="growl" showDetail="false" />
         <div class="container theme-showcase" role="main">
             <!--<main-menu params="routerObj: routerObj, authModel: authModelObj"></main-menu>-->
-            <nav class="navbar navbar-inverse " jsf:rendered="#{not empty request.userPrincipal}">
+            <nav class="navbar navbar-inverse">
                 <div class="container-fluid">
                     <!-- Brand and toggle get grouped for better mobile display -->
                     <div class="navbar-header">
-                        <button type="button" aria-expanded="false" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar1">
-                            <span class="sr-only">Menu</span>
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                            <span class="sr-only">Toggle navigation</span>
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
                         <a class="navbar-brand" href="#">Sistema EPS</a>
                     </div>
-                    <div class="collapse navbar-collapse" id="navbar1">
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav">
                             <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">
-                                    Procesos EPS <span class="caret"></span>
-                                </a>
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Page 1
+                                    <span class="caret"></span></a>
                                 <ul class="dropdown-menu">
-                                    <li>
-                                        <p:link  outcome="createProcess" value="Crear Proceso"/>
-                                    </li>
-                                    <li>
-                                        <p:link  outcome="processes" value="Ver Procesos"/>
-                                    </li>
+                                    <li><a href="#">Page 1-1</a></li>
+                                    <li><a href="#">Page 1-2</a></li>
+                                    <li><a href="#">Page 1-3</a></li>
                                 </ul>
+                            </li>
+                            <li>
+                                <p:link  value="menuitem2"/>
+                            </li>
+                            <li>
+                                <p:link value="menuitem3"/>
                             </li>
                         </ul>
                         <h:form>
                             <ul class="nav navbar-nav navbar-right">
                                 <li jsf:rendered="#{not empty request.userPrincipal}">
-                                    <p class="navbar-text">Usuario: <span>#{p:remoteUser()}</span>, 
+                                    <p class="navbar-text">logueado como <span>#{p:remoteUser()}</span>, 
                                         <h:commandLink styleClass="navbar-link"
                                                        action="#{logoutView.logout()}"
                                                        value="Salir"/>
@@ -74,7 +75,8 @@
                         </h:form>
                     </div><!-- /.navbar-collapse -->
                 </div><!-- /.container-fluid -->
-            </nav>      
+            </nav>
+
             <div id="page" class="p-3 mb-2 bg-gradient-light text-dark">
                 <ui:insert name="content">
                     content

@@ -27,9 +27,9 @@ public class UserRepository {
         this.entityManager = entityManager;
     }
 
-    public Optional<User> getUserByUserId(String userId) {
-        TypedQuery<User> typeQuerry = entityManager.createQuery("SELECT u FROM USER u WHERE u.userId = :userId", User.class);
-        typeQuerry.setParameter("userId", userId);
+    public Optional<User> getUserByDPI(String dpi) {
+        TypedQuery<User> typeQuerry = entityManager.createQuery("SELECT u FROM user u WHERE u.dpi = :dpi", User.class);
+        typeQuerry.setParameter("dpi", dpi);
         try {
             return Optional.of(typeQuerry.getSingleResult());
         } catch (Exception e) {
@@ -45,9 +45,6 @@ public class UserRepository {
         CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
         Root<User> userR = criteriaQuery.from(User.class);
         List<Predicate> predicates = new ArrayList<>();
-        if (user.getUserId()!= null) {
-            predicates.add(criteriaBuilder.equal(userR.get("userId"), user.getUserId()));
-        }
         if (user.getDpi() != null) {
             predicates.add(criteriaBuilder.equal(userR.get("dpi"), user.getDpi()));
         }
@@ -78,7 +75,7 @@ public class UserRepository {
         if (user.getDirection() != null) {
             predicates.add(criteriaBuilder.equal(userR.get("direction"), user.getDirection()));
         }
-        if (user.getState() != null) {
+        if (user.getState() != 0) {
             predicates.add(criteriaBuilder.equal(userR.get("state"), user.getState()));
         }
         if (user.getROLid() != null) {

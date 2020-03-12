@@ -29,9 +29,6 @@ public class ProcessRepository {
         if (process.getId() != null) {
             predicates.add(criteriaBuilder.equal(processR.get("id"), process.getId()));
         }
-        if(process.getUserCareer()!=null){
-            predicates.add(criteriaBuilder.equal(processR.get("userCareer"), process.getUserCareer()));
-        }
         criteriaQuery.where(predicates.stream().toArray(Predicate[]::new));
         TypedQuery<Process> query = entityManager.createQuery(criteriaQuery);
         return query.getResultList();

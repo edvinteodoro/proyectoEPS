@@ -16,7 +16,7 @@ import javax.ejb.Local;
 @Local
 public interface UserFacadeLocal {
     
-    public List<User> getAuthenticatedUser() throws UserException;
+    public Optional<User> getAuthenticatedUser();
 
     public User createUser(User user) throws UserException;
 

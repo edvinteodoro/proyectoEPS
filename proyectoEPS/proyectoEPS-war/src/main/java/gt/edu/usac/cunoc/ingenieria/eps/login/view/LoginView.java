@@ -29,7 +29,6 @@ import javax.servlet.http.HttpServletResponse;
 @Named
 @ViewScoped
 public class LoginView implements Serializable {
-
     @EJB
     private UserFacadeLocal userFacade;
 

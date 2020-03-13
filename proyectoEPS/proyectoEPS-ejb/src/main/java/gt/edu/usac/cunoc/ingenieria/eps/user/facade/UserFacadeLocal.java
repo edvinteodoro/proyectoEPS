@@ -1,3 +1,4 @@
+
 package gt.edu.usac.cunoc.ingenieria.eps.user.facade;
 
 import User.exception.UserException;
@@ -9,10 +10,6 @@ import java.util.List;
 import java.util.Optional;
 import javax.ejb.Local;
 
-/**
- *
- * @author charly
- */
 @Local
 public interface UserFacadeLocal {
     

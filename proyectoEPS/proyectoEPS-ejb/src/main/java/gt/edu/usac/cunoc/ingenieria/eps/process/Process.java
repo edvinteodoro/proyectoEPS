@@ -56,7 +56,7 @@ public class Process implements Serializable {
     private Boolean approvedEPSDevelopment;
     @Column(name = "progress")
     private Integer progress;
-    @OneToOne(mappedBy="pROCESSid")
+    @OneToOne(mappedBy="pROCESSid",cascade = CascadeType.PERSIST)
     private Requeriment requeriment;
     @OneToOne
     @JoinColumn(name="USER_CAREER_id",referencedColumnName = "id")

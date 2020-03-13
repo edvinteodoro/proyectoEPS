@@ -19,7 +19,6 @@ import org.primefaces.model.StreamedContent;
 @Named
 @ViewScoped
 public class RequerimentReviewView implements Serializable {
-
     @EJB
     private ProcessFacadeLocal processFacade;
 
@@ -40,6 +39,11 @@ public class RequerimentReviewView implements Serializable {
     public void init() {
         
     }
+    
+    public void aceptar(){
+        
+    }
+    
 
     public StreamedContent getWrittenRequest() {
         return writtenRequest;

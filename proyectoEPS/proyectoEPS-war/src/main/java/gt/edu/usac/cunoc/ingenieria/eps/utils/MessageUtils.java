@@ -8,7 +8,6 @@ import static javax.faces.application.FacesMessage.SEVERITY_INFO;
 import static javax.faces.application.FacesMessage.SEVERITY_WARN;
 import javax.faces.context.FacesContext;
 
-
 public class MessageUtils {
 
     public static final String PATH_MESSAGES_BUNDLE = "com.jgranados.journals.i18n.messages";

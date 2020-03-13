@@ -18,7 +18,8 @@ import org.primefaces.model.UploadedFile;
 public class UpdateProcessView implements Serializable{
     @EJB
     private ProcessFacadeLocal processFacade;
-
+    
+    
     private StreamedContent writtenRequestStream;
     private StreamedContent inscriptionConstancyStream;
     private StreamedContent pensumeClosureStream;

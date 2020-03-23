@@ -25,23 +25,4 @@ public class SectionRepository {
     public SectionRepository() {
     }
     
-    public Section getIntroduction(Project project) throws MandatoryException{
-        if (project.getId()== null){
-            throw new MandatoryException("No existe projecto a buscar Introducción");
-        } 
-        Query query = entityManager.createQuery("SELECT s FROM Section o WHERE b.project.id = :idProject AND type = :typeSection", Section.class);
-        query.setParameter("idProject", project.getId());
-        query.setParameter("typeSection", Section.INTRODUCTION);
-        return (Section) query.getSingleResult();
-    }
-    
-    public Section getJustification(Project project) throws MandatoryException{
-        if (project.getId()== null){
-            throw new MandatoryException("No existe projecto a buscar Justificación");
-        } 
-        Query query = entityManager.createQuery("SELECT s FROM Section o WHERE b.project.id = :idProject AND type = :typeSection", Section.class);
-        query.setParameter("idProject", project.getId());
-        query.setParameter("typeSection", Section.JUSTIFICATION);
-        return (Section) query.getSingleResult();
-    }
 }

@@ -24,7 +24,7 @@ public class Title implements Serializable {
     @Column(name = "id")
     private Integer id;
     @Column(name = "text")
-    private Byte[] text;
+    private String text;
     
     @ManyToOne(fetch = FetchType.LAZY)
     private Section section;
@@ -41,12 +41,7 @@ public class Title implements Serializable {
     public Title() {
     }
 
-    public Title(Integer id) {
-        this.id = id;
-    }
-
-    public Title(Integer id, Byte[] text) {
-        this.id = id;
+    public Title(String text) {
         this.text = text;
     }
 
@@ -58,11 +53,11 @@ public class Title implements Serializable {
         this.id = id;
     }
 
-    public Byte[] getText() {
+    public String getText() {
         return text;
     }
 
-    public void setText(Byte[] text) {
+    public void setText(String text) {
         this.text = text;
     }
 

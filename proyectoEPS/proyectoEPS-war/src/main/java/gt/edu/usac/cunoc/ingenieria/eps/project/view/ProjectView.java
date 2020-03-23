@@ -21,7 +21,7 @@ import org.primefaces.model.UploadedFile;
 
 @Named
 @ViewScoped
-public class CreateProjectView implements Serializable{
+public class ProjectView implements Serializable{
     
     @EJB
     private ProjectFacadeLocal projectFacade;
@@ -44,6 +44,10 @@ public class CreateProjectView implements Serializable{
         project = new Project();
         generalObjectves = new ArrayList<>();
         specificObjectives = new ArrayList<>();
+        project.addSection();
+        project.getSections().get(0).getTitles().get(0).setText("Introducción");
+        project.addSection();
+        project.getSections().get(1).getTitles().get(0).setText("Justificación");
     }
     
     public Project getProject() {

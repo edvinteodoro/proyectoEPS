@@ -2,6 +2,7 @@
 package gt.edu.usac.cunoc.ingenieria.eps.project;
 
 import gt.edu.usac.cunoc.ingenieria.eps.exception.LimitException;
+import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -13,7 +14,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -48,6 +51,9 @@ public class Project implements Serializable {
     private List<Objectives> objectives;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "project", orphanRemoval = true)
     private List<Section> sections;
+    @OneToOne
+    @JoinColumn(name="PROCESS_id",referencedColumnName = "id")
+    private Process pROCESSid;
     
     public Project() {
         this.decimalCoordinates = new ArrayList<>();
@@ -177,14 +183,23 @@ public class Project implements Serializable {
         this.sections = sections;
     }
     
-    public void addSection(Section section){
+    public void addSection(){
+        Section section = new Section();
         sections.add(section);
         section.setProject(this);
     }
     
-    public void removeSection(Section section){
-        sections.remove(section);
-        section.setProject(null);
+    public void removeSection(Integer sectionIndex){
+        sections.get(sectionIndex).setProject(null);
+        sections.remove(sectionIndex.intValue());
+    }
+
+    public Process getProcess() {
+        return pROCESSid;
+    }
+
+    public void setProcess(Process process) {
+        this.pROCESSid = process;
     }
     
     @Override

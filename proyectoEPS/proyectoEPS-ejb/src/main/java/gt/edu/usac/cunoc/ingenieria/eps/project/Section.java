@@ -32,11 +32,13 @@ public class Section implements Serializable {
     private Project project;
     
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "section", orphanRemoval = true)
-    private List<Title> titles = new ArrayList<>();
+    private List<Title> titles;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "section", orphanRemoval = true)
     private List<Correction> corrections = new ArrayList<>();
 
     public Section() {
+        titles = new ArrayList<>();
+        this.addTitle();
     }
 
     public Section(LocalDate lastModificationDate) {
@@ -75,14 +77,15 @@ public class Section implements Serializable {
         this.titles = titles;
     }
     
-    public void addTitle(Title title){
+    public void addTitle(){
+        Title title = new Title();
         titles.add(title);
         title.setSection(this);
     }
     
-    public void removeTitle(Title title){
-        titles.remove(title);
-        title.setSection(null);
+    public void removeTitle(Integer titleIndex){
+        titles.get(titleIndex).setSection(null);
+        titles.remove(titleIndex.intValue());
     }
 
     public List<Correction> getCorrections() {

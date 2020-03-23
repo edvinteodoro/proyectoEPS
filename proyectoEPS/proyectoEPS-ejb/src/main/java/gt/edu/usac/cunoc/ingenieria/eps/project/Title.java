@@ -13,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -35,8 +36,8 @@ public class Title implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "titleParent", orphanRemoval = true)
     private List<Title> titles = new ArrayList<>();
     
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "title", orphanRemoval = true)
-    private List<Texto> texts = new ArrayList<>();
+    @OneToOne(mappedBy = "title", cascade = CascadeType.ALL)
+    private Texto texto;
 
     public Title() {
     }
@@ -95,22 +96,22 @@ public class Title implements Serializable {
         title.setTitleParent(null);
     }
 
-    public List<Texto> getTexts() {
-        return texts;
+    public Texto getTexts() {
+        return texto;
     }
 
-    public void setTexts(ArrayList<Texto> texts) {
-        this.texts = texts;
+    public void setTexts(Texto texts) {
+        this.texto = texts;
     }
     
     public void addText(Texto text){
-        texts.add(text);
-        text.setTitle(this);
+        texto = text;
+        texto.setTitle(this);
     }
     
     public void removeText(Texto text){
-        texts.remove(text);
-        text.setTitle(null);
+        texto = null;
+        texto.setTitle(null);
     }
     
     @Override

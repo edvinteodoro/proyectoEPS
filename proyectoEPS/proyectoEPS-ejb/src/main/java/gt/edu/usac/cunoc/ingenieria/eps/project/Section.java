@@ -19,21 +19,14 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "SECTION")
 public class Section implements Serializable {
-
-    public static final Short INTRODUCTION = 0;
-    public static final Short JUSTIFICATION = 1;
-    public static final Short CUSTOM = 2;
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
-    @Column(name = "name")
-    private String name;
     @Column(name = "lastModificationDate")
     private LocalDate lastModificationDate;
-    @Column(name = "type")
-    private Short type;
+
     
     @ManyToOne(fetch = FetchType.LAZY)
     private Project project;
@@ -46,15 +39,8 @@ public class Section implements Serializable {
     public Section() {
     }
 
-    public Section(Integer id) {
-        this.id = id;
-    }
-
-    public Section(Integer id, String name, LocalDate lastModificationDate, Short type) {
-        this.id = id;
-        this.name = name;
+    public Section(LocalDate lastModificationDate) {
         this.lastModificationDate = lastModificationDate;
-        this.type = type;
     }
 
     public Integer getId() {
@@ -65,28 +51,12 @@ public class Section implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public LocalDate getLastModificationDate() {
         return lastModificationDate;
     }
 
     public void setLastModificationDate(LocalDate lastModificationDate) {
         this.lastModificationDate = lastModificationDate;
-    }
-
-    public Short getType() {
-        return type;
-    }
-
-    public void setType(Short type) {
-        this.type = type;
     }
 
     public Project getProject() {

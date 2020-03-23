@@ -166,11 +166,19 @@ CREATE TABLE IF NOT EXISTS `EPS_SYSTEM`.`PROJECT` (
   `title` VARCHAR(400) NOT NULL,
   `state` TINYINT NOT NULL,
   `schedule` MEDIUMBLOB NOT NULL,
-  `investmentPlan` MEDIUMBLOB NOT NULL,
-  `annexed` MEDIUMBLOB NULL,
+  `investmentPlan` BLOB NOT NULL,
+  `annexed` BLOB NULL,
   `limitReceptionDate` DATE NOT NULL,
-  PRIMARY KEY (`id`))
+  `PROCESS_id` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_PROJECT_PROCESS1`
+    FOREIGN KEY (`PROCESS_id`)
+    REFERENCES `EPS_SYSTEM`.`PROCESS` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
+
+CREATE INDEX `fk_PROJECT_PROCESS1_idx` ON `EPS_SYSTEM`.`PROJECT` (`PROCESS_id` ASC) ;
 
 -- -----------------------------------------------------
 -- Table `EPS_SYSTEM`.`REQUERIMENT`

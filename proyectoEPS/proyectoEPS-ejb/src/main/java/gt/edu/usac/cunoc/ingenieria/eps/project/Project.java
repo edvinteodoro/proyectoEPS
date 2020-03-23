@@ -47,12 +47,13 @@ public class Project implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "project", orphanRemoval = true)
     private List<Objectives> objectives;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "project", orphanRemoval = true)
-    private List<Section> sections = new ArrayList<>();
+    private List<Section> sections;
     
     public Project() {
         this.decimalCoordinates = new ArrayList<>();
         this.objectives = new ArrayList<>();
         this.bibliographies = new ArrayList<>();
+        this.sections = new ArrayList<>();
     }
 
     public Integer getId() {

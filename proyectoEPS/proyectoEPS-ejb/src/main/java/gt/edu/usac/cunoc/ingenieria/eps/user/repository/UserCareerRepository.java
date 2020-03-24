@@ -17,7 +17,10 @@ import javax.persistence.Query;
 public class UserCareerRepository {
     
     public static final String FIND_USERS_BY_CAREER = "SELECT u FROM UserCareer g, User u WHERE g.career.codigo = :cAREERcodigo AND g.user.userId = u.uSERuserId";
-    public static final String FIND_CAREER_OF_USERS = "SELECT u FROM UserCareer gu, Group g WHERE gu.user.userId = :uSERuserId AND gu.group.codigo = g.cAREERcodigo";
+    public static final String FIND_CAREER_OF_USERS = "SELECT c.cAREERcodigo FROM UserCareer c WHERE c.uSERuserId.userId=:userId";
+    public static final String FIND_USER_CAREER_OF_USER = "SELECT c FROM UserCareer c WHERE c.cAREERcodigo.codigo=:careerCode";
+    public static final String FIND_USER_CAREER = "SELECT c FROM UserCareer c WHERE c.id = :id";   
+    public static final String FIND_USER_CAREER_USER = "SELECT c FROM UserCareer c WHERE c.uSERuserId.userId = :userId";  
     public static final String FIND_USERCAREER_BY_CAREER_AND_USER = "SELECT g FROM UserCareer g WHERE g.group.codigo = :cAREERcodigo AND g.user.userId = :uSERuserId";
     public static final String GET_ALL_CAREER_USERS = "SELECT gu FROM UserCareer gu";
     public static final String CAREER_PARAMETER_NAME = "cAREERcodigo";
@@ -53,9 +56,33 @@ public class UserCareerRepository {
         query.setParameter(ID_PARAMETER_NAME, id);
         return query.getResultList();
     }
+    
+    public List<Career> getCareersOfUser(User user){
+        Query query = entityManager.createQuery(FIND_CAREER_OF_USERS);
+        query.setParameter(ID_PARAMETER_NAME, user.getUserId());
+        return query.getResultList();
+    }
 
     public List<UserCareer> getAllGroupUser() {
         Query query = entityManager.createQuery(GET_ALL_CAREER_USERS);
+        return query.getResultList();
+    }
+    
+    public List<UserCareer> getUserCareer(Career career){
+        Query query = entityManager.createQuery(FIND_USER_CAREER_OF_USER);
+        query.setParameter("careerCode", career.getCodigo());
+        return query.getResultList();
+    }
+    
+    public List<UserCareer> getUserCareer(UserCareer UserCareer){
+        Query query = entityManager.createQuery(FIND_USER_CAREER);
+        query.setParameter("id", UserCareer.getId());
+        return query.getResultList();
+    }
+    
+    public List<UserCareer> getUserCareer(User user){
+        Query query = entityManager.createQuery(FIND_USER_CAREER_USER);
+        query.setParameter(ID_PARAMETER_NAME, user.getUserId());
         return query.getResultList();
     }
     

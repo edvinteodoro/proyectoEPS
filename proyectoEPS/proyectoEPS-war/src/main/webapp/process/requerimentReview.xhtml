@@ -79,24 +79,10 @@
                 <br></br><br></br>
                 <div class="row">
                     <div class="form-group col-sm-4">
-                        <button styleClass="btn btn-primary"
-                                update="@form,:growl" 
-                                jsf:outcome="processes">
-                            <span class="glyphicon glyphicon-remove"></span> Rechazar
-                        </button>
-
                         <p:commandLink styleClass="btn btn-primary" oncomplete="PF('dlgEdit').show();"
                                        update=":#{p:component('dlgEdit')}">
-                            <span class="glyphicon glyphicon-pencil"></span>Solicitar Cambios
+                            <span class="glyphicon glyphicon-pencil"></span> Realizar Observaciones
                         </p:commandLink>
-
-
-                        <button styleClass="btn btn-primary"
-                                update="@form,:growl" 
-                                action="#{requerimentReviewView.aceptar()}"
-                                jsf:outcome="processes">
-                            <span class="glyphicon glyphicon-ok"></span> Aceptar
-                        </button>
                     </div>
                 </div>
             </fieldset>

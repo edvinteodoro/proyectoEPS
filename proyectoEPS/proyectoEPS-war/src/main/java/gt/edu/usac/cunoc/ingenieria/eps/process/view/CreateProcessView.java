@@ -3,10 +3,15 @@ package gt.edu.usac.cunoc.ingenieria.eps.process.view;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Requeriment;
 import gt.edu.usac.cunoc.ingenieria.eps.process.facade.ProcessFacadeLocal;
+import gt.edu.usac.cunoc.ingenieria.eps.user.Career;
+import gt.edu.usac.cunoc.ingenieria.eps.user.User;
+import gt.edu.usac.cunoc.ingenieria.eps.user.UserCareer;
+import gt.edu.usac.cunoc.ingenieria.eps.user.facade.UserFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.utils.MessageUtils;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.context.ExternalContext;
@@ -28,6 +33,9 @@ public class CreateProcessView implements Serializable {
     @EJB
     private ProcessFacadeLocal processFacade;
     
+    @EJB
+    private UserFacadeLocal userFacade;
+    
     private UploadedFile writtenRequest;
     private UploadedFile inscriptionConstancy;
     private UploadedFile pensumeClosure;
@@ -46,6 +54,14 @@ public class CreateProcessView implements Serializable {
 
     private Process process;
     
+    private Process processExist;
+    
+    private User user;
+    
+    private List<Career> careers;
+    
+    private List<UserCareer> userCareers;
+    
     String nameWrittenRequest="";
     String nameInscriptionConstancy="";
     String namePensumeClosure="";
@@ -55,6 +71,13 @@ public class CreateProcessView implements Serializable {
     
     @PostConstruct
     public void init() {
+        try {
+            user = userFacade.getAuthenticatedUser().get(0);
+            careers=userFacade.getCareersOfUser(user); 
+            userCareers=userFacade.getUserCareer(user);
+        } catch (Exception e) {
+            System.out.println("No se pudo obtener usuario");
+        }
     }
 
     public Process getProcess() {
@@ -63,12 +86,24 @@ public class CreateProcessView implements Serializable {
         }
         return process;
     }
+    
+    public void setProcess(Process process){
+        this.process=process;
+    }
 
     public Requeriment getRequeriment() {
         if (requeriment == null) {
             requeriment = new Requeriment();
         }
         return requeriment;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public void guardar() throws IOException {
@@ -265,6 +300,25 @@ public class CreateProcessView implements Serializable {
     public void reloadAeioSettlemen(){
         writtenRequestStream = new DefaultStreamedContent(new ByteArrayInputStream(writtenRequest.getContents()), "application/pdf", "Solicitud Escrita.pdf");
     }
+
+    public List<Career> getCareers() {
+        return careers;
+    }
+
+    public void setCareers(List<Career> careers) {
+        this.careers = careers;
+    }
+
+    public List<UserCareer> getUserCareers() {
+        return userCareers;
+    }
+
+    public void setUserCareers(List<UserCareer> userCareers) {
+        this.userCareers = userCareers;
+    }
+    
+    
+    
     
     
 }

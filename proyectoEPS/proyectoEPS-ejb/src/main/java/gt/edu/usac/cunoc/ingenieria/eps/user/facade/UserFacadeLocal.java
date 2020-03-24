@@ -43,6 +43,13 @@ public interface UserFacadeLocal {
     
     public List<User> findUsersByGroupUserCareer(UserCareer userCareer, int id) throws UserException;
     
-    public List<UserCareer> findAllUserCareer(UserCareer userCareer) throws UserException;
+    public List<UserCareer> findAllUserCareer() throws UserException;
     
+    public List<Career> getCareersOfUser(User user);
+
+    public List<UserCareer> getUserCareer(Career career);
+    
+    public List<UserCareer> getUserCareer(UserCareer UserCareer);
+    
+    public List<UserCareer> getUserCareer(User user);
 }

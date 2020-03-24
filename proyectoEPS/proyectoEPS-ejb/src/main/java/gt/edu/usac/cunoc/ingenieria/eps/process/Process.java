@@ -59,8 +59,7 @@ public class Process implements Serializable {
     private Integer progress;
     @OneToOne(mappedBy="pROCESSid",cascade = CascadeType.PERSIST)
     private Requeriment requeriment;
-    @OneToOne
-    @JoinColumn(name="USER_CAREER_id",referencedColumnName = "id")
+    @OneToOne(mappedBy="process",cascade =CascadeType.REFRESH)
     private UserCareer userCareer;
     @OneToOne(mappedBy="pROCESSid",cascade = CascadeType.PERSIST)
     private Project project;
@@ -170,9 +169,9 @@ public class Process implements Serializable {
     
     public String getApprovedCareerCoordinatorMessage(){
         if(approvedCareerCoordinator==false){
-            return "No Aprovado";
+            return "No Aprobado";
         }else{
-            return "Aprovado";
+            return "Aprobado";
         }
     }
     public String getStateMessage(){

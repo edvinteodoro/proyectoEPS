@@ -47,4 +47,17 @@ public class CareerRepository {
         TypedQuery<Career> typedQuery = entityManager.createQuery(GET_ALL,Career.class);
         return typedQuery.getResultList();
     }
+    
+    public List<Career> getCareer(Career career){
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Career> criteriaQuery = criteriaBuilder.createQuery(Career.class);
+        Root<Career> Career = criteriaQuery.from(Career.class);
+        List<Predicate> predicates = new ArrayList<>();
+        if (career.getCodigo() != null) {
+            predicates.add(criteriaBuilder.equal(Career.get("codigo"), career.getCodigo()));
+        }
+        criteriaQuery.where(predicates.stream().toArray(Predicate[]::new));
+        TypedQuery<Career> query = entityManager.createQuery(criteriaQuery);
+        return query.getResultList();
+    }
 }

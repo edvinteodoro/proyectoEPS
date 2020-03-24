@@ -15,6 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -39,6 +40,9 @@ public class UserCareer implements Serializable {
     @JoinColumn(name = "USER_userId", referencedColumnName = "userId")
     @ManyToOne(optional = false)
     private User uSERuserId;
+    @OneToOne
+    @JoinColumn(name="PROCESS_id",referencedColumnName = "id")
+    private Process process;
 
     public UserCareer() {
     }
@@ -70,6 +74,16 @@ public class UserCareer implements Serializable {
     public void setUSERuserId(User uSERuserId) {
         this.uSERuserId = uSERuserId;
     }
+
+    public Process getProcess() {
+        return process;
+    }
+
+    public void setProcess(Process process) {
+        this.process = process;
+    }
+    
+    
 
     @Override
     public int hashCode() {

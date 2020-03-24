@@ -102,7 +102,6 @@ public class RequerimentReviewView implements Serializable {
     }
     
     public void loadCurrentProcess(){
-        System.out.println("ejemplos");
         requeriment = processFacade.getRequeriment(new Requeriment(processId)).get(0);
         writtenRequest = new DefaultStreamedContent(new ByteArrayInputStream(requeriment.getWrittenRequest()), "application/pdf", "Solicitud Escrita.pdf");
         inscriptionConstancy = new DefaultStreamedContent(new ByteArrayInputStream(requeriment.getInscriptionConstancy()), "application/pdf", "Constancia Inscripcion.pdf");

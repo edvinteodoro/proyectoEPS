@@ -39,6 +39,8 @@ public class ProjectView implements Serializable{
     private List<Objectives> generalObjectves;
     private List<Objectives> specificObjectives;
     
+    private Integer projectId;
+     
     @PostConstruct
     public void init() {
         project = new Project();
@@ -162,6 +164,17 @@ public class ProjectView implements Serializable{
             } catch (MandatoryException | LimitException ex) {
                 MessageUtils.addErrorMessage(ex.getMessage());
             } 
+        }
+    }
+    
+    public void loadCurrentProject(){
+        project = projectFacade.getProject(projectId);
+        for (int i = 0; i < project.getObjectives().size(); i++) {
+            if (project.getObjectives().get(i).getState() == Objectives.GENERAL_OBJETICVE){
+                generalObjectves.add(project.getObjectives().get(i));
+            } else {
+                specificObjectives.add(project.getObjectives().get(i));
+            }
         }
     }
     

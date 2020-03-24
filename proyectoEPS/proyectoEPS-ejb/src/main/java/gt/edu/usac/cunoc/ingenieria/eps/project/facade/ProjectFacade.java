@@ -6,6 +6,7 @@ import gt.edu.usac.cunoc.ingenieria.eps.exception.LimitException;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.MandatoryException;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Objectives;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
+import gt.edu.usac.cunoc.ingenieria.eps.project.repository.ProjectRepository;
 import gt.edu.usac.cunoc.ingenieria.eps.project.service.ProjectService;
 import java.time.LocalDate;
 import java.util.List;
@@ -19,6 +20,9 @@ public class ProjectFacade implements ProjectFacadeLocal{
 
     @EJB
     private ProjectService projectService;
+    
+    @EJB
+    private ProjectRepository projectRepository;
                     
     @Override
     public Project createProject(Project project, List<Objectives> generalObjective, List<Objectives> specificObjective) throws MandatoryException, LimitException {
@@ -40,4 +44,11 @@ public class ProjectFacade implements ProjectFacadeLocal{
         }
         return projectService.create(project);
     }
+
+    @Override
+    public Project getProject(Integer projectId) {
+        return projectRepository.getProjects(projectId.intValue(), null,null).get(0);
+    }
+
+
 }

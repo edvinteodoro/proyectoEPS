@@ -3,6 +3,7 @@ package gt.edu.usac.cunoc.ingenieria.eps.process.view;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Requeriment;
 import gt.edu.usac.cunoc.ingenieria.eps.process.facade.ProcessFacadeLocal;
+import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
 import gt.edu.usac.cunoc.ingenieria.eps.utils.MessageUtils;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -43,6 +44,7 @@ public class CreateProcessView implements Serializable {
     private StreamedContent aeioSettlementStream;
 
     private Requeriment requeriment;
+    private Project project;
 
     private Process process;
     
@@ -84,6 +86,7 @@ public class CreateProcessView implements Serializable {
             getRequeriment().setWrittenRequest(writtenRequest.getContents());
             getRequeriment().setpROCESSid(getProcess());
             getProcess().setRequeriment(getRequeriment());
+            getProcess().setProject(project);
             if (aeioSettlement != null) {
                 getRequeriment().setAEIOsettlement(aeioSettlement.getContents());
             }
@@ -265,6 +268,16 @@ public class CreateProcessView implements Serializable {
     public void reloadAeioSettlemen(){
         writtenRequestStream = new DefaultStreamedContent(new ByteArrayInputStream(writtenRequest.getContents()), "application/pdf", "Solicitud Escrita.pdf");
     }
-    
-    
+
+    public Project getProject() {
+        if (project == null){
+            return new Project();
+        } 
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
+       
 }

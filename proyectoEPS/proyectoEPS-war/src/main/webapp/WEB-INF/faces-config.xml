@@ -36,8 +36,8 @@
             <redirect/>
         </navigation-case>
         <navigation-case>
-            <from-outcome>createProject</from-outcome>
-            <to-view-id>/project/createProject.xhtml</to-view-id>
+            <from-outcome>project</from-outcome>
+            <to-view-id>/project/project.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
     </navigation-rule>

@@ -1,6 +1,7 @@
 package gt.edu.usac.cunoc.ingenieria.eps.process;
 
 
+import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
 import gt.edu.usac.cunoc.ingenieria.eps.user.UserCareer;
 import java.io.Serializable;
 import java.util.List;
@@ -60,6 +61,8 @@ public class Process implements Serializable {
     private Requeriment requeriment;
     @OneToOne(mappedBy="process",cascade =CascadeType.REFRESH)
     private UserCareer userCareer;
+    @OneToOne(mappedBy="pROCESSid",cascade = CascadeType.PERSIST)
+    private Project project;
     
 
     public Process() {
@@ -194,10 +197,15 @@ public class Process implements Serializable {
     public void setRequeriment(Requeriment requeriment) {
         this.requeriment = requeriment;
     }
-    
-    
-    
 
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

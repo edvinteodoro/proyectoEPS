@@ -1,9 +1,10 @@
-
 package gt.edu.usac.cunoc.ingenieria.eps.project.view;
 
 import gt.edu.usac.cunoc.ingenieria.eps.configuration.repository.PropertyRepository;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.LimitException;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.MandatoryException;
+import gt.edu.usac.cunoc.ingenieria.eps.process.facade.ProcessFacadeLocal;
+import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Objectives;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
 import gt.edu.usac.cunoc.ingenieria.eps.project.facade.ProjectFacadeLocal;
@@ -21,39 +22,37 @@ import org.primefaces.model.UploadedFile;
 
 @Named
 @ViewScoped
-public class ProjectView implements Serializable{
-    
+public class ProjectView implements Serializable {
+
     @EJB
     private ProjectFacadeLocal projectFacade;
-    
+
+    @EJB
+    private ProcessFacadeLocal processFacade;
+
     private UploadedFile schedule;
     private UploadedFile investmentPlan;
     private UploadedFile annexed;
-    
+
     private String sheduleFileName = "";
     private String investmentPlanFileName = "";
     private String annexedFileName = "";
 
     private Project project;
-    
+    private Process process;
     private List<Objectives> generalObjectves;
     private List<Objectives> specificObjectives;
-    
-    private Integer projectId;
-     
+
+    private Integer processId;
+
     @PostConstruct
     public void init() {
-        project = new Project();
         generalObjectves = new ArrayList<>();
         specificObjectives = new ArrayList<>();
-        project.addSection();
-        project.getSections().get(0).getTitles().get(0).setText("Introducción");
-        project.addSection();
-        project.getSections().get(1).getTitles().get(0).setText("Justificación");
     }
-    
+
     public Project getProject() {
-        if (this.project == null){
+        if (this.project == null) {
             this.project = new Project();
         }
         return this.project;
@@ -62,20 +61,20 @@ public class ProjectView implements Serializable{
     public void setProject(Project project) {
         this.project = project;
     }
-    
-    public void handleSchedule(FileUploadEvent event){
-       this.schedule = event.getFile();
-       this.sheduleFileName = event.getFile().getFileName();
-    } 
-   
-    public void handleInvestmentPlan(FileUploadEvent event){
-       this.investmentPlan = event.getFile();
-       this.investmentPlanFileName = event.getFile().getFileName();
+
+    public void handleSchedule(FileUploadEvent event) {
+        this.schedule = event.getFile();
+        this.sheduleFileName = event.getFile().getFileName();
     }
-   
-    public void handleAnnexed(FileUploadEvent event){
-       this.annexed = event.getFile();
-       this.annexedFileName = event.getFile().getFileName();
+
+    public void handleInvestmentPlan(FileUploadEvent event) {
+        this.investmentPlan = event.getFile();
+        this.investmentPlanFileName = event.getFile().getFileName();
+    }
+
+    public void handleAnnexed(FileUploadEvent event) {
+        this.annexed = event.getFile();
+        this.annexedFileName = event.getFile().getFileName();
     }
 
     public String getSheduleFileName() {
@@ -109,16 +108,16 @@ public class ProjectView implements Serializable{
     public void setGeneralObjectves(List<Objectives> generalObjectves) {
         this.generalObjectves = generalObjectves;
     }
-    
-    public void addGeneralObjectives(){
-        if (getGeneralObjectves().size() < PropertyRepository.LIMIT_GENERAL_OBJECTIVE.getValueInt()){
+
+    public void addGeneralObjectives() {
+        if (getGeneralObjectves().size() < PropertyRepository.LIMIT_GENERAL_OBJECTIVE.getValueInt()) {
             getGeneralObjectves().add(new Objectives());
         } else {
             MessageUtils.addErrorMessage("Número Maximo de Objetivos Generales: " + PropertyRepository.LIMIT_GENERAL_OBJECTIVE.getValueInt());
         }
     }
-    
-    public void removeGeneralOBjectives(Integer objectiveIndex){
+
+    public void removeGeneralOBjectives(Integer objectiveIndex) {
         getGeneralObjectves().remove(objectiveIndex.intValue());
     }
 
@@ -129,19 +128,19 @@ public class ProjectView implements Serializable{
     public void setSpecificObjectives(List<Objectives> specificObjectives) {
         this.specificObjectives = specificObjectives;
     }
-   
-    public void addSpecificObjectives(){
-        if (getSpecificObjectives().size() < PropertyRepository.LIMIT_SPECIFIC_OBJECTIVE.getValueInt()){
+
+    public void addSpecificObjectives() {
+        if (getSpecificObjectives().size() < PropertyRepository.LIMIT_SPECIFIC_OBJECTIVE.getValueInt()) {
             getSpecificObjectives().add(new Objectives());
         } else {
             MessageUtils.addErrorMessage("Número Maximo de Objetivos Especificos: " + PropertyRepository.LIMIT_SPECIFIC_OBJECTIVE.getValueInt());
         }
     }
-    
-    public void removeSpecificOBjectives(Integer objectiveIndex){
+
+    public void removeSpecificOBjectives(Integer objectiveIndex) {
         getSpecificObjectives().remove(objectiveIndex.intValue());
     }
-    
+
     public Boolean nullFiles() {
         if (schedule == null || investmentPlan == null) {
             MessageUtils.addErrorMessage("Ingrese los documentos obligatorios *");
@@ -149,36 +148,44 @@ public class ProjectView implements Serializable{
         }
         return false;
     }
-    
-    public void upload(){
-        if (!nullFiles()) {     
+
+    public void upload() {
+        if (!nullFiles()) {
             try {
                 getProject().setSchedule(schedule.getContents());
                 getProject().setInvestmentPlan(investmentPlan.getContents());
                 if (annexed != null) {
                     getProject().setAnnexed(annexed.getContents());
                 }
-                projectFacade.createProject(getProject(),getGeneralObjectves(),getSpecificObjectives());
+                projectFacade.createProject(getProject(), getGeneralObjectves(), getSpecificObjectives());
                 MessageUtils.addSuccessMessage("Se ha creado el proyecto exitosamente");
                 clean();
             } catch (MandatoryException | LimitException ex) {
                 MessageUtils.addErrorMessage(ex.getMessage());
-            } 
+            }
         }
     }
-    
-    public void loadCurrentProject(){
-        project = projectFacade.getProject(projectId);
+
+    public void loadCurrentProject() {
+        process = processFacade.getProcess(new Process(processId)).get(0);
+        this.project = process.getProject();
+        if (this.project == null) {
+            this.project = new Project();
+            project.addSection();
+            project.getSections().get(0).getTitles().get(0).setText("Introducción");
+            project.addSection();
+            project.getSections().get(1).getTitles().get(0).setText("Justificación");
+        }
         for (int i = 0; i < project.getObjectives().size(); i++) {
-            if (project.getObjectives().get(i).getState() == Objectives.GENERAL_OBJETICVE){
+            if (project.getObjectives().get(i).getState() == Objectives.GENERAL_OBJETICVE) {
                 generalObjectves.add(project.getObjectives().get(i));
             } else {
                 specificObjectives.add(project.getObjectives().get(i));
             }
         }
     }
-    
-    public void clean(){
+
+    public void clean() {
         this.project = new Project();
         this.schedule = new DefaultUploadedFile();
         this.annexed = new DefaultUploadedFile();
@@ -189,5 +196,13 @@ public class ProjectView implements Serializable{
         this.generalObjectves.clear();
         this.specificObjectives.clear();
     }
-   
+
+    public Integer getProcessId() {
+        return processId;
+    }
+
+    public void setProcessId(Integer processId) {
+        this.processId = processId;
+    }
+
 }

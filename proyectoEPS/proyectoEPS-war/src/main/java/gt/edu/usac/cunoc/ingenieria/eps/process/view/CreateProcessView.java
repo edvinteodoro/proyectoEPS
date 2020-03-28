@@ -121,7 +121,6 @@ public class CreateProcessView implements Serializable {
             getRequeriment().setWrittenRequest(writtenRequest.getContents());
             getRequeriment().setpROCESSid(getProcess());
             getProcess().setRequeriment(getRequeriment());
-            getProcess().setProject(project);
             if (aeioSettlement != null) {
                 getRequeriment().setAEIOsettlement(aeioSettlement.getContents());
             }

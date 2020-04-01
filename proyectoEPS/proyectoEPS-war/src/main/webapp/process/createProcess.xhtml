@@ -20,7 +20,7 @@
                     <div class="form-group col-sm-3">
                         <p:outputLabel for="writtenRequest" value="Carta de Solicitud EPS Escritas:" />
                     </div>
-                    <div class="form-group col-sm-3">
+                    <div class="form-group col-sm-4">
                         <p:fileUpload id="writtenRequest" fileUploadListener="#{createProcessView.handleWrittenRequest}"
                                       required="true" 
                                       styleClass="in-dialog"
@@ -37,7 +37,7 @@
                     <div class="form-group col-sm-3">
                         <p:outputLabel for="inscriptionConstancy" value="Constancia de Inscripcion:"/>
                     </div>
-                    <div class="form-group col-sm-3">
+                    <div class="form-group col-sm-4">
                         <p:fileUpload id="inscriptionConstancy" fileUploadListener="#{createProcessView.handleInscriptionConstancy}" 
                                       required="true"   
                                       styleClass="in-dialog"
@@ -54,7 +54,7 @@
                     <div class="form-group col-sm-3">
                         <p:outputLabel for="pensumeClosure" value="Constancia de Cierre de Pensum:"/>
                     </div>
-                    <div class="form-group col-sm-3">
+                    <div class="form-group col-sm-4">
                         <p:fileUpload id="pensumeClosure" fileUploadListener="#{createProcessView.handlePensumeClosure}"
                                       required="true"   
                                       styleClass="in-dialog"
@@ -71,7 +71,7 @@
                     <div class="form-group col-sm-3">
                         <p:outputLabel for="propedeuticConstancy" value="Constancia de Propedeutico:"/>
                     </div>
-                    <div class="form-group col-sm-3">
+                    <div class="form-group col-sm-4">
                         <p:fileUpload id="propedeuticConstancy"  fileUploadListener="#{createProcessView.handlePropedeuticConstancy}"
                                       required="true"   
                                       styleClass="in-dialog"
@@ -88,7 +88,7 @@
                     <div class="form-group col-sm-3">
                         <p:outputLabel for="epsPreProject"  value="Constancia de Pre Proyecto:"/>
                     </div>
-                    <div class="form-group col-sm-3">
+                    <div class="form-group col-sm-4">
                         <p:fileUpload id="epsPreProject" fileUploadListener="#{createProcessView.handleEpsPreProject}"
                                       required="true"  
                                       styleClass="in-dialog"
@@ -105,7 +105,7 @@
                     <div class="form-group col-sm-3">
                         <p:outputLabel for="aeio" value="Documento Finiquito de AEIO:"/>
                     </div>
-                    <div class="form-group col-sm-3">
+                    <div class="form-group col-sm-4">
                         <p:fileUpload id="aeio" fileUploadListener="#{createProcessView.handleAeioSettlement}" 
                                       styleClass="in-dialog"
                                       skinSimple="true" auto="true" allowTypes="/(\.|\/)(pdf)$/"
@@ -120,7 +120,7 @@
                 <div class="row">
                     <div class="form-group col-sm-3">
                         <p:outputLabel value="Seleccione su Carrera:"/></div>
-                    <div class="form-group col-sm-3">
+                    <div class="form-group col-sm-4">
                         <p:selectOneMenu id="career"  value="#{createProcessView.process.userCareer}" converter="careerConverter">
                             <f:selectItems value="#{createProcessView.userCareers}" var="userCareer"
                                            itemValue="#{userCareer}"

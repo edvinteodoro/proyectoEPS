@@ -25,6 +25,7 @@ public class ProcessesView implements Serializable {
     @PostConstruct
     public void init() {
         processes = processFacade.getProcess(new Process());
+        System.out.println("requisitos: "+processes.get(0).getRequeriment());
     }
 
     public List<Process> getProcesses() {

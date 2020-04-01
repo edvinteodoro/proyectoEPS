@@ -40,7 +40,7 @@ public class UserCareer implements Serializable {
     @JoinColumn(name = "USER_userId", referencedColumnName = "userId")
     @ManyToOne(optional = false)
     private User uSERuserId;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="PROCESS_id",referencedColumnName = "id")
     private Process process;
 

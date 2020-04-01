@@ -1,0 +1,99 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="../templates/template-one.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:define name="title">
+        Registrar Usuario
+    </ui:define>
+
+    <ui:define name="content">
+        <h:form id="frmLogin">            
+            <p:focus id="focuss" context="frmLogin" />
+            <p:messages  globalOnly="true"/>
+            <fieldset class="center-block">
+                <legend>Crear Usuario</legend>
+
+                <div class="row">
+                    <div class="form-group col-sm-3">
+                        <p:outputLabel for="carnet" value="Carnet:" />
+                    </div>
+                    <div class="form-group col-sm-4">
+                        <p:inputText id="carnet" styleClass="form-control" required="true"
+                                     pt:required="true" value="#{createUserView.user.carnet}"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-4">
+                        <p:outputLabel for="fname" value="Nombres:" />
+                        <p:inputText id="fname" styleClass="form-control" pt:placeholder="Nombres" required="true"
+                                     pt:required="true" value="#{createUserView.user.firstName}"/>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="form-group col-sm-4">
+                        <p:outputLabel for="lname" value="Apellidos:" />
+                        <p:inputText id="lname" styleClass="form-control" pt:placeholder="Apellidos" required="true"
+                                     pt:required="true" value="#{createUserView.user.lastName}"/>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-sm-4">
+                        <p:outputLabel for="email" value="Correo:" />
+                        <p:inputText id="email" styleClass="form-control" pt:placeholder="#{i18nLabels.Username}" required="true"
+                                     pt:required="true" value="#{createUserView.user.email}"/>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-sm-4">
+                        <p:outputLabel for="phone" value="Numero de telefono:" />
+                        <p:inputText id="phone" styleClass="form-control" pt:placeholder="#{i18nLabels.Username}" required="true"
+                                     pt:required="true" value="#{createUserView.user.phone}"/>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="form-group col-sm-4">
+                        <p:outputLabel for="rolUser" value="Tipo de Usuario:" />
+                        <p:selectOneMenu id="rolUser"  value="#{createUserView.user.ROLid}" converter="rolUserConverter">
+                            <f:selectItems value="#{createUserView.rolUsers}" var="rolUser"
+                                           itemValue="#{rolUser}"
+                                           itemLabel="#{rolUser.name}"/>
+                        </p:selectOneMenu>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-sm-4">
+                        <p:outputLabel for="pass" value="Contrasena:" />
+                        <p:password id="pass" styleClass="form-control" pt:placeholder="Contrasena" required="true"
+                                    pt:required="true" value="#{createUserView.user.password}" pt:type="password"
+                                    />
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="form-group col-sm-4">
+                        <p:commandLink styleClass="btn btn-primary"
+                                       update="@form,:growl" 
+                                       action="#{createUserView.createUser()}">
+                            <span class="glyphicon glyphicon-log-in"></span> Crear Usuario
+                        </p:commandLink>
+                    </div>
+                </div>
+
+            </fieldset>
+        </h:form>
+    </ui:define>
+
+</ui:composition>
+
+

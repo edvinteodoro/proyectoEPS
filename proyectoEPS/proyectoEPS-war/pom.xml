@@ -24,7 +24,7 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>proyectoEPS-ejb</artifactId>
             <version>${project.version}</version>
-            <type>jar</type>
+            <type>ejb</type>
             <scope>provided</scope>
         </dependency>
         <dependency>

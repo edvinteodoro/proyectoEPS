@@ -6,6 +6,7 @@ import gt.edu.usac.cunoc.ingenieria.eps.process.DocumentInitialEps;
 import gt.edu.usac.cunoc.ingenieria.eps.user.UserCareer;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -16,6 +17,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -83,11 +85,11 @@ public class User implements Serializable {
     @NotNull
     @Column(name = "state")
     private Boolean state;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "uSERuserId")
-    private Collection<UserCareer> userCareerCollection;
     @JoinColumn(name = "ROL_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Rol rOLid;
+    @OneToMany(mappedBy="uSERuserId",cascade = CascadeType.ALL)
+    private List<UserCareer> userCareers;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "uSERadviser")
     private Collection<Appointment> appointmentCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "uSERreviewer")
@@ -211,14 +213,6 @@ public class User implements Serializable {
         this.state = state;
     }
 
-    public Collection<UserCareer> getUserCareerCollection() {
-        return userCareerCollection;
-    }
-
-    public void setUserCareerCollection(Collection<UserCareer> userCareerCollection) {
-        this.userCareerCollection = userCareerCollection;
-    }
-
     public Rol getROLid() {
         return rOLid;
     }
@@ -258,6 +252,24 @@ public class User implements Serializable {
     public void setDocumentInitialEpsCollection1(Collection<DocumentInitialEps> documentInitialEpsCollection1) {
         this.documentInitialEpsCollection1 = documentInitialEpsCollection1;
     }
+
+    public Rol getrOLid() {
+        return rOLid;
+    }
+
+    public void setrOLid(Rol rOLid) {
+        this.rOLid = rOLid;
+    }
+
+    public List<UserCareer> getUserCareers() {
+        return userCareers;
+    }
+
+    public void setUserCareers(List<UserCareer> userCareers) {
+        this.userCareers = userCareers;
+    }
+    
+    
 
     @Override
     public int hashCode() {

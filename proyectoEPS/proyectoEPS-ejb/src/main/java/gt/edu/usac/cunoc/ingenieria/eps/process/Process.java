@@ -67,6 +67,10 @@ public class Process implements Serializable {
 
     public Process() {
     }
+    
+    public Process(UserCareer userCareer) {
+        this.userCareer=userCareer;
+    }   
 
     public Process(Integer id) {
         this.id = id;

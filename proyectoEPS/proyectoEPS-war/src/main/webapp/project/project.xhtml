@@ -7,10 +7,8 @@
                 xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
                 xmlns:jsf="http://xmlns.jcp.org/jsf"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
-                xmlns:o="http://omnifaces.org/ui"
-                xmlns:c="http://java.sun.com/jsp/jstl/core"
-                >
-    
+                xmlns:o="http://omnifaces.org/ui">
+
     <f:metadata>
         <o:viewParam name="idProcess" required="true" value="#{projectView.processId}"
                      requiredMessage="Ningun valor">
@@ -51,10 +49,15 @@
                                       label="Seleccionar"
                                       update="labelSchedule"
                                       sizeLimit="15000000"
+                                      allowTypes="/(\.|\/)(pdf)$/"
+                                      invalidFileMessage="Solo se puede cargar archivos pdf"
                                       invalidSizeMessage="Archivo demasiado grande, limite de 14MB"
                                       >                                       
                         </p:fileUpload>
-                        <p:outputLabel id="labelSchedule" value="#{projectView.sheduleFileName}" class="text-primary"/>
+                        <h:commandLink id="labelSchedule" value="#{projectView.sheduleFileName}" class="text-primary"
+                                       target="_blank" actionListener="#{projectView.reloadSchedule()}">
+                            <p:fileDownload value="#{projectView.scheduleStream}" contentDisposition="inline"/>
+                        </h:commandLink>
                     </div>
                 </div>
                 <div class="row">
@@ -66,10 +69,15 @@
                                       label="Seleccionar"
                                       update="labelInvestmentPlan"
                                       sizeLimit="15000000"
+                                      allowTypes="/(\.|\/)(pdf)$/"
+                                      invalidFileMessage="Solo se puede cargar archivos pdf"
                                       invalidSizeMessage="Archivo demasiado grande, limite de 14MB"
                                       >                                       
                         </p:fileUpload>
-                        <p:outputLabel id="labelInvestmentPlan" value="#{projectView.investmentPlanFileName}" class="text-primary"/>
+                        <h:commandLink id="labelInvestmentPlan" value="#{projectView.investmentPlanFileName}" class="text-primary"
+                                       target="_blank" actionListener="#{projectView.reloadInvestmentPlan()}">
+                            <p:fileDownload value="#{projectView.investmentPlanStream}" contentDisposition="inline"/>
+                        </h:commandLink>
                     </div>                    
                 </div>
                 <div class="row">
@@ -80,10 +88,15 @@
                                       label="Seleccionar"
                                       update="labelAnnexed"
                                       sizeLimit="15000000"
+                                      allowTypes="/(\.|\/)(pdf)$/"
+                                      invalidFileMessage="Solo se puede cargar archivos pdf"
                                       invalidSizeMessage="Archivo demasiado grande, limite de 14MB"
                                       >                                       
                         </p:fileUpload>
-                        <p:outputLabel id="labelAnnexed" value="#{projectView.annexedFileName}" class="text-primary"/>
+                        <h:commandLink id="labelAnnexed" value="#{projectView.annexedFileName}" class="text-primary"
+                                       target="_blank" actionListener="#{projectView.reloadAnnexed()}">
+                            <p:fileDownload value="#{projectView.annexedStream}" contentDisposition="inline"/>
+                        </h:commandLink>
                     </div>
                 </div>
                 <div class="row" >
@@ -92,10 +105,24 @@
                             <ui:repeat value="#{projectView.project.decimalCoordinates}" var="decimalCoordinate" varStatus="decimalCoordinateStatus">
                                 <div class="row">
                                     <div class="form-group col-sm-4">
-                                        <p:inputNumber placeholder="Latitud" decimalPlaces="4" value="#{decimalCoordinate.latitude}"></p:inputNumber>
+                                        <p:inputNumber placeholder="Latitud" 
+                                                       decimalPlaces="4" 
+                                                       value="#{decimalCoordinate.latitude}"
+                                                       decimalSeparator="."
+                                                       minValue="-90.0000"
+                                                       maxValue="90.9999"
+                                                       >
+                                        </p:inputNumber>
+                                        
                                     </div>                                   
                                     <div class="form-group col-sm-4">
-                                        <p:inputNumber placeholder="Longitud" decimalPlaces="4" value="#{decimalCoordinate.longitude}"></p:inputNumber>
+                                        <p:inputNumber placeholder="Longitud" 
+                                                       decimalPlaces="4" 
+                                                       value="#{decimalCoordinate.longitude}"
+                                                       minValue="-180.0000"
+                                                       maxValue="180.9999"
+                                                       decimalSeparator="."
+                                                       ></p:inputNumber>
                                     </div>
                                     <div class="form-group col-sm-3">
                                         <p:commandLink  styleClass="btn btn-danger" actionListener="#{projectView.project.removeDecimalCoordinates(decimalCoordinateStatus.index)}" 
@@ -195,13 +222,13 @@
                                                             <div class="form-group col-md-12">
                                                                 <p:outputLabel for="titleSection" value="Titulo:"/>
                                                                 <p:inputText id="titleSection" styleClass="form-control" pt:placeholder="Titulo"
-                                                                             value="#{title.text}"/>
+                                                                             value="#{title.name}"
+                                                                             />
                                                             </div>
                                                         </div>
                                                         <div class="row">
                                                             <div class="form-group col-md-12">
                                                                 <p:textEditor widgetVar="editor" height="300" style="margin-bottom:10px" placeholder="Ingrese su Contenido"
-
                                                                               >
                                                                     <f:facet name="toolbar">
                                                                         <span class="ql-formats">
@@ -221,8 +248,8 @@
                                                     </ui:repeat>
                                                     <div class="row">
                                                         <div class="form-group col-sm-2">
-                                                            <p:commandLink  styleClass="btn btn-danger" actionListener="#{projectView.project.removeSection(sectionStatus.index)}" 
-                                                                            update="#{p:component('listSections')}"
+                                                            <p:commandLink  styleClass="btn btn-danger" actionListener="#{projectView.removeSection(sectionStatus.index)}" 
+                                                                            update="#{p:component('listSections')}, :growl"
                                                                             process="#{p:component('listSections')}"
                                                                             >
                                                                 <span class="glyphicon glyphicon-minus"></span> Eliminar Sección
@@ -303,7 +330,7 @@
                 <div class="form-group col-sm-2">
                     <p:commandLink styleClass="btn btn-primary"
                                    update="@form,:growl" 
-                                   action="#{projectView.upload()}">
+                                   action="#{projectView.uploadCreate()}">
                         <span class="glyphicon glyphicon-floppy-disk"></span> Guardar Proyecto EPS
                     </p:commandLink>
                 </div><div class="form-group col-sm-2">

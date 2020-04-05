@@ -52,7 +52,6 @@ public class CreateProcessView implements Serializable {
     private StreamedContent aeioSettlementStream;
 
     private Requeriment requeriment;
-    private Project project;
 
     private Process process;
 
@@ -308,17 +307,6 @@ public class CreateProcessView implements Serializable {
 
     public void reloadAeioSettlemen() {
         writtenRequestStream = new DefaultStreamedContent(new ByteArrayInputStream(writtenRequest.getContents()), "application/pdf", "Solicitud Escrita.pdf");
-    }
-
-    public Project getProject() {
-        if (project == null) {
-            return new Project();
-        }
-        return project;
-    }
-
-    public void setProject(Project project) {
-        this.project = project;
     }
 
     public List<Career> getCareers() {

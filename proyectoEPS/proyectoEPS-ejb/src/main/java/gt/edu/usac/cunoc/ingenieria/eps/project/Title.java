@@ -11,6 +11,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -25,25 +26,27 @@ public class Title implements Serializable {
     @Column(name = "id")
     private Integer id;
     @Column(name = "text")
-    private String text;
+    private String name;
     
     @ManyToOne(fetch = FetchType.LAZY)
     private Section section;
    
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "TITLE_parent_id", referencedColumnName = "id")
     private Title titleParent;
     
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "titleParent", orphanRemoval = true)
-    private List<Title> titles = new ArrayList<>();
+    private List<Title> titles;
     
     @OneToOne(mappedBy = "title", cascade = CascadeType.ALL)
     private Texto texto;
 
     public Title() {
+        this.titles = new ArrayList<>();
     }
 
-    public Title(String text) {
-        this.text = text;
+    public Title(String name) {
+        this.name = name;
     }
 
     public Integer getId() {
@@ -54,12 +57,12 @@ public class Title implements Serializable {
         this.id = id;
     }
 
-    public String getText() {
-        return text;
+    public String getName() {
+        return name;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Section getSection() {

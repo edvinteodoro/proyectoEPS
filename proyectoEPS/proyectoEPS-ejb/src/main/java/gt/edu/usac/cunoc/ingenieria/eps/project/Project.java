@@ -1,7 +1,7 @@
-
 package gt.edu.usac.cunoc.ingenieria.eps.project;
 
 import gt.edu.usac.cunoc.ingenieria.eps.exception.LimitException;
+import gt.edu.usac.cunoc.ingenieria.eps.exception.MandatoryException;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -25,13 +25,13 @@ public class Project implements Serializable {
 
     public static final Short ACTIVE = 1;
     public static final Short INACTIVE = 0;
-    
+
     @Id
-    @GeneratedValue( strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
     @Column(name = "title")
-    private String title; 
+    private String title;
     @Column(name = "state")
     private Short state;
     @Column(name = "schedule")
@@ -52,14 +52,15 @@ public class Project implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "project", orphanRemoval = true)
     private List<Section> sections;
     @OneToOne
-    @JoinColumn(name="PROCESS_id",referencedColumnName = "id")
+    @JoinColumn(name = "PROCESS_id", referencedColumnName = "id")
     private Process pROCESSid;
-    
+
     public Project() {
         this.decimalCoordinates = new ArrayList<>();
         this.objectives = new ArrayList<>();
         this.bibliographies = new ArrayList<>();
         this.sections = new ArrayList<>();
+        setInitialSections();
     }
 
     public Integer getId() {
@@ -126,16 +127,16 @@ public class Project implements Serializable {
         this.bibliographies = bibliographies;
     }
 
-    public void addBibliography(){
+    public void addBibliography() {
         Bibliography bibliography = new Bibliography();
         bibliographies.add(bibliography);
         bibliography.setProject(this);
     }
-    
-    public void removeBibliography(Integer bibliographyIndex){
+
+    public void removeBibliography(Integer bibliographyIndex) {
         bibliographies.get(bibliographyIndex).setProject(null);
         bibliographies.remove(bibliographyIndex.intValue());
-        
+
     }
 
     public List<DecimalCoordinate> getDecimalCoordinates() {
@@ -145,14 +146,14 @@ public class Project implements Serializable {
     public void setDecimalCoordinates(List<DecimalCoordinate> decimalCoordinates) {
         this.decimalCoordinates = decimalCoordinates;
     }
-    
-    public void addDecimalCoordinates(){
-        DecimalCoordinate decimalCoordinate =  new DecimalCoordinate();
+
+    public void addDecimalCoordinates() {
+        DecimalCoordinate decimalCoordinate = new DecimalCoordinate();
         decimalCoordinates.add(decimalCoordinate);
         decimalCoordinate.setProject(this);
     }
-    
-    public void removeDecimalCoordinates(Integer decimalCoordinateIndex){
+
+    public void removeDecimalCoordinates(Integer decimalCoordinateIndex) {
         decimalCoordinates.get(decimalCoordinateIndex).setProject(null);
         decimalCoordinates.remove(decimalCoordinateIndex.intValue());
     }
@@ -164,13 +165,13 @@ public class Project implements Serializable {
     public void setObjectives(List<Objectives> objectives) {
         this.objectives = objectives;
     }
-    
-    public void addObjective(Objectives objective) throws LimitException{
+
+    public void addObjective(Objectives objective) throws LimitException {
         objectives.add(objective);
         objective.setProject(this);
     }
-    
-    public void removeObjective(Objectives objective){
+
+    public void removeObjective(Objectives objective) {
         objectives.remove(objective);
         objective.setProject(null);
     }
@@ -182,26 +183,49 @@ public class Project implements Serializable {
     public void setSections(List<Section> sections) {
         this.sections = sections;
     }
-    
-    public void addSection(){
+
+    public void addSection() {
         Section section = new Section();
         sections.add(section);
         section.setProject(this);
     }
-    
-    public void removeSection(Integer sectionIndex){
-        sections.get(sectionIndex).setProject(null);
-        sections.remove(sectionIndex.intValue());
+
+    public void removeSection(Integer sectionIndex) throws MandatoryException {
+        Section sectionToEliminate = sections.get(sectionIndex);
+        if (sectionToEliminate.getType() == Section.INTRODUCTION) {
+            throw new MandatoryException("Sección Introducción Obligatoria");
+        } else if (sectionToEliminate.getType() == Section.JUSTIFICATION){
+            throw new MandatoryException("Sección Justificación Obligatoria");
+        } else {
+            sections.get(sectionIndex).setProject(null);
+            sections.remove(sectionIndex.intValue());
+        }
     }
 
-    public Process getProcess() {
+    public Process getpROCESSid() {
         return pROCESSid;
     }
 
-    public void setProcess(Process process) {
-        this.pROCESSid = process;
+    public void setpROCESSid(Process pROCESSid) {
+        this.pROCESSid = pROCESSid;
     }
-    
+
+    private void setInitialSections() {
+        this.addSection();
+        this.getSections().get(0).getTitles().get(0).setName(Section.INTRODUCTION_TEXT);
+        this.getSections().get(0).getTitles().get(0).setTitleParent(null);
+        this.getSections().get(0).getTitles().get(0).setSection(this.getSections().get(0));
+        this.getSections().get(0).setLastModificationDate(LocalDate.now());
+        this.getSections().get(0).setType(Section.INTRODUCTION);
+
+        this.addSection();
+        this.getSections().get(1).getTitles().get(0).setName(Section.JUSTIFICATION_TEXT);
+        this.getSections().get(1).getTitles().get(0).setTitleParent(null);
+        this.getSections().get(1).getTitles().get(0).setSection(this.getSections().get(1));
+        this.getSections().get(1).setLastModificationDate(LocalDate.now());
+        this.getSections().get(1).setType(Section.JUSTIFICATION);
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -226,5 +250,5 @@ public class Project implements Serializable {
     public String toString() {
         return "gt.edu.usac.cunoc.ingenieria.eps.project.Project[ id=" + title + " ]";
     }
-    
+
 }

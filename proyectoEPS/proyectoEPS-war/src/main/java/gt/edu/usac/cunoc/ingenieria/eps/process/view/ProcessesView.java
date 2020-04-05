@@ -3,6 +3,7 @@ package gt.edu.usac.cunoc.ingenieria.eps.process.view;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import gt.edu.usac.cunoc.ingenieria.eps.process.facade.ProcessFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
+import gt.edu.usac.cunoc.ingenieria.eps.user.UserCareer;
 import gt.edu.usac.cunoc.ingenieria.eps.user.facade.UserFacadeLocal;
 import java.io.Serializable;
 import java.util.List;
@@ -35,6 +36,9 @@ public class ProcessesView implements Serializable {
         try {
             user = userFacade.getAuthenticatedUser().get(0);
             processes = processFacade.getProcessUser(user);
+            if(processes.get(0)==null){
+                processes=null;
+            }
         } catch (Exception e) {
         }
     }

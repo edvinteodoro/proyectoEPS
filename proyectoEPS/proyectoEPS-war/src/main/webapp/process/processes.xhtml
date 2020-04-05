@@ -28,8 +28,16 @@
                 <p:column headerText="Progreso">
                     <h:outputText value="#{process.progress}" />
                 </p:column>
+                <p:column headerText="Requisitos" styleClass="text-center">
+                    <p data-placement="top" data-toggle="tooltip" title="Requisitos">
+                        <button jsf:outcome="updateRequeriment" styleClass="btn btn-success btn-xs">
+                            <f:param name="idRequeriment" value="#{process.requeriment.id}"/>
+                            <span class="glyphicon glyphicon-log-in"></span>
+                        </button>
+                    </p>
+                </p:column>
                 <p:column headerText="Anteproyecto" styleClass="text-center">
-                    <p data-placement="top" data-toggle="tooltip" title="#{user.messageState}">
+                    <p data-placement="top" data-toggle="tooltip" title="Anteproyecto">
                         <button jsf:outcome="project" styleClass="btn btn-success btn-xs">
                             <f:param name="idProcess" value="#{process.id}"/>
                             <span class="glyphicon glyphicon-log-in"></span>

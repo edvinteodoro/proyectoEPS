@@ -6,6 +6,7 @@ import gt.edu.usac.cunoc.ingenieria.eps.process.repository.RequerimentRepository
 import gt.edu.usac.cunoc.ingenieria.eps.process.service.ProcessService;
 import gt.edu.usac.cunoc.ingenieria.eps.process.service.RequerimentService;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
+import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
@@ -26,7 +27,7 @@ public class ProcessFacade implements ProcessFacadeLocal {
     
     @EJB
     ProcessRepository processRepository;
-
+    
     @Override
     public List<Requeriment> getRequeriment(Requeriment requeriment) {
         return requerimentRepository.getRequeriment(requeriment);
@@ -50,6 +51,11 @@ public class ProcessFacade implements ProcessFacadeLocal {
     @Override
     public List<Process> getProcess(Process process) {
         return processRepository.getProcess(process);
+    }
+
+    @Override
+    public List<Process> getProcessUser(User user) {
+        return processRepository.getProcessUser(user);
     }
 
 }

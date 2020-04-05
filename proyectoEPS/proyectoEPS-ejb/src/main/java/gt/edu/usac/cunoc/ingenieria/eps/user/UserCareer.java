@@ -7,6 +7,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -38,7 +39,7 @@ public class UserCareer implements Serializable {
     @ManyToOne(optional = false)
     private Career cAREERcodigo;
     @JoinColumn(name = "USER_userId", referencedColumnName = "userId")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false,fetch = FetchType.LAZY)
     private User uSERuserId;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="PROCESS_id",referencedColumnName = "id")
@@ -49,6 +50,11 @@ public class UserCareer implements Serializable {
 
     public UserCareer(Integer id) {
         this.id = id;
+    }
+    
+    public UserCareer(Career career,User user){
+        this.cAREERcodigo=career;
+        this.uSERuserId=user;
     }
 
     public Integer getId() {

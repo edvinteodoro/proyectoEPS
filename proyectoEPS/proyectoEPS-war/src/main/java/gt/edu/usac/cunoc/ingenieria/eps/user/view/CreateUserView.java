@@ -4,8 +4,11 @@ import User.exception.UserException;
 import gt.edu.usac.cunoc.ingenieria.eps.user.Career;
 import gt.edu.usac.cunoc.ingenieria.eps.user.Rol;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
+import gt.edu.usac.cunoc.ingenieria.eps.user.UserCareer;
 import gt.edu.usac.cunoc.ingenieria.eps.user.facade.UserFacadeLocal;
+import gt.edu.usac.cunoc.ingenieria.eps.utils.MessageUtils;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,12 +25,15 @@ public class CreateUserView implements Serializable {
     private UserFacadeLocal userFacade;
 
     List<Career> careers;
+    List<Career> selectedCareers;
     List<Rol> rolUsers;
+    List<UserCareer> userCareers;
     User user;
 
     @PostConstruct
     public void init() {
-        rolUsers=userFacade.getAllRolUser();
+        rolUsers = userFacade.getAllRolUser();
+        careers = userFacade.getAllCareer();
     }
 
     public UserFacadeLocal getUserFacade() {
@@ -65,11 +71,47 @@ public class CreateUserView implements Serializable {
         this.user = user;
     }
 
+    public List<Career> getSelectedCareers() {
+        if (selectedCareers == null) {
+            return selectedCareers = new ArrayList<>();
+        } else {
+            return selectedCareers;
+        }
+    }
+
+    public void setSelectedCareers(List<Career> selectedCareers) {
+        this.selectedCareers = selectedCareers;
+    }
+
+    public List<UserCareer> getUserCareers() {
+        if (userCareers == null) {
+            return userCareers = new ArrayList<>();
+        } else {
+            return userCareers;
+        }
+    }
+
+    public void setUserCareers(List<UserCareer> userCareers) {
+        this.userCareers = userCareers;
+    }
+
     public void createUser() {
         try {
-            userFacade.createUser(user);
-        } catch (UserException ex) {
+            for (int i = 0; i < getSelectedCareers().size(); i++) {
+                getUserCareers().add(new UserCareer(getSelectedCareers().get(i), getUser()));
+            }
+            getUser().setState(Boolean.TRUE); 
+            getUser().setUserCareers(getUserCareers());
+            userFacade.createUser(getUser());
+            MessageUtils.addSuccessMessage("Se ha creado registrado el usuario");
+            cleanUser();
+        } catch (Exception ex) {
 
         }
+    }
+    
+    private void cleanUser(){
+        user=null;
+        getSelectedCareers().clear();
     }
 }

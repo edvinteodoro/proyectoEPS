@@ -121,7 +121,7 @@
                     <div class="form-group col-sm-3">
                         <p:outputLabel value="Seleccione su Carrera:"/></div>
                     <div class="form-group col-sm-4">
-                        <p:selectOneMenu id="career"  value="#{createProcessView.process.userCareer}" converter="careerConverter">
+                        <p:selectOneMenu id="career"  value="#{createProcessView.process.userCareer}" converter="userCareerConverter">
                             <f:selectItems value="#{createProcessView.userCareers}" var="userCareer"
                                            itemValue="#{userCareer}"
                                            itemLabel="#{userCareer.CAREERcodigo.name}"/>

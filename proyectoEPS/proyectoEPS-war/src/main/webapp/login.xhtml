@@ -10,24 +10,28 @@
         Login
     </ui:define>
     <ui:define name="content">
-        <h:form id="frmLogin">            
+        <h:form id="frmLogin" class="justify-content-center">            
             <p:focus id="focuss" context="frmLogin" />
             <p:messages  globalOnly="true"/>
             <fieldset class="center-block">
                 <legend>Iniciar sesion</legend>
 
                 <div class="row">
-                    <div class="form-group col-sm-4">
+                    <div class="form-group col-sm-2">
                         <p:outputLabel for="name" value="Nombre usuario" />
-                        <p:inputText id="name" styleClass="form-control" required="true"
+                    </div>
+                    <div class="form-group col-sm-4">
+                        <p:inputText id="name" styleClass="form-control" pt:placeholder="Usuario" required="true"
                                      pt:required="true" value="#{loginView.userId}"
                                      requiredMessage="Ingrese Usuario"
                                      />
                     </div>
                 </div>
                 <div class="row">
-                    <div class="form-group col-sm-4">
+                    <div class="form-group col-sm-2">
                         <p:outputLabel for="pass" value="Password:" />
+                    </div>
+                    <div class="form-group col-sm-4">
                         <p:password id="pass" styleClass="form-control" pt:placeholder="Contrasena" required="true"
                                     pt:required="true"  value="#{loginView.password}" pt:type="password"
                                     requiredMessage="Ingrese contrasena"/>

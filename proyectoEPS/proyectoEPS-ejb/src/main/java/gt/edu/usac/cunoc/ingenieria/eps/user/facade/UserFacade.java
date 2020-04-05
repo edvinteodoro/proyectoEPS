@@ -182,6 +182,11 @@ public class UserFacade implements UserFacadeLocal {
     public List<Rol> getAllRolUser() {
         return rolUserRepository.getAllRolUser();
     }
+
+    @Override
+    public List<Career> getAllCareer() {
+        return careerRepository.getAll();
+    }
     
     
 

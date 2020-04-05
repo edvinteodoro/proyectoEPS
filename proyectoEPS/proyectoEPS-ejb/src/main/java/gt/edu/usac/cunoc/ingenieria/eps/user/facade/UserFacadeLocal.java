@@ -54,4 +54,6 @@ public interface UserFacadeLocal {
     public List<UserCareer> getUserCareer(User user);
 
     public List<Rol> getAllRolUser();
+    
+    public List<Career> getAllCareer();
 }

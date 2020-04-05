@@ -19,49 +19,69 @@
                 <legend>Crear Usuario</legend>
 
                 <div class="row">
-                    <div class="form-group col-sm-3">
+                    <div class="form-group col-sm-2">
+                        <p:outputLabel for="dpi" value="Dpi:" />
+                    </div>
+                    <div class="form-group col-sm-4">
+                        <p:inputText id="dpi" styleClass="form-control" pt:placeholder="Dpi" required="true"
+                                     pt:required="true" value="#{createUserView.user.dpi}"/>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-sm-2">
                         <p:outputLabel for="carnet" value="Carnet:" />
                     </div>
                     <div class="form-group col-sm-4">
-                        <p:inputText id="carnet" styleClass="form-control" required="true"
+                        <p:inputText id="carnet" styleClass="form-control" pt:placeholder="Carnet" required="true"
                                      pt:required="true" value="#{createUserView.user.carnet}"/>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="form-group col-sm-4">
+                    <div class="form-group col-sm-2">
                         <p:outputLabel for="fname" value="Nombres:" />
+                    </div>
+                    <div class="form-group col-sm-4">
                         <p:inputText id="fname" styleClass="form-control" pt:placeholder="Nombres" required="true"
                                      pt:required="true" value="#{createUserView.user.firstName}"/>
                     </div>
                 </div>
-                
+
                 <div class="row">
-                    <div class="form-group col-sm-4">
+                    <div class="form-group col-sm-2">
                         <p:outputLabel for="lname" value="Apellidos:" />
+                    </div>
+                    <div class="form-group col-sm-4">
                         <p:inputText id="lname" styleClass="form-control" pt:placeholder="Apellidos" required="true"
                                      pt:required="true" value="#{createUserView.user.lastName}"/>
                     </div>
                 </div>
 
                 <div class="row">
-                    <div class="form-group col-sm-4">
+                    <div class="form-group col-sm-2">
                         <p:outputLabel for="email" value="Correo:" />
-                        <p:inputText id="email" styleClass="form-control" pt:placeholder="#{i18nLabels.Username}" required="true"
+                    </div>
+                    <div class="form-group col-sm-4">
+                        <p:inputText id="email" styleClass="form-control" pt:placeholder="Correo" required="true"
                                      pt:required="true" value="#{createUserView.user.email}"/>
                     </div>
                 </div>
 
                 <div class="row">
-                    <div class="form-group col-sm-4">
+                    <div class="form-group col-sm-2">
                         <p:outputLabel for="phone" value="Numero de telefono:" />
-                        <p:inputText id="phone" styleClass="form-control" pt:placeholder="#{i18nLabels.Username}" required="true"
+                    </div>
+                    <div class="form-group col-sm-4">
+                        <p:inputText id="phone" styleClass="form-control" pt:placeholder="Telefono" required="true"
                                      pt:required="true" value="#{createUserView.user.phone}"/>
                     </div>
                 </div>
-                
+
                 <div class="row">
-                    <div class="form-group col-sm-4">
+                    <div class="form-group col-sm-2">
                         <p:outputLabel for="rolUser" value="Tipo de Usuario:" />
+                    </div>
+                    <div class="form-group col-sm-4">
                         <p:selectOneMenu id="rolUser"  value="#{createUserView.user.ROLid}" converter="rolUserConverter">
                             <f:selectItems value="#{createUserView.rolUsers}" var="rolUser"
                                            itemValue="#{rolUser}"
@@ -71,8 +91,30 @@
                 </div>
 
                 <div class="row">
+                    <div class="form-group col-sm-2">
+                        <p:outputLabel for="career" value="Seleccion Carrera:" />
+                    </div>
                     <div class="form-group col-sm-4">
+                        <p:selectManyCheckbox id="career" value="#{createUserView.selectedCareers}" converter="careerConverter"  layout="grid" columns="1">
+                            <f:selectItems value="#{createUserView.careers}" var="career" itemLabel="#{career.name}" itemValue="#{career}" />
+                        </p:selectManyCheckbox>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-2">
+                        <p:outputLabel for="userId" value="Nombre Usuario:" />
+                    </div>
+                    <div class="form-group col-sm-4">
+                        <p:inputText id="userId" styleClass="form-control" pt:placeholder="Nombre Usuario:" required="true"
+                                     pt:required="true" value="#{createUserView.user.userId}"/>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-sm-2">
                         <p:outputLabel for="pass" value="Contrasena:" />
+                    </div>
+                    <div class="form-group col-sm-4">
                         <p:password id="pass" styleClass="form-control" pt:placeholder="Contrasena" required="true"
                                     pt:required="true" value="#{createUserView.user.password}" pt:type="password"
                                     />

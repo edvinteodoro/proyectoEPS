@@ -18,6 +18,8 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.security.enterprise.identitystore.Pbkdf2PasswordHash;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 
 @Stateless
 @LocalBean
@@ -40,15 +42,17 @@ public class UserService {
     }
 
     public User createUser(User user) throws UserException {
-        System.out.println("--------------------------------creando");
         if (user == null) {
             throw new UserException("User is null");
         }
         user.setPassword(encryptPass(user.getPassword()));
         try {
             entityManager.persist(user);
-        } catch (NullPointerException e) {
-            System.out.println(e);
+        } catch (ConstraintViolationException e) {
+            // Aqui tira los errores de constraint
+            for (ConstraintViolation actual : e.getConstraintViolations()) {
+                System.out.println(actual.toString());
+            }
         }
         return user;
     }
@@ -106,7 +110,7 @@ public class UserService {
         String userId = securityContext.getCallerPrincipal().getName();
         return userRepository.getUser(new User(userId));
     }
-    
+
     private String encryptPass(String pass) {
         char passwordInput[] = pass.toCharArray();
         Map<String, String> map = new HashMap<>();

@@ -5,7 +5,7 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui"
       xmlns:jsf="http://xmlns.jcp.org/jsf">
-      
+
 
     <h:head>
         <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
@@ -15,7 +15,7 @@
         <h:outputStylesheet library="css" name="bootstrap-theme.css"/>
         <h:outputScript name="jquery/jquery.js" library="primefaces" />
         <h:outputScript name="jquery/jquery-plugins.js" library="primefaces" />
-        
+
         <h:outputScript name="bootstrap.js" library="js" />
         <h:outputScript name="core.js" library="primefaces" />
 
@@ -58,6 +58,16 @@
                                     </li>
                                     <li>
                                         <p:link  outcome="processes" value="Ver Procesos"/>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">
+                                    Usuarios <span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <p:link  outcome="createUser" value="Crear Usuario"/>
                                     </li>
                                 </ul>
                             </li>

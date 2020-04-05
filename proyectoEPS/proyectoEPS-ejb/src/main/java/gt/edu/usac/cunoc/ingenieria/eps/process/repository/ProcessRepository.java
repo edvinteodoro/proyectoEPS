@@ -24,11 +24,11 @@ public class ProcessRepository {
 
     @PersistenceContext(name = PERSISTENCE_UNIT_NAME)
     private EntityManager entityManager;
-    
+
     public static final String GET_PROCESS_USER = "SELECT c.process FROM UserCareer c WHERE c.uSERuserId.userId=:userId";
     public static final String ID_PARAMETER_NAME = "userId";
-    
-    public List<Process> getProcess(Process process){
+
+    public List<Process> getProcess(Process process) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Process> criteriaQuery = criteriaBuilder.createQuery(Process.class);
         Root<Process> processR = criteriaQuery.from(Process.class);
@@ -36,15 +36,15 @@ public class ProcessRepository {
         if (process.getId() != null) {
             predicates.add(criteriaBuilder.equal(processR.get("id"), process.getId()));
         }
-        if(process.getUserCareer()!=null){
+        if (process.getUserCareer() != null) {
             predicates.add(criteriaBuilder.equal(processR.get("userCareer"), process.getUserCareer()));
         }
         criteriaQuery.where(predicates.stream().toArray(Predicate[]::new));
         TypedQuery<Process> query = entityManager.createQuery(criteriaQuery);
         return query.getResultList();
     }
-    
-    public List<Process> getProcessUser(User user){
+
+    public List<Process> getProcessUser(User user) {
         Query query = entityManager.createQuery(GET_PROCESS_USER);
         query.setParameter(ID_PARAMETER_NAME, user.getUserId());
         return query.getResultList();

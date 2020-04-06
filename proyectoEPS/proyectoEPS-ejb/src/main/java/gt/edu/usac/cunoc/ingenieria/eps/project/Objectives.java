@@ -35,7 +35,7 @@ public class Objectives implements Serializable {
     
     @ManyToOne(fetch = FetchType.LAZY)
     private Project project;
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "objective", orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "objectives", orphanRemoval = true)
     private List<Correction> corrections = new ArrayList<>();
 
     public Objectives() {

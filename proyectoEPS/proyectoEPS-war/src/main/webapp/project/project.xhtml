@@ -107,21 +107,15 @@
                                     <div class="form-group col-sm-4">
                                         <p:inputNumber placeholder="Latitud" 
                                                        decimalPlaces="4" 
-                                                       value="#{decimalCoordinate.latitude}"
-                                                       decimalSeparator="."
-                                                       minValue="-90.0000"
-                                                       maxValue="90.9999"
+                                                       value="#{decimalCoordinate.latitude}"                                                      
                                                        >
                                         </p:inputNumber>
-                                        
+
                                     </div>                                   
                                     <div class="form-group col-sm-4">
                                         <p:inputNumber placeholder="Longitud" 
                                                        decimalPlaces="4" 
                                                        value="#{decimalCoordinate.longitude}"
-                                                       minValue="-180.0000"
-                                                       maxValue="180.9999"
-                                                       decimalSeparator="."
                                                        ></p:inputNumber>
                                     </div>
                                     <div class="form-group col-sm-3">
@@ -217,35 +211,33 @@
                                         <div class="row">
                                             <div class="form-group col-md-12">
                                                 <p:panel>
-                                                    <ui:repeat value="#{section.titles}" var="title" varStatus="titleStatus">
-                                                        <div class="row">
-                                                            <div class="form-group col-md-12">
-                                                                <p:outputLabel for="titleSection" value="Titulo:"/>
-                                                                <p:inputText id="titleSection" styleClass="form-control" pt:placeholder="Titulo"
-                                                                             value="#{title.name}"
-                                                                             />
-                                                            </div>
+                                                    <div class="row">
+                                                        <div class="form-group col-md-12">
+                                                            <p:outputLabel for="titleSection" value="Titulo:"/>
+                                                            <p:inputText id="titleSection" styleClass="form-control" pt:placeholder="Titulo"
+                                                                         value="#{section.title.name}"
+                                                                         />
                                                         </div>
-                                                        <div class="row">
-                                                            <div class="form-group col-md-12">
-                                                                <p:textEditor widgetVar="editor" height="300" style="margin-bottom:10px" placeholder="Ingrese su Contenido"
-                                                                              >
-                                                                    <f:facet name="toolbar">
-                                                                        <span class="ql-formats">
-                                                                            <button class="ql-bold"></button>
-                                                                            <button class="ql-italic"></button>
-                                                                            <button class="ql-underline"></button>
-                                                                            <button class="ql-strike"></button>
-                                                                        </span>
-                                                                        <span class="ql-formats">
-                                                                            <select class="ql-font"></select>
-                                                                            <select class="ql-size"></select>
-                                                                        </span>
-                                                                    </f:facet>
-                                                                </p:textEditor>
-                                                            </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="form-group col-md-12">
+                                                            <p:textEditor widgetVar="editor" height="300" style="margin-bottom:10px" placeholder="Ingrese su Contenido"
+                                                                          >
+                                                                <f:facet name="toolbar">
+                                                                    <span class="ql-formats">
+                                                                        <button class="ql-bold"></button>
+                                                                        <button class="ql-italic"></button>
+                                                                        <button class="ql-underline"></button>
+                                                                        <button class="ql-strike"></button>
+                                                                    </span>
+                                                                    <span class="ql-formats">
+                                                                        <select class="ql-font"></select>
+                                                                        <select class="ql-size"></select>
+                                                                    </span>
+                                                                </f:facet>
+                                                            </p:textEditor>
                                                         </div>
-                                                    </ui:repeat>
+                                                    </div>
                                                     <div class="row">
                                                         <div class="form-group col-sm-2">
                                                             <p:commandLink  styleClass="btn btn-danger" actionListener="#{projectView.removeSection(sectionStatus.index)}" 
@@ -333,11 +325,19 @@
                                    action="#{projectView.uploadCreate()}">
                         <span class="glyphicon glyphicon-floppy-disk"></span> Guardar Proyecto EPS
                     </p:commandLink>
-                </div><div class="form-group col-sm-2">
-                    <p:commandLink styleClass="btn btn-success"
+                </div>
+                <div class="form-group col-sm-2">
+                    <p:commandLink styleClass="btn btn-primary"
 
                                    >
                         <span class="glyphicon glyphicon-check"></span> Solicitar Revisión
+                    </p:commandLink>
+                </div>
+                <div class="form-group col-sm-2">
+                    <p:commandLink styleClass="btn btn-info"
+
+                                   >
+                        <span class="glyphicon glyphicon-file"></span> Generar Archivo PDF
                     </p:commandLink>
                 </div>
             </div>

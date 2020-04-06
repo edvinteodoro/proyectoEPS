@@ -4,6 +4,7 @@ package gt.edu.usac.cunoc.ingenieria.eps.project;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.jar.Attributes;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -28,7 +29,8 @@ public class Title implements Serializable {
     @Column(name = "text")
     private String name;
     
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "SECTION_id", referencedColumnName = "id")
     private Section section;
    
     @ManyToOne(fetch = FetchType.LAZY)

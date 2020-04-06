@@ -48,6 +48,7 @@ public class ProjectFacade implements ProjectFacadeLocal {
         if (specificObjective.size() > PropertyRepository.LIMIT_SPECIFIC_OBJECTIVE.getValueInt()) {
             throw new LimitException("Número Maximo de Objetivos Especificos: " + PropertyRepository.LIMIT_SPECIFIC_OBJECTIVE.getValueInt());
         }
+        project.getObjectives().clear();
         for (int i = 0; i < generalObjective.size(); i++) {
             generalObjective.get(i).setState(Objectives.GENERAL_OBJETICVE);
             generalObjective.get(i).setLastModificationDate(LocalDate.now());

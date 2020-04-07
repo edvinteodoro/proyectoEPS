@@ -39,7 +39,7 @@ public class Section implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     private Project project;
     
-    @OneToOne(mappedBy="section",cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "section", orphanRemoval = true)
     private Title title;
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "section", orphanRemoval = true)
@@ -47,10 +47,13 @@ public class Section implements Serializable {
 
     public Section() {
         this.title = new Title();
+        this.title.setSection(this);
     }
 
     public Section(LocalDate lastModificationDate, Short type) {
         this.lastModificationDate = lastModificationDate;
+        this.title = new Title();
+        this.title.setSection(this);
         this.type = type;
     }
 

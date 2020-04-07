@@ -30,7 +30,7 @@ public class Title implements Serializable {
     private String name;
     
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "SECTION_id", referencedColumnName = "id")
+    @JoinColumn(name = "SECTION_id")
     private Section section;
    
     @ManyToOne(fetch = FetchType.LAZY)
@@ -40,15 +40,19 @@ public class Title implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "titleParent", orphanRemoval = true)
     private List<Title> titles;
     
-    @OneToOne(mappedBy = "title", cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "title", orphanRemoval = true)
     private Texto texto;
 
     public Title() {
         this.titles = new ArrayList<>();
+        this.texto = new Texto();
+        this.texto.setTitle(this);
     }
 
     public Title(String name) {
         this.name = name;
+        this.texto = new Texto();
+        this.texto.setTitle(this);
     }
 
     public Integer getId() {
@@ -101,11 +105,11 @@ public class Title implements Serializable {
         title.setTitleParent(null);
     }
 
-    public Texto getTexts() {
+    public Texto getTexto() {
         return texto;
     }
 
-    public void setTexts(Texto texts) {
+    public void setTexto(Texto texts) {
         this.texto = texts;
     }
     

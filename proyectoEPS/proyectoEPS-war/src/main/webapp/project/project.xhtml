@@ -207,6 +207,7 @@
                         <p:panel header="Secciones" id="listSections">
                             <div class="row">
                                 <div class="form-group col-md-12">
+                                   
                                     <ui:repeat value="#{projectView.project.sections}" var="section" varStatus="sectionStatus">
                                         <div class="row">
                                             <div class="form-group col-md-12">
@@ -221,7 +222,16 @@
                                                     </div>
                                                     <div class="row">
                                                         <div class="form-group col-md-12">
-                                                            <p:textEditor widgetVar="editor" height="300" style="margin-bottom:10px" placeholder="Ingrese su Contenido"
+                                                            <!--<h:inputText
+                                                                value="#{section.title.texto.text}"
+                                                                >
+                                                                
+                                                            </h:inputText>
+                                                            -->
+                                                            <p:textEditor height="300" 
+                                                                          style="margin-bottom:10px" 
+                                                                          placeholder="Ingrese su Contenido"
+                                                                          value="#{section.title.texto.text}"
                                                                           >
                                                                 <f:facet name="toolbar">
                                                                     <span class="ql-formats">
@@ -236,6 +246,7 @@
                                                                     </span>
                                                                 </f:facet>
                                                             </p:textEditor>
+                                                            
                                                         </div>
                                                     </div>
                                                     <div class="row">

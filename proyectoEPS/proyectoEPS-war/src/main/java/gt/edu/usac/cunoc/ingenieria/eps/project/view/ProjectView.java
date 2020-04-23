@@ -7,6 +7,7 @@ import gt.edu.usac.cunoc.ingenieria.eps.process.facade.ProcessFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Objectives;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
+import gt.edu.usac.cunoc.ingenieria.eps.project.Title;
 import gt.edu.usac.cunoc.ingenieria.eps.project.facade.ProjectFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.utils.MessageUtils;
 import java.io.ByteArrayInputStream;
@@ -50,6 +51,7 @@ public class ProjectView implements Serializable {
     private List<Objectives> specificObjectives;
 
     private Integer processId;
+    private Title parentTitle;
 
     private Boolean flagUpdate = false;
 
@@ -211,6 +213,7 @@ public class ProjectView implements Serializable {
                 if (annexed != null){
                     getProject().setAnnexed(annexed.getContents());
                 }
+                System.out.println("============================");
                 projectFacade.updateProject(getProject(), getGeneralObjectves(), getSpecificObjectives());
                 MessageUtils.addSuccessMessage("Se han Guardado los Cambios");
             } else {
@@ -274,4 +277,11 @@ public class ProjectView implements Serializable {
         this.processId = processId;
     }
 
+    public Title getParentTitle() {
+        return parentTitle;
+    }
+
+    public void setParentTitle(Title parentTitle) {
+        this.parentTitle = parentTitle;
+    }
 }

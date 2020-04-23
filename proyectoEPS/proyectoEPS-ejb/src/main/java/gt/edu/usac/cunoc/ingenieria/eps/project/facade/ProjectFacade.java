@@ -23,7 +23,7 @@ public class ProjectFacade implements ProjectFacadeLocal {
 
     @EJB
     private ProjectRepository projectRepository;
-
+    
     @Override
     public Project updateProject(Project project, List<Objectives> generalObjective, List<Objectives> specificObjective) throws MandatoryException, LimitException {
         verifyProject(project, generalObjective, specificObjective);

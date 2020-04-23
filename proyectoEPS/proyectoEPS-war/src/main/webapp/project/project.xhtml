@@ -7,7 +7,9 @@
                 xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
                 xmlns:jsf="http://xmlns.jcp.org/jsf"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
-                xmlns:o="http://omnifaces.org/ui">
+                xmlns:o="http://omnifaces.org/ui"
+                xmlns:cmp="http://xmlns.jcp.org/jsf/composite/components"
+                >
 
     <f:metadata>
         <o:viewParam name="idProcess" required="true" value="#{projectView.processId}"
@@ -207,11 +209,10 @@
                         <p:panel header="Secciones" id="listSections">
                             <div class="row">
                                 <div class="form-group col-md-12">
-                                   
                                     <ui:repeat value="#{projectView.project.sections}" var="section" varStatus="sectionStatus">
                                         <div class="row">
                                             <div class="form-group col-md-12">
-                                                <p:panel>
+                                                <p:panel id="Section">
                                                     <div class="row">
                                                         <div class="form-group col-md-12">
                                                             <p:outputLabel for="titleSection" value="Titulo:"/>
@@ -222,12 +223,6 @@
                                                     </div>
                                                     <div class="row">
                                                         <div class="form-group col-md-12">
-                                                            <!--<h:inputText
-                                                                value="#{section.title.texto.text}"
-                                                                >
-                                                                
-                                                            </h:inputText>
-                                                            -->
                                                             <p:textEditor height="300" 
                                                                           style="margin-bottom:10px" 
                                                                           placeholder="Ingrese su Contenido"
@@ -245,12 +240,16 @@
                                                                         <select class="ql-size"></select>
                                                                     </span>
                                                                 </f:facet>
-                                                            </p:textEditor>
-                                                            
-                                                        </div>
+                                                            </p:textEditor>                                                            
+                                                        </div>                                                        
                                                     </div>
                                                     <div class="row">
-                                                        <div class="form-group col-sm-2">
+                                                        <cmp:titleChildren parentTitle="#{section.title}" rendered="#{not empty section.title.titles}">
+                                                      
+                                                        </cmp:titleChildren>
+                                                    </div>                                                                                                       
+                                                    <div class="row">
+                                                        <div class="form-group col-sm-3">
                                                             <p:commandLink  styleClass="btn btn-danger" actionListener="#{projectView.removeSection(sectionStatus.index)}" 
                                                                             update="#{p:component('listSections')}, :growl"
                                                                             process="#{p:component('listSections')}"
@@ -258,8 +257,16 @@
                                                                 <span class="glyphicon glyphicon-minus"></span> Eliminar Sección
                                                             </p:commandLink>
                                                         </div>
+                                                        <div class="form-group col-sm-3">
+                                                            <p:commandLink  styleClass="btn btn-success"  
+                                                                            actionListener="#{section.title.addChildTitle()}"
+                                                                            update="#{p:component('Section')}, :growl"
+                                                                            process="#{p:component('Section')}"
+                                                                            >
+                                                                <span class="glyphicon glyphicon-plus"></span> Agregar SubTitulo
+                                                            </p:commandLink>
+                                                        </div>
                                                     </div>
-
                                                 </p:panel>
                                             </div>
                                         </div>

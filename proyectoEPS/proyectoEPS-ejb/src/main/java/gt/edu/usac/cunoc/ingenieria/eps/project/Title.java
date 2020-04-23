@@ -4,7 +4,6 @@ package gt.edu.usac.cunoc.ingenieria.eps.project;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.jar.Attributes;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -95,14 +94,15 @@ public class Title implements Serializable {
         this.titles = titles;
     }
 
-    public void addChildTitle(Title title){
+    public void addChildTitle(){
+        Title title = new Title();
         titles.add(title);
         title.setTitleParent(this);
     }
     
-    public void removeChildTitle(Title title){
-        titles.remove(title);
-        title.setTitleParent(null);
+    public void removeChildTitle(Integer titleIndex){
+        titles.get(titleIndex).setTitleParent(null);
+        titles.remove(titleIndex.intValue());
     }
 
     public Texto getTexto() {

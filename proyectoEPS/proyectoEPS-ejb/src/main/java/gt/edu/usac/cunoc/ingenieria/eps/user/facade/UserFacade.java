@@ -4,6 +4,7 @@ import User.exception.UserException;
 import gt.edu.usac.cunoc.ingenieria.eps.user.Career;
 import gt.edu.usac.cunoc.ingenieria.eps.user.Rol;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
+import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import gt.edu.usac.cunoc.ingenieria.eps.user.UserCareer;
 import gt.edu.usac.cunoc.ingenieria.eps.user.repository.CareerRepository;
 import gt.edu.usac.cunoc.ingenieria.eps.user.repository.RolRepository;
@@ -186,6 +187,11 @@ public class UserFacade implements UserFacadeLocal {
     @Override
     public List<Career> getAllCareer() {
         return careerRepository.getAll();
+    }
+
+    @Override
+    public List<User> getCareerCoordinator(Process process) { 
+        return userRepository.getCareerCoordinator(process);
     }
     
     

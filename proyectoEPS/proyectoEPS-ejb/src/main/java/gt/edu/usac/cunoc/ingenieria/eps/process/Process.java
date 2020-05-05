@@ -70,7 +70,11 @@ public class Process implements Serializable {
     
     public Process(UserCareer userCareer) {
         this.userCareer=userCareer;
-    }   
+    }
+    
+    public Process(Boolean approvedCareerCoordinator) {
+        this.approvedCareerCoordinator=approvedCareerCoordinator;
+    }
 
     public Process(Integer id) {
         this.id = id;

@@ -3,6 +3,7 @@ package gt.edu.usac.cunoc.ingenieria.eps.user.repository;
 import User.exception.UserException;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.PERSISTENCE_UNIT_NAME;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
+import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -10,6 +11,7 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -19,7 +21,9 @@ import javax.persistence.criteria.Root;
 @Stateless
 @LocalBean
 public class UserRepository {
-    
+
+    public static final String GET_CAREER_COORDINATOR = "SELECT u.uSERuserId FROM UserCareer u WHERE u.uSERuserId.state=TRUE AND u.cAREERcodigo.codigo=:codigo";
+
     @PersistenceContext(name = PERSISTENCE_UNIT_NAME)
     private EntityManager entityManager;
 
@@ -37,6 +41,12 @@ public class UserRepository {
         }
     }
 
+    public List<User> getCareerCoordinator(Process process) {
+        Query query = entityManager.createQuery(GET_CAREER_COORDINATOR);
+        query.setParameter("codigo", process.getUserCareer().getCAREERcodigo().getCodigo());
+        return query.getResultList();
+    }
+
     public List<User> getUser(User user) throws UserException {
         if (user == null) {
             throw new UserException("User is null");
@@ -45,7 +55,7 @@ public class UserRepository {
         CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
         Root<User> userR = criteriaQuery.from(User.class);
         List<Predicate> predicates = new ArrayList<>();
-        if (user.getUserId()!= null) {
+        if (user.getUserId() != null) {
             predicates.add(criteriaBuilder.equal(userR.get("userId"), user.getUserId()));
         }
         if (user.getDpi() != null) {
@@ -88,7 +98,5 @@ public class UserRepository {
         TypedQuery<User> query = entityManager.createQuery(criteriaQuery);
         return query.getResultList();
     }
-    
-    
-    
+
 }

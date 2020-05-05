@@ -46,6 +46,7 @@ public class UserCareer implements Serializable {
     private Process process;
 
     public UserCareer() {
+        
     }
 
     public UserCareer(Integer id) {

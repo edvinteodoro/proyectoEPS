@@ -38,4 +38,55 @@
     <welcome-file-list>
         <welcome-file>login.xhtml</welcome-file>
     </welcome-file-list>
+    
+    
+    <security-constraint>
+        <display-name>createProcess</display-name>
+        <web-resource-collection>
+            <web-resource-name>createProcess</web-resource-name>
+            <url-pattern>/process/createProcess.xhtml</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <description>Allowed users</description>
+            <role-name>Estudiante</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+    <security-constraint>
+        <display-name>processes</display-name>
+        <web-resource-collection>
+            <web-resource-name>processes</web-resource-name>
+            <url-pattern>/process/processes.xhtml</url-pattern>
+            <url-pattern>/process/updateRequeriment.xhtml</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <description>Allowed users</description>
+            <role-name>Coordinador_Carrera</role-name>
+            <role-name>Estudiante</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+    <security-constraint>
+        <display-name>user</display-name>
+        <web-resource-collection>
+            <web-resource-name>user</web-resource-name>
+            <url-pattern>/user/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <description>Allowed users</description>
+            <role-name>Secretaria_EPS</role-name>
+            <role-name>Estudiante</role-name>
+        </auth-constraint>
+    </security-constraint>    
+    
+    
+    <security-role>
+        <role-name>Estudiante</role-name>
+    </security-role>
+    <security-role>
+        <role-name>Coordinador_Carrera</role-name>
+    </security-role>
+    <security-role>
+        <role-name>Secretaria_EPS</role-name>
+    </security-role>
 </web-app>

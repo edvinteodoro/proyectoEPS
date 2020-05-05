@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:cc="http://xmlns.jcp.org/jsf/composite"
+      xmlns:cmp="http://xmlns.jcp.org/jsf/composite/components"
+      >
+    <cc:interface>
+        <cc:attribute name="parentTitle" required="true" type="gt.edu.usac.cunoc.ingenieria.eps.project.Title"/>
+    </cc:interface>
+
+    <cc:implementation >
+        <ui:repeat value="#{cc.attrs.parentTitle.titles}" var="titleChildren" rendered="#{not empty cc.attrs.parentTitle.titles}" >
+            <div class="row">
+                <div class="form-group col-md-12">
+                    <p:outputLabel for="titleSection" value="Subtitulo"/>
+                    <p:inputText id="titleSection" styleClass="form-control" pt:placeholder="SubTitulo"
+                                 value="#{titleChildren.name}"
+                                 />
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-12">
+                    <p:textEditor height="300" 
+                                  style="margin-bottom:10px" 
+                                  placeholder="Ingrese su Contenido"
+                                  value="#{titleChildren.texto.text}"
+                                  >
+                        <f:facet name="toolbar">
+                            <span class="ql-formats">
+                                <button class="ql-bold"></button>
+                                <button class="ql-italic"></button>
+                                <button class="ql-underline"></button>
+                                <button class="ql-strike"></button>
+                            </span>
+                            <span class="ql-formats">
+                                <select class="ql-font"></select>
+                                <select class="ql-size"></select>
+                            </span>
+                        </f:facet>
+                    </p:textEditor>                                                            
+                </div>                                                        
+            </div>
+            <div class="row">
+                <div class="form-group col-sm-3">
+                    <p:commandLink  styleClass="btn btn-danger" 
+                                    >
+                        <span class="glyphicon glyphicon-minus"></span> Eliminar Subtitulo
+                    </p:commandLink>
+                </div>
+                <div class="form-group col-sm-3">
+                    <p:commandLink  styleClass="btn btn-success"  
+
+                                    >
+                        <span class="glyphicon glyphicon-plus"></span> Agregar SubTitulo
+                    </p:commandLink>
+                </div>
+            </div>
+            <cmp:titleChildren parentTitle="#{titleChildren}" rendered="#{not empty titleChildren.titles}"></cmp:titleChildren>
+        </ui:repeat>
+    </cc:implementation>
+</html>

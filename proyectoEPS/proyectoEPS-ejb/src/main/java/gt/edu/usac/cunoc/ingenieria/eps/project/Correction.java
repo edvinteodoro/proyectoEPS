@@ -33,7 +33,7 @@ public class Correction implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     private Bibliography bibliography;
     @ManyToOne(fetch = FetchType.LAZY)
-    private Objectives objective;
+    private Objectives objectives;
     
     public Correction() {
     }
@@ -97,11 +97,11 @@ public class Correction implements Serializable {
     }
 
     public Objectives getObjective() {
-        return objective;
+        return objectives;
     }
 
     public void setObjective(Objectives objective) {
-        this.objective = objective;
+        this.objectives = objective;
     }
 
     @Override

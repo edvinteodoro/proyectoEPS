@@ -7,6 +7,7 @@ import gt.edu.usac.cunoc.ingenieria.eps.process.facade.ProcessFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Objectives;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
+import gt.edu.usac.cunoc.ingenieria.eps.project.Title;
 import gt.edu.usac.cunoc.ingenieria.eps.project.facade.ProjectFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.tief.TailCoordinator;
 import gt.edu.usac.cunoc.ingenieria.eps.tief.facade.TailFacadeLocal;
@@ -23,7 +24,6 @@ import javax.inject.Named;
 import javax.ejb.EJB;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
-import org.primefaces.model.DefaultUploadedFile;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
 
@@ -64,6 +64,7 @@ public class ProjectView implements Serializable {
     private List<Objectives> specificObjectives;
 
     private Integer processId;
+    private Title parentTitle;
 
     private Boolean flagUpdate = false;
 
@@ -92,21 +93,21 @@ public class ProjectView implements Serializable {
         this.schedule = event.getFile();
         this.project.setSchedule(schedule.getContents());
         this.scheduleFileName = event.getFile().getFileName();
-        this.scheduleStream = new DefaultStreamedContent(new ByteArrayInputStream(project.getSchedule()), "application/pdf", "Calendario.pdf");
+        this.scheduleStream = new DefaultStreamedContent(new ByteArrayInputStream(schedule.getContents()), "application/pdf", "Calendario.pdf");
     }
 
     public void handleInvestmentPlan(FileUploadEvent event) {
         this.investmentPlan = event.getFile();
         this.project.setInvestmentPlan(investmentPlan.getContents());
         this.investmentPlanFileName = event.getFile().getFileName();
-        this.investmentPlanStream = new DefaultStreamedContent(new ByteArrayInputStream(project.getInvestmentPlan()), "application/pdf", "Plan de Inversión.pdf");
+        this.investmentPlanStream = new DefaultStreamedContent(new ByteArrayInputStream(investmentPlan.getContents()), "application/pdf", "Plan de Inversión.pdf");
     }
 
     public void handleAnnexed(FileUploadEvent event) {
         this.annexed = event.getFile();
         this.project.setAnnexed(annexed.getContents());
         this.annexedFileName = event.getFile().getFileName();
-        this.annexedStream = new DefaultStreamedContent(new ByteArrayInputStream(project.getAnnexed()), "application/pdf", "Anexos.pdf");
+        this.annexedStream = new DefaultStreamedContent(new ByteArrayInputStream(annexed.getContents()), "application/pdf", "Anexos.pdf");
     }
 
     public String getSheduleFileName() {
@@ -218,24 +219,34 @@ public class ProjectView implements Serializable {
     }
 
     public void uploadCreate() {
-        if (!nullFiles()) {
-            try {
-                getProject().setSchedule(schedule.getContents());
-                getProject().setInvestmentPlan(investmentPlan.getContents());
-                if (annexed != null) {
+        try {
+            if (flagUpdate) {
+                if (schedule != null){
+                    getProject().setSchedule(schedule.getContents());
+                }
+                if (investmentPlan != null){
+                    getProject().setInvestmentPlan(investmentPlan.getContents());
+                }
+                if (annexed != null){
                     getProject().setAnnexed(annexed.getContents());
                 }
-                if (flagUpdate) {
-                    projectFacade.updateProject(getProject(), getGeneralObjectves(), getSpecificObjectives());
-                    MessageUtils.addSuccessMessage("Se han Guardado los Cambios");
-                } else {
+                System.out.println("============================");
+                projectFacade.updateProject(getProject(), getGeneralObjectves(), getSpecificObjectives());
+                MessageUtils.addSuccessMessage("Se han Guardado los Cambios");
+            } else {
+                if (!nullFiles()) {
+                    getProject().setSchedule(schedule.getContents());
+                    getProject().setInvestmentPlan(investmentPlan.getContents());
+                    if (annexed != null) {
+                        getProject().setAnnexed(annexed.getContents());
+                    }
                     projectFacade.createProject(getProject(), getGeneralObjectves(), getSpecificObjectives(), process);
                     MessageUtils.addSuccessMessage("Se ha Creado el Proyecto");
                 }
 
-            } catch (MandatoryException | LimitException ex) {
-                MessageUtils.addErrorMessage(ex.getMessage());
             }
+        } catch (MandatoryException | LimitException ex) {
+            MessageUtils.addErrorMessage(ex.getMessage());
         }
     }
 
@@ -277,18 +288,6 @@ public class ProjectView implements Serializable {
         }
     }
 
-    public void clean() {
-        this.project = new Project();
-        this.schedule = new DefaultUploadedFile();
-        this.annexed = new DefaultUploadedFile();
-        this.investmentPlan = new DefaultUploadedFile();
-        this.annexedFileName = "";
-        this.investmentPlanFileName = "";
-        this.scheduleFileName = "";
-        this.generalObjectves.clear();
-        this.specificObjectives.clear();
-    }
-
     public Integer getProcessId() {
         return processId;
     }
@@ -304,7 +303,6 @@ public class ProjectView implements Serializable {
     public void setProcessId(Integer processId) {
         this.processId = processId;
     }
-
     public User getCareerCoordinator() {
         return coordinator; 
     }
@@ -313,5 +311,11 @@ public class ProjectView implements Serializable {
         //validaciones
       //tailFacade.createTailCoordinator(new TailCoordinator);
     }
+    public Title getParentTitle() {
+        return parentTitle;
+    }
 
+    public void setParentTitle(Title parentTitle) {
+        this.parentTitle = parentTitle;
+    }
 }

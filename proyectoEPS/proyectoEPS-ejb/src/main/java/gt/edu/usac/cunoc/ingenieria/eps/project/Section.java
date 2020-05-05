@@ -14,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -22,6 +23,7 @@ public class Section implements Serializable {
     
     public static final Short INTRODUCTION = 0;
     public static final Short JUSTIFICATION = 1;
+    public static final Short CUSTOM = 2;
     public static final String INTRODUCTION_TEXT = "Introducción";
     public static final String JUSTIFICATION_TEXT = "Justificación";
     
@@ -37,18 +39,21 @@ public class Section implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     private Project project;
     
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "section", orphanRemoval = true)
-    private List<Title> titles;
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "section", orphanRemoval = true)
+    private Title title;
+    
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "section", orphanRemoval = true)
     private List<Correction> corrections = new ArrayList<>();
 
     public Section() {
-        titles = new ArrayList<>();
-        this.addTitle();
+        this.title = new Title();
+        this.title.setSection(this);
     }
 
     public Section(LocalDate lastModificationDate, Short type) {
         this.lastModificationDate = lastModificationDate;
+        this.title = new Title();
+        this.title.setSection(this);
         this.type = type;
     }
 
@@ -76,23 +81,12 @@ public class Section implements Serializable {
         this.project = project;
     }
 
-    public List<Title> getTitles() {
-        return titles;
+    public Title getTitle() {
+        return title;
     }
 
-    public void setTitles(List<Title> titles) {
-        this.titles = titles;
-    }
-    
-    public void addTitle(){
-        Title title = new Title();
-        titles.add(title);
-        title.setSection(this);
-    }
-    
-    public void removeTitle(Integer titleIndex){
-        titles.get(titleIndex).setSection(null);
-        titles.remove(titleIndex.intValue());
+    public void setTitle(Title title) {
+        this.title = title;
     }
 
     public List<Correction> getCorrections() {

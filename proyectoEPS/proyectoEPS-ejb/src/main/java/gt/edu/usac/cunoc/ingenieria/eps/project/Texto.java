@@ -4,6 +4,7 @@ package gt.edu.usac.cunoc.ingenieria.eps.project;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,9 +21,9 @@ public class Texto implements Serializable {
     @Column(name = "id")
     private Integer id;
     @Column(name = "text")
-    private Byte[] text;
+    private byte[] text;
     
-    @OneToOne()
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TITLE_id", referencedColumnName = "id")
     private Title title;
     
@@ -33,7 +34,7 @@ public class Texto implements Serializable {
         this.id = id;
     }
 
-    public Texto(Integer id, Byte[] text) {
+    public Texto(Integer id, byte[] text) {
         this.id = id;
         this.text = text;
     }
@@ -46,12 +47,18 @@ public class Texto implements Serializable {
         this.id = id;
     }
 
-    public Byte[] getText() {
-        return text;
+    public String getText() {
+        if (this.text != null){
+            return new String(this.text);
+        } else {
+            return new String();
+        }
     }
 
-    public void setText(Byte[] text) {
-        this.text = text;
+    public void setText(String text) {
+        if (text != null){
+            this.text = text.getBytes();
+        }
     }
 
     public Title getTitle() {

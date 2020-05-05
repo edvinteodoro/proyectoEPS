@@ -188,6 +188,10 @@ public class Project implements Serializable {
         Section section = new Section();
         sections.add(section);
         section.setProject(this);
+        section.setLastModificationDate(LocalDate.now());
+        section.setType(Section.CUSTOM);
+        section.getTitle().setTitleParent(null);
+        section.getTitle().setSection(section);
     }
 
     public void removeSection(Integer sectionIndex) throws MandatoryException {
@@ -212,16 +216,16 @@ public class Project implements Serializable {
 
     private void setInitialSections() {
         this.addSection();
-        this.getSections().get(0).getTitles().get(0).setName(Section.INTRODUCTION_TEXT);
-        this.getSections().get(0).getTitles().get(0).setTitleParent(null);
-        this.getSections().get(0).getTitles().get(0).setSection(this.getSections().get(0));
+        this.getSections().get(0).getTitle().setName(Section.INTRODUCTION_TEXT);
+        this.getSections().get(0).getTitle().setTitleParent(null);
+        this.getSections().get(0).getTitle().setSection(this.getSections().get(0));
         this.getSections().get(0).setLastModificationDate(LocalDate.now());
         this.getSections().get(0).setType(Section.INTRODUCTION);
 
         this.addSection();
-        this.getSections().get(1).getTitles().get(0).setName(Section.JUSTIFICATION_TEXT);
-        this.getSections().get(1).getTitles().get(0).setTitleParent(null);
-        this.getSections().get(1).getTitles().get(0).setSection(this.getSections().get(1));
+        this.getSections().get(1).getTitle().setName(Section.JUSTIFICATION_TEXT);
+        this.getSections().get(1).getTitle().setTitleParent(null);
+        this.getSections().get(1).getTitle().setSection(this.getSections().get(1));
         this.getSections().get(1).setLastModificationDate(LocalDate.now());
         this.getSections().get(1).setType(Section.JUSTIFICATION);
     }

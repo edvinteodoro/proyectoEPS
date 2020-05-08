@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui"
@@ -13,11 +12,11 @@
     </cc:interface>
 
     <cc:implementation >
-        <ui:repeat value="#{cc.attrs.parentTitle.titles}" var="titleChildren" rendered="#{not empty cc.attrs.parentTitle.titles}" >
+        <p:repeat value="#{cc.attrs.parentTitle.titles}" var="titleChildren" rendered="#{not empty cc.attrs.parentTitle.titles}" varStatus="titleChildrenStatus">
             <div class="row">
                 <div class="form-group col-md-12">
                     <p:outputLabel for="titleSection" value="Subtitulo"/>
-                    <p:inputText id="titleSection" styleClass="form-control" pt:placeholder="SubTitulo"
+                    <p:inputText id="titleSection" styleClass="form-control" pt:placeholder="Subtitulo"
                                  value="#{titleChildren.name}"
                                  />
                 </div>
@@ -46,20 +45,25 @@
             </div>
             <div class="row">
                 <div class="form-group col-sm-3">
-                    <p:commandLink  styleClass="btn btn-danger" 
+                    <p:commandLink  styleClass="btn btn-danger"
+                                    actionListener="#{cc.attrs.parentTitle.removeChildTitle(titleChildrenStatus.index)}"
+                                    update="#{p:component('Section')}, :growl"
+                                    process="#{p:component('Section')}"
                                     >
                         <span class="glyphicon glyphicon-minus"></span> Eliminar Subtitulo
                     </p:commandLink>
                 </div>
                 <div class="form-group col-sm-3">
                     <p:commandLink  styleClass="btn btn-success"  
-
+                                    actionListener="#{titleChildren.addChildTitle()}"
+                                    update="#{p:component('Section')}, :growl"
+                                    process="#{p:component('Section')}"
                                     >
                         <span class="glyphicon glyphicon-plus"></span> Agregar SubTitulo
                     </p:commandLink>
                 </div>
             </div>
-            <cmp:titleChildren parentTitle="#{titleChildren}" rendered="#{not empty titleChildren.titles}"></cmp:titleChildren>
-        </ui:repeat>
+            <!-- <cmp:titleChildren parentTitle="#{titleChildren}" rendered="#{not empty titleChildren.titles}"></cmp:titleChildren> -->
+        </p:repeat>
     </cc:implementation>
 </html>

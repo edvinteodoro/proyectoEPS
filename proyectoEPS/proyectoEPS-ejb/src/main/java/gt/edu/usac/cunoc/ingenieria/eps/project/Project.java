@@ -136,7 +136,6 @@ public class Project implements Serializable {
     public void removeBibliography(Integer bibliographyIndex) {
         bibliographies.get(bibliographyIndex).setProject(null);
         bibliographies.remove(bibliographyIndex.intValue());
-
     }
 
     public List<DecimalCoordinate> getDecimalCoordinates() {

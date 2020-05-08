@@ -104,7 +104,7 @@
                 <div class="row" >
                     <div class="form-group col-md-8" >
                         <p:panel header="Coordenadas Decimales" id="coordinatesDecimal">
-                            <ui:repeat value="#{projectView.project.decimalCoordinates}" var="decimalCoordinate" varStatus="decimalCoordinateStatus">
+                            <p:repeat value="#{projectView.project.decimalCoordinates}" var="decimalCoordinate" varStatus="decimalCoordinateStatus">
                                 <div class="row">
                                     <div class="form-group col-sm-4">
                                         <p:inputNumber placeholder="Latitud" 
@@ -129,7 +129,7 @@
                                         </p:commandLink>
                                     </div>
                                 </div> 
-                            </ui:repeat>
+                            </p:repeat>
                             <p:commandLink styleClass="btn btn-success" actionListener="#{projectView.project.addDecimalCoordinates()}" update="coordinatesDecimal"
                                            process="#{p:component('coordinatesDecimal')}"
                                            >
@@ -144,7 +144,7 @@
                 <div class="row">
                     <div class="form-group col-md-8">
                         <p:panel header="Objetivos Generales" id="generalObjectives" >
-                            <ui:repeat value="#{projectView.generalObjectves}" var="generalObjective" varStatus="generalObjectiveStatus">
+                            <p:repeat value="#{projectView.generalObjectves}" var="generalObjective" varStatus="generalObjectiveStatus">
                                 <div class="row">
                                     <div class="form-group col-sm-10">
                                         <p:inputText pt:placeholder="Objetivo General" 
@@ -162,7 +162,7 @@
                                         </p:commandLink>
                                     </div>
                                 </div>
-                            </ui:repeat>
+                            </p:repeat>
                             <p:commandLink styleClass="btn btn-success" actionListener="#{projectView.addGeneralObjectives()}" update="generalObjectives, growl"
                                            process="#{p:component('generalObjectives')}"
                                            >
@@ -174,7 +174,7 @@
                 <div class="row">
                     <div class="form-group col-md-8">
                         <p:panel header="Objetivos Especificos" id="specificObjectives" >
-                            <ui:repeat value="#{projectView.specificObjectives}" var="specificObjective" varStatus="specificObjectiveStatus">
+                            <p:repeat value="#{projectView.specificObjectives}" var="specificObjective" varStatus="specificObjectiveStatus">
                                 <div class="row">
                                     <div class="form-group col-sm-10">
                                         <p:inputText pt:placeholder="Objetivo Especifico" 
@@ -192,7 +192,7 @@
                                         </p:commandLink>
                                     </div>
                                 </div>
-                            </ui:repeat>
+                            </p:repeat>
                             <p:commandLink styleClass="btn btn-success" actionListener="#{projectView.addSpecificObjectives()}" update="specificObjectives, growl"
                                            process="#{p:component('specificObjectives')}"
                                            >
@@ -209,7 +209,7 @@
                         <p:panel header="Secciones" id="listSections">
                             <div class="row">
                                 <div class="form-group col-md-12">
-                                    <ui:repeat value="#{projectView.project.sections}" var="section" varStatus="sectionStatus">
+                                    <p:repeat value="#{projectView.project.sections}" var="section" varStatus="sectionStatus">
                                         <div class="row">
                                             <div class="form-group col-md-12">
                                                 <p:panel id="Section">
@@ -244,9 +244,9 @@
                                                         </div>                                                        
                                                     </div>
                                                     <div class="row">
-                                                        <cmp:titleChildren parentTitle="#{section.title}" rendered="#{not empty section.title.titles}">
-                                                      
-                                                        </cmp:titleChildren>
+                                                        <div class="form-group col-md-12">
+                                                            <cmp:titleChildren parentTitle="#{section.title}" rendered="#{not empty section.title.titles}"/>
+                                                        </div>                                                        
                                                     </div>                                                                                                       
                                                     <div class="row">
                                                         <div class="form-group col-sm-3">
@@ -270,7 +270,7 @@
                                                 </p:panel>
                                             </div>
                                         </div>
-                                    </ui:repeat>
+                                    </p:repeat>
                                     <p:commandLink styleClass="btn btn-success" actionListener="#{projectView.project.addSection()}" update="listSections"
                                                    process="#{p:component('listSections')}"
                                                    >

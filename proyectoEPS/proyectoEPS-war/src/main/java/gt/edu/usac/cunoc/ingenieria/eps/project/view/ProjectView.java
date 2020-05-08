@@ -229,7 +229,6 @@ public class ProjectView implements Serializable {
                 if (annexed != null){
                     getProject().setAnnexed(annexed.getContents());
                 }
-                System.out.println("============================");
                 projectFacade.updateProject(getProject(), getGeneralObjectves(), getSpecificObjectives());
                 MessageUtils.addSuccessMessage("Se han Guardado los Cambios");
             } else {
@@ -317,4 +316,8 @@ public class ProjectView implements Serializable {
     public void setParentTitle(Title parentTitle) {
         this.parentTitle = parentTitle;
     }
+    
+//    public void createPDF(Project project){
+//        projectFacade.createPDF(project);
+//    }
 }

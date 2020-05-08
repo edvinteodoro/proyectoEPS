@@ -16,4 +16,6 @@ public interface ProjectFacadeLocal {
     public Project createProject(Project project, List<Objectives> generalObjective, List<Objectives> specificObjective, Process process) throws MandatoryException, LimitException;
             
     public Project getProject(Integer projectId);
+//    
+//    public Boolean createPDF(Project project);
 }

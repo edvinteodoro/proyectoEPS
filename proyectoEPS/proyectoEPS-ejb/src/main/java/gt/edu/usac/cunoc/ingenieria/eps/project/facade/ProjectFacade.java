@@ -60,4 +60,9 @@ public class ProjectFacade implements ProjectFacadeLocal {
             project.addObjective(specificObjective.get(i));
         }
     }
+//
+//    @Override
+//    public Boolean createPDF(Project project) {
+//        return projectService.createPDF(project);
+//    }
 }

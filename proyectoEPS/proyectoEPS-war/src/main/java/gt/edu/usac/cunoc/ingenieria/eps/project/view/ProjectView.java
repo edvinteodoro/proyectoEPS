@@ -9,8 +9,7 @@ import gt.edu.usac.cunoc.ingenieria.eps.project.Objectives;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Title;
 import gt.edu.usac.cunoc.ingenieria.eps.project.facade.ProjectFacadeLocal;
-import gt.edu.usac.cunoc.ingenieria.eps.tief.TailCoordinator;
-import gt.edu.usac.cunoc.ingenieria.eps.tief.facade.TailFacadeLocal;
+import gt.edu.usac.cunoc.ingenieria.eps.tail.facade.TailFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import gt.edu.usac.cunoc.ingenieria.eps.user.facade.UserFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.utils.MessageUtils;
@@ -308,9 +307,9 @@ public class ProjectView implements Serializable {
     }
 
     public void reviewRequeried() {
-        //validaciones
-      //tailFacade.createTailCoordinator(new TailCoordinator);
-    }
+       //validaciones
+        tailFacade.createTailCoordinator(user,getProcess());
+     }
     public Title getParentTitle() {
         return parentTitle;
     }

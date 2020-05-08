@@ -26,6 +26,8 @@ public class UserCareerRepository {
     public static final String CAREER_PARAMETER_NAME = "cAREERcodigo";
     public static final String USER_PARAMETER_NAME = "uSERuserId";
     public static final String ID_PARAMETER_NAME = "userId";
+    public static final String ID_PARAMETER_CAREER = "nameCareer";
+    public static final String GET_USER_CAREER_BY_USER_CAREER = "SELECT c FROM UserCareer c WHERE c.uSERuserId.userId=:userId AND c.cAREERcodigo.name=:nameCareer";
 
     @PersistenceContext(name = PERSISTENCE_UNIT_NAME)
     private EntityManager entityManager;
@@ -84,6 +86,13 @@ public class UserCareerRepository {
         Query query = entityManager.createQuery(FIND_USER_CAREER_USER);
         query.setParameter(ID_PARAMETER_NAME, user.getUserId());
         return query.getResultList();
+    }
+    
+    public List<UserCareer> getUserCareer(User user,String career){
+        Query query = entityManager.createQuery(GET_USER_CAREER_BY_USER_CAREER);
+        query.setParameter(ID_PARAMETER_NAME, user.getUserId());
+        query.setParameter(ID_PARAMETER_CAREER, career);
+        return query.getResultList(); 
     }
     
 }

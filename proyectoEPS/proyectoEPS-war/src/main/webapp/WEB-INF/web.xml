@@ -75,7 +75,6 @@
         <auth-constraint>
             <description>Allowed users</description>
             <role-name>Secretaria_EPS</role-name>
-            <role-name>Estudiante</role-name>
         </auth-constraint>
     </security-constraint>    
     

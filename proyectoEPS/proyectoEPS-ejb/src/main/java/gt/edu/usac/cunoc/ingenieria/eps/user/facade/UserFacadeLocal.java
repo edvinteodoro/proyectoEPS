@@ -59,4 +59,6 @@ public interface UserFacadeLocal {
     public List<Career> getAllCareer();
     
     public List<User> getCareerCoordinator(Process process);
+    
+    public UserCareer getUserCareer(User user,String career);
 }

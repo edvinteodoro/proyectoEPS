@@ -1,13 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package gt.edu.usac.cunoc.ingenieria.eps.tief;
+package gt.edu.usac.cunoc.ingenieria.eps.tail;
 
 import gt.edu.usac.cunoc.ingenieria.eps.user.UserCareer;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -43,8 +39,7 @@ public class TailCoordinator implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "date")
-    @Temporal(TemporalType.DATE)
-    private Date date;
+    private LocalDate date;
     @OneToOne
     @JoinColumn(name="USER_CAREER_id",referencedColumnName = "id")
     private UserCareer userCareer;
@@ -59,12 +54,20 @@ public class TailCoordinator implements Serializable {
         this.id = id;
     }
 
-    public TailCoordinator(Integer id, Date date, UserCareer userCareer, Process process) {
+    public TailCoordinator(Integer id, LocalDate date, UserCareer userCareer, Process process) {
         this.id = id;
         this.date = date;
         this.userCareer = userCareer;
         this.process = process;
     }
+    
+    public TailCoordinator(LocalDate date, UserCareer userCareer, Process process) {
+        this.id = id;
+        this.date = date;
+        this.userCareer = userCareer;
+        this.process = process;
+    }
+
 
     
     public Integer getId() {
@@ -75,11 +78,11 @@ public class TailCoordinator implements Serializable {
         this.id = id;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

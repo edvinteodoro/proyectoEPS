@@ -1,6 +1,7 @@
 package gt.edu.usac.cunoc.ingenieria.eps.user.repository;
 
 import User.exception.UserException;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.COORDINADOR_CARRERA;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.PERSISTENCE_UNIT_NAME;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
@@ -22,7 +23,7 @@ import javax.persistence.criteria.Root;
 @LocalBean
 public class UserRepository {
 
-    public static final String GET_CAREER_COORDINATOR = "SELECT u.uSERuserId FROM UserCareer u WHERE u.uSERuserId.state=TRUE AND u.cAREERcodigo.codigo=:codigo";
+    public static final String GET_CAREER_COORDINATOR = "SELECT u.uSERuserId FROM UserCareer u WHERE u.uSERuserId.state=TRUE AND u.cAREERcodigo.codigo=:codigo AND u.uSERuserId.rOLid.name=:rolName";
 
     @PersistenceContext(name = PERSISTENCE_UNIT_NAME)
     private EntityManager entityManager;
@@ -44,6 +45,7 @@ public class UserRepository {
     public List<User> getCareerCoordinator(Process process) {
         Query query = entityManager.createQuery(GET_CAREER_COORDINATOR);
         query.setParameter("codigo", process.getUserCareer().getCAREERcodigo().getCodigo());
+        query.setParameter("rolName", COORDINADOR_CARRERA);
         return query.getResultList();
     }
 

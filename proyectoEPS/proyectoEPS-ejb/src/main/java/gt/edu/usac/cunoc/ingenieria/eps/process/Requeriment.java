@@ -1,6 +1,5 @@
 package gt.edu.usac.cunoc.ingenieria.eps.process;
 
-
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;

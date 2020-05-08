@@ -1,6 +1,5 @@
 package gt.edu.usac.cunoc.ingenieria.eps.process;
 
-
 import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
 import gt.edu.usac.cunoc.ingenieria.eps.user.UserCareer;
 import java.io.Serializable;

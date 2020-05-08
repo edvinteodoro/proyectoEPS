@@ -4,13 +4,11 @@ import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.COORDINAD
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.ESTUDIANTE;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import gt.edu.usac.cunoc.ingenieria.eps.process.facade.ProcessFacadeLocal;
-import gt.edu.usac.cunoc.ingenieria.eps.tief.facade.TailFacadeLocal;
+import gt.edu.usac.cunoc.ingenieria.eps.tail.facade.TailFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
-import gt.edu.usac.cunoc.ingenieria.eps.user.UserCareer;
 import gt.edu.usac.cunoc.ingenieria.eps.user.facade.UserFacadeLocal;
 import java.io.Serializable;
 import java.util.List;
-import java.util.Objects;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.context.ExternalContext;
@@ -44,7 +42,7 @@ public class ProcessesView implements Serializable {
         try {
             careerCoordinator = false;
             user = userFacade.getAuthenticatedUser().get(0);
-            switch (user.getROLid().getName()) {
+            switch (user.getROLid().getName()){    
                 case ESTUDIANTE:
                     processes = processFacade.getProcessUser(user);
                     break;
@@ -79,10 +77,9 @@ public class ProcessesView implements Serializable {
     }
 
     public Boolean getIsFirst(Integer id) {
-        if(id==getProcesses().get(0).getId()){
+        if (id == getProcesses().get(0).getId()) {
             return true;
         }
         return false;
     }
-
 }

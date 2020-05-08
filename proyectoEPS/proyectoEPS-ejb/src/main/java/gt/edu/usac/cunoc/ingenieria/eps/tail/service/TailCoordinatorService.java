@@ -1,7 +1,7 @@
-package gt.edu.usac.cunoc.ingenieria.eps.tief.service;
+package gt.edu.usac.cunoc.ingenieria.eps.tail.service;
 
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.PERSISTENCE_UNIT_NAME;
-import gt.edu.usac.cunoc.ingenieria.eps.tief.TailCoordinator;
+import gt.edu.usac.cunoc.ingenieria.eps.tail.TailCoordinator;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;

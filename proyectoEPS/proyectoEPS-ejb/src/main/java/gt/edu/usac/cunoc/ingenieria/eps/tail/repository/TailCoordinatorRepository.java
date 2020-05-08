@@ -1,4 +1,4 @@
-package gt.edu.usac.cunoc.ingenieria.eps.tief.repository;
+package gt.edu.usac.cunoc.ingenieria.eps.tail.repository;
 
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.PERSISTENCE_UNIT_NAME;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;

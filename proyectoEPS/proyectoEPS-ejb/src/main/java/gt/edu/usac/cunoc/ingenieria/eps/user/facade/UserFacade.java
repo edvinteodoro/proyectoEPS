@@ -193,6 +193,11 @@ public class UserFacade implements UserFacadeLocal {
     public List<User> getCareerCoordinator(Process process) { 
         return userRepository.getCareerCoordinator(process);
     }
+
+    @Override
+    public UserCareer getUserCareer(User user, String career) {
+        return userCareerRepository.getUserCareer(user, career).get(0);
+    }
     
     
 

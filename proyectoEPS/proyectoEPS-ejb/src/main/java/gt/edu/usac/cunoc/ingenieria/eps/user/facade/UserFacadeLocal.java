@@ -2,6 +2,7 @@
 package gt.edu.usac.cunoc.ingenieria.eps.user.facade;
 
 import User.exception.UserException;
+import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import gt.edu.usac.cunoc.ingenieria.eps.user.Career;
 import gt.edu.usac.cunoc.ingenieria.eps.user.Rol;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
@@ -56,4 +57,8 @@ public interface UserFacadeLocal {
     public List<Rol> getAllRolUser();
     
     public List<Career> getAllCareer();
+    
+    public List<User> getCareerCoordinator(Process process);
+    
+    public UserCareer getUserCareer(User user,String career);
 }

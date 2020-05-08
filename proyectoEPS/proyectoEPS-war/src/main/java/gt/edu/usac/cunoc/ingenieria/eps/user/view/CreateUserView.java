@@ -113,5 +113,6 @@ public class CreateUserView implements Serializable {
     private void cleanUser(){
         user=null;
         getSelectedCareers().clear();
+        getUserCareers().clear();
     }
 }

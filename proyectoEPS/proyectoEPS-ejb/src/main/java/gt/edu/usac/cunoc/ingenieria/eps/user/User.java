@@ -5,6 +5,7 @@ import gt.edu.usac.cunoc.ingenieria.eps.project.Correction;
 import gt.edu.usac.cunoc.ingenieria.eps.process.DocumentInitialEps;
 import gt.edu.usac.cunoc.ingenieria.eps.user.UserCareer;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import javax.persistence.Basic;

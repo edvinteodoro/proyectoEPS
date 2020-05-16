@@ -94,6 +94,7 @@ public class Title implements Serializable {
     }
 
     public void addChildTitle(){
+        System.out.println("======================Agregando hijo");
         Title title = new Title();
         titles.add(title);
         title.setTitleParent(this);

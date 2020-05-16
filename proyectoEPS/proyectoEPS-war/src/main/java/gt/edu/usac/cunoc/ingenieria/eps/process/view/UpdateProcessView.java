@@ -1,7 +1,11 @@
 package gt.edu.usac.cunoc.ingenieria.eps.process.view;
 
+import User.exception.UserException;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.ESTUDIANTE;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Requeriment;
 import gt.edu.usac.cunoc.ingenieria.eps.process.facade.ProcessFacadeLocal;
+import gt.edu.usac.cunoc.ingenieria.eps.user.User;
+import gt.edu.usac.cunoc.ingenieria.eps.user.facade.UserFacadeLocal;
 import java.io.ByteArrayInputStream;
 import java.io.Serializable;
 import javax.annotation.PostConstruct;
@@ -19,6 +23,8 @@ public class UpdateProcessView implements Serializable{
     @EJB
     private ProcessFacadeLocal processFacade;
     
+    @EJB
+    private UserFacadeLocal userFacade;    
     
     private StreamedContent writtenRequestStream;
     private StreamedContent inscriptionConstancyStream;
@@ -41,15 +47,20 @@ public class UpdateProcessView implements Serializable{
     String nameEpsPreProjec="";
     String nameAeioSettlemen="";
     
-    
+    private String observation="";
 
     private Requeriment requeriment;
     private Integer processId;
     private Boolean showAeioSettlement= false;
-
+    
+    User user;
+    
     @PostConstruct
-    public void init() {
-        
+    public void init(){
+        try {
+            user = userFacade.getAuthenticatedUser().get(0);
+        } catch (Exception e) {
+        }
     }
     
     public void save(){
@@ -192,5 +203,21 @@ public class UpdateProcessView implements Serializable{
     }
     public void reloadAeioSettlemen(){
         writtenRequestStream = new DefaultStreamedContent(new ByteArrayInputStream(requeriment.getAEIOsettlement()), "application/pdf", "Finiquito aeio.pdf");
+    }
+    
+    public Boolean isStudent(){
+        if(user.getROLid().getName().equals(ESTUDIANTE)){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    
+    public String getObservation() {
+        return observation;
+    }
+
+    public void setObservation(String observation) {
+        this.observation = observation;
     }
 }

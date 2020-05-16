@@ -9,6 +9,9 @@ import gt.edu.usac.cunoc.ingenieria.eps.project.Objectives;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Title;
 import gt.edu.usac.cunoc.ingenieria.eps.project.facade.ProjectFacadeLocal;
+import gt.edu.usac.cunoc.ingenieria.eps.tail.facade.TailFacadeLocal;
+import gt.edu.usac.cunoc.ingenieria.eps.user.User;
+import gt.edu.usac.cunoc.ingenieria.eps.user.facade.UserFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.utils.MessageUtils;
 import java.io.ByteArrayInputStream;
 import java.io.Serializable;
@@ -32,6 +35,15 @@ public class ProjectView implements Serializable {
 
     @EJB
     private ProcessFacadeLocal processFacade;
+
+    @EJB
+    private UserFacadeLocal userFacade;
+    
+    @EJB
+    private TailFacadeLocal tailFacade;
+
+    private User user;
+    private User coordinator;
 
     private StreamedContent scheduleStream;
     private StreamedContent investmentPlanStream;
@@ -57,8 +69,12 @@ public class ProjectView implements Serializable {
 
     @PostConstruct
     public void init() {
-        generalObjectves = new ArrayList<>();
-        specificObjectives = new ArrayList<>();
+        try {
+            generalObjectves = new ArrayList<>();
+            specificObjectives = new ArrayList<>();
+            user = userFacade.getAuthenticatedUser().get(0);
+        } catch (Exception e) {
+        }
     }
 
     public Project getProject() {
@@ -235,6 +251,8 @@ public class ProjectView implements Serializable {
 
     public void loadCurrentProject() {
         this.process = processFacade.getProcess(new Process(processId)).get(0);
+        coordinator=userFacade.getCareerCoordinator(getProcess()).get(0);
+        System.out.println(coordinator.getFirstName());
         this.project = process.getProject();
         flagUpdate = true;
         if (this.project == null) {
@@ -272,11 +290,26 @@ public class ProjectView implements Serializable {
     public Integer getProcessId() {
         return processId;
     }
+    
+    public Process getProcess(){
+        return process;
+    }
+    
+    public void setProcess(Process process){
+        this.process=process;
+    }
 
     public void setProcessId(Integer processId) {
         this.processId = processId;
     }
+    public User getCareerCoordinator() {
+        return coordinator; 
+    }
 
+    public void reviewRequeried() {
+       //validaciones
+        tailFacade.createTailCoordinator(user,getProcess());
+     }
     public Title getParentTitle() {
         return parentTitle;
     }

@@ -3,6 +3,7 @@ package gt.edu.usac.cunoc.ingenieria.eps.login.view;
 import User.exception.UserException;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.COORDINADOR_CARRERA;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.ESTUDIANTE;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.SECRETARIA_EPS;
 import gt.edu.usac.cunoc.ingenieria.eps.user.Rol;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import gt.edu.usac.cunoc.ingenieria.eps.user.facade.UserFacadeLocal;
@@ -25,10 +26,10 @@ import javax.security.enterprise.credential.UsernamePasswordCredential;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 @Named
 @ViewScoped
 public class LoginView implements Serializable {
+
     @EJB
     private UserFacadeLocal userFacade;
 
@@ -43,9 +44,9 @@ public class LoginView implements Serializable {
 
     private String userId;
     private String password;
-    
+
     @PostConstruct
-    public void init(){
+    public void init() {
     }
 
     public void login()
@@ -80,10 +81,13 @@ public class LoginView implements Serializable {
         User currentUser = userFacade.getAuthenticatedUser().get(0);
         switch (currentUser.getROLid().getName()) {
             case COORDINADOR_CARRERA:
-                externalContext.redirect(externalContext.getRequestContextPath() + "/process/processReview.xhtml");
+                externalContext.redirect(externalContext.getRequestContextPath() + "/process/processes.xhtml");
                 break;
             case ESTUDIANTE:
                 externalContext.redirect(externalContext.getRequestContextPath() + "/process/processes.xhtml");
+                break;
+            case SECRETARIA_EPS:
+                externalContext.redirect(externalContext.getRequestContextPath() + "/user/createUser.xhtml");
                 break;
             default:
         }
@@ -104,6 +108,5 @@ public class LoginView implements Serializable {
     public void setPassword(String password) {
         this.password = password;
     }
-    
-    
+
 }

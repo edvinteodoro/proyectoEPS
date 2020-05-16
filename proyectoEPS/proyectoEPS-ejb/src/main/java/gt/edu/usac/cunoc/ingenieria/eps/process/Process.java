@@ -1,6 +1,5 @@
 package gt.edu.usac.cunoc.ingenieria.eps.process;
 
-
 import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
 import gt.edu.usac.cunoc.ingenieria.eps.user.UserCareer;
 import java.io.Serializable;
@@ -70,7 +69,11 @@ public class Process implements Serializable {
     
     public Process(UserCareer userCareer) {
         this.userCareer=userCareer;
-    }   
+    }
+    
+    public Process(Boolean approvedCareerCoordinator) {
+        this.approvedCareerCoordinator=approvedCareerCoordinator;
+    }
 
     public Process(Integer id) {
         this.id = id;

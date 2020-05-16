@@ -63,6 +63,8 @@ public class CreateProcessView implements Serializable {
 
     private List<UserCareer> userCareers;
 
+    private Boolean creando;
+
     String nameWrittenRequest = "";
     String nameInscriptionConstancy = "";
     String namePensumeClosure = "";
@@ -73,6 +75,7 @@ public class CreateProcessView implements Serializable {
     @PostConstruct
     public void init() {
         try {
+            creando = false;
             user = userFacade.getAuthenticatedUser().get(0);
             careers = userFacade.getCareersOfUser(user);
             userCareers = userFacade.getUserCareer(user);
@@ -108,7 +111,7 @@ public class CreateProcessView implements Serializable {
     }
 
     public void guardar() throws IOException {
-        if (!nullFiles()) {
+        if (!nullFiles()) { 
             if (getProcess().getUserCareer().getProcess() == null) {
                 getProcess().setApprovedEPSDevelopment(false);
                 getProcess().setApprovedCareerCoordinator(false);
@@ -127,10 +130,19 @@ public class CreateProcessView implements Serializable {
                 processFacade.createProcess(getProcess());
                 MessageUtils.addSuccessMessage("Se ha creado registrado el proceso");
                 redirectToProcesses();
-            }else{
+            } else {
                 MessageUtils.addErrorMessage("Ya se tiene un proceso de Eps con la carrera");
             }
         }
+    }
+    
+    public void actualizar() throws IOException{
+        setCreando(true);
+        new Thread(){
+            public void funcion() throws IOException{
+                guardar();
+            }
+        }.start();
     }
 
     public UploadedFile getFileInputStream() {
@@ -324,10 +336,18 @@ public class CreateProcessView implements Serializable {
     public void setUserCareers(List<UserCareer> userCareers) {
         this.userCareers = userCareers;
     }
-    
-    private boolean existeProcess(){
+
+    public Boolean getCreando() {
+        return creando;
+    }
+
+    public void setCreando(Boolean creando) {
+        this.creando = creando;
+    }
+
+    private boolean existeProcess() {
         for (int i = 0; i < userCareers.size(); i++) {
-            if(userCareers.get(i)==getProcess().getUserCareer()){
+            if (userCareers.get(i) == getProcess().getUserCareer()) {
                 return true;
             }
         }

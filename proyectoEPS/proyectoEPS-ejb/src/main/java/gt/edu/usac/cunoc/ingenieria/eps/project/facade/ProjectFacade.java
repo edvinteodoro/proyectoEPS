@@ -8,8 +8,11 @@ import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import gt.edu.usac.cunoc.ingenieria.eps.project.repository.ProjectRepository;
 import gt.edu.usac.cunoc.ingenieria.eps.project.service.ProjectService;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -60,9 +63,13 @@ public class ProjectFacade implements ProjectFacadeLocal {
             project.addObjective(specificObjective.get(i));
         }
     }
-//
-//    @Override
-//    public Boolean createPDF(Project project) {
-//        return projectService.createPDF(project);
-//    }
+
+    @Override
+    public void createPDF(Project project) {
+        try {
+            projectService.createPDF(project);
+        } catch (IOException ex) {
+            System.out.println("================================ Error al generar pdf");
+        }
+    }
 }

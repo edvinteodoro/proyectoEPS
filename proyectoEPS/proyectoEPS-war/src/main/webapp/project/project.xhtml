@@ -35,11 +35,25 @@
             <fieldset>
                 <legend>Proyecto</legend> 
                 <div class="row">
-                    <div  class="form-group col-md-8">
-                        <p:outputLabel for="title" value="Titulo:"/>
-                        <p:inputText id="title" styleClass="form-control" pt:placeholder="Titulo del Proyecto"
-                                     pt:required="true"
-                                     value="#{projectView.project.title}"/>
+                    <p:outputLabel for="title" value="Titulo:"/>
+                    <div class="form-group col-md-12">
+                        <div class="form-group col-md-8">
+                            <p:inputText id="title" styleClass="form-control" pt:placeholder="Titulo del Proyecto"
+                                         disabled="#{!projectView.isStuden()}"
+                                         pt:required="true"
+                                         value="#{projectView.project.title}"/><br></br>
+                            <div id="titleComment" style="display:none">
+                                <p:inputTextarea rows="10" cols="97" counterTemplate="{0} characters remaining." autoResize="false" />
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <p:commandLink styleClass="btn btn-primary" 
+                                           rendered="#{!projectView.isStuden()}"
+                                           onclick="$('#titleComment').attr('style', 'display:block')"
+                                           title="Realizar Comentario">
+                                <span class="glyphicon glyphicon-comment"></span>
+                            </p:commandLink>
+                        </div>
                     </div>
                 </div>
                 <div class="row">

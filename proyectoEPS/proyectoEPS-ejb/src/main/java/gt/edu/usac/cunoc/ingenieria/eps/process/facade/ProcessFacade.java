@@ -6,6 +6,7 @@ import gt.edu.usac.cunoc.ingenieria.eps.process.repository.RequerimentRepository
 import gt.edu.usac.cunoc.ingenieria.eps.process.service.ProcessService;
 import gt.edu.usac.cunoc.ingenieria.eps.process.service.RequerimentService;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
+import gt.edu.usac.cunoc.ingenieria.eps.process.StateProcess;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import java.util.List;
 import javax.ejb.EJB;
@@ -58,4 +59,8 @@ public class ProcessFacade implements ProcessFacadeLocal {
         return processRepository.getProcessUser(user);
     }
 
+    @Override
+    public Process updateProcess(Process process) {
+        return processService.updateProcess(process);
+    }
 }

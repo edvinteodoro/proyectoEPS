@@ -15,6 +15,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -54,6 +55,26 @@ public class Project implements Serializable {
     @OneToOne
     @JoinColumn(name = "PROCESS_id", referencedColumnName = "id")
     private Process pROCESSid;
+    @ManyToOne
+    @JoinColumn(name="CORRECTION_Calendario",referencedColumnName = "id")
+    private Correction correctionCalendar;
+    @ManyToOne
+    @JoinColumn(name="CORRECTION_Plan",referencedColumnName = "id")
+    private Correction correctionPlan;
+    @ManyToOne
+    @JoinColumn(name="CORRECTION_Anexo",referencedColumnName = "id")
+    private Correction correctionAnexo;
+    @ManyToOne
+    @JoinColumn(name="CORRECTION_title",referencedColumnName = "id")
+    private Correction correctionTitle;
+    @ManyToOne
+    @JoinColumn(name="CORRECTION_objectives",referencedColumnName = "id")
+    private Correction correctionObjetives;
+    @ManyToOne
+    @JoinColumn(name="CORRECTION_coordinate",referencedColumnName = "id")
+    private Correction correctionCoordinates;
+    
+    
 
     public Project() {
         this.decimalCoordinates = new ArrayList<>();

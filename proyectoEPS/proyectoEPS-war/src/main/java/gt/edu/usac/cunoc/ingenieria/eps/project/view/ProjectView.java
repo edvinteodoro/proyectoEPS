@@ -1,5 +1,6 @@
 package gt.edu.usac.cunoc.ingenieria.eps.project.view;
 
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.ESTUDIANTE;
 import gt.edu.usac.cunoc.ingenieria.eps.configuration.repository.PropertyRepository;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.LimitException;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.MandatoryException;
@@ -315,6 +316,10 @@ public class ProjectView implements Serializable {
 
     public void setParentTitle(Title parentTitle) {
         this.parentTitle = parentTitle;
+    }
+    
+    public Boolean isStuden(){
+        return user.getROLid().getName().equals(ESTUDIANTE);
     }
     
 //    public void createPDF(Project project){

@@ -12,63 +12,65 @@
         <cc:attribute name="parentTitle" required="true" type="gt.edu.usac.cunoc.ingenieria.eps.project.Title"/>
     </cc:interface>
 
-    <cc:implementation >
+    <cc:implementation>
         <c:if test="#{not empty cc.attrs.parentTitle.titles}">
-            <p:repeat value="#{cc.attrs.parentTitle.titles}" var="titleChildren" rendered="#{not empty cc.attrs.parentTitle.titles}" varStatus="titleChildrenStatus">
-                <div class="row">
-                    <div class="form-group col-md-12">
-                        <p:outputLabel for="titleSection" value="Subtitulo"/>
-                        <p:inputText id="titleSection" styleClass="form-control" pt:placeholder="Subtitulo"
-                                     value="#{titleChildren.name}"
-                                     />
+            <p:dataView value="#{cc.attrs.parentTitle.titles}" var="titleChildren" rowIndexVar="titleChildrenStatus" listIcon="pi pi-list">
+                <p:dataViewListItem>
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <p:outputLabel for="titleSection" value="Subtitulo"/>
+                            <p:inputText id="titleSection" styleClass="form-control" pt:placeholder="Subtitulo"
+                                         value="#{titleChildren.name}"
+                                         />
+                        </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-md-12">
-                        <p:textEditor height="300" 
-                                      style="margin-bottom:10px" 
-                                      placeholder="Ingrese su Contenido"
-                                      value="#{titleChildren.texto.text}"
-                                      >
-                            <f:facet name="toolbar">
-                                <span class="ql-formats">
-                                    <button class="ql-bold"></button>
-                                    <button class="ql-italic"></button>
-                                    <button class="ql-underline"></button>
-                                    <button class="ql-strike"></button>
-                                </span>
-                                <span class="ql-formats">
-                                    <select class="ql-font"></select>
-                                    <select class="ql-size"></select>
-                                </span>
-                            </f:facet>
-                        </p:textEditor>                                                            
-                    </div>                                                        
-                </div>
-                <div class="row">
-                    <div class="form-group col-sm-3">
-                        <p:commandLink  styleClass="btn btn-danger"
-                                        actionListener="#{cc.attrs.parentTitle.removeChildTitle(titleChildrenStatus.index)}"
-                                        update="#{p:component('Section')}"
-                                        process="#{p:component('Section')}"
-                                        >
-                            <span class="glyphicon glyphicon-minus"></span> Eliminar Subtitulo
-                        </p:commandLink>
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <p:textEditor height="300" 
+                                          style="margin-bottom:10px" 
+                                          placeholder="Ingrese su Contenido"
+                                          value="#{titleChildren.texto.text}"
+                                          >
+                                <f:facet name="toolbar">
+                                    <span class="ql-formats">
+                                        <button class="ql-bold"></button>
+                                        <button class="ql-italic"></button>
+                                        <button class="ql-underline"></button>
+                                        <button class="ql-strike"></button>
+                                    </span>
+                                    <span class="ql-formats">
+                                        <select class="ql-font"></select>
+                                        <select class="ql-size"></select>
+                                    </span>
+                                </f:facet>
+                            </p:textEditor>                                                            
+                        </div>                                                        
                     </div>
-                    <div class="form-group col-sm-3">
-                        <p:commandLink  styleClass="btn btn-success"  
-                                        actionListener="#{titleChildren.addChildTitle()}"
-                                        update="#{p:component('Section')}"
-                                        process="#{p:component('Section')}"
-                                        >
-                            <span class="glyphicon glyphicon-plus"></span> Agregar SubTitulo
-                        </p:commandLink>
+                    <div class="row">
+                        <div class="form-group col-sm-3">
+                            <p:commandLink  styleClass="btn btn-danger"
+                                            actionListener="#{projectView.eliminarTitulo(titleChildrenStatus)}"
+                                            update="#{p:component('Section')}, :growl"
+                                            process="@this"
+                                            >
+                                <span class="glyphicon glyphicon-minus"></span> Eliminar Subtitulo
+                            </p:commandLink>
+                        </div>
+                        <div class="form-group col-sm-3">
+                            <p:commandLink  styleClass="btn btn-success"  
+                                            actionListener="#{titleChildren.addChildTitle()}"
+                                            update="#{p:component('Section')}, :growl"
+                                            process="@this"
+                                            >
+                                <span class="glyphicon glyphicon-plus"></span> Agregar SubTitulo
+                            </p:commandLink>
+                        </div>
                     </div>
-                </div>
-                <c:if test="#{not empty titleChildren.titles}">
-                    <cmp:titleChildren parentTitle="#{titleChildren}" rendered="#{not empty titleChildren.titles}"></cmp:titleChildren>
-                </c:if>
-            </p:repeat>
+                    <c:if test="#{not empty titleChildren.titles}">
+                        <cmp:titleChildren parentTitle="#{titleChildren}"/>
+                    </c:if>
+                </p:dataViewListItem>
+            </p:dataView>
         </c:if>
     </cc:implementation>
 </html>

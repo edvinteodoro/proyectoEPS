@@ -39,7 +39,7 @@ public class ProjectView implements Serializable {
 
     @EJB
     private UserFacadeLocal userFacade;
-    
+
     @EJB
     private TailFacadeLocal tailFacade;
 
@@ -221,15 +221,16 @@ public class ProjectView implements Serializable {
     public void uploadCreate() {
         try {
             if (flagUpdate) {
-                if (schedule != null){
+                if (schedule != null) {
                     getProject().setSchedule(schedule.getContents());
                 }
-                if (investmentPlan != null){
+                if (investmentPlan != null) {
                     getProject().setInvestmentPlan(investmentPlan.getContents());
                 }
-                if (annexed != null){
+                if (annexed != null) {
                     getProject().setAnnexed(annexed.getContents());
                 }
+                System.out.println("===================================");
                 projectFacade.updateProject(getProject(), getGeneralObjectves(), getSpecificObjectives());
                 MessageUtils.addSuccessMessage("Se han Guardado los Cambios");
             } else {
@@ -251,7 +252,7 @@ public class ProjectView implements Serializable {
 
     public void loadCurrentProject() {
         this.process = processFacade.getProcess(new Process(processId)).get(0);
-        coordinator=userFacade.getCareerCoordinator(getProcess()).get(0);
+        coordinator = userFacade.getCareerCoordinator(getProcess()).get(0);
         System.out.println(coordinator.getFirstName());
         this.project = process.getProject();
         flagUpdate = true;
@@ -290,26 +291,28 @@ public class ProjectView implements Serializable {
     public Integer getProcessId() {
         return processId;
     }
-    
-    public Process getProcess(){
+
+    public Process getProcess() {
         return process;
     }
-    
-    public void setProcess(Process process){
-        this.process=process;
+
+    public void setProcess(Process process) {
+        this.process = process;
     }
 
     public void setProcessId(Integer processId) {
         this.processId = processId;
     }
+
     public User getCareerCoordinator() {
-        return coordinator; 
+        return coordinator;
     }
 
     public void reviewRequeried() {
-       //validaciones
-        tailFacade.createTailCoordinator(user,getProcess());
-     }
+        //validaciones
+        tailFacade.createTailCoordinator(user, getProcess());
+    }
+
     public Title getParentTitle() {
         return parentTitle;
     }
@@ -317,12 +320,12 @@ public class ProjectView implements Serializable {
     public void setParentTitle(Title parentTitle) {
         this.parentTitle = parentTitle;
     }
-    
-    public Boolean isStuden(){
+
+    public Boolean isStuden() {
         return user.getROLid().getName().equals(ESTUDIANTE);
     }
-    
-//    public void createPDF(Project project){
-//        projectFacade.createPDF(project);
-//    }
+
+    public void createPDF() {
+        projectFacade.createPDF(project);
+    }
 }

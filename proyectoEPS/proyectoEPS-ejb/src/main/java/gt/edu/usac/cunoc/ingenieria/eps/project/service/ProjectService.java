@@ -1,11 +1,18 @@
 package gt.edu.usac.cunoc.ingenieria.eps.project.service;
 
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.List;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.PERSISTENCE_UNIT_NAME;
 import gt.edu.usac.cunoc.ingenieria.eps.configuration.repository.PropertyRepository;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.LimitException;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.MandatoryException;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
+import gt.edu.usac.cunoc.ingenieria.eps.project.Objectives;
+import java.io.IOException;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -58,7 +65,28 @@ public class ProjectService {
         }
     }
     
-//    public Boolean createPDF(Project project){
-//        
-//    }
+    public void createPDF(Project project) throws IOException{
+        String destino = "/home/crystian/Escritorio/" + project.getTitle() + ".pdf";
+        PdfDocument pdf = new PdfDocument(new PdfWriter(destino));
+        Document document = new Document(pdf);
+        document.add(new Paragraph(project.getTitle()));
+        document.add(new Paragraph("Objetivos"));
+        document.add(new Paragraph("Objetivos Generales"));
+        List listGeneralObjetives = new List().setSymbolIndent(12).setListSymbol("\u2022");
+        for (int i = 0; i < project.getObjectives().size(); i++) {
+            if (project.getObjectives().get(i).getState() == Objectives.GENERAL_OBJETICVE){
+                listGeneralObjetives.add(project.getObjectives().get(i).getText());
+            }
+        }
+        document.add(listGeneralObjetives);
+        document.add(new Paragraph("Objetivos Especificos"));
+        List listSpecificObjetives = new List().setSymbolIndent(12).setListSymbol("\u2022");
+        for (int i = 0; i < project.getObjectives().size(); i++) {
+            if (project.getObjectives().get(i).getState() == Objectives.SPECIFIC_OBJECTIVE){
+                listSpecificObjetives.add(project.getObjectives().get(i).getText());
+            }
+        }
+        document.add(listSpecificObjetives);
+        document.close();
+    }
 }

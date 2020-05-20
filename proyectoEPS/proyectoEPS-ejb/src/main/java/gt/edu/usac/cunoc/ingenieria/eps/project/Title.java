@@ -47,12 +47,6 @@ public class Title implements Serializable {
         this.texto.setTitle(this);
     }
 
-    public Title(String name) {
-        this.name = name;
-        this.texto = new Texto();
-        this.texto.setTitle(this);
-    }
-
     public Integer getId() {
         return id;
     }
@@ -94,7 +88,7 @@ public class Title implements Serializable {
     }
 
     public void addChildTitle(){
-        System.out.println("======================Agregando hijo");
+        System.out.println("======================Agregando hijo=====================");
         Title title = new Title();
         titles.add(title);
         title.setTitleParent(this);

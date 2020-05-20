@@ -63,8 +63,7 @@ public class ProjectView implements Serializable {
     private List<Objectives> specificObjectives;
 
     private Integer processId;
-    private Title parentTitle;
-
+    
     private Boolean flagUpdate = false;
 
     @PostConstruct
@@ -229,7 +228,6 @@ public class ProjectView implements Serializable {
                 if (annexed != null){
                     getProject().setAnnexed(annexed.getContents());
                 }
-                System.out.println("===================================");
                 projectFacade.updateProject(getProject(), getGeneralObjectves(), getSpecificObjectives());
                 MessageUtils.addSuccessMessage("Se han Guardado los Cambios");
             } else {
@@ -251,8 +249,8 @@ public class ProjectView implements Serializable {
 
     public void loadCurrentProject() {
         this.process = processFacade.getProcess(new Process(processId)).get(0);
-        coordinator=userFacade.getCareerCoordinator(getProcess()).get(0);
-        System.out.println(coordinator.getFirstName());
+        //coordinator=userFacade.getCareerCoordinator(getProcess()).get(0);
+        //System.out.println(coordinator.getFirstName());
         this.project = process.getProject();
         flagUpdate = true;
         if (this.project == null) {
@@ -310,13 +308,6 @@ public class ProjectView implements Serializable {
        //validaciones
         tailFacade.createTailCoordinator(user,getProcess());
      }
-    public Title getParentTitle() {
-        return parentTitle;
-    }
-
-    public void setParentTitle(Title parentTitle) {
-        this.parentTitle = parentTitle;
-    }
     
     public void createPDF(){
         projectFacade.createPDF(project);

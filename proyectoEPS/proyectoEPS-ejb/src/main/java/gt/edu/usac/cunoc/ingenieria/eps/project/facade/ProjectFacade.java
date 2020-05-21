@@ -9,6 +9,7 @@ import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import gt.edu.usac.cunoc.ingenieria.eps.project.repository.ProjectRepository;
 import gt.edu.usac.cunoc.ingenieria.eps.project.service.ProjectService;
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.logging.Level;
@@ -26,7 +27,7 @@ public class ProjectFacade implements ProjectFacadeLocal {
 
     @EJB
     private ProjectRepository projectRepository;
-    
+
     @Override
     public Project updateProject(Project project, List<Objectives> generalObjective, List<Objectives> specificObjective) throws MandatoryException, LimitException {
         verifyProject(project, generalObjective, specificObjective);
@@ -65,11 +66,7 @@ public class ProjectFacade implements ProjectFacadeLocal {
     }
 
     @Override
-    public void createPDF(Project project) {
-        try {
-            projectService.createPDF(project);
-        } catch (IOException ex) {
-            System.out.println("================================ Error al generar pdf");
-        }
+    public InputStream createPDF(Project project) throws IOException {
+        return projectService.createPDF(project);
     }
 }

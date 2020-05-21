@@ -14,9 +14,12 @@ import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import gt.edu.usac.cunoc.ingenieria.eps.user.facade.UserFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.utils.MessageUtils;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
@@ -48,6 +51,8 @@ public class ProjectView implements Serializable {
     private StreamedContent scheduleStream;
     private StreamedContent investmentPlanStream;
     private StreamedContent annexedStream;
+    
+    private StreamedContent pdfFile;
 
     private UploadedFile schedule;
     private UploadedFile investmentPlan;
@@ -158,6 +163,14 @@ public class ProjectView implements Serializable {
 
     public void setAnnexedStream(StreamedContent annexedStream) {
         this.annexedStream = annexedStream;
+    }
+
+    public StreamedContent getPdfFile() {
+        return pdfFile;
+    }
+
+    public void setPdfFile(StreamedContent pdfFile) {
+        this.pdfFile = pdfFile;
     }
 
     public void reloadSchedule() {
@@ -310,6 +323,10 @@ public class ProjectView implements Serializable {
      }
     
     public void createPDF(){
-        projectFacade.createPDF(project);
+        try {
+            this.pdfFile = new DefaultStreamedContent(projectFacade.createPDF(project),"application/pdf",getProject().getTitle());
+        } catch (IOException ex) {
+           MessageUtils.addErrorMessage(ex.getMessage());
+        }
     }
 }

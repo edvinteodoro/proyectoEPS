@@ -347,8 +347,11 @@
                 </div>
                 <div class="form-group col-sm-2">
                     <p:commandLink styleClass="btn btn-info"
-                                   action="#{projectView.createPDF()}"
+                                   target="_blank"
+                                   actionListener="#{projectView.createPDF()}"
+                                   update=":growl" 
                                    >
+                        <p:fileDownload value="#{projectView.pdfFile}" contentDisposition="inline"/>
                         <span class="glyphicon glyphicon-file"></span> Generar Archivo PDF
                     </p:commandLink>
                 </div>

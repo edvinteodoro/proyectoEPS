@@ -5,6 +5,7 @@ import gt.edu.usac.cunoc.ingenieria.eps.exception.MandatoryException;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Objectives;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
+import gt.edu.usac.cunoc.ingenieria.eps.user.UserCareer;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -19,5 +20,5 @@ public interface ProjectFacadeLocal {
             
     public Project getProject(Integer projectId);
     
-    public InputStream createPDF(Project project) throws IOException;
+    public InputStream createPDF(Project project, UserCareer userCareer) throws IOException;
 }

@@ -5,11 +5,15 @@ import com.itextpdf.io.source.ByteArrayOutputStream;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.Style;
+import com.itextpdf.layout.element.AreaBreak;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.List;
+import com.itextpdf.layout.element.Text;
+import com.itextpdf.layout.property.AreaBreakType;
 import com.itextpdf.layout.property.TextAlignment;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.PERSISTENCE_UNIT_NAME;
 import gt.edu.usac.cunoc.ingenieria.eps.configuration.repository.PropertyRepository;
@@ -17,11 +21,16 @@ import gt.edu.usac.cunoc.ingenieria.eps.exception.LimitException;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.MandatoryException;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
+import gt.edu.usac.cunoc.ingenieria.eps.project.Bibliography;
+import gt.edu.usac.cunoc.ingenieria.eps.project.DecimalCoordinate;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Objectives;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Section;
+import gt.edu.usac.cunoc.ingenieria.eps.user.UserCareer;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.Objects;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -36,6 +45,7 @@ public class ProjectService {
 
     private Style titleStyle;
     private Style bodyStyle;
+    private Style bodyStyleItalic;
     private String bullet = "\u2022"; //Simbolo de Punto para las pestañas
 
     @PersistenceContext(name = PERSISTENCE_UNIT_NAME)
@@ -79,7 +89,7 @@ public class ProjectService {
         }
     }
 
-    public InputStream createPDF(Project project) throws IOException {
+    public InputStream createPDF(Project project, UserCareer userCareer) throws IOException {
         this.setFontDocument();
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         //PdfDocument pdf = new PdfDocument(new PdfWriter(out));
@@ -89,29 +99,35 @@ public class ProjectService {
 
         Document document = new Document(pdf);
 
-        //Generar el titulo del Documento
-        document.add(new Paragraph(project.getTitle()).addStyle(titleStyle).setTextAlignment(TextAlignment.CENTER));
+        //Generar portada del Documento
+        document = addCoverPage(document, project, userCareer);
 
         //Generar Introducción
         document = addIntroduction(document, project);
-        
+
         //Generar Justificación
         document = addJustification(document, project);
-        
+
         //Generar los objetivos
         document = addObjectives(document, project);
-        
+
         //Generar Secciones
-        
+        document = addSections(document, project);
+
         //Generar Coordenadas
-        
+        document = addCoordinates(document, project);
+
         //Agregar calendario
-        
+        document = addSchedule(document, project);
+
         //Agregar Plan de Inversión
-        
+        document = addInvestmentPlan(document, project);
+
         //Agregar Bibliografia
-        
+        //document = addBibliography(document, project);
+
         //Agregar Anexos
+        document = addAnnexes(document, project);
 
         document.close();
 
@@ -120,14 +136,33 @@ public class ProjectService {
 
     private void setFontDocument() throws IOException {
         this.titleStyle = new Style();
-        PdfFont fontTimesRoman = PdfFontFactory.createFont(FontConstants.TIMES_ROMAN);
+        PdfFont fontTimesRoman = PdfFontFactory.createFont(FontConstants.HELVETICA);
         this.titleStyle.setFont(fontTimesRoman).setFontSize(14);
 
         this.bodyStyle = new Style();
         this.bodyStyle.setFont(fontTimesRoman).setFontSize(12);
+
+        this.bodyStyleItalic = new Style();
+        PdfFont fontTimesItalic = PdfFontFactory.createFont(FontConstants.TIMES_ITALIC);
+        this.bodyStyleItalic.setFont(fontTimesItalic).setFontSize(12);
+    }
+
+    private Document addCoverPage(Document document, Project project, UserCareer userCareer) {
+        document.add(new Paragraph("Universidad de San Carlos de Guatemala").addStyle(titleStyle).setTextAlignment(TextAlignment.CENTER));
+        document.add(new Paragraph("Centro Universitario de Occidente").addStyle(titleStyle).setTextAlignment(TextAlignment.CENTER));
+        document.add(new Paragraph(userCareer.getCAREERcodigo().getName()).addStyle(titleStyle).setTextAlignment(TextAlignment.CENTER));
+        
+        document.add(new Paragraph(project.getTitle()).addStyle(titleStyle).setTextAlignment(TextAlignment.CENTER));
+        document.add(new Paragraph("Por").addStyle(titleStyle).setTextAlignment(TextAlignment.CENTER));
+        document.add(new Paragraph(userCareer.getUSERuserId().getFirstName() + userCareer.getUSERuserId().getLastName()).addStyle(titleStyle).setTextAlignment(TextAlignment.CENTER));
+        //document.add(new Paragraph(userCareer.getUSERuserId().getCarnet()).addStyle(titleStyle).setTextAlignment(TextAlignment.CENTER));
+        document.add(new Paragraph("Quetzaltenango Quetzaltenango," + getDateCover()).addStyle(titleStyle).setTextAlignment(TextAlignment.CENTER));
+        
+        return document;
     }
 
     private Document addObjectives(Document document, Project project) {
+        document.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
         if (!project.getObjectives().isEmpty()) {
             document.add(new Paragraph("Objetivos").addStyle(bodyStyle));
             List listGeneralObjetives = new List().setSymbolIndent(12).setListSymbol(bullet);
@@ -153,28 +188,143 @@ public class ProjectService {
         }
         return document;
     }
-    
-    private Document addIntroduction(Document document, Project project){
+
+    private Document addIntroduction(Document document, Project project) {
+        document.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
         document.add(new Paragraph("Introducción").addStyle(bodyStyle));
         String textIntroduction = "";
         for (int i = 0; i < project.getSections().size(); i++) {
-            if (project.getSections().get(i).getTitle().getName().equals(Section.INTRODUCTION_TEXT)){
-            textIntroduction = project.getSections().get(i).getTitle().getTexto().getText();
+            Section temp = project.getSections().get(i);
+            if (Objects.equals(Section.INTRODUCTION, temp.getType())) {
+                textIntroduction = project.getSections().get(i).getTitle().getTexto().getText();
             }
         }
         document.add(new Paragraph(textIntroduction));
         return document;
     }
-    
-    private Document addJustification(Document document, Project project){
+
+    private Document addJustification(Document document, Project project) {
+        document.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
         document.add(new Paragraph("Justificación").addStyle(bodyStyle));
         String textIntroduction = "";
         for (int i = 0; i < project.getSections().size(); i++) {
-            if (project.getSections().get(i).getTitle().getName().equals(Section.JUSTIFICATION_TEXT)){
-            textIntroduction = project.getSections().get(i).getTitle().getTexto().getText();
+            Section temp = project.getSections().get(i);
+            if (Objects.equals(temp.getType(), Section.JUSTIFICATION)) {
+                textIntroduction = project.getSections().get(i).getTitle().getTexto().getText();
             }
         }
         document.add(new Paragraph(textIntroduction));
         return document;
+    }
+
+    private Document addSections(Document document, Project project) {
+        for (int i = 0; i < project.getSections().size(); i++) {
+            Section temp = project.getSections().get(i);
+            if (!Objects.equals(temp.getType(), Section.INTRODUCTION) && !Objects.equals(temp.getType(), Section.JUSTIFICATION)) {
+                document.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+                document.add(new Paragraph(temp.getTitle().getName()).addStyle(bodyStyle));
+                String textIntroduction = "";
+                textIntroduction = project.getSections().get(i).getTitle().getTexto().getText();
+                document.add(new Paragraph(textIntroduction));
+            }
+        }
+        return document;
+    }
+
+    private Document addCoordinates(Document document, Project project) {
+        document.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+        document.add(new Paragraph("Coordenadas Decimales").addStyle(bodyStyle));
+        for (int i = 0; i < project.getDecimalCoordinates().size(); i++) {
+            DecimalCoordinate temp = project.getDecimalCoordinates().get(i);
+            document.add(new Paragraph("Latitud: " + temp.getLatitude() + "   Longitud: " + temp.getLongitude()));
+        }
+        return document;
+    }
+
+    private Document addSchedule(Document document, Project project) throws IOException {
+        try (PdfDocument schedulePDF = new PdfDocument(new PdfReader(new ByteArrayInputStream(project.getSchedule())))) {
+            schedulePDF.copyPagesTo(1, schedulePDF.getNumberOfPages(), document.getPdfDocument());
+            schedulePDF.close();
+        }
+        return document;
+    }
+
+    private Document addInvestmentPlan(Document document, Project project) throws IOException {
+        try (PdfDocument investmentPlanPDF = new PdfDocument(new PdfReader(new ByteArrayInputStream(project.getInvestmentPlan())))) {
+            investmentPlanPDF.copyPagesTo(1, investmentPlanPDF.getNumberOfPages(), document.getPdfDocument());
+            investmentPlanPDF.close();
+        }
+        return document;
+    }
+
+    private Document addBibliography(Document document, Project project) {
+        document.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+        document.add(new Paragraph("Bibliografía").addStyle(bodyStyle));
+        Text first;
+        Text second;
+        Text third;
+        for (int i = 0; i < project.getBibliographies().size(); i++) {
+            Bibliography temp = project.getBibliographies().get(i);
+            first = new Text(temp.getAuthor() + ",(" + temp.getPublicactionYear() + "),").addStyle(bodyStyle);
+            second = new Text(temp.getTitle()).addStyle(bodyStyleItalic);
+            third = new Text("," + temp.getCity() + "," + temp.getCountry() + "," + temp.getEditorial()).addStyle(bodyStyle);
+            document.add(new Paragraph().add(first).add(second).add(third));
+        }
+        return document;
+    }
+
+    private Document addAnnexes(Document document, Project project) throws IOException {
+        if (project.getAnnexed().length != 0) {
+            try (PdfDocument investmentPlanPDF = new PdfDocument(new PdfReader(new ByteArrayInputStream(project.getInvestmentPlan())))) {
+                investmentPlanPDF.copyPagesTo(1, investmentPlanPDF.getNumberOfPages(), document.getPdfDocument());
+                investmentPlanPDF.close();
+            }
+        }
+        return document;
+    }
+    
+    private String getDateCover(){
+        String date = "";
+        LocalDate currentDate = LocalDate.now();
+        Month currentMonth = currentDate.getMonth();
+        switch (currentMonth){
+            case JANUARY:
+                date = "Enero";
+                break;
+            case FEBRUARY:
+                date = "Febrero";
+                break;
+            case MARCH:
+                date = "Marzo";
+                break;
+            case APRIL:
+                date = "Abril";
+                break;
+            case MAY:
+                date = "Mayo";
+                break;
+            case JUNE:
+                date = "Junio";
+                break;
+            case JULY:
+                date = "Julio";
+                break;
+            case AUGUST:
+                date = "Agosto";
+                break;
+            case SEPTEMBER:
+                date = "Septiembre";
+                break;
+            case OCTOBER:
+                date = "Octubre";
+                break;
+            case NOVEMBER:
+                date = "Noviembre";
+                break;
+            case DECEMBER:
+                date = "Diciembre";
+                break;
+        }
+        return date + " de " + currentDate.getYear(); 
     }
 }

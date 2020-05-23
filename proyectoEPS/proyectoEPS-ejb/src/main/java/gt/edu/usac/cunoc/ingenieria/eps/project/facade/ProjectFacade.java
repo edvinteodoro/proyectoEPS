@@ -8,6 +8,7 @@ import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import gt.edu.usac.cunoc.ingenieria.eps.project.repository.ProjectRepository;
 import gt.edu.usac.cunoc.ingenieria.eps.project.service.ProjectService;
+import gt.edu.usac.cunoc.ingenieria.eps.user.UserCareer;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
@@ -66,7 +67,7 @@ public class ProjectFacade implements ProjectFacadeLocal {
     }
 
     @Override
-    public InputStream createPDF(Project project) throws IOException {
-        return projectService.createPDF(project);
+    public InputStream createPDF(Project project, UserCareer userCareer) throws IOException {
+        return projectService.createPDF(project, userCareer);
     }
 }

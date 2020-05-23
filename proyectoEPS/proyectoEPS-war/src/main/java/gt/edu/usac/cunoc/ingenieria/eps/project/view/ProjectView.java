@@ -18,8 +18,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
@@ -324,7 +322,7 @@ public class ProjectView implements Serializable {
     
     public void createPDF(){
         try {
-            this.pdfFile = new DefaultStreamedContent(projectFacade.createPDF(project),"application/pdf",getProject().getTitle());
+            this.pdfFile = new DefaultStreamedContent(projectFacade.createPDF(project, process.getUserCareer()),"application/pdf",getProject().getTitle());
         } catch (IOException ex) {
            MessageUtils.addErrorMessage(ex.getMessage());
         }

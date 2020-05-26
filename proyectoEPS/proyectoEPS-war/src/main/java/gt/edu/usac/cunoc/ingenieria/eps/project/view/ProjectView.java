@@ -323,8 +323,9 @@ public class ProjectView implements Serializable {
     public void createPDF(){
         try {
             this.pdfFile = new DefaultStreamedContent(projectFacade.createPDF(project, process.getUserCareer()),"application/pdf",getProject().getTitle());
+            System.out.println("===========================");
         } catch (IOException ex) {
-           MessageUtils.addErrorMessage(ex.getMessage());
+            MessageUtils.addErrorMessage(ex.getMessage());
         }
     }
 }

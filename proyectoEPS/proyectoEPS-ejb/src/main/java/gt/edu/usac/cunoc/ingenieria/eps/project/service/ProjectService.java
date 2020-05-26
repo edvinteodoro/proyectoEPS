@@ -1,6 +1,10 @@
 package gt.edu.usac.cunoc.ingenieria.eps.project.service;
 
+import com.itextpdf.html2pdf.ConverterProperties;
+import com.itextpdf.html2pdf.HtmlConverter;
 import com.itextpdf.io.font.FontConstants;
+import com.itextpdf.io.image.ImageData;
+import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.io.source.ByteArrayOutputStream;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
@@ -10,8 +14,12 @@ import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.Style;
 import com.itextpdf.layout.element.AreaBreak;
+import com.itextpdf.layout.element.IBlockElement;
+import com.itextpdf.layout.element.IElement;
+import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.List;
+import com.itextpdf.layout.element.ListItem;
 import com.itextpdf.layout.element.Text;
 import com.itextpdf.layout.property.AreaBreakType;
 import com.itextpdf.layout.property.TextAlignment;
@@ -29,6 +37,7 @@ import gt.edu.usac.cunoc.ingenieria.eps.user.UserCareer;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Objects;
@@ -96,9 +105,9 @@ public class ProjectService {
 
         String destino = "/home/crystian/Escritorio/" + project.getTitle() + ".pdf";
         PdfDocument pdf = new PdfDocument(new PdfWriter(destino));
-
+        
         Document document = new Document(pdf);
-
+        
         //Generar portada del Documento
         document = addCoverPage(document, project, userCareer);
 
@@ -124,47 +133,51 @@ public class ProjectService {
         document = addInvestmentPlan(document, project);
 
         //Agregar Bibliografia
-        //document = addBibliography(document, project);
+        document = addBibliography(document, project);
 
         //Agregar Anexos
         document = addAnnexes(document, project);
 
         document.close();
-
         return new ByteArrayInputStream(out.toByteArray());
     }
 
     private void setFontDocument() throws IOException {
         this.titleStyle = new Style();
-        PdfFont fontTimesRoman = PdfFontFactory.createFont(FontConstants.HELVETICA);
+        PdfFont fontTimesRoman = PdfFontFactory.createFont(FontConstants.TIMES_ROMAN);
         this.titleStyle.setFont(fontTimesRoman).setFontSize(14);
 
         this.bodyStyle = new Style();
         this.bodyStyle.setFont(fontTimesRoman).setFontSize(12);
 
         this.bodyStyleItalic = new Style();
-        PdfFont fontTimesItalic = PdfFontFactory.createFont(FontConstants.TIMES_ITALIC);
+        PdfFont fontTimesItalic = PdfFontFactory.createFont(FontConstants.TIMES_ROMAN);
         this.bodyStyleItalic.setFont(fontTimesItalic).setFontSize(12);
     }
 
-    private Document addCoverPage(Document document, Project project, UserCareer userCareer) {
+    private Document addCoverPage(Document document, Project project, UserCareer userCareer) throws MalformedURLException {
         document.add(new Paragraph("Universidad de San Carlos de Guatemala").addStyle(titleStyle).setTextAlignment(TextAlignment.CENTER));
         document.add(new Paragraph("Centro Universitario de Occidente").addStyle(titleStyle).setTextAlignment(TextAlignment.CENTER));
         document.add(new Paragraph(userCareer.getCAREERcodigo().getName()).addStyle(titleStyle).setTextAlignment(TextAlignment.CENTER));
-        
+        //ImageData logoCunoc = ImageDataFactory.create("usac.png");
+        //Image logoCunocImage = new Image(logoCunoc);
+        //document.add(logoCunocImage);
+        document.add(new Paragraph().add(new Text("\n")));
         document.add(new Paragraph(project.getTitle()).addStyle(titleStyle).setTextAlignment(TextAlignment.CENTER));
+        document.add(new Paragraph().add(new Text("\n")));
         document.add(new Paragraph("Por").addStyle(titleStyle).setTextAlignment(TextAlignment.CENTER));
-        document.add(new Paragraph(userCareer.getUSERuserId().getFirstName() + userCareer.getUSERuserId().getLastName()).addStyle(titleStyle).setTextAlignment(TextAlignment.CENTER));
+        document.add(new Paragraph(userCareer.getUSERuserId().getFirstName() + " " + userCareer.getUSERuserId().getLastName()).addStyle(titleStyle).setTextAlignment(TextAlignment.CENTER));
         //document.add(new Paragraph(userCareer.getUSERuserId().getCarnet()).addStyle(titleStyle).setTextAlignment(TextAlignment.CENTER));
+        document.add(new Paragraph().add(new Text("\n")));
+        document.add(new Paragraph().add(new Text("\n")));
         document.add(new Paragraph("Quetzaltenango Quetzaltenango," + getDateCover()).addStyle(titleStyle).setTextAlignment(TextAlignment.CENTER));
-        
         return document;
     }
 
     private Document addObjectives(Document document, Project project) {
         document.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
         if (!project.getObjectives().isEmpty()) {
-            document.add(new Paragraph("Objetivos").addStyle(bodyStyle));
+            document.add(new Paragraph("Objetivos").addStyle(titleStyle).setTextAlignment(TextAlignment.CENTER));
             List listGeneralObjetives = new List().setSymbolIndent(12).setListSymbol(bullet);
             for (int i = 0; i < project.getObjectives().size(); i++) {
                 if (Objects.equals(project.getObjectives().get(i).getState(), Objectives.GENERAL_OBJETICVE)) {
@@ -191,7 +204,7 @@ public class ProjectService {
 
     private Document addIntroduction(Document document, Project project) {
         document.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-        document.add(new Paragraph("Introducción").addStyle(bodyStyle));
+        document.add(new Paragraph("Introducción").addStyle(titleStyle).setTextAlignment(TextAlignment.CENTER));
         String textIntroduction = "";
         for (int i = 0; i < project.getSections().size(); i++) {
             Section temp = project.getSections().get(i);
@@ -199,21 +212,27 @@ public class ProjectService {
                 textIntroduction = project.getSections().get(i).getTitle().getTexto().getText();
             }
         }
-        document.add(new Paragraph(textIntroduction));
+        java.util.List<IElement> list = HtmlConverter.convertToElements(textIntroduction);
+        for (IElement element : list) {
+            document.add((IBlockElement) element);
+        }
         return document;
     }
 
     private Document addJustification(Document document, Project project) {
         document.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-        document.add(new Paragraph("Justificación").addStyle(bodyStyle));
-        String textIntroduction = "";
+        document.add(new Paragraph("Justificación").addStyle(titleStyle).setTextAlignment(TextAlignment.CENTER));
+        String textJustification = "";
         for (int i = 0; i < project.getSections().size(); i++) {
             Section temp = project.getSections().get(i);
             if (Objects.equals(temp.getType(), Section.JUSTIFICATION)) {
-                textIntroduction = project.getSections().get(i).getTitle().getTexto().getText();
+                textJustification = project.getSections().get(i).getTitle().getTexto().getText();
             }
         }
-        document.add(new Paragraph(textIntroduction));
+        java.util.List<IElement> list = HtmlConverter.convertToElements(textJustification);
+        for (IElement element : list) {
+            document.add((IBlockElement) element);
+        }
         return document;
     }
 
@@ -222,10 +241,13 @@ public class ProjectService {
             Section temp = project.getSections().get(i);
             if (!Objects.equals(temp.getType(), Section.INTRODUCTION) && !Objects.equals(temp.getType(), Section.JUSTIFICATION)) {
                 document.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-                document.add(new Paragraph(temp.getTitle().getName()).addStyle(bodyStyle));
-                String textIntroduction = "";
-                textIntroduction = project.getSections().get(i).getTitle().getTexto().getText();
-                document.add(new Paragraph(textIntroduction));
+                document.add(new Paragraph(temp.getTitle().getName()).addStyle(titleStyle).setTextAlignment(TextAlignment.CENTER));
+                String text = "";
+                text = project.getSections().get(i).getTitle().getTexto().getText();
+                java.util.List<IElement> list = HtmlConverter.convertToElements(text);
+                for (IElement element : list) {
+                    document.add((IBlockElement) element);
+                }
             }
         }
         return document;
@@ -233,7 +255,7 @@ public class ProjectService {
 
     private Document addCoordinates(Document document, Project project) {
         document.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-        document.add(new Paragraph("Coordenadas Decimales").addStyle(bodyStyle));
+        document.add(new Paragraph("Coordenadas Decimales").addStyle(titleStyle).setTextAlignment(TextAlignment.CENTER));
         for (int i = 0; i < project.getDecimalCoordinates().size(); i++) {
             DecimalCoordinate temp = project.getDecimalCoordinates().get(i);
             document.add(new Paragraph("Latitud: " + temp.getLatitude() + "   Longitud: " + temp.getLongitude()));
@@ -258,8 +280,9 @@ public class ProjectService {
     }
 
     private Document addBibliography(Document document, Project project) {
+        document.getPdfDocument().addNewPage();
         document.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-        document.add(new Paragraph("Bibliografía").addStyle(bodyStyle));
+        document.add(new Paragraph("Bibliografía").addStyle(titleStyle).setTextAlignment(TextAlignment.CENTER));
         Text first;
         Text second;
         Text third;
@@ -275,19 +298,19 @@ public class ProjectService {
 
     private Document addAnnexes(Document document, Project project) throws IOException {
         if (project.getAnnexed().length != 0) {
-            try (PdfDocument investmentPlanPDF = new PdfDocument(new PdfReader(new ByteArrayInputStream(project.getInvestmentPlan())))) {
+            try (PdfDocument investmentPlanPDF = new PdfDocument(new PdfReader(new ByteArrayInputStream(project.getAnnexed())))) {
                 investmentPlanPDF.copyPagesTo(1, investmentPlanPDF.getNumberOfPages(), document.getPdfDocument());
                 investmentPlanPDF.close();
             }
         }
         return document;
     }
-    
-    private String getDateCover(){
+
+    private String getDateCover() {
         String date = "";
         LocalDate currentDate = LocalDate.now();
         Month currentMonth = currentDate.getMonth();
-        switch (currentMonth){
+        switch (currentMonth) {
             case JANUARY:
                 date = "Enero";
                 break;
@@ -325,6 +348,6 @@ public class ProjectService {
                 date = "Diciembre";
                 break;
         }
-        return date + " de " + currentDate.getYear(); 
+        return date + " de " + currentDate.getYear();
     }
 }

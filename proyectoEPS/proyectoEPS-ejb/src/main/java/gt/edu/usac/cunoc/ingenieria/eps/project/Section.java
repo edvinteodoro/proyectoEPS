@@ -47,6 +47,7 @@ public class Section implements Serializable {
     public Section() {
         this.title = new Title();
         this.title.setSection(this);
+        this.title.setTitleParent(null);
     }
 
     public Section(LocalDate lastModificationDate, Short type) {

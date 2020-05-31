@@ -65,8 +65,7 @@ public class ProjectView implements Serializable {
     private List<Objectives> specificObjectives;
 
     private Integer processId;
-    private Title parentTitle;
-
+    
     private Boolean flagUpdate = false;
 
     @PostConstruct
@@ -231,8 +230,6 @@ public class ProjectView implements Serializable {
                 if (annexed != null) {
                     getProject().setAnnexed(annexed.getContents());
                 }
-                getProject().getSections().get(0).getTitle().setTitles(null);
-                getProject().getSections().get(1).getTitle().setTitles(null);
                 projectFacade.updateProject(getProject(), getGeneralObjectves(), getSpecificObjectives());
                 MessageUtils.addSuccessMessage("Se han Guardado los Cambios");
             } else {
@@ -313,7 +310,6 @@ public class ProjectView implements Serializable {
     }
 
     public void reviewRequeried() {
-        //validaciones
         tailFacade.createTailCoordinator(user, getProcess());
     }
 

@@ -21,23 +21,24 @@
     </f:metadata>
 
     <ui:define name="head">
-        Proyecto
+        Anteproyecto
     </ui:define>
 
     <ui:define name="title">
-        Proyecto
+        Anteproyecto
     </ui:define>
 
     <ui:define name="content">
         <h:outputScript library="js" name="calendar_es.js" />
         <h:form id="formProject">
             <fieldset>
-                <legend>Titulo</legend> 
+                <legend>Anteproyecto</legend> 
                 <div class="row">
                     <div class="form-group col-md-8">
                         <p:outputLabel for="title" value="Titulo:"/>
                         <p:inputText id="title" styleClass="form-control" pt:placeholder="Titulo del Proyecto"
                                      disabled="#{!projectView.isStuden()}"
+
                                      pt:required="true"
                                      value="#{projectView.project.title}"/><br></br>
 
@@ -53,9 +54,6 @@
                         </p>
                     </div>
                 </div>
-            </fieldset>
-            <fieldset >
-                <legend>Objetivos</legend>
                 <div class="row">
                     <div class="form-group col-md-8">
                         <p:panel header="Objetivos Generales" id="generalObjectives" >
@@ -139,12 +137,9 @@
                         </p:commandLink>
                     </div>
                 </div>
-            </fieldset>
-            <fieldset>
-                <legend>Secciones</legend>
                 <div class="row">
                     <div class="form-group col-md-8">
-                        <p:panel id="listSections">
+                        <p:panel id="listSections" header="Secciones">
                             <div class="row">
                                 <div class="form-group col-md-12">
                                     <p:dataView value="#{projectView.project.sections}" var="section" rowIndexVar="sectionStatus">
@@ -204,17 +199,6 @@
                                                                     <span class="glyphicon glyphicon-comment"></span> Comentar
                                                                 </p:commandLink>
                                                             </div>
-                                                            <!--
-                                                            <div class="form-group col-sm-3">
-                                                                <p:commandLink  styleClass="btn btn-success"  
-                                                                                actionListener="#{section.title.addChildTitle()}"
-                                                                                update="#{p:component('Section')}, :growl"
-                                                                                process="#{p:component('Section')}"
-                                                                                >
-                                                                    <span class="glyphicon glyphicon-plus"></span> Agregar SubTitulo
-                                                                </p:commandLink>
-                                                            </div>
-                                                            -->
                                                         </div>
                                                     </p:panel>
                                                 </div>
@@ -232,12 +216,9 @@
                         </p:panel>
                     </div>
                 </div>
-            </fieldset>
-            <fieldset>
-                <legend>Coordenadas Decimales</legend>
                 <div class="row" >
                     <div class="form-group col-md-8" >
-                        <p:panel id="coordinatesDecimal">
+                        <p:panel id="coordinatesDecimal" header="Coordenadas Decimales">
                             <p:dataView value="#{projectView.project.decimalCoordinates}" var="decimalCoordinate" rowIndexVar="decimalCoordinateStatus" >
                                 <p:dataViewListItem>
                                     <div class="row">
@@ -282,11 +263,10 @@
                         </p:commandLink>
                     </div>
                 </div>
-            </fieldset>
-            <fieldset>
-                <legend>Calendario</legend>
+
                 <div class="row">
                     <div class="form-group col-sm-8">
+                        <p:outputLabel for="schedule" value="Calendario"/>
                         <p:fileUpload id="schedule" fileUploadListener="#{projectView.handleSchedule}"
                                       rendered="#{projectView.isStuden()}"
                                       required="true"
@@ -312,11 +292,10 @@
                         </p:commandLink>
                     </div>
                 </div>
-            </fieldset>
-            <fieldset>
-                <legend>Plan de Inversión</legend>
+
                 <div class="row">
                     <div class="form-group col-sm-8">
+                        <p:outputLabel for="investmentPlan" value="Plan de Inversión"/>
                         <p:fileUpload id="investmentPlan" fileUploadListener="#{projectView.handleInvestmentPlan}"
                                       required="true"
                                       rendered="#{projectView.isStuden()}"
@@ -342,12 +321,10 @@
                         </p:commandLink>
                     </div>                    
                 </div>
-            </fieldset>
-            <fieldset >
-                <legend>Bibliografía</legend>
+
                 <div class="row">
                     <div class="form-group col-md-8">
-                        <p:panel id="biblioghraphies" >
+                        <p:panel id="biblioghraphies" header="Bibliografía">
                             <p:dataView value="#{projectView.project.bibliographies}" var="bibliography" rowIndexVar="bibliographyStatus">
                                 <p:dataViewListItem>
                                     <div class="row">
@@ -407,11 +384,10 @@
                         </p:commandLink>
                     </div>
                 </div>
-            </fieldset>
-            <fieldset>
-                <legend>Anexos</legend>
+
                 <div class="row">
                     <div class="form-group col-sm-8">
+                        <p:outputLabel for="annexed" value="Anexos"/>
                         <p:fileUpload id="annexed" fileUploadListener="#{projectView.handleAnnexed}"
                                       skinSimple="true" auto="true"
                                       rendered="#{projectView.isStuden()}"

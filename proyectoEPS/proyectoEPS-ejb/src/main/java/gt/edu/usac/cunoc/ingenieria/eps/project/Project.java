@@ -210,8 +210,6 @@ public class Project implements Serializable {
         section.setProject(this);
         section.setLastModificationDate(LocalDate.now());
         section.setType(Section.CUSTOM);
-        section.getTitle().setTitleParent(null);
-        section.getTitle().setSection(section);
     }
 
     public void removeSection(Integer sectionIndex) throws MandatoryException {
@@ -285,19 +283,19 @@ public class Project implements Serializable {
     
 
     private void setInitialSections() {
-        this.addSection();
-        this.getSections().get(0).getTitle().setName(Section.INTRODUCTION_TEXT);
-        this.getSections().get(0).getTitle().setTitleParent(null);
-        this.getSections().get(0).getTitle().setSection(this.getSections().get(0));
-        this.getSections().get(0).setLastModificationDate(LocalDate.now());
-        this.getSections().get(0).setType(Section.INTRODUCTION);
-
-        this.addSection();
-        this.getSections().get(1).getTitle().setName(Section.JUSTIFICATION_TEXT);
-        this.getSections().get(1).getTitle().setTitleParent(null);
-        this.getSections().get(1).getTitle().setSection(this.getSections().get(1));
-        this.getSections().get(1).setLastModificationDate(LocalDate.now());
-        this.getSections().get(1).setType(Section.JUSTIFICATION);
+        Section sectionIntroduction = new Section();
+        sections.add(sectionIntroduction);
+        sectionIntroduction.getTitle().setName(Section.INTRODUCTION_TEXT);
+        sectionIntroduction.setProject(this);
+        sectionIntroduction.setLastModificationDate(LocalDate.now());
+        sectionIntroduction.setType(Section.INTRODUCTION);
+        
+        Section sectionJustification = new Section();
+        sections.add(sectionJustification);
+        sectionJustification.getTitle().setName(Section.JUSTIFICATION_TEXT);
+        sectionJustification.setProject(this);
+        sectionJustification.setLastModificationDate(LocalDate.now());
+        sectionJustification.setType(Section.JUSTIFICATION);
     }
 
     @Override

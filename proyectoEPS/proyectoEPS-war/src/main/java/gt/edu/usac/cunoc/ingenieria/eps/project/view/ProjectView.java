@@ -1,5 +1,6 @@
 package gt.edu.usac.cunoc.ingenieria.eps.project.view;
 
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.ESTUDIANTE;
 import gt.edu.usac.cunoc.ingenieria.eps.configuration.repository.PropertyRepository;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.LimitException;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.MandatoryException;
@@ -8,6 +9,7 @@ import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Objectives;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Title;
+import gt.edu.usac.cunoc.ingenieria.eps.project.Section;
 import gt.edu.usac.cunoc.ingenieria.eps.project.facade.ProjectFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.tail.facade.TailFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
@@ -38,7 +40,7 @@ public class ProjectView implements Serializable {
 
     @EJB
     private UserFacadeLocal userFacade;
-    
+
     @EJB
     private TailFacadeLocal tailFacade;
 
@@ -219,13 +221,13 @@ public class ProjectView implements Serializable {
     public void uploadCreate() {
         try {
             if (flagUpdate) {
-                if (schedule != null){
+                if (schedule != null) {
                     getProject().setSchedule(schedule.getContents());
                 }
-                if (investmentPlan != null){
+                if (investmentPlan != null) {
                     getProject().setInvestmentPlan(investmentPlan.getContents());
                 }
-                if (annexed != null){
+                if (annexed != null) {
                     getProject().setAnnexed(annexed.getContents());
                 }
                 projectFacade.updateProject(getProject(), getGeneralObjectves(), getSpecificObjectives());
@@ -237,6 +239,8 @@ public class ProjectView implements Serializable {
                     if (annexed != null) {
                         getProject().setAnnexed(annexed.getContents());
                     }
+                    getProject().getSections().get(0).getTitle().setTitles(null);
+                    getProject().getSections().get(1).getTitle().setTitles(null);
                     projectFacade.createProject(getProject(), getGeneralObjectves(), getSpecificObjectives(), process);
                     MessageUtils.addSuccessMessage("Se ha Creado el Proyecto");
                 }
@@ -249,8 +253,8 @@ public class ProjectView implements Serializable {
 
     public void loadCurrentProject() {
         this.process = processFacade.getProcess(new Process(processId)).get(0);
-        //coordinator=userFacade.getCareerCoordinator(getProcess()).get(0);
-        //System.out.println(coordinator.getFirstName());
+        coordinator = userFacade.getCareerCoordinator(getProcess()).get(0);
+        System.out.println(coordinator.getFirstName());
         this.project = process.getProject();
         flagUpdate = true;
         if (this.project == null) {
@@ -288,28 +292,40 @@ public class ProjectView implements Serializable {
     public Integer getProcessId() {
         return processId;
     }
-    
-    public Process getProcess(){
+
+    public Process getProcess() {
         return process;
     }
-    
-    public void setProcess(Process process){
-        this.process=process;
+
+    public void setProcess(Process process) {
+        this.process = process;
     }
 
     public void setProcessId(Integer processId) {
         this.processId = processId;
     }
+
     public User getCareerCoordinator() {
-        return coordinator; 
+        return coordinator;
     }
 
     public void reviewRequeried() {
-       //validaciones
-        tailFacade.createTailCoordinator(user,getProcess());
-     }
-    
-    public void createPDF(){
+        tailFacade.createTailCoordinator(user, getProcess());
+    }
+
+    public Title getParentTitle() {
+        return parentTitle;
+    }
+
+    public void setParentTitle(Title parentTitle) {
+        this.parentTitle = parentTitle;
+    }
+
+    public Boolean isStuden() {
+        return user.getROLid().getName().equals(ESTUDIANTE);
+    }
+
+    public void createPDF() {
         projectFacade.createPDF(project);
     }
 }

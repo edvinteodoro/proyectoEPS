@@ -30,16 +30,28 @@
 
     <ui:define name="content">
         <h:outputScript library="js" name="calendar_es.js" />
-        <h:form id="frmLogin">            
-            <p:focus id="focuss" context="frmLogin" />
+        <h:form id="formProject">
             <fieldset>
                 <legend>Anteproyecto</legend> 
                 <div class="row">
-                    <div  class="form-group col-md-8">
-                        <p:outputLabel for="title" value="Titulo" />
-                        <p:inputText id="title" styleClass="form-control" pt:placeholder="Titulo del Anteproyecto"
+                    <div class="form-group col-md-8">
+                        <p:outputLabel for="title" value="Titulo:"/>
+                        <p:inputText id="title" styleClass="form-control" pt:placeholder="Titulo del Proyecto"
+                                     disabled="#{!projectView.isStuden()}"
+
                                      pt:required="true"
-                                     value="#{projectView.project.title}"/>
+                                     value="#{projectView.project.title}"/><br></br>
+
+                        <p data-placement="top" data-toggle="tooltip" title="comentar">
+                            <p:commandLink class="btn btn-primary btn-xs"
+                                           styleClass="btn btn-primary btn-xs"
+                                           oncomplete="PF('dlgCmt').show();"
+                                           update=":#{p:component('dlgCmt')}"
+                                           rendered="#{!projectView.isStuden()}">
+                                <f:setPropertyActionListener value="#{projectView.project}" target="#{projectView.project}"/>
+                                <span class="glyphicon glyphicon-comment"></span> Comentar
+                            </p:commandLink>
+                        </p>
                     </div>
                 </div>
                 <div class="row">
@@ -50,13 +62,15 @@
                                     <div class="row">
                                         <div class="form-group col-sm-10">
                                             <p:inputText pt:placeholder="Objetivo General" 
+                                                         disabled="#{!projectView.isStuden()}"
                                                          value="#{generalObjective.text}"
                                                          class="form-control"
                                                          >
                                             </p:inputText>
                                         </div>
                                         <div class="form-group col-sm-2">
-                                            <p:commandLink  styleClass="btn btn-danger" actionListener="#{projectView.removeGeneralOBjectives(generalObjectiveStatus)}" 
+                                            <p:commandLink  styleClass="btn btn-danger"  actionListener="#{projectView.removeGeneralOBjectives(generalObjectiveStatus)}" 
+                                                            rendered="#{projectView.isStuden()}"
                                                             update="#{p:component('generalObjectives')}"
                                                             process="#{p:component('generalObjectives')}"
                                                             >
@@ -68,10 +82,18 @@
                             </p:dataView>
                             <p:commandLink styleClass="btn btn-success" actionListener="#{projectView.addGeneralObjectives()}" update="generalObjectives, growl"
                                            process="#{p:component('generalObjectives')}"
+                                           rendered="#{projectView.isStuden()}"
                                            >
                                 <span class="glyphicon glyphicon-plus"></span> Agregar
                             </p:commandLink>
                         </p:panel>
+                        <br></br><p:commandLink styleClass="btn btn-primary" 
+                                                rendered="#{!projectView.isStuden()}"
+                                                onclick="$('#titleComment').attr('style', 'display:block')"
+                                                title="Realizar Comentario"
+                                                class="btn btn-primary btn-xs">
+                            <span class="glyphicon glyphicon-comment"></span> Comentar
+                        </p:commandLink>
                     </div>
                 </div>
                 <div class="row">
@@ -91,6 +113,7 @@
                                             <p:commandLink  styleClass="btn btn-danger" actionListener="#{projectView.removeSpecificOBjectives(specificObjectiveStatus)}" 
                                                             update="#{p:component('specificObjectives')}"
                                                             process="#{p:component('specificObjectives')}"
+                                                            rendered="#{projectView.isStuden()}"
                                                             >
                                                 <span class="glyphicon glyphicon-minus"></span> Eliminar
                                             </p:commandLink>
@@ -100,10 +123,18 @@
                             </p:dataView>
                             <p:commandLink styleClass="btn btn-success" actionListener="#{projectView.addSpecificObjectives()}" update="specificObjectives, growl"
                                            process="#{p:component('specificObjectives')}"
+                                           rendered="#{projectView.isStuden()}"
                                            >
                                 <span class="glyphicon glyphicon-plus"></span> Agregar
                             </p:commandLink>
                         </p:panel>
+                        <br></br><p:commandLink styleClass="btn btn-primary" 
+                                                rendered="#{!projectView.isStuden()}"
+                                                onclick="$('#titleComment').attr('style', 'display:block')"
+                                                title="Realizar Comentario"
+                                                class="btn btn-primary btn-xs">
+                            <span class="glyphicon glyphicon-comment"></span> Comentar
+                        </p:commandLink>
                     </div>
                 </div>
                 <div class="row">
@@ -156,8 +187,16 @@
                                                                 <p:commandLink  styleClass="btn btn-danger" actionListener="#{projectView.removeSection(sectionStatus)}" 
                                                                                 update="#{p:component('listSections')}, :growl"
                                                                                 process="#{p:component('listSections')}"
+                                                                                rendered="#{projectView.isStuden()}"
                                                                                 >
                                                                     <span class="glyphicon glyphicon-minus"></span> Eliminar Sección
+                                                                </p:commandLink>
+                                                                <br></br><p:commandLink styleClass="btn btn-primary" 
+                                                                                        rendered="#{!projectView.isStuden()}"
+                                                                                        onclick="$('#titleComment').attr('style', 'display:block')"
+                                                                                        title="Realizar Comentario"
+                                                                                        class="btn btn-primary btn-xs">
+                                                                    <span class="glyphicon glyphicon-comment"></span> Comentar
                                                                 </p:commandLink>
                                                             </div>
                                                         </div>
@@ -168,6 +207,7 @@
                                     </p:dataView>
                                     <p:commandLink styleClass="btn btn-success" actionListener="#{projectView.project.addSection()}" update="listSections"
                                                    process="#{p:component('listSections')}"
+                                                   rendered="#{projectView.isStuden()}"
                                                    >
                                         <span class="glyphicon glyphicon-plus"></span> Agregar Sección
                                     </p:commandLink>
@@ -185,7 +225,7 @@
                                         <div class="form-group col-sm-4">
                                             <p:inputNumber placeholder="Latitud" 
                                                            decimalPlaces="4" 
-                                                           value="#{decimalCoordinate.latitude}"                                                      
+                                                           value="#{decimalCoordinate.latitude}"
                                                            >
                                             </p:inputNumber>
                                         </div>                                   
@@ -199,6 +239,7 @@
                                             <p:commandLink  styleClass="btn btn-danger" actionListener="#{projectView.project.removeDecimalCoordinates(decimalCoordinateStatus)}" 
                                                             update="#{p:component('coordinatesDecimal')}"
                                                             process="#{p:component('coordinatesDecimal')}"
+                                                            rendered="#{projectView.isStuden()}"
                                                             >
                                                 <span class="glyphicon glyphicon-minus"></span> Eliminar
                                             </p:commandLink>
@@ -208,10 +249,18 @@
                             </p:dataView>
                             <p:commandLink styleClass="btn btn-success" actionListener="#{projectView.project.addDecimalCoordinates()}" update="coordinatesDecimal"
                                            process="#{p:component('coordinatesDecimal')}"
+                                           rendered="#{projectView.isStuden()}"
                                            >
                                 <span class="glyphicon glyphicon-plus"></span> Agregar
                             </p:commandLink>
                         </p:panel>
+                        <br></br><p:commandLink styleClass="btn btn-primary" 
+                                                rendered="#{!projectView.isStuden()}"
+                                                onclick="$('#titleComment').attr('style', 'display:block')"
+                                                title="Realizar Comentario"
+                                                class="btn btn-primary btn-xs">
+                            <span class="glyphicon glyphicon-comment"></span> Comentar
+                        </p:commandLink>
                     </div>
                 </div>
 
@@ -219,6 +268,7 @@
                     <div class="form-group col-sm-8">
                         <p:outputLabel for="schedule" value="Calendario"/>
                         <p:fileUpload id="schedule" fileUploadListener="#{projectView.handleSchedule}"
+                                      rendered="#{projectView.isStuden()}"
                                       required="true"
                                       skinSimple="true" auto="true"
                                       label="Seleccionar"
@@ -233,6 +283,13 @@
                                        target="_blank" actionListener="#{projectView.reloadSchedule()}">
                             <p:fileDownload value="#{projectView.scheduleStream}" contentDisposition="inline"/>
                         </h:commandLink>
+                        <br></br><br></br><p:commandLink styleClass="btn btn-primary" 
+                                                         rendered="#{!projectView.isStuden()}"
+                                                         onclick="$('#titleComment').attr('style', 'display:block')"
+                                                         title="Realizar Comentario"
+                                                         class="btn btn-primary btn-xs">
+                            <span class="glyphicon glyphicon-comment"></span> Comentar
+                        </p:commandLink>
                     </div>
                 </div>
 
@@ -241,6 +298,7 @@
                         <p:outputLabel for="investmentPlan" value="Plan de Inversión"/>
                         <p:fileUpload id="investmentPlan" fileUploadListener="#{projectView.handleInvestmentPlan}"
                                       required="true"
+                                      rendered="#{projectView.isStuden()}"
                                       skinSimple="true" auto="true"
                                       label="Seleccionar"
                                       update="labelInvestmentPlan"
@@ -254,6 +312,13 @@
                                        target="_blank" actionListener="#{projectView.reloadInvestmentPlan()}">
                             <p:fileDownload value="#{projectView.investmentPlanStream}" contentDisposition="inline"/>
                         </h:commandLink>
+                        <br></br><br></br><p:commandLink styleClass="btn btn-primary" 
+                                                         rendered="#{!projectView.isStuden()}"
+                                                         onclick="$('#titleComment').attr('style', 'display:block')"
+                                                         title="Realizar Comentario"
+                                                         class="btn btn-primary btn-xs">
+                            <span class="glyphicon glyphicon-comment"></span> Comentar
+                        </p:commandLink>
                     </div>                    
                 </div>
 
@@ -279,6 +344,7 @@
                                             <p:commandLink  styleClass="btn btn-danger" actionListener="#{projectView.project.removeBibliography(bibliographyStatus)}" 
                                                             update="#{p:component('biblioghraphies')}"
                                                             process="#{p:component('biblioghraphies')}"
+                                                            rendered="#{projectView.isStuden()}"
                                                             >
                                                 <span class="glyphicon glyphicon-minus"></span> Eliminar
                                             </p:commandLink>
@@ -304,10 +370,18 @@
                             </p:dataView>
                             <p:commandLink styleClass="btn btn-success" actionListener="#{projectView.project.addBibliography}" update="biblioghraphies"
                                            process="#{p:component('biblioghraphies')}"
+                                           rendered="#{projectView.isStuden()}"
                                            >
                                 <span class="glyphicon glyphicon-plus"></span> Agregar
                             </p:commandLink>
                         </p:panel>
+                        <br></br><p:commandLink styleClass="btn btn-primary" 
+                                                rendered="#{!projectView.isStuden()}"
+                                                onclick="$('#titleComment').attr('style', 'display:block')"
+                                                title="Realizar Comentario"
+                                                class="btn btn-primary btn-xs">
+                            <span class="glyphicon glyphicon-comment"></span> Comentar
+                        </p:commandLink>
                     </div>
                 </div>
 
@@ -316,6 +390,7 @@
                         <p:outputLabel for="annexed" value="Anexos"/>
                         <p:fileUpload id="annexed" fileUploadListener="#{projectView.handleAnnexed}"
                                       skinSimple="true" auto="true"
+                                      rendered="#{projectView.isStuden()}"
                                       label="Seleccionar"
                                       update="labelAnnexed"
                                       sizeLimit="15000000"
@@ -328,6 +403,13 @@
                                        target="_blank" actionListener="#{projectView.reloadAnnexed()}">
                             <p:fileDownload value="#{projectView.annexedStream}" contentDisposition="inline"/>
                         </h:commandLink>
+                        <br></br><p:commandLink styleClass="btn btn-primary" 
+                                                rendered="#{!projectView.isStuden()}"
+                                                onclick="$('#titleComment').attr('style', 'display:block')"
+                                                title="Realizar Comentario"
+                                                class="btn btn-primary btn-xs">
+                            <span class="glyphicon glyphicon-comment"></span> Comentar
+                        </p:commandLink><br></br>
                     </div>
                 </div>
             </fieldset>
@@ -354,5 +436,24 @@
                 </div>
             </div>
         </h:form>
+        <p:dialog header="Comentario" id="dlgCmt" widgetVar="dlgCmt"
+                  fitViewport="true" modal="true" closeOnEscape="true">
+            <p:ajax event="close" update="@this" />
+            <h:form>
+                <div class="modal-body">
+                    <fieldset>
+                        <div class="row form-group">
+                            <p:inputTextarea  id="cmt" rows="10" cols="60" counter="display" maxlength="1000" counterTemplate="{0} characters remaining." autoResize="false" />
+                            <br />
+                            <h:outputText id="display" /><br></br><br></br>
+                            <p:commandLink class="btn btn-primary btn-xs"
+                                           styleClass="btn btn-primary btn-xs">
+                                <span class="glyphicon glyphicon-ok"></span> Comentar
+                            </p:commandLink>
+                        </div>
+                    </fieldset>
+                </div>
+            </h:form>
+        </p:dialog>
     </ui:define>
 </ui:composition>

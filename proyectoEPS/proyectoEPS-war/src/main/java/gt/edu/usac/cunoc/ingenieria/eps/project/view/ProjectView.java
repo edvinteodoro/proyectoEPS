@@ -9,6 +9,7 @@ import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Objectives;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Title;
+import gt.edu.usac.cunoc.ingenieria.eps.project.Section;
 import gt.edu.usac.cunoc.ingenieria.eps.project.facade.ProjectFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.tail.facade.TailFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
@@ -230,7 +231,8 @@ public class ProjectView implements Serializable {
                 if (annexed != null) {
                     getProject().setAnnexed(annexed.getContents());
                 }
-                System.out.println("===================================");
+                getProject().getSections().get(0).getTitle().setTitles(null);
+                getProject().getSections().get(1).getTitle().setTitles(null);
                 projectFacade.updateProject(getProject(), getGeneralObjectves(), getSpecificObjectives());
                 MessageUtils.addSuccessMessage("Se han Guardado los Cambios");
             } else {
@@ -240,6 +242,8 @@ public class ProjectView implements Serializable {
                     if (annexed != null) {
                         getProject().setAnnexed(annexed.getContents());
                     }
+                    getProject().getSections().get(0).getTitle().setTitles(null);
+                    getProject().getSections().get(1).getTitle().setTitles(null);
                     projectFacade.createProject(getProject(), getGeneralObjectves(), getSpecificObjectives(), process);
                     MessageUtils.addSuccessMessage("Se ha Creado el Proyecto");
                 }

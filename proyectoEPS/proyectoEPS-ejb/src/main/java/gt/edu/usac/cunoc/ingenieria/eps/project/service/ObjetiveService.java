@@ -25,7 +25,7 @@ public class ObjetiveService {
     }
     
     public Objectives create(Objectives objective) throws MandatoryException{
-        if (objective.getState() == null){
+        if (objective.getType()== null){
             throw new MandatoryException("Atributo Tipo Obligatorio");
         }
         if (objective.getText() == null){

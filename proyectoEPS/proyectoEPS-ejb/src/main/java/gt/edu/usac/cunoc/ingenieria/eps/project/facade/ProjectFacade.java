@@ -53,12 +53,12 @@ public class ProjectFacade implements ProjectFacadeLocal {
         }
         project.getObjectives().clear();
         for (int i = 0; i < generalObjective.size(); i++) {
-            generalObjective.get(i).setState(Objectives.GENERAL_OBJETICVE);
+            generalObjective.get(i).setType(Objectives.GENERAL_OBJETICVE);
             generalObjective.get(i).setLastModificationDate(LocalDate.now());
             project.addObjective(generalObjective.get(i));
         }
         for (int i = 0; i < specificObjective.size(); i++) {
-            specificObjective.get(i).setState(Objectives.SPECIFIC_OBJECTIVE);
+            specificObjective.get(i).setType(Objectives.SPECIFIC_OBJECTIVE);
             specificObjective.get(i).setLastModificationDate(LocalDate.now());
             project.addObjective(specificObjective.get(i));
         }

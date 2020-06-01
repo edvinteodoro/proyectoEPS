@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
@@ -280,7 +281,7 @@ public class ProjectView implements Serializable {
         }
 
         for (int i = 0; i < project.getObjectives().size(); i++) {
-            if (project.getObjectives().get(i).getState() == Objectives.GENERAL_OBJETICVE) {
+            if (Objects.equals(project.getObjectives().get(i).getType(), Objectives.GENERAL_OBJETICVE)) {
                 generalObjectves.add(project.getObjectives().get(i));
             } else {
                 specificObjectives.add(project.getObjectives().get(i));
@@ -323,7 +324,7 @@ public class ProjectView implements Serializable {
     public void createPDF(){
         try {
             this.pdfFile = new DefaultStreamedContent(projectFacade.createPDF(project, process.getUserCareer()),"application/pdf",getProject().getTitle());
-            System.out.println("===========================");
+            MessageUtils.addSuccessMessage("Archivo PDF Generado");
         } catch (IOException ex) {
             MessageUtils.addErrorMessage(ex.getMessage());
         }

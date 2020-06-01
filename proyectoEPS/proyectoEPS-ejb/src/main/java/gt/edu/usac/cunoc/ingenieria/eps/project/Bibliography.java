@@ -15,7 +15,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-
 @Entity
 @Table(name = "BIBLIOGRAPHY")
 public class Bibliography implements Serializable {
@@ -36,6 +35,8 @@ public class Bibliography implements Serializable {
     private String country;
     @Column(name = "editorial")
     private String editorial;
+    @Column(name = "position")
+    private Integer position;
     
     @ManyToOne(fetch = FetchType.LAZY)
     private Project project;
@@ -115,6 +116,14 @@ public class Bibliography implements Serializable {
         this.editorial = editorial;
     }
 
+    public Integer getPosition() {
+        return position;
+    }
+
+    public void setPosition(Integer position) {
+        this.position = position;
+    }
+
     public Project getProject() {
         return project;
     }
@@ -155,10 +164,7 @@ public class Bibliography implements Serializable {
             return false;
         }
         Bibliography other = (Bibliography) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        return !((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)));
     }
 
     @Override

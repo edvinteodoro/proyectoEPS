@@ -8,8 +8,6 @@ import gt.edu.usac.cunoc.ingenieria.eps.process.facade.ProcessFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Objectives;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
-import gt.edu.usac.cunoc.ingenieria.eps.project.Title;
-import gt.edu.usac.cunoc.ingenieria.eps.project.Section;
 import gt.edu.usac.cunoc.ingenieria.eps.project.facade.ProjectFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.tail.facade.TailFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
@@ -251,12 +249,9 @@ public class ProjectView implements Serializable {
                     if (annexed != null) {
                         getProject().setAnnexed(annexed.getContents());
                     }
-                    getProject().getSections().get(0).getTitle().setTitles(null);
-                    getProject().getSections().get(1).getTitle().setTitles(null);
                     projectFacade.createProject(getProject(), getGeneralObjectves(), getSpecificObjectives(), process);
                     MessageUtils.addSuccessMessage("Se ha Creado el Proyecto");
                 }
-
             }
         } catch (MandatoryException | LimitException ex) {
             MessageUtils.addErrorMessage(ex.getMessage());
@@ -265,8 +260,8 @@ public class ProjectView implements Serializable {
 
     public void loadCurrentProject() {
         this.process = processFacade.getProcess(new Process(processId)).get(0);
-        coordinator = userFacade.getCareerCoordinator(getProcess()).get(0);
-        System.out.println(coordinator.getFirstName());
+        //coordinator = userFacade.getCareerCoordinator(getProcess()).get(0);
+        //System.out.println(coordinator.getFirstName());
         this.project = process.getProject();
         flagUpdate = true;
         if (this.project == null) {
@@ -333,22 +328,10 @@ public class ProjectView implements Serializable {
         } catch (IOException ex) {
             MessageUtils.addErrorMessage(ex.getMessage());
         }
-        tailFacade.createTailCoordinator(user, getProcess());
-    }
-
-    public Title getParentTitle() {
-        return parentTitle;
-    }
-
-    public void setParentTitle(Title parentTitle) {
-        this.parentTitle = parentTitle;
     }
 
     public Boolean isStuden() {
         return user.getROLid().getName().equals(ESTUDIANTE);
     }
 
-    public void createPDF() {
-        projectFacade.createPDF(project);
-    }
 }

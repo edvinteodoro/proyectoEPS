@@ -154,9 +154,6 @@ public class ProjectService {
         this.setFontDocument();
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         PdfDocument pdf = new PdfDocument(new PdfWriter(out));
-
-        //String destino = "/home/crystian/Escritorio/" + project.getTitle() + ".pdf";
-        //PdfDocument pdf = new PdfDocument(new PdfWriter(destino));
         Document document = new Document(pdf);
 
         //Generar portada del Documento

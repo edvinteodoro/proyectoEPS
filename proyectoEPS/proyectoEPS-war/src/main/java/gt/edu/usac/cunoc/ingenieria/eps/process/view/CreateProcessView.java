@@ -2,8 +2,8 @@ package gt.edu.usac.cunoc.ingenieria.eps.process.view;
 
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Requeriment;
+import gt.edu.usac.cunoc.ingenieria.eps.process.StateProcess;
 import gt.edu.usac.cunoc.ingenieria.eps.process.facade.ProcessFacadeLocal;
-import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
 import gt.edu.usac.cunoc.ingenieria.eps.user.Career;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import gt.edu.usac.cunoc.ingenieria.eps.user.UserCareer;
@@ -115,7 +115,7 @@ public class CreateProcessView implements Serializable {
             if (getProcess().getUserCareer().getProcess() == null) {
                 getProcess().setApprovedEPSDevelopment(false);
                 getProcess().setApprovedCareerCoordinator(false);
-                getProcess().setState(true);
+                getProcess().setState(StateProcess.ACTIVO);
                 getProcess().setProgress(0);
                 getRequeriment().setEPSpreproject(epsPreProject.getContents());
                 getRequeriment().setInscriptionConstancy(inscriptionConstancy.getContents());

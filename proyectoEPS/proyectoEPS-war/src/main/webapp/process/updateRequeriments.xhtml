@@ -34,6 +34,7 @@
                     </div>
                     <div class="form-group col-sm-5" jsf:rendered="#{updateProcessView.isStudent()}">
                         <p:fileUpload id="writtenRequest" fileUploadListener="#{updateProcessView.handleWrittenRequest}"
+                                      
                                       required="true" 
                                       styleClass="in-dialog"
                                       skinSimple="true" auto="true" allowTypes="/(\.|\/)(pdf)$/"

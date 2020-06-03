@@ -26,12 +26,14 @@ public class Objectives implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
-    @Column(name = "state")
-    private Short state;
+    @Column(name = "type")
+    private Short type;
     @Column(name = "text")
     private String text;
     @Column(name = "lastModificationDate")
     private LocalDate lastModificationDate;
+    @Column(name = "position")
+    private Integer position;
     
     @ManyToOne(fetch = FetchType.LAZY)
     private Project project;
@@ -45,9 +47,9 @@ public class Objectives implements Serializable {
         this.id = id;
     }
 
-    public Objectives(Integer id, Short state, String text, LocalDate lastModificationDate) {
+    public Objectives(Integer id, Short type, String text, LocalDate lastModificationDate) {
         this.id = id;
-        this.state = state;
+        this.type = type;
         this.text = text;
         this.lastModificationDate = lastModificationDate;
     }
@@ -60,12 +62,12 @@ public class Objectives implements Serializable {
         this.id = id;
     }
 
-    public Short getState() {
-        return state;
+    public Short getType() {
+        return type;
     }
 
-    public void setState(Short state) {
-        this.state = state;
+    public void setType(Short type) {
+        this.type = type;
     }
 
     public String getText() {
@@ -82,6 +84,14 @@ public class Objectives implements Serializable {
 
     public void setLastModificationDate(LocalDate lastModificationDate) {
         this.lastModificationDate = lastModificationDate;
+    }
+
+    public Integer getPosition() {
+        return position;
+    }
+
+    public void setPosition(Integer position) {
+        this.position = position;
     }
 
     public Project getProject() {
@@ -124,10 +134,7 @@ public class Objectives implements Serializable {
             return false;
         }
         Objectives other = (Objectives) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        return !((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)));
     }
 
     @Override

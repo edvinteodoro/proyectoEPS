@@ -174,10 +174,6 @@
                                                                             <button class="ql-underline"></button>
                                                                             <button class="ql-strike"></button>
                                                                         </span>
-                                                                        <span class="ql-formats">
-                                                                            <select class="ql-font"></select>
-                                                                            <select class="ql-size"></select>
-                                                                        </span>
                                                                     </f:facet>
                                                                 </p:textEditor>                                                            
                                                             </div>                                                        
@@ -395,7 +391,6 @@
                         </p:commandLink>
                     </div>
                 </div>
-
                 <div class="row">
                     <div class="form-group col-sm-8">
                         <p:outputLabel for="annexed" value="Anexos"/>
@@ -434,7 +429,15 @@
                                    action="#{projectView.uploadCreate()}">
                         <span class="glyphicon glyphicon-floppy-disk"></span> Guardar Proyecto EPS
                     </p:commandLink>
-                </div><div class="form-group col-sm-2">
+                </div>
+                <div class="form-group col-sm-2">
+                    <p:commandLink styleClass="btn btn-info"
+                                   actionListener="#{projectView.createPDF()}"
+                                   update="openFile, :growl">
+                        <span class="glyphicon glyphicon-file"></span> Generar Archivo PDF
+                    </p:commandLink>
+                </div>
+                <div class="form-group col-sm-2">
                     <p:commandLink styleClass="btn btn-success"
                                    update="@form,:growl"
                                    rendered="#{projectView.isStuden()}"
@@ -459,12 +462,15 @@
                         <span class="glyphicon glyphicon-check"></span> Rechazar Proyecto
                     </p:commandLink>
                 </div>
-                <div class="form-group col-sm-2">
-                    <p:commandLink styleClass="btn btn-info"
-                                   action="#{projectView.createPDF()}"
+                <div jsf:id="openFile">
+                    <h:commandLink id="openPDF" 
+                                   styleClass="btn btn-success"
+                                   target="_blank"
+                                   rendered="#{projectView.pdfFile!=null}"
                                    >
-                        <span class="glyphicon glyphicon-file"></span> Generar Archivo PDF
-                    </p:commandLink>
+                        <p:fileDownload value="#{projectView.pdfFile}" contentDisposition="inline"/>
+                        <span class="glyphicon glyphicon-open-file"></span>Abrir PDF
+                    </h:commandLink>
                 </div>
             </div>
         </h:form>

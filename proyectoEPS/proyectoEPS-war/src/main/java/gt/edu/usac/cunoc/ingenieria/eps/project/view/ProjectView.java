@@ -21,6 +21,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
@@ -58,6 +59,8 @@ public class ProjectView implements Serializable {
     private StreamedContent scheduleStream;
     private StreamedContent investmentPlanStream;
     private StreamedContent annexedStream;
+    
+    private StreamedContent pdfFile;
 
     private UploadedFile schedule;
     private UploadedFile investmentPlan;
@@ -265,6 +268,14 @@ public class ProjectView implements Serializable {
         this.annexedStream = annexedStream;
     }
 
+    public StreamedContent getPdfFile() {
+        return pdfFile;
+    }
+
+    public void setPdfFile(StreamedContent pdfFile) {
+        this.pdfFile = pdfFile;
+    }
+
     public void reloadSchedule() {
         this.scheduleStream = new DefaultStreamedContent(new ByteArrayInputStream(project.getSchedule()), "application/pdf", "Calendario.pdf");
     }
@@ -342,12 +353,9 @@ public class ProjectView implements Serializable {
                     if (annexed != null) {
                         getProject().setAnnexed(annexed.getContents());
                     }
-                    getProject().getSections().get(0).getTitle().setTitles(null);
-                    getProject().getSections().get(1).getTitle().setTitles(null);
                     projectFacade.createProject(getProject(), getGeneralObjectves(), getSpecificObjectives(), process);
                     MessageUtils.addSuccessMessage("Se ha Creado el Proyecto");
                 }
-
             }
         } catch (MandatoryException | LimitException ex) {
             MessageUtils.addErrorMessage(ex.getMessage());
@@ -356,8 +364,8 @@ public class ProjectView implements Serializable {
 
     public void loadCurrentProject() {
         this.process = processFacade.getProcess(new Process(processId)).get(0);
-        coordinator = userFacade.getCareerCoordinator(getProcess()).get(0);
-        System.out.println(coordinator.getFirstName());
+        //coordinator = userFacade.getCareerCoordinator(getProcess()).get(0);
+        //System.out.println(coordinator.getFirstName());
         this.project = process.getProject();
         flagUpdate = true;
         if (this.project == null) {
@@ -376,7 +384,7 @@ public class ProjectView implements Serializable {
         }
 
         for (int i = 0; i < project.getObjectives().size(); i++) {
-            if (project.getObjectives().get(i).getState() == Objectives.GENERAL_OBJETICVE) {
+            if (Objects.equals(project.getObjectives().get(i).getType(), Objectives.GENERAL_OBJETICVE)) {
                 generalObjectves.add(project.getObjectives().get(i));
             } else {
                 specificObjectives.add(project.getObjectives().get(i));
@@ -439,7 +447,7 @@ public class ProjectView implements Serializable {
     public User getCareerCoordinator() {
         return coordinator;
     }
-
+    
     public String getComment() {
         return comment;
     }
@@ -465,13 +473,18 @@ public class ProjectView implements Serializable {
             MessageUtils.addErrorMessage("No se puederon agregar los cambios");
         }
     }
+    
+    public void createPDF(){
+        try {
+            this.pdfFile = new DefaultStreamedContent(projectFacade.createPDF(project, process.getUserCareer()),"application/pdf",getProject().getTitle());
+            MessageUtils.addSuccessMessage("Archivo PDF Generado");
+        } catch (IOException ex) {
+            MessageUtils.addErrorMessage(ex.getMessage());
+        }
+    }
 
     public Boolean isStuden() {
         return user.getROLid().getName().equals(ESTUDIANTE);
-    }
-
-    public void createPDF() {
-        projectFacade.createPDF(project);
     }
 
     public void comment(final String modalIdToClose) {

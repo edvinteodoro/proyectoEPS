@@ -8,11 +8,11 @@ import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import gt.edu.usac.cunoc.ingenieria.eps.project.repository.ProjectRepository;
 import gt.edu.usac.cunoc.ingenieria.eps.project.service.ProjectService;
+import gt.edu.usac.cunoc.ingenieria.eps.user.UserCareer;
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -26,7 +26,7 @@ public class ProjectFacade implements ProjectFacadeLocal {
 
     @EJB
     private ProjectRepository projectRepository;
-    
+
     @Override
     public Project updateProject(Project project, List<Objectives> generalObjective, List<Objectives> specificObjective) throws MandatoryException, LimitException {
         verifyProject(project, generalObjective, specificObjective);
@@ -53,24 +53,20 @@ public class ProjectFacade implements ProjectFacadeLocal {
         }
         project.getObjectives().clear();
         for (int i = 0; i < generalObjective.size(); i++) {
-            generalObjective.get(i).setState(Objectives.GENERAL_OBJETICVE);
+            generalObjective.get(i).setType(Objectives.GENERAL_OBJETICVE);
             generalObjective.get(i).setLastModificationDate(LocalDate.now());
             project.addObjective(generalObjective.get(i));
         }
         for (int i = 0; i < specificObjective.size(); i++) {
-            specificObjective.get(i).setState(Objectives.SPECIFIC_OBJECTIVE);
+            specificObjective.get(i).setType(Objectives.SPECIFIC_OBJECTIVE);
             specificObjective.get(i).setLastModificationDate(LocalDate.now());
             project.addObjective(specificObjective.get(i));
         }
     }
 
     @Override
-    public void createPDF(Project project) {
-        try {
-            projectService.createPDF(project);
-        } catch (IOException ex) {
-            System.out.println("================================ Error al generar pdf");
-        }
+    public InputStream createPDF(Project project, UserCareer userCareer) throws IOException {
+        return projectService.createPDF(project, userCareer);
     }
 
     @Override

@@ -34,6 +34,8 @@ public class Section implements Serializable {
     private LocalDate lastModificationDate;
     @Column(name = "type")
     private Short type;
+    @Column(name = "position")
+    private Integer position;
     
     @ManyToOne(fetch = FetchType.LAZY)
     private Project project;
@@ -114,7 +116,15 @@ public class Section implements Serializable {
     public void setType(Short type) {
         this.type = type;
     }
-    
+
+    public Integer getPosition() {
+        return position;
+    }
+
+    public void setPosition(Integer position) {
+        this.position = position;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;

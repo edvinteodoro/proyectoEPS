@@ -68,4 +68,9 @@ public class ProjectFacade implements ProjectFacadeLocal {
     public InputStream createPDF(Project project, UserCareer userCareer) throws IOException {
         return projectService.createPDF(project, userCareer);
     }
+
+    @Override
+    public Project updateProject(Project project) throws MandatoryException, LimitException{
+        return projectService.update(project);
+    }
 }

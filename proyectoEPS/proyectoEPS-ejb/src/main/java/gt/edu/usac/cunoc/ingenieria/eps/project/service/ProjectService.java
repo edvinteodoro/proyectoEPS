@@ -77,6 +77,7 @@ public class ProjectService {
         entityManager.merge(project);
         return project;
     }
+    
 
     public Project create(Project project, Process process) throws MandatoryException, LimitException {
         verifyProject(project);

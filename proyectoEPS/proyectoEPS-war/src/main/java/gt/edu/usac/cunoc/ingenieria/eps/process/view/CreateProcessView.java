@@ -111,7 +111,7 @@ public class CreateProcessView implements Serializable {
     }
 
     public void guardar() throws IOException {
-        if (!nullFiles()) { 
+        if (!nullFiles()) {
             if (getProcess().getUserCareer().getProcess() == null) {
                 getProcess().setApprovedEPSDevelopment(false);
                 getProcess().setApprovedCareerCoordinator(false);
@@ -127,19 +127,24 @@ public class CreateProcessView implements Serializable {
                 if (aeioSettlement != null) {
                     getRequeriment().setAEIOsettlement(aeioSettlement.getContents());
                 }
-                processFacade.createProcess(getProcess());
-                MessageUtils.addSuccessMessage("Se ha creado registrado el proceso");
-                redirectToProcesses();
+                List<User> coordinadors=userFacade.getCareerCoordinator(getProcess());
+                if (coordinadors != null && !coordinadors.isEmpty()) {
+                    processFacade.createProcess(getProcess());
+                    MessageUtils.addSuccessMessage("Se ha creado registrado el proceso");
+                    redirectToProcesses();
+                } else {
+                    MessageUtils.addErrorMessage("No se pudo crear el proceso debido que no hay ningun coordinador para la carrera seleccionada");
+                }
             } else {
                 MessageUtils.addErrorMessage("Ya se tiene un proceso de Eps con la carrera");
             }
         }
     }
-    
-    public void actualizar() throws IOException{
+
+    public void actualizar() throws IOException {
         setCreando(true);
-        new Thread(){
-            public void funcion() throws IOException{
+        new Thread() {
+            public void funcion() throws IOException {
                 guardar();
             }
         }.start();

@@ -80,8 +80,6 @@ public class Project implements Serializable {
     @OneToOne
     @JoinColumn(name="CORRECTION_specificObjectives",referencedColumnName = "id")
     private Correction correctionSpecificObjetives;
-    
-    
 
     public Project() {
         this.decimalCoordinates = new ArrayList<>();
@@ -302,8 +300,6 @@ public class Project implements Serializable {
     public void setCorrectionCoordinates(Correction correctionCoordinate) {
         this.correctionCoordinate = correctionCoordinate;
     }
-    
-    
 
     private void setInitialSections() {
         Section sectionIntroduction = new Section();

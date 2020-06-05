@@ -15,7 +15,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -73,6 +72,9 @@ public class Project implements Serializable {
     @OneToOne
     @JoinColumn(name="CORRECTION_coordinate",referencedColumnName = "id")
     private Correction correctionCoordinate;
+    @OneToOne
+    @JoinColumn(name="CORRECTION_specificObjectives",referencedColumnName = "id")
+    private Correction correctionSpecificObjetives;
     
     
 
@@ -86,6 +88,22 @@ public class Project implements Serializable {
 
     public Integer getId() {
         return id;
+    }
+
+    public Correction getCorrectionCoordinate() {
+        return correctionCoordinate;
+    }
+
+    public void setCorrectionCoordinate(Correction correctionCoordinate) {
+        this.correctionCoordinate = correctionCoordinate;
+    }
+
+    public Correction getCorrectionSpecificObjetives() {
+        return correctionSpecificObjetives;
+    }
+
+    public void setCorrectionSpecificObjetives(Correction correctionSpecificObjetives) {
+        this.correctionSpecificObjetives = correctionSpecificObjetives;
     }
 
     public void setId(Integer id) {

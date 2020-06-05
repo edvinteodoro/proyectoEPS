@@ -72,4 +72,9 @@ public class ProjectFacade implements ProjectFacadeLocal {
             System.out.println("================================ Error al generar pdf");
         }
     }
+
+    @Override
+    public Project updateProject(Project project) throws MandatoryException, LimitException{
+        return projectService.update(project);
+    }
 }

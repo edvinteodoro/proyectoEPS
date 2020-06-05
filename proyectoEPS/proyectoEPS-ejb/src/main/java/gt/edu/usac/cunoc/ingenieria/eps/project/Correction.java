@@ -22,7 +22,7 @@ public class Correction implements Serializable {
     @Column(name = "id")
     private Integer id;
     @Column(name = "text")
-    private Byte[] text;
+    private byte[] text;
     @Column(name = "date")
     private LocalDate date;
     
@@ -37,12 +37,18 @@ public class Correction implements Serializable {
     
     public Correction() {
     }
+    
+    public Correction(LocalDate date,User user){
+        this.date=date;
+        this.text=text;
+        this.user=user;
+    }
 
     public Correction(Integer id) {
         this.id = id;
     }
 
-    public Correction(Integer id, Byte[] text, LocalDate date) {
+    public Correction(Integer id, byte[] text, LocalDate date) {
         this.id = id;
         this.text = text;
         this.date = date;
@@ -56,11 +62,11 @@ public class Correction implements Serializable {
         this.id = id;
     }
 
-    public Byte[] getText() {
+    public byte[] getText() {
         return text;
     }
 
-    public void setText(Byte[] text) {
+    public void setText(byte[] text) {
         this.text = text;
     }
 

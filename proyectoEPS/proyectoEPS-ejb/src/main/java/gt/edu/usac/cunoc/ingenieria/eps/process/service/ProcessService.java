@@ -24,11 +24,8 @@ public class ProcessService {
     }
     
     public Process updateProcess(Process process){
-        Process updateProcess = entityManager.find(Process.class, process.getId());
-        if (updateProcess.getState() != null) {
-            updateProcess.setState(process.getState());
-        }
-        return updateProcess;
+        entityManager.merge(process);
+        return process;
     }
     
     

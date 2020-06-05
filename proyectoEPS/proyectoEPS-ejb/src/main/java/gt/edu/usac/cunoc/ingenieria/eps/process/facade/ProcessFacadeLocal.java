@@ -2,7 +2,6 @@ package gt.edu.usac.cunoc.ingenieria.eps.process.facade;
 
 import gt.edu.usac.cunoc.ingenieria.eps.process.Requeriment;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
-import gt.edu.usac.cunoc.ingenieria.eps.process.StateProcess;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import java.util.List;
 import javax.ejb.Local;

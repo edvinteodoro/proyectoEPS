@@ -6,6 +6,7 @@ import gt.edu.usac.cunoc.ingenieria.eps.tail.repository.TailCoordinatorRepositor
 import gt.edu.usac.cunoc.ingenieria.eps.tail.service.TailCoordinatorService;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
+import gt.edu.usac.cunoc.ingenieria.eps.process.service.ProcessService;
 import gt.edu.usac.cunoc.ingenieria.eps.user.facade.UserFacadeLocal;
 import java.time.LocalDate;
 import java.util.List;
@@ -22,6 +23,9 @@ public class TailFacade implements TailFacadeLocal {
 
     @EJB
     TailCoordinatorRepository tailCoordiantorRepository;
+    
+    @EJB
+    ProcessService processService;
 
     @EJB
     private UserFacadeLocal userFacade;
@@ -41,7 +45,6 @@ public class TailFacade implements TailFacadeLocal {
     @Override
     public TailCoordinator createTailCoordinator(User user, Process process) {
         List<User> coordinators = userFacade.getCareerCoordinator(process);
-        System.out.println("---------------------------------------- FACADE TAIL  "+coordinators.size());
         if (coordinators.size() > 1) {
             User coordinator = coordinators.get(0);
             int cantidad = tailCoordiantorRepository.getProcessByCoordinator(coordinator).size();
@@ -52,12 +55,18 @@ public class TailFacade implements TailFacadeLocal {
                     coordinator = coordinators.get(i);
                 }
             }
+            processService.updateProcess(process);
             return tailCoordiantorService.createTailCoordinator(new TailCoordinator(date, userFacade.getUserCareer(coordinator, process.getUserCareer().getCAREERcodigo().getName()), process));
         } else if (coordinators.size() == 1) {
-            System.out.println("aqui");
+            processService.updateProcess(process);
             return tailCoordiantorService.createTailCoordinator(new TailCoordinator(date, userFacade.getUserCareer(coordinators.get(0), process.getUserCareer().getCAREERcodigo().getName()), process));
         } else {
             return null;
         }
+    }
+
+    @Override
+    public void deleteTailCoordinatod(Process process) {
+        tailCoordiantorService.deleteTailCoordiantor(process); 
     }
 }

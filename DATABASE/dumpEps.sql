@@ -222,7 +222,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `USER` WRITE;
 /*!40000 ALTER TABLE `USER` DISABLE KEYS */;
-INSERT INTO `USER` VALUES ('coordinador1','201630875',NULL,'201630875',NULL,'Coordinador','Coordinador','coordinador@gmail.com','31615293','PBKDF2WithHmacSHA256:3072:Opf3Tbl1Z5aFGIBrxF9JblnP7WnZDeoIsuqJsHhPnk/32bH7a5KreE4YG0QnbbRJKIz5g01YezToG3hXyRNJ1g==:LraqnpFl2NWAtesImr13dKlaeMfa8LpwoZ2M0YdaOEI=',2,NULL,1),('estudiante','201630873',NULL,'201630873',NULL,'Edvin Teodoro','Gonzalez Rafael','edvinteodoro2@gmail.com','31615293','PBKDF2WithHmacSHA256:3072:pqwg+0X/U9lkXkCw/j3KwNJ8SwY2hdCmDUdtBDmBg0dOuQCc4d9h/Wk1uPfv57G9+xtp/H1/yf5TeywrB1vqWg==:Kn5pc4hZEJJS7g1UY2CpaJos4MccawhLZJ5jwXV47Bc=',1,NULL,1),('estudiante2','201530873',NULL,'201530873',NULL,'Juan','Lopez','juanlopez@gmail.com','31615293','PBKDF2WithHmacSHA256:3072:1yqLZgmwVMs1pFJnN7m55arYYc53RbwUbwUIeJQP5gVzFasa0QABKbdt7s7ddSOgKSk1vWw1VdGsx0RKx9UlNg==:4o7u38cyGv0s8pgIwT/BGhFQGCrUhkjZ2mcGmEl+u94=',1,NULL,1),('secretaria','201330873',NULL,'201330873',NULL,'secretaria','secretaria','secretaria@gmail.com','201330873','PBKDF2WithHmacSHA256:3072:uOZm6rISD7pg3Z1scq1myP+ueWArrf1/v4GZEAjqnwV2WcPNSZMKnRZuoX/jJFx6R4YllZmEYz0n2xnb1VI6gw==:w3nbuw0TDn+qqEayLGfWMFK4rAqkmV7hYBARtRbbgvw=',3,NULL,1);
+INSERT INTO `USER` VALUES ('coordinador1','201630875',NULL,'201630875',NULL,'Coordinador','Coordinador','coordinador@gmail.com','31615293','PBKDF2WithHmacSHA256:3072:Opf3Tbl1Z5aFGIBrxF9JblnP7WnZDeoIsuqJsHhPnk/32bH7a5KreE4YG0QnbbRJKIz5g01YezToG3hXyRNJ1g==:LraqnpFl2NWAtesImr13dKlaeMfa8LpwoZ2M0YdaOEI=',2,NULL,1),('estudiante1','201630873',NULL,'201630873',NULL,'Edvin Teodoro','Gonzalez Rafael','edvinteodoro2@gmail.com','31615293','PBKDF2WithHmacSHA256:3072:pqwg+0X/U9lkXkCw/j3KwNJ8SwY2hdCmDUdtBDmBg0dOuQCc4d9h/Wk1uPfv57G9+xtp/H1/yf5TeywrB1vqWg==:Kn5pc4hZEJJS7g1UY2CpaJos4MccawhLZJ5jwXV47Bc=',1,NULL,1),('estudiante2','201530873',NULL,'201530873',NULL,'Juan','Lopez','juanlopez@gmail.com','31615293','PBKDF2WithHmacSHA256:3072:1yqLZgmwVMs1pFJnN7m55arYYc53RbwUbwUIeJQP5gVzFasa0QABKbdt7s7ddSOgKSk1vWw1VdGsx0RKx9UlNg==:4o7u38cyGv0s8pgIwT/BGhFQGCrUhkjZ2mcGmEl+u94=',1,NULL,1),('secretaria','201330873',NULL,'201330873',NULL,'secretaria','secretaria','secretaria@gmail.com','201330873','PBKDF2WithHmacSHA256:3072:uOZm6rISD7pg3Z1scq1myP+ueWArrf1/v4GZEAjqnwV2WcPNSZMKnRZuoX/jJFx6R4YllZmEYz0n2xnb1VI6gw==:w3nbuw0TDn+qqEayLGfWMFK4rAqkmV7hYBARtRbbgvw=',3,NULL,1);
 /*!40000 ALTER TABLE `USER` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -232,7 +232,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `USER_CAREER` WRITE;
 /*!40000 ALTER TABLE `USER_CAREER` DISABLE KEYS */;
-INSERT INTO `USER_CAREER` VALUES (21,'estudiante',1,NULL),(22,'estudiante',2,NULL),(23,'estudiante2',1,NULL),(24,'estudiante2',2,NULL),(25,'coordinador1',2,NULL);
+INSERT INTO `USER_CAREER` VALUES (21,'estudiante1',1,NULL),(22,'estudiante1',2,NULL),(23,'estudiante2',1,NULL),(24,'estudiante2',2,NULL),(25,'coordinador1',2,NULL);
 /*!40000 ALTER TABLE `USER_CAREER` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

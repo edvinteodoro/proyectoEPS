@@ -59,7 +59,7 @@ public class ProjectService {
     private Style titleStyle;
     private Style bodyStyle;
     private Style bodyStyleItalic;
-    private String bullet = "\u2022"; //Simbolo de Punto para las pestañas
+    private final String bullet = "\u2022"; //Simbolo de Punto para las pestañas
 
     @PersistenceContext(name = PERSISTENCE_UNIT_NAME)
     public void setEntityManager(EntityManager entityManager) {
@@ -77,7 +77,6 @@ public class ProjectService {
         entityManager.merge(project);
         return project;
     }
-    
 
     public Project create(Project project, Process process) throws MandatoryException, LimitException {
         verifyProject(project);
@@ -182,7 +181,7 @@ public class ProjectService {
         document = addInvestmentPlan(document, project);
 
         //Agregar Bibliografia
-        addBibliography(getFixedCanvas(document.getPdfDocument()), project);
+        document = addBibliography(document, project);
 
         //Agregar Anexos
         document = addAnnexes(document, project);
@@ -200,7 +199,7 @@ public class ProjectService {
         this.bodyStyle.setFont(fontTimesRoman).setFontSize(12);
 
         this.bodyStyleItalic = new Style();
-        PdfFont fontTimesItalic = PdfFontFactory.createFont(FontConstants.TIMES_ROMAN);
+        PdfFont fontTimesItalic = PdfFontFactory.createFont(FontConstants.TIMES_ITALIC);
         this.bodyStyleItalic.setFont(fontTimesItalic).setFontSize(12);
     }
 
@@ -225,8 +224,8 @@ public class ProjectService {
         document.add(new Paragraph().add(new Text("\n")));
         document.add(new Paragraph("Por").addStyle(titleStyle).setTextAlignment(TextAlignment.CENTER));
         document.add(new Paragraph(userCareer.getUSERuserId().getFirstName() + " " + userCareer.getUSERuserId().getLastName()).addStyle(titleStyle).setTextAlignment(TextAlignment.CENTER));
-        //document.add(new Paragraph(userCareer.getUSERuserId().getCarnet()).addStyle(titleStyle).setTextAlignment(TextAlignment.CENTER));
-        for (int i = 0; i < 8; i++) {
+        document.add(new Paragraph(userCareer.getUSERuserId().getCarnet()).addStyle(titleStyle).setTextAlignment(TextAlignment.CENTER));
+        for (int i = 0; i < 7; i++) {
             document.add(new Paragraph().add(new Text("\n")));
         }
         document.add(new Paragraph("Quetzaltenango Quetzaltenango, " + getDateCover()).addStyle(titleStyle).setTextAlignment(TextAlignment.CENTER));
@@ -328,7 +327,6 @@ public class ProjectService {
         try (PdfDocument schedulePDF = new PdfDocument(new PdfReader(new ByteArrayInputStream(project.getSchedule())))) {
             schedulePDF.copyPagesTo(1, schedulePDF.getNumberOfPages(), document.getPdfDocument());
             schedulePDF.close();
-            //copyPdfPagesFixed(schedulePDF, document.getPdfDocument(), 1, schedulePDF.getNumberOfPages(), 0);
         }
         return document;
     }
@@ -337,37 +335,47 @@ public class ProjectService {
         try (PdfDocument investmentPlanPDF = new PdfDocument(new PdfReader(new ByteArrayInputStream(project.getInvestmentPlan())))) {
             investmentPlanPDF.copyPagesTo(1, investmentPlanPDF.getNumberOfPages(), document.getPdfDocument());
             investmentPlanPDF.close();
-            //copyPdfPagesFixed(investmentPlanPDF, document.getPdfDocument(), 1, investmentPlanPDF.getNumberOfPages(), 0);
         }
-
         return document;
     }
 
-    private static Canvas getFixedCanvas(PdfDocument target) {
-        target.addNewPage();
-        PdfPage newPage = target.getLastPage();
-        Rectangle pageSize = newPage.getCropBox();
-        try (Canvas canvas = new Canvas(new PdfCanvas(newPage, true), target, pageSize)) {
-            return canvas;
+    private Document addBibliography(Document document, Project project) throws IOException {
+        if (!project.getBibliographies().isEmpty()) {
+            PdfDocument pdfBibiography = new PdfDocument(new PdfReader(createPDFBibliographies(project)));
+            pdfBibiography.copyPagesTo(1, pdfBibiography.getNumberOfPages(), document.getPdfDocument());
+            pdfBibiography.close();
         }
+        return document;
     }
 
-    private Document addBibliography(Canvas document, Project project) {
-        if (!project.getBibliographies().isEmpty()) {
-            //document.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-            document.add(new Paragraph("Bibliografía").addStyle(titleStyle).setTextAlignment(TextAlignment.CENTER));
-            Text first;
-            Text second;
-            Text third;
-            for (int i = 0; i < project.getBibliographies().size(); i++) {
-                Bibliography temp = project.getBibliographies().get(i);
-                first = new Text(temp.getAuthor() + ",(" + temp.getPublicactionYear() + "),").addStyle(bodyStyle);
-                second = new Text(temp.getTitle()).addStyle(bodyStyleItalic);
-                third = new Text("," + temp.getCity() + "," + temp.getCountry() + "," + temp.getEditorial()).addStyle(bodyStyle);
-                document.add(new Paragraph().add(first).add(second).add(third));
-            }
+    private InputStream createPDFBibliographies(Project project) throws IOException {
+        Style titleStyle2 = new Style();
+        PdfFont fontTimesRoman2 = PdfFontFactory.createFont(FontConstants.TIMES_ROMAN);
+        titleStyle2.setFont(fontTimesRoman2).setFontSize(14);
+
+        Style bodyStyle2 = new Style();
+        bodyStyle2.setFont(fontTimesRoman2).setFontSize(12);
+
+        Style bodyStyleItalic2 = new Style();
+        PdfFont fontTimesItalic2 = PdfFontFactory.createFont(FontConstants.TIMES_ITALIC);
+        bodyStyleItalic2.setFont(fontTimesItalic2).setFontSize(12);
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        PdfDocument pdf = new PdfDocument(new PdfWriter(out));
+        Document documentBibliogaphy = new Document(pdf);
+        documentBibliogaphy.add(new Paragraph("Bibliografía").addStyle(titleStyle2).setTextAlignment(TextAlignment.CENTER));
+        Text first;
+        Text second;
+        Text third;
+        for (int i = 0; i < project.getBibliographies().size(); i++) {
+            Bibliography temp = project.getBibliographies().get(i);
+            first = new Text(temp.getAuthor() + ",(" + temp.getPublicactionYear() + "),").addStyle(bodyStyle2);
+            second = new Text(temp.getTitle()).addStyle(bodyStyleItalic2);
+            third = new Text("," + temp.getCity() + "," + temp.getCountry() + "," + temp.getEditorial()).addStyle(bodyStyle2);
+            documentBibliogaphy.add(new Paragraph().add(first).add(second).add(third));
         }
-        return null;
+        documentBibliogaphy.close();
+        return new ByteArrayInputStream(out.toByteArray());
     }
 
     private Document addAnnexes(Document document, Project project) throws IOException {

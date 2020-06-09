@@ -24,23 +24,23 @@ import javax.validation.ConstraintViolationException;
 @Stateless
 @LocalBean
 public class UserService {
-
+    
     @PersistenceContext(name = PERSISTENCE_UNIT_NAME)
     private EntityManager entityManager;
-
+    
     @Resource
     SessionContext securityContext;
-
+    
     @Inject
     private Pbkdf2PasswordHash pbkdf2PasswordHash;
-
+    
     @EJB
     UserRepository userRepository;
-
+    
     public void setEntityManager(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
-
+    
     public User createUser(User user) throws UserException {
         if (user == null) {
             throw new UserException("User is null");
@@ -56,13 +56,13 @@ public class UserService {
         }
         return user;
     }
-
+    
     public User updateUser(User user) throws UserException {
-
+        
         if (user == null) {
             throw new UserException("User is null");
         }
-
+        
         User updateUser = entityManager.find(User.class, user.getDpi());
         try {
             if (user.getDpi() != null) {
@@ -90,7 +90,7 @@ public class UserService {
                 updateUser.setPhone(user.getPhone());
             }
             if (user.getPassword() != null) {
-                updateUser.setPassword(user.getPassword());
+                updateUser.setPassword(encryptPass(user.getPassword()));
             }
             if (user.getDirection() != null) {
                 updateUser.setDirection(user.getDirection());
@@ -105,12 +105,12 @@ public class UserService {
         }
         return updateUser;
     }
-
+    
     public List<User> getAuthenticatedUser() throws UserException {
         String userId = securityContext.getCallerPrincipal().getName();
         return userRepository.getUser(new User(userId));
     }
-
+    
     private String encryptPass(String pass) {
         char passwordInput[] = pass.toCharArray();
         Map<String, String> map = new HashMap<>();
@@ -120,5 +120,5 @@ public class UserService {
         pbkdf2PasswordHash.initialize(map);
         return pbkdf2PasswordHash.generate(passwordInput);
     }
-
+    
 }

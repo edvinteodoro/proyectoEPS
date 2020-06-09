@@ -64,20 +64,7 @@
             <role-name>Coordinador_Carrera</role-name>
             <role-name>Estudiante</role-name>
         </auth-constraint>
-    </security-constraint>
-
-    <security-constraint>
-        <display-name>user</display-name>
-        <web-resource-collection>
-            <web-resource-name>user</web-resource-name>
-            <url-pattern>/user/*</url-pattern>
-        </web-resource-collection>
-        <auth-constraint>
-            <description>Allowed users</description>
-            <role-name>Secretaria_EPS</role-name>
-        </auth-constraint>
     </security-constraint>    
-    
     
     <security-role>
         <role-name>Estudiante</role-name>

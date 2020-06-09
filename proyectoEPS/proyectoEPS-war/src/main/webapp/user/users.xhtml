@@ -1,0 +1,176 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="../templates/template-one.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:define name="title">
+        Usuarios
+    </ui:define>
+
+    <ui:define name="content">
+        <h:form>            
+            <p:messages  globalOnly="true"/>
+            <fieldset>
+                <legend>Usuarios</legend>
+                <div class="row">
+                    <div class="form-group col-sm-2">
+                        <p:outputLabel for="userId" value="User ID:" />
+                        <p:inputText id="userId"
+                                     styleClass="form-control"
+                                     pt:placeholder="User ID"
+                                     value="#{usersView.searchCriteria.userId}"/>
+                    </div>
+                    <div class="form-group col-sm-2">
+                        <p:outputLabel for="dpi" value="DPI:" />
+                        <p:inputText id="dpi"
+                                     styleClass="form-control"
+                                     pt:placeholder="Documento Personal de Identificacion"
+                                     value="#{usersView.searchCriteria.dpi}"/>
+                    </div>
+                    <div class="form-group col-sm-2">
+                        <p:outputLabel for="carnet" value="Carnet:" />
+                        <p:inputText id="carnet"
+                                     styleClass="form-control"
+                                     pt:placeholder="Carnet"
+                                     value="#{usersView.searchCriteria.carnet}"/>
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <p:outputLabel for="nombre" value="Nombre:" />
+                        <p:inputText id="nombre"
+                                     styleClass="form-control"
+                                     pt:placeholder="Nombre"
+                                     value="#{usersView.searchCriteria.firstName}"/>
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <p:outputLabel for="apellido" value="Apellido:" />
+                        <p:inputText id="apellido"
+                                     styleClass="form-control"
+                                     pt:placeholder="Apellido"
+                                     value="#{usersView.searchCriteria.lastName}"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="btn-group pull-right">
+                        <p:commandLink styleClass="btn btn-danger"
+                                       update=":#{p:component('dpi')},:#{p:component('userId')}
+                                       ,:#{p:component('carnet')},:#{p:component('nombre')},:#{p:component('apellido')}"
+                                       action="#{usersView.cleanCriteria()}" title="limpiar">
+                            &nbsp;<span class="glyphicon glyphicon-repeat"></span>&nbsp;
+                        </p:commandLink>
+                        <p:commandLink styleClass="btn btn-primary" update=":#{p:component('usersTable')}"
+                                       actionListener="#{usersView.findUsers()}">
+                            <span class="glyphicon glyphicon-search"></span> Buscar
+                        </p:commandLink>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <p:dataTable id="usersTable" var="user" value="#{usersView.users}"
+                                 reflow="true">
+                        <p:column headerText="ID">
+                            <h:outputText value="#{user.userId}" />
+                        </p:column>
+                        <p:column headerText="Nombre">
+                            <h:outputText value="#{user.firstName}, #{user.lastName}" />
+                        </p:column>
+                        <p:column headerText="Correo">
+                            <h:outputText value="#{user.email}" />
+                        </p:column>
+                        <p:column headerText="Teléfono">
+                            <h:outputText value="#{user.phone}" />
+                        </p:column>
+                        <p:column headerText="Información" styleClass="text-center">
+                            <p data-placement="top" data-toggle="tooltip" title="Información">
+                                <p:commandLink styleClass="btn btn-primary btn-xs" oncomplete="PF('infoAbout').show();"
+                                               update=":#{p:component('infoAbout')}">
+                                    <f:setPropertyActionListener value="#{user}" target="#{usersView.selectedUser}"/>
+                                    <span class="glyphicon glyphicon-file"></span>
+                                </p:commandLink>
+                            </p>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </fieldset>
+        </h:form>
+
+        <p:dialog header="#{usersView.selectedUser.userId}" id="infoAbout" widgetVar="infoAbout"
+                  fitViewport="true" modal="true" closeOnEscape="true">
+            <p:ajax event="close" listener="#{usersView.cleanSelectedUser()}" update="@this" />
+            <h:form>
+                <div class="modal-body">
+                    <fieldset>
+                        <div class="row form-group">
+                            <p:outputLabel value="DPI:" styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <h:outputText value="#{usersView.selectedUser.dpi}"/>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <p:outputLabel value="Codigo Personal:" styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <h:outputText value="#{usersView.selectedUser.codePersonal}"/>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <p:outputLabel value="Carnet:" styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <h:outputText value="#{usersView.selectedUser.carnet}"/>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <p:outputLabel value="Codigo Academico:" styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <h:outputText value="#{usersView.selectedUser.academicRegister}"/>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <p:outputLabel value="Nombre:" styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <h:outputText value="#{usersView.selectedUser.firstName}, #{usersView.selectedUser.lastName}"/>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <p:outputLabel value="Correo Electrónico:" styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <h:outputText value="#{usersView.selectedUser.email}" />
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <p:outputLabel value="Telefono:" styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <h:outputText value="#{usersView.selectedUser.phone}" />
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <p:outputLabel value="Estado:" styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <p:selectBooleanCheckbox value="#{usersView.selectedUser.state}"  disabled="true"/>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <p:outputLabel value="ROL:" styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <h:outputText value="#{usersView.selectedUser.ROLid.id} - #{usersView.selectedUser.ROLid.name}"/>
+                            </div>
+                        </div>
+                        <p:dataTable id="carrears" value="#{usersView.selectedUser.userCareers}" var="careersSelected">
+                            <p:column headerText="Codigo">
+                                <h:outputText value="#{careersSelected.CAREERcodigo.codigo}"/>
+                            </p:column>
+                            <p:column headerText="Nombre">
+                                <h:outputText value="#{careersSelected.CAREERcodigo.name}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </fieldset>
+                </div>
+            </h:form>
+        </p:dialog>
+    </ui:define>
+
+</ui:composition>
+
+

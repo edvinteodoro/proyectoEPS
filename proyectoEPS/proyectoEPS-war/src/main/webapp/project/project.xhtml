@@ -35,7 +35,7 @@
                 <legend>Anteproyecto</legend> 
                 <div class="row">
                     <div class="form-group col-md-8">
-                         <p:outputLabel class="text-danger" value="Advertencia:   No se puede editar el proyecto debido a que esta en un proceso de revision." rendered="#{projectView.isStuden() and (projectView.process.state==projectView.revisionState)}"/><br></br><br></br>
+                        <p:outputLabel class="text-danger" value="Advertencia:   No se puede editar el proyecto debido a que se encuentra en un proceso de revision." rendered="#{projectView.isStuden() and (projectView.process.state==projectView.revisionState)}"/><br></br><br></br>
                         <p:outputLabel for="title" value="Titulo:"/>
                         <p:inputText id="title" styleClass="form-control" pt:placeholder="Titulo del Proyecto"
                                      disabled="#{!projectView.isStuden() or (projectView.process.state==projectView.revisionState)}"
@@ -44,13 +44,12 @@
                                      value="#{projectView.project.title}"/><br></br>
 
                         <p data-placement="top" data-toggle="tooltip" title="comentar">
-                            <p:commandLink class="btn btn-primary btn-xs"
-                                           styleClass="btn btn-primary btn-xs"
+                            <p:commandLink class="#{projectView.correctionTitle.style}"
                                            oncomplete="PF('dlgCmt').show();"
                                            update=":#{p:component('dlgCmt')}"
-                                           rendered="#{!projectView.isStuden()}">
+                                           rendered="#{!projectView.isStuden() or (projectView.correctionTitle!=null and (projectView.process.state!=projectView.revisionState))}">
                                 <f:setPropertyActionListener value="#{projectView.correctionTitle}" target="#{projectView.correctionSelected}"/>
-                                <span class="glyphicon glyphicon-comment"></span> Comentar
+                                <span class="glyphicon glyphicon-eye-open"></span> #{projectView.textObser}
                             </p:commandLink>
                         </p>
                     </div>
@@ -88,13 +87,13 @@
                                 <span class="glyphicon glyphicon-plus"></span> Agregar
                             </p:commandLink>
                         </p:panel>
-                        <br></br><p:commandLink class="btn btn-primary btn-xs" styleClass="btn btn-primary btn-xs" 
-                                                rendered="#{!projectView.isStuden()}"
+                        <br></br><p:commandLink class="#{projectView.correctionObjetives.style}" 
+                                                rendered="#{!projectView.isStuden() or (projectView.correctionObjetives!=null and (projectView.process.state!=projectView.revisionState))}"
                                                 oncomplete="PF('dlgCmt').show();"
                                                 update=":#{p:component('dlgCmt')}"
                                                 >
                             <f:setPropertyActionListener value="#{projectView.correctionObjetives}" target="#{projectView.correctionSelected}"/>
-                            <span class="glyphicon glyphicon-comment"></span> Comentar
+                            <span class="glyphicon glyphicon-eye-open"></span> #{projectView.textObser}
                         </p:commandLink>
                     </div>
                 </div>
@@ -106,6 +105,7 @@
                                     <div class="row">
                                         <div class="form-group col-sm-10">
                                             <p:inputText pt:placeholder="Objetivo Especifico" 
+                                                         disabled="#{!projectView.isStuden() or (projectView.process.state==projectView.revisionState)}"
                                                          value="#{specificObjective.text}"
                                                          class="form-control"
                                                          >
@@ -130,14 +130,14 @@
                                 <span class="glyphicon glyphicon-plus"></span> Agregar
                             </p:commandLink>
                         </p:panel>
-                        <br></br><p:commandLink class="btn btn-primary btn-xs"  styleClass="btn btn-primary btn-xs" 
-                                                rendered="#{!projectView.isStuden()}"
+                        <br></br><p:commandLink class="#{projectView.correctionSpecificObjetives.style}" 
+                                                rendered="#{!projectView.isStuden() or (projectView.correctionSpecificObjetives!=null and (projectView.process.state!=projectView.revisionState))}"
                                                 title="Realizar Comentario"
                                                 oncomplete="PF('dlgCmt').show();"
                                                 update=":#{p:component('dlgCmt')}"
                                                 >
                             <f:setPropertyActionListener value="#{projectView.correctionSpecificObjetives}" target="#{projectView.correctionSelected}"/>
-                            <span class="glyphicon glyphicon-comment"></span> Comentar
+                            <span class="glyphicon glyphicon-eye-open"></span> #{projectView.textObser}
                         </p:commandLink>
                     </div>
                 </div>
@@ -192,11 +192,10 @@
                                                                                 >
                                                                     <span class="glyphicon glyphicon-minus"></span> Eliminar Sección
                                                                 </p:commandLink>
-                                                                <br></br><p:commandLink  styleClass="btn btn-primary btn-xs" 
-                                                                                        rendered="#{!projectView.isStuden()}"
-                                                                                        title="Realizar Comentario"
-                                                                                        class="btn btn-primary btn-xs">
-                                                                    <span class="glyphicon glyphicon-comment"></span> Comentar
+                                                                <br></br><p:commandLink  class="btn btn-primary btn-xs"
+                                                                                         rendered="#{!projectView.isStuden()}"
+                                                                                         title="Realizar Comentario">
+                                                                    <span class="glyphicon glyphicon-eye-open"></span> #{projectView.textObser}
                                                                 </p:commandLink>
                                                             </div>
                                                         </div>
@@ -254,14 +253,14 @@
                                 <span class="glyphicon glyphicon-plus"></span> Agregar
                             </p:commandLink>
                         </p:panel>
-                        <br></br><p:commandLink class="btn btn-primary btn-xs"  styleClass="btn btn-primary btn-xs" 
-                                                rendered="#{!projectView.isStuden()}"
+                        <br></br><p:commandLink class="#{projectView.correctionCoordinates.style}"
+                                                rendered="#{!projectView.isStuden() or (projectView.correctionCoordinates!=null and (projectView.process.state!=projectView.revisionState))}"
                                                 title="Realizar Comentario"
                                                 oncomplete="PF('dlgCmt').show();"
                                                 update=":#{p:component('dlgCmt')}"
                                                 >
                             <f:setPropertyActionListener value="#{projectView.correctionCoordinates}" target="#{projectView.correctionSelected}"/>
-                            <span class="glyphicon glyphicon-comment"></span> Comentar
+                            <span class="glyphicon glyphicon-eye-open"></span> #{projectView.textObser}
                         </p:commandLink>
                     </div>
                 </div>
@@ -285,15 +284,14 @@
                                        target="_blank" actionListener="#{projectView.reloadSchedule()}">
                             <p:fileDownload value="#{projectView.scheduleStream}" contentDisposition="inline"/>
                         </h:commandLink>
-                        <br></br><br></br><p:commandLink class="btn btn-primary btn-xs"  styleClass="btn btn-primary btn-xs"
-                                                         rendered="#{!projectView.isStuden()}"
+                        <br></br><br></br><p:commandLink class="#{projectView.correctionCalendar.style}"
+                                                         rendered="#{!projectView.isStuden() or (projectView.correctionCalendar!=null and (projectView.process.state!=projectView.revisionState))}"
                                                          title="Realizar Comentario"
                                                          oncomplete="PF('dlgCmt').show();"
                                                          update=":#{p:component('dlgCmt')}"
                                                          >
                             <f:setPropertyActionListener value="#{projectView.correctionCalendar}" target="#{projectView.correctionSelected}"/>
-
-                            <span class="glyphicon glyphicon-comment"></span> Comentar
+                            <span class="glyphicon glyphicon-eye-open"></span> #{projectView.textObser}
                         </p:commandLink>
                     </div>
                 </div>
@@ -317,15 +315,14 @@
                                        target="_blank" actionListener="#{projectView.reloadInvestmentPlan()}">
                             <p:fileDownload value="#{projectView.investmentPlanStream}" contentDisposition="inline"/>
                         </h:commandLink>
-                        <br></br><br></br><p:commandLink class="btn btn-primary btn-xs"  styleClass="btn btn-primary btn-xs" 
-                                                         rendered="#{!projectView.isStuden()}"
+                        <br></br><br></br><p:commandLink class="#{projectView.correctionPlan.style}"
+                                                         rendered="#{!projectView.isStuden() or (projectView.correctionPlan!=null and (projectView.process.state!=projectView.revisionState))}"
                                                          title="Realizar Comentario"
                                                          oncomplete="PF('dlgCmt').show();"
                                                          update=":#{p:component('dlgCmt')}"
                                                          >
                             <f:setPropertyActionListener value="#{projectView.correctionPlan}" target="#{projectView.correctionSelected}"/>
-
-                            <span class="glyphicon glyphicon-comment"></span> Comentar
+                            <span class="glyphicon glyphicon-eye-open"></span> #{projectView.textObser}
                         </p:commandLink>
                     </div>                    
                 </div>
@@ -387,7 +384,7 @@
                                                 rendered="#{!projectView.isStuden()}"
                                                 onclick="$('#titleComment').attr('style', 'display:block')"
                                                 title="Realizar Comentario">
-                            <span class="glyphicon glyphicon-comment"></span> Comentar
+                            <span class="glyphicon glyphicon-eye-open"></span> #{projectView.textObser}
                         </p:commandLink>
                     </div>
                 </div>
@@ -409,40 +406,33 @@
                                        target="_blank" actionListener="#{projectView.reloadAnnexed()}">
                             <p:fileDownload value="#{projectView.annexedStream}" contentDisposition="inline"/>
                         </h:commandLink>
-                        <br></br><p:commandLink class="btn btn-primary btn-xs"  styleClass="btn btn-primary btn-xs" 
-                                                rendered="#{!projectView.isStuden()}"
+                        <br></br><p:commandLink class="#{projectView.correctionAnexo.style}"
+                                                rendered="#{!projectView.isStuden() or (projectView.correctionAnexo!=null and (projectView.process.state!=projectView.revisionState))}"
                                                 title="Realizar Comentario"
                                                 oncomplete="PF('dlgCmt').show();"
                                                 update=":#{p:component('dlgCmt')}"
                                                 >
                             <f:setPropertyActionListener value="#{projectView.correctionAnexo}" target="#{projectView.correctionSelected}"/>
-                            <span class="glyphicon glyphicon-comment"></span> Comentar
-                        </p:commandLink><br></br>
+                            <span class="glyphicon glyphicon-eye-open"></span> #{projectView.textObser}
+                        </p:commandLink><br></br><br></br>
                     </div>
                 </div>
             </fieldset>
             <div class="row">
                 <div class="form-group col-sm-2">
-                    <p:commandLink styleClass="btn btn-primary"
-                                   update="@form,:growl" 
-                                   rendered="#{projectView.isStuden()}"
-                                   action="#{projectView.uploadCreate()}">
-                        <span class="glyphicon glyphicon-floppy-disk"></span> Guardar Proyecto EPS
-                    </p:commandLink>
-                </div>
-                <div class="form-group col-sm-2">
-                    <p:commandLink styleClass="btn btn-info"
-                                   actionListener="#{projectView.createPDF()}"
-                                   update="openFile, :growl">
-                        <span class="glyphicon glyphicon-file"></span> Generar Archivo PDF
+                    <p:commandLink styleClass="btn btn-success"
+                                   update="@form,:growl"
+                                   rendered="#{!projectView.isStuden()}"
+                                   action="#{projectView.finishReview()}">
+                        <span class="glyphicon glyphicon-remove"></span> Rechazar Proyecto
                     </p:commandLink>
                 </div>
                 <div class="form-group col-sm-2">
                     <p:commandLink styleClass="btn btn-success"
                                    update="@form,:growl"
-                                   rendered="#{projectView.isStuden()}"
-                                   action="#{projectView.reviewRequeried()}">
-                        <span class="glyphicon glyphicon-check"></span> Solicitar Revisión
+                                   rendered="#{!projectView.isStuden()}"
+                                   action="#{projectView.acceptChanges()}">
+                        <span class="glyphicon glyphicon-check"></span> Aceptar Proyecto
                     </p:commandLink>
                 </div>
                 <div class="form-group col-sm-2">
@@ -453,13 +443,22 @@
                         <span class="glyphicon glyphicon-check"></span> Terminar Revisión
                     </p:commandLink>
                 </div>
-                
                 <div class="form-group col-sm-2">
-                    <p:commandLink styleClass="btn btn-success"
-                                   update="@form,:growl"
+                    <p:commandLink styleClass="btn btn-info"
+                                   actionListener="#{projectView.createPDF()}"
                                    rendered="#{!projectView.isStuden()}"
-                                   action="#{projectView.finishReview()}">
-                        <span class="glyphicon glyphicon-check"></span> Rechazar Proyecto
+                                   update="openFile, :growl">
+                        <span class="glyphicon glyphicon-file"></span> Generar Archivo PDF
+                    </p:commandLink>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-sm-2">
+                    <p:commandLink styleClass="btn btn-primary"
+                                   update="@form,:growl" 
+                                   rendered="#{projectView.isStuden()}"
+                                   action="#{projectView.uploadCreate()}">
+                        <span class="glyphicon glyphicon-floppy-disk"></span> Guardar Proyecto EPS
                     </p:commandLink>
                 </div>
                 <div jsf:id="openFile">
@@ -472,6 +471,22 @@
                         <span class="glyphicon glyphicon-open-file"></span>Abrir PDF
                     </h:commandLink>
                 </div>
+                <div class="form-group col-sm-2">
+                    <p:commandLink styleClass="btn btn-info"
+                                   actionListener="#{projectView.createPDF()}"
+                                   rendered="#{projectView.isStuden()}"
+                                   update="openFile, :growl">
+                        <span class="glyphicon glyphicon-file"></span> Generar Archivo PDF
+                    </p:commandLink>
+                </div>
+                <div class="form-group col-sm-2">
+                    <p:commandLink styleClass="btn btn-success"
+                                   update="@form,:growl"
+                                   rendered="#{projectView.isStuden() and (projectView.process.state!=projectView.revisionState)}"
+                                   action="#{projectView.reviewRequeried()}">
+                        <span class="glyphicon glyphicon-check"></span> Solicitar Revisión
+                    </p:commandLink>
+                </div>
             </div>
         </h:form>
         <p:dialog header="Comentario" id="dlgCmt" widgetVar="dlgCmt"
@@ -481,14 +496,25 @@
                 <div class="modal-body">
                     <fieldset>
                         <div class="row form-group">
-                            <p:inputTextarea  value="#{projectView.correctionSelectedText}" id="cmt" rows="10" cols="60" counter="display" maxlength="1000" counterTemplate="{0} characters remaining." autoResize="false" />
-                            <br />
+                            <p:layoutUnit position="center">
+                                #{projectView.listCorrection}
+                            </p:layoutUnit><br></br>
+                            <p:inputTextarea  disabled="#{projectView.isStuden()}" value="#{projectView.correctionSelectedText}" id="cmt" rows="10" cols="60" counter="display" maxlength="1000" counterTemplate="{0} characters remaining." autoResize="false" />
+                            <br/>
                             <h:outputText id="display" /><br></br><br></br>
                             <p:commandLink class="btn btn-primary btn-xs"
                                            styleClass="btn btn-primary btn-xs"
-                                           update="@form,:#{p:component('growl')}"
+                                           rendered="#{!projectView.isStuden()}"
+                                           update="@form,:#{p:component('growl')},:#{p:component('formProject')}"
                                            actionListener="#{projectView.comment('dlgCmt')}">
                                 <span class="glyphicon glyphicon-ok"></span> Comentar
+                            </p:commandLink>
+                            <p:commandLink class="btn btn-primary btn-xs"
+                                           styleClass="btn btn-primary btn-xs"
+                                           rendered="#{!projectView.isStuden()}"
+                                           update="@form,:#{p:component('growl')}"
+                                           actionListener="#{projectView.acceptChanges('dlgCmt')}">
+                                <span class="glyphicon glyphicon-ok"></span> Aceptar Cambios
                             </p:commandLink>
                         </div>
                     </fieldset>

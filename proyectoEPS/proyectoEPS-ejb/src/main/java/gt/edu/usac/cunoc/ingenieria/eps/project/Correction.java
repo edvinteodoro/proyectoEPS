@@ -1,11 +1,14 @@
 
 package gt.edu.usac.cunoc.ingenieria.eps.project;
 
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.COORDINADOR_CARRERA;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import java.io.Serializable;
 import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,25 +26,29 @@ public class Correction implements Serializable {
     private Integer id;
     @Column(name = "text")
     private byte[] text;
+    @Column(name = "type")
+    @Enumerated(EnumType.STRING)
+    private TypeCorrection type;
     @Column(name = "date")
     private LocalDate date;
+    @Column(name = "status")
+    private Boolean status;
     
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
     @ManyToOne(fetch = FetchType.LAZY)
+    private Project project;
+    @ManyToOne(fetch = FetchType.LAZY)
     private Section section;
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Bibliography bibliography;
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Objectives objectives;
     
     public Correction() {
     }
     
-    public Correction(LocalDate date,User user){
+    public Correction(LocalDate date,User user,TypeCorrection type,Project project){
         this.date=date;
-        this.text=text;
         this.user=user;
+        this.type=type;
+        this.project=project;
     }
 
     public Correction(Integer id) {
@@ -93,22 +100,62 @@ public class Correction implements Serializable {
     public void setSection(Section section) {
         this.section = section;
     }
-
-    public Bibliography getBibliography() {
-        return bibliography;
+    
+    public Boolean getStatus(){
+        return status;
+    }
+    
+    public void setStatus(Boolean status){
+        this.status=status;
     }
 
-    public void setBibliography(Bibliography bibliography) {
-        this.bibliography = bibliography;
+    public Project getProcess() {
+        return project;
     }
 
-    public Objectives getObjective() {
-        return objectives;
+    public void setProcess(Project project) {
+        this.project = project;
     }
 
-    public void setObjective(Objectives objective) {
-        this.objectives = objective;
+    public TypeCorrection getType() {
+        return type;
     }
+
+    public void setType(TypeCorrection type) {
+        this.type = type;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
+    public String getStyle() {
+        String value="btn btn-danger btn-xs";
+        if(status!=null && this.text!=null){
+            if(status==false){
+                value="btn btn-primary btn-xs";
+            }
+        }else if(this.text==null){
+            value="btn btn-primary btn-xs";
+        }
+        return value;
+    }
+    public String getButtonName(){
+        if(getStatus()==null){
+            return "Reliazar Observacion";
+        }else if(getStatus().equals(true)){
+            return "Reliazar Observacion";
+        }
+        return null;
+    }
+    
+    
+    
+    
 
     @Override
     public int hashCode() {

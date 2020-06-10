@@ -40,8 +40,6 @@ public class Bibliography implements Serializable {
     
     @ManyToOne(fetch = FetchType.LAZY)
     private Project project;
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bibliography", orphanRemoval = false)
-    private List<Correction> corrections = new ArrayList<>();
 
     public Bibliography() {
     }
@@ -130,24 +128,6 @@ public class Bibliography implements Serializable {
 
     public void setProject(Project project) {
         this.project = project;
-    }
-
-    public List<Correction> getCorrections() {
-        return corrections;
-    }
-
-    public void setCorrections(List<Correction> corrections) {
-        this.corrections = corrections;
-    }
-    
-    public void addCorrection(Correction correction){
-        corrections.add(correction);
-        correction.setBibliography(this);
-    }
-    
-    public void removeCorrection(Correction correction){
-        corrections.remove(correction);
-        correction.setBibliography(null);
     }
     
     @Override

@@ -64,7 +64,7 @@ public class Process implements Serializable {
     private Requeriment requeriment;
     @OneToOne(mappedBy="process",cascade =CascadeType.REFRESH)
     private UserCareer userCareer;
-    @OneToOne(mappedBy="pROCESSid",cascade = CascadeType.PERSIST)
+    @OneToOne(mappedBy="pROCESSid",cascade = CascadeType.ALL)
     private Project project;
     
 

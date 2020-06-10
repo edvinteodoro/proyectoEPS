@@ -36,8 +36,6 @@ public class Objectives implements Serializable {
     
     @ManyToOne(fetch = FetchType.LAZY)
     private Project project;
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "objectives", orphanRemoval = true)
-    private List<Correction> corrections = new ArrayList<>();
 
     public Objectives() {
     }
@@ -99,24 +97,6 @@ public class Objectives implements Serializable {
 
     public void setProject(Project project) {
         this.project = project;
-    }
-
-    public List<Correction> getCorrections() {
-        return corrections;
-    }
-
-    public void setCorrections(List<Correction> corrections) {
-        this.corrections = corrections;
-    }
-
-    public void addCorrection(Correction correction){
-        corrections.add(correction);
-        correction.setObjective(this);
-    }
-    
-    public void removeCorrection(Correction correction){
-        corrections.remove(correction);
-        correction.setObjective(null);
     }
     
     @Override

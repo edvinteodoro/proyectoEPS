@@ -62,7 +62,6 @@ public class Project implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "project", orphanRemoval = true)
     @OrderBy("id DESC")
     private List<Correction> corrections;
-    
 
     public Project() {
         this.decimalCoordinates = new ArrayList<>();

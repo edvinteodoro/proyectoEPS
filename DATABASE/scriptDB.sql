@@ -24,7 +24,7 @@ USE `EPS_SYSTEM` ;
 DROP TABLE IF EXISTS `EPS_SYSTEM`.`ROL` ;
 
 CREATE TABLE IF NOT EXISTS `EPS_SYSTEM`.`ROL` (
-  `id` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
@@ -71,29 +71,6 @@ CREATE TABLE IF NOT EXISTS `EPS_SYSTEM`.`CAREER` (
   `codigo` INT NOT NULL,
   `name` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`codigo`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `EPS_SYSTEM`.`USER_CAREER`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `EPS_SYSTEM`.`USER_CAREER` ;
-
-CREATE TABLE IF NOT EXISTS `EPS_SYSTEM`.`USER_CAREER` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `USER_userId` VARCHAR(45) NOT NULL,
-  `CAREER_codigo` INT NOT NULL,
-  PRIMARY KEY (`id`),
-  CONSTRAINT `fk_USER_CAREER_USER1`
-    FOREIGN KEY (`USER_userId`)
-    REFERENCES `EPS_SYSTEM`.`USER` (`userId`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_USER_CAREER_CAREER1`
-    FOREIGN KEY (`CAREER_codigo`)
-    REFERENCES `EPS_SYSTEM`.`CAREER` (`codigo`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
@@ -642,3 +619,19 @@ INSERT INTO PROPERTY(name, valueInt) VALUES ("LIMIT_GENERAL_OBJECTIVE",2);
 INSERT INTO PROPERTY(name, valueInt) VALUES ("LIMIT_SPECIFIC_OBJECTIVE",8);
 INSERT INTO PROPERTY(name, valueInt) VALUES ("CHARACTER_LIMIT_JUSTIFICATION",3500);
 INSERT INTO PROPERTY(name, valueDate) VALUES ("GENERAL_LIMIT_RECEPTION_DATE",CURDATE());
+
+INSERT INTO CAREER(codigo, name) VALUES (58, "Ingeniería en Ciencias y Sistemas");
+INSERT INTO CAREER(codigo, name) VALUES (34, "Ingeniería Mecánica");
+INSERT INTO CAREER(codigo, name) VALUES (33, "Ingeniería Civil");
+INSERT INTO CAREER(codigo, name) VALUES (35, "Ingeniería Industrial");
+INSERT INTO CAREER(codigo, name) VALUES (36, "Ingeniería Mecánica-Industrial");
+
+INSERT INTO ROL(name) values("Dirección");
+INSERT INTO ROL(name) values("Coordinación_EPS");
+INSERT INTO ROL(name) values("Secretaria_EPS");
+INSERT INTO ROL(name) values("Coordinador_Carrera");
+INSERT INTO ROL(name) values("Secretaria_Coordinación");
+INSERT INTO ROL(name) values("Estudiante");
+INSERT INTO ROL(name) values("Revisor");
+INSERT INTO ROL(name) values("Asesor");
+INSERT INTO ROL(name) values("Supervisor_EPS");

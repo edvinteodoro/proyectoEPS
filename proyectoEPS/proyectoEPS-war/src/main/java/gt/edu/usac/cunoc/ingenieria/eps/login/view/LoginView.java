@@ -25,6 +25,7 @@ import javax.security.enterprise.credential.Password;
 import javax.security.enterprise.credential.UsernamePasswordCredential;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.primefaces.PrimeFaces;
 
 @Named
 @ViewScoped
@@ -44,6 +45,8 @@ public class LoginView implements Serializable {
 
     private String userId;
     private String password;
+    private String userIDReset;
+    private String email;
 
     @PostConstruct
     public void init() {
@@ -93,6 +96,17 @@ public class LoginView implements Serializable {
         }
     }
 
+    public void resetPassword(final String modalIdToClose) {
+        try {
+            userFacade.resetPassword(userIDReset, email);
+            MessageUtils.addSuccessMessage("Exito, verifique su correo");
+            clean();
+            PrimeFaces.current().executeScript("PF('" + modalIdToClose + "').hide()");
+        } catch (UserException e) {
+            MessageUtils.addErrorMessage(e.getMessage());
+        }
+    }
+
     public String getUserId() {
         return userId;
     }
@@ -107,6 +121,29 @@ public class LoginView implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getUserIDReset() {
+        return userIDReset;
+    }
+
+    public void setUserIDReset(String userIDReset) {
+        this.userIDReset = userIDReset;
+    }
+
+    public void clean() {
+        setUserId("");
+        setPassword("");
+        setUserIDReset("");
+        setEmail("");
     }
 
 }

@@ -70,13 +70,20 @@
                                     <li>
                                         <p:link  outcome="createUser" value="Crear Usuario"/>
                                     </li>
+                                    <li>
+                                        <p:link outcome="users" value="Consultar Usuarios"/>
+                                    </li>
                                 </ul>
                             </li>
                         </ul>
                         <h:form>
                             <ul class="nav navbar-nav navbar-right">
                                 <li jsf:rendered="#{not empty request.userPrincipal}">
-                                    <p class="navbar-text">Usuario: <span>#{p:remoteUser()}</span>, 
+                                    <p class="navbar-text">
+                                        Usuario: 
+                                        <h:commandLink styleClass="navbar-link"
+                                                       action="#{logoutView.goToMyProfile()}"
+                                                       value="#{p:remoteUser()} "/>,
                                         <h:commandLink styleClass="navbar-link"
                                                        action="#{logoutView.logout()}"
                                                        value="Salir"/>

@@ -8,8 +8,7 @@
             <from-outcome>login</from-outcome>
             <to-view-id>/login.xhtml</to-view-id>
             <redirect/>
-        </navigation-case>
-      
+        </navigation-case>      
         <navigation-case>
             <from-outcome>logout</from-outcome>
             <to-view-id>/logout.xhtml</to-view-id>
@@ -43,6 +42,16 @@
         <navigation-case>
             <from-outcome>createUser</from-outcome>
             <to-view-id>/user/createUser.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>users</from-outcome>
+            <to-view-id>/user/users.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>userProfile</from-outcome>
+            <to-view-id>/user/userProfile.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
     </navigation-rule>

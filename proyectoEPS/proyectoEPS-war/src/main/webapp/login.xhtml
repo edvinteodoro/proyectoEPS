@@ -48,9 +48,51 @@
                             </p:commandLink>
                         </div>
                     </div>
+                <div class="row">
+                    <div class="form-group col-sm-4">
+                        <p:commandLink styleClass="navbar-link" oncomplete="PF('dlgReset').show();"
+                                       value="Olvide mi Contraseña"
+                                       update=":#{p:component('dlgReset')}">
+                        </p:commandLink>
+                    </div>
+                </div>
                 </fieldset>
             </h:form>
         </div>
+        
+        <p:dialog header="Recuperar Contrasena" id="dlgReset" widgetVar="dlgReset"
+                  fitViewport="true" modal="true" closeOnEscape="true">
+            <p:ajax event="close" listener="#{loginView.clean()}" update="@this" />
+            <h:form>
+                <div class="modal-body">
+                    <fieldset>
+                        <div class="row form-group">
+                            <p:outputLabel for="carnet" value="Carnet o ID:" styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <p:inputText id="carnet" styleClass="form-control"
+                                             pt:required="true" maxlength="45" required="true"
+                                             value="#{loginView.userIDReset}"/>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <p:outputLabel for="emailU" value="Correo" styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <p:inputText id="emailU" styleClass="form-control" placeholder="micorreo@correo.com"
+                                             pt:required="true" maxlength="45" required="true"
+                                             value="#{loginView.email}"/>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="modal-footer ">
+                    <p:commandLink styleClass="btn btn-warning btn-lg" style="width: 100%;"
+                                   update="@form,:#{p:component('growl')}"
+                                   actionListener="#{loginView.resetPassword('dlgReset')}">
+                        <span class="glyphicon glyphicon-ok-sign"></span> Recuperar Contraseña
+                    </p:commandLink>
+                </div>
+            </h:form>
+        </p:dialog>
     </ui:define>
 
 </ui:composition>

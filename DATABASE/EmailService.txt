@@ -1,0 +1,28 @@
+User: eps.cunoc@gmail.com
+Pass: ingeieria==Eps12345#->sistemas
+
+Payara JavaMail Sessions
+
+JNDI Name: 	mail/__EPSingenieria
+Mail host: 	smtp.gmail.com
+Default User:	eps.cunoc
+Password:	Pass (UP)
+Auth:		null
+Default Sender address:	eps.cunoc@gmail.com
+Description:	Servicio de correo EPS CUNOC
+
+Advanced: Set as default
+
+Additional Properties
+
+Name				Value
+mail.smtp.user			eps.cunoc@gmail.com
+mail.smtp.host			smtp.gmail.com
+mail.smtp.password		pass (UP)
+mail.smtp.auth			true
+mail.smtp.starttls.enable	true
+mail.smtp.socketFactory.port	465
+mail.smtp.socketFactory.class	javax.net.ssl.SSLSocketFactory
+
+Config Gmail:
+https://techblissonline.com/gmail-smtp/

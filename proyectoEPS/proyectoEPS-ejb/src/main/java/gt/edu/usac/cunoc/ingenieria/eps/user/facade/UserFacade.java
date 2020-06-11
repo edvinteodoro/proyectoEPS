@@ -153,6 +153,16 @@ public class UserFacade implements UserFacadeLocal {
     public List<User> getAuthenticatedUser() throws UserException {
         return userService.getAuthenticatedUser();
     }
+    
+    @Override
+    public User resetPassword(User user) throws UserException{
+        return userService.resetPassword(user);
+    }
+    
+    @Override
+    public boolean resetPassword(String userID, String userEmail) throws UserException{
+        return userService.resetPassword(userID, userEmail);
+    }
 
     @Override
     public Career updateCareer(Career career) throws UserException {

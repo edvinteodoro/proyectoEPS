@@ -59,27 +59,9 @@ public class Project implements Serializable {
     @OneToOne
     @JoinColumn(name = "PROCESS_id", referencedColumnName = "id")
     private Process pROCESSid;
-    @OneToOne
-    @JoinColumn(name="CORRECTION_Calendario",referencedColumnName = "id")
-    private Correction correctionCalendar;
-    @OneToOne
-    @JoinColumn(name="CORRECTION_Plan",referencedColumnName = "id")
-    private Correction correctionPlan;
-    @OneToOne
-    @JoinColumn(name="CORRECTION_Anexo",referencedColumnName = "id")
-    private Correction correctionAnexo;
-    @OneToOne
-    @JoinColumn(name="CORRECTION_title",referencedColumnName = "id")
-    private Correction correctionTitle;
-    @OneToOne
-    @JoinColumn(name="CORRECTION_objectives",referencedColumnName = "id")
-    private Correction correctionObjetives;
-    @OneToOne
-    @JoinColumn(name="CORRECTION_coordinate",referencedColumnName = "id")
-    private Correction correctionCoordinate;
-    @OneToOne
-    @JoinColumn(name="CORRECTION_specificObjectives",referencedColumnName = "id")
-    private Correction correctionSpecificObjetives;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "project", orphanRemoval = true)
+    @OrderBy("id DESC")
+    private List<Correction> corrections;
 
     public Project() {
         this.decimalCoordinates = new ArrayList<>();
@@ -91,22 +73,6 @@ public class Project implements Serializable {
 
     public Integer getId() {
         return id;
-    }
-
-    public Correction getCorrectionCoordinate() {
-        return correctionCoordinate;
-    }
-
-    public void setCorrectionCoordinate(Correction correctionCoordinate) {
-        this.correctionCoordinate = correctionCoordinate;
-    }
-
-    public Correction getCorrectionSpecificObjetives() {
-        return correctionSpecificObjetives;
-    }
-
-    public void setCorrectionSpecificObjetives(Correction correctionSpecificObjetives) {
-        this.correctionSpecificObjetives = correctionSpecificObjetives;
     }
 
     public void setId(Integer id) {
@@ -225,6 +191,16 @@ public class Project implements Serializable {
         this.sections = sections;
     }
 
+    public List<Correction> getCorrections() {
+        return corrections;
+    }
+
+    public void setCorrections(List<Correction> corrections) {
+        this.corrections = corrections;
+    }
+    
+    
+
     public void addSection() {
         Section section = new Section();
         sections.add(section);
@@ -251,54 +227,6 @@ public class Project implements Serializable {
 
     public void setpROCESSid(Process pROCESSid) {
         this.pROCESSid = pROCESSid;
-    }
-
-    public Correction getCorrectionCalendar() {
-        return correctionCalendar;
-    }
-
-    public void setCorrectionCalendar(Correction correctionCalendar) {
-        this.correctionCalendar = correctionCalendar;
-    }
-
-    public Correction getCorrectionPlan() {
-        return correctionPlan;
-    }
-
-    public void setCorrectionPlan(Correction correctionPlan) {
-        this.correctionPlan = correctionPlan;
-    }
-
-    public Correction getCorrectionAnexo() {
-        return correctionAnexo;
-    }
-
-    public void setCorrectionAnexo(Correction correctionAnexo) {
-        this.correctionAnexo = correctionAnexo;
-    }
-
-    public Correction getCorrectionTitle() {
-        return correctionTitle;
-    }
-
-    public void setCorrectionTitle(Correction correctionTitle) {
-        this.correctionTitle = correctionTitle;
-    }
-
-    public Correction getCorrectionObjetives() {
-        return correctionObjetives;
-    }
-
-    public void setCorrectionObjetives(Correction correctionObjetives) {
-        this.correctionObjetives = correctionObjetives;
-    }
-
-    public Correction getCorrectionCoordinates() {
-        return correctionCoordinate;
-    }
-
-    public void setCorrectionCoordinates(Correction correctionCoordinate) {
-        this.correctionCoordinate = correctionCoordinate;
     }
 
     private void setInitialSections() {

@@ -35,7 +35,7 @@
                 <legend>Anteproyecto</legend> 
                 <div class="row">
                     <div class="form-group col-md-8">
-                         <p:outputLabel class="text-danger" value="Advertencia:   No se puede editar el proyecto debido a que esta en un proceso de revision." rendered="#{projectView.isStuden() and (projectView.process.state==projectView.revisionState)}"/><br></br><br></br>
+                        <p:outputLabel class="text-danger" value="Advertencia:   No se puede editar el proyecto debido a que esta en un proceso de revision." rendered="#{projectView.isStuden() and (projectView.process.state==projectView.revisionState)}"/><br></br><br></br>
                         <p:outputLabel for="title" value="Titulo:"/>
                         <p:inputText id="title" styleClass="form-control" pt:placeholder="Titulo del Proyecto"
                                      disabled="#{!projectView.isStuden() or (projectView.process.state==projectView.revisionState)}"
@@ -193,9 +193,9 @@
                                                                     <span class="glyphicon glyphicon-minus"></span> Eliminar Sección
                                                                 </p:commandLink>
                                                                 <br></br><p:commandLink  styleClass="btn btn-primary btn-xs" 
-                                                                                        rendered="#{!projectView.isStuden()}"
-                                                                                        title="Realizar Comentario"
-                                                                                        class="btn btn-primary btn-xs">
+                                                                                         rendered="#{!projectView.isStuden()}"
+                                                                                         title="Realizar Comentario"
+                                                                                         class="btn btn-primary btn-xs">
                                                                     <span class="glyphicon glyphicon-comment"></span> Comentar
                                                                 </p:commandLink>
                                                             </div>
@@ -443,6 +443,9 @@
                                    rendered="#{projectView.isStuden()}"
                                    action="#{projectView.reviewRequeried()}">
                         <span class="glyphicon glyphicon-check"></span> Solicitar Revisión
+                        <p:confirm header="Confirmación" 
+                                   message="Al Solicitar Revisión no podra editar la información hasta que sea revisada"
+                                   />
                     </p:commandLink>
                 </div>
                 <div class="form-group col-sm-2">
@@ -453,7 +456,7 @@
                         <span class="glyphicon glyphicon-check"></span> Terminar Revisión
                     </p:commandLink>
                 </div>
-                
+
                 <div class="form-group col-sm-2">
                     <p:commandLink styleClass="btn btn-success"
                                    update="@form,:growl"
@@ -495,5 +498,9 @@
                 </div>
             </h:form>
         </p:dialog>
+        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+            <p:commandButton value="Solicitar Revisión" type="button" styleClass="ui-confirmdialog-yes"/>
+            <p:commandButton value="Cancelar" type="button" styleClass="ui-confirmdialog-no"/>
+        </p:confirmDialog> 
     </ui:define>
 </ui:composition>

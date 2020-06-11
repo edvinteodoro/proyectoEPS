@@ -12,5 +12,6 @@ public interface TailFacadeLocal {
     public TailCoordinator createTailCoordinator(TailCoordinator tailCoordinator);
     public TailCoordinator createTailCoordinator(User user,Process process);
     public List<Process> getProcessByCoordinator(User user);
+    public void deleteTailCoordinatod(Process process);
     
 }

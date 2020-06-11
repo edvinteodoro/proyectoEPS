@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 @Entity
@@ -26,6 +27,8 @@ public class Title implements Serializable {
     private Integer id;
     @Column(name = "text")
     private String name;
+    @Column(name = "position")
+    private Integer position;
     
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "SECTION_id")
@@ -36,6 +39,7 @@ public class Title implements Serializable {
     private Title titleParent;
     
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "titleParent", orphanRemoval = true)
+    @OrderBy("position ASC")
     private List<Title> titles;
     
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "title", orphanRemoval = true)
@@ -61,6 +65,14 @@ public class Title implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Integer getPosition() {
+        return position;
+    }
+
+    public void setPosition(Integer position) {
+        this.position = position;
     }
 
     public Section getSection() {

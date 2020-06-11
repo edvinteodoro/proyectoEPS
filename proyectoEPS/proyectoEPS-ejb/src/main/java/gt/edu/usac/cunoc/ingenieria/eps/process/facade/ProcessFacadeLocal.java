@@ -20,4 +20,6 @@ public interface ProcessFacadeLocal {
     public Process createProcess(Process process);
     
     public List<Process> getProcessUser(User user); 
+    
+    public Process updateProcess(Process process);
 }

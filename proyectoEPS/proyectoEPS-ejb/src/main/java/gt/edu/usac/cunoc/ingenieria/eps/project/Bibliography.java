@@ -15,7 +15,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-
 @Entity
 @Table(name = "BIBLIOGRAPHY")
 public class Bibliography implements Serializable {
@@ -36,11 +35,11 @@ public class Bibliography implements Serializable {
     private String country;
     @Column(name = "editorial")
     private String editorial;
+    @Column(name = "position")
+    private Integer position;
     
     @ManyToOne(fetch = FetchType.LAZY)
     private Project project;
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bibliography", orphanRemoval = false)
-    private List<Correction> corrections = new ArrayList<>();
 
     public Bibliography() {
     }
@@ -115,30 +114,20 @@ public class Bibliography implements Serializable {
         this.editorial = editorial;
     }
 
+    public Integer getPosition() {
+        return position;
+    }
+
+    public void setPosition(Integer position) {
+        this.position = position;
+    }
+
     public Project getProject() {
         return project;
     }
 
     public void setProject(Project project) {
         this.project = project;
-    }
-
-    public List<Correction> getCorrections() {
-        return corrections;
-    }
-
-    public void setCorrections(List<Correction> corrections) {
-        this.corrections = corrections;
-    }
-    
-    public void addCorrection(Correction correction){
-        corrections.add(correction);
-        correction.setBibliography(this);
-    }
-    
-    public void removeCorrection(Correction correction){
-        corrections.remove(correction);
-        correction.setBibliography(null);
     }
     
     @Override
@@ -155,10 +144,7 @@ public class Bibliography implements Serializable {
             return false;
         }
         Bibliography other = (Bibliography) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        return !((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)));
     }
 
     @Override

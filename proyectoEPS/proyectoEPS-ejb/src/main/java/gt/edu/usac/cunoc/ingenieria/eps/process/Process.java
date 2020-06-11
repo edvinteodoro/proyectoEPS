@@ -1,5 +1,6 @@
 package gt.edu.usac.cunoc.ingenieria.eps.process;
 
+import static gt.edu.usac.cunoc.ingenieria.eps.process.StateProcess.ACTIVO;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
 import gt.edu.usac.cunoc.ingenieria.eps.user.UserCareer;
 import java.io.Serializable;
@@ -8,6 +9,8 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -36,7 +39,8 @@ public class Process implements Serializable {
     @Column(name = "id")
     private Integer id;
     @Column(name = "state")
-    private Boolean state;
+    @Enumerated(EnumType.STRING)
+    private StateProcess state;
     @Column(name = "approvedCareerCoordinator")
     private Boolean approvedCareerCoordinator;
     @Lob
@@ -60,7 +64,7 @@ public class Process implements Serializable {
     private Requeriment requeriment;
     @OneToOne(mappedBy="process",cascade =CascadeType.REFRESH)
     private UserCareer userCareer;
-    @OneToOne(mappedBy="pROCESSid",cascade = CascadeType.PERSIST)
+    @OneToOne(mappedBy="pROCESSid",cascade = CascadeType.ALL)
     private Project project;
     
 
@@ -92,11 +96,11 @@ public class Process implements Serializable {
         this.id = id;
     }
 
-    public Boolean getState() {
+    public StateProcess getState() {
         return state;
     }
 
-    public void setState(Boolean state) {
+    public void setState(StateProcess state) {
         this.state = state;
     }
 
@@ -172,20 +176,11 @@ public class Process implements Serializable {
         this.userCareer = userCareer;
     }
     
-    
-    
     public String getApprovedCareerCoordinatorMessage(){
         if(approvedCareerCoordinator==false){
             return "No Aprobado";
         }else{
             return "Aprobado";
-        }
-    }
-    public String getStateMessage(){
-        if(state==false){
-            return "Desactivado";
-        }else{
-            return "Activo";
         }
     }
     

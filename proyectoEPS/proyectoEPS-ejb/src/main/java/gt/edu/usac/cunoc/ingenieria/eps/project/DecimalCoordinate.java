@@ -23,6 +23,8 @@ public class DecimalCoordinate implements Serializable {
     private Double latitude;
     @Column(name = "longitude")
     private Double longitude;
+    @Column(name = "position")
+    private Integer position;
     
     @ManyToOne(fetch = FetchType.LAZY)
     private Project project;
@@ -62,6 +64,14 @@ public class DecimalCoordinate implements Serializable {
 
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
+    }
+
+    public Integer getPosition() {
+        return position;
+    }
+
+    public void setPosition(Integer position) {
+        this.position = position;
     }
 
     public Project getProject() {

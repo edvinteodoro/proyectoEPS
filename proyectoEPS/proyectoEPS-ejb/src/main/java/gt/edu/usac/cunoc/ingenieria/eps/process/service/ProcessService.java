@@ -2,6 +2,7 @@ package gt.edu.usac.cunoc.ingenieria.eps.process.service;
 
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.PERSISTENCE_UNIT_NAME;
+import gt.edu.usac.cunoc.ingenieria.eps.process.StateProcess;
 import gt.edu.usac.cunoc.ingenieria.eps.user.UserCareer;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -21,6 +22,12 @@ public class ProcessService {
         entityManager.merge(userCareer);
         return process;
     }
+    
+    public Process updateProcess(Process process){
+        entityManager.merge(process);
+        return process;
+    }
+    
     
     
 }

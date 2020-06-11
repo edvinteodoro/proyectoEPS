@@ -17,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 @Entity
@@ -32,8 +33,8 @@ public class Project implements Serializable {
     private Integer id;
     @Column(name = "title")
     private String title;
-    @Column(name = "state")
-    private Short state;
+    @Column(name = "status")
+    private Short status;
     @Column(name = "schedule")
     private byte[] schedule;
     @Column(name = "investmentPlan")
@@ -44,16 +45,23 @@ public class Project implements Serializable {
     private LocalDate limitReceptionDate;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "project", orphanRemoval = true)
+    @OrderBy("position ASC")
     private List<Bibliography> bibliographies;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "project", orphanRemoval = true)
+    @OrderBy("position ASC")
     private List<DecimalCoordinate> decimalCoordinates;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "project", orphanRemoval = true)
+    @OrderBy("position ASC")
     private List<Objectives> objectives;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "project", orphanRemoval = true)
+    @OrderBy("position ASC")
     private List<Section> sections;
     @OneToOne
     @JoinColumn(name = "PROCESS_id", referencedColumnName = "id")
     private Process pROCESSid;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "project", orphanRemoval = true)
+    @OrderBy("id DESC")
+    private List<Correction> corrections;
 
     public Project() {
         this.decimalCoordinates = new ArrayList<>();
@@ -79,12 +87,12 @@ public class Project implements Serializable {
         this.title = title;
     }
 
-    public short getState() {
-        return state;
+    public short getStatus() {
+        return status;
     }
 
-    public void setState(Short state) {
-        this.state = state;
+    public void setStatus(Short status) {
+        this.status = status;
     }
 
     public byte[] getSchedule() {
@@ -183,6 +191,16 @@ public class Project implements Serializable {
         this.sections = sections;
     }
 
+    public List<Correction> getCorrections() {
+        return corrections;
+    }
+
+    public void setCorrections(List<Correction> corrections) {
+        this.corrections = corrections;
+    }
+    
+    
+
     public void addSection() {
         Section section = new Section();
         sections.add(section);
@@ -241,10 +259,7 @@ public class Project implements Serializable {
             return false;
         }
         Project other = (Project) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+        return !((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id)));
     }
 
     @Override

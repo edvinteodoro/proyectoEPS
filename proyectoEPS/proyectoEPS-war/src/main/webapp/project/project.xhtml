@@ -192,11 +192,16 @@
                                                                                 >
                                                                     <span class="glyphicon glyphicon-minus"></span> Eliminar Sección
                                                                 </p:commandLink>
-                                                                <br></br><p:commandLink  class="btn btn-primary btn-xs"
-                                                                                         rendered="#{!projectView.isStuden()}"
-                                                                                         title="Realizar Comentario">
-                                                                    <span class="glyphicon glyphicon-eye-open"></span> #{projectView.textObser}
-                                                                </p:commandLink>
+                                                                <br></br><br></br>
+                                                                <p data-placement="top" data-toggle="tooltip" title="comentar">
+                                                                    <p:commandLink class="#{projectView.getCorrectionSection(section).style}"
+                                                                                   oncomplete="PF('dlgCmt').show();"
+                                                                                   update=":#{p:component('dlgCmt')}"
+                                                                                   rendered="#{!projectView.isStuden() or (projectView.getCorrectionSection(section)!=null and (projectView.process.state!=projectView.revisionState))}">
+                                                                        <f:setPropertyActionListener value="#{projectView.getCorrectionSection(section)}" target="#{projectView.correctionSelected}"/>
+                                                                        <span class="glyphicon glyphicon-eye-open"></span> #{projectView.textObser}
+                                                                    </p:commandLink>
+                                                                </p>
                                                             </div>
                                                         </div>
                                                     </p:panel>
@@ -334,7 +339,7 @@
                                 <p:dataViewListItem>
                                     <div class="row">
                                         <div class="form-group col-sm-4">
-                                            <p:inputText placeholder="Autor" value="#{bibliography.author}" size="26"></p:inputText>
+                                            <p:inputText placeholder="Autor" value="#{bibliography.author}" size="26" ></p:inputText>
                                         </div>
                                         <div class="form-group col-sm-4">
                                             <p:calendar id="expirationDate" pt:placeholder="Fecha Publicación"
@@ -499,7 +504,7 @@
                             <p:layoutUnit position="center">
                                 #{projectView.listCorrection}
                             </p:layoutUnit><br></br>
-                            <p:inputTextarea  disabled="#{projectView.isStuden()}" value="#{projectView.correctionSelectedText}" id="cmt" rows="10" cols="60" counter="display" maxlength="1000" counterTemplate="{0} characters remaining." autoResize="false" />
+                            <p:inputTextarea  disabled="#{projectView.isStuden()}" value="#{projectView.correctionSelectedText}" id="cmt" rows="10" cols="60" counter="display" maxlength="10000" counterTemplate="{0} Caracteres Restantes." autoResize="false" />
                             <br/>
                             <h:outputText id="display" /><br></br><br></br>
                             <p:commandLink class="btn btn-primary btn-xs"

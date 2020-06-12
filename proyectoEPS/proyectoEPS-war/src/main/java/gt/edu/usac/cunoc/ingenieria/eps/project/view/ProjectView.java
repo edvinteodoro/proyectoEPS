@@ -10,11 +10,13 @@ import gt.edu.usac.cunoc.ingenieria.eps.process.StateProcess;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Correction;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Objectives;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
+import gt.edu.usac.cunoc.ingenieria.eps.project.Section;
 import gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection;
 import static gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection.ANEXO;
 import static gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection.CALENDAR;
 import static gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection.COORDINATE;
 import static gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection.OBJETIVES;
+import static gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection.OTHER;
 import static gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection.PLAN;
 import static gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection.SPECIFIC_OBJETIVES;
 import static gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection.TITLE;
@@ -98,25 +100,11 @@ public class ProjectView implements Serializable {
     private Correction correctionCoordinates;
     private Correction correctionObjetives;
     private Correction correctionSpecificObjetives;
-
-    private String styleCorrectionTitle;
-    private String styleCorrectionPlan;
-    private String styleCorrectionAnexo;
-    private String styleCorrectionCalendar;
-    private String styleCorrectionCoordinates;
-    private String styleCorrectionObjetives;
-    private String styleCorrectionSpecificObjetives;
+    private Correction correctionSection;
 
     @PostConstruct
     public void init() {
         try {
-            styleCorrectionTitle = "btn btn-primary btn-xs";
-            styleCorrectionPlan = "btn btn-primary btn-xs";
-            styleCorrectionAnexo = "btn btn-primary btn-xs";
-            styleCorrectionCalendar = "btn btn-primary btn-xs";
-            styleCorrectionCoordinates = "btn btn-primary btn-xs";
-            styleCorrectionObjetives = "btn btn-primary btn-xs";
-            styleCorrectionSpecificObjetives = "btn btn-primary btn-xs";
             generalObjectves = new ArrayList<>();
             specificObjectives = new ArrayList<>();
             revisionState = StateProcess.REVISION;
@@ -251,12 +239,40 @@ public class ProjectView implements Serializable {
         this.correctionSpecificObjetives = correctionSpecificObjetives;
     }
 
+    public Correction getCorrectionSection(Section section) {
+        correctionSection = getCorrectionSection1(section);
+        if (correctionSection == null && getCorrections() != null) {
+            getCorrections().add(new Correction(LocalDate.now(), user, OTHER, getProject(), section));
+            correctionSection = getCorrections().get(getCorrections().size() - 1);
+        }
+        return correctionSection;
+    }
+
+    public void setCorrectionSection(Correction correctionSection) {
+        this.correctionSection = correctionSection;
+    }
+
     public List<Correction> getCorrections() {
         return corrections;
     }
 
     public void setCorrections(List<Correction> corrections) {
         this.corrections = corrections;
+    }
+
+    public Correction getCorrectionSection1(Section section) {
+        if (getCorrections() != null) {
+            for (int i = 0; i < getCorrections().size(); i++) {
+                if (getCorrections().get(i).getSection() != null) {
+                    if (getCorrections().get(i).getSection().equals(section)) {
+                        return getCorrections().get(i);
+                    }
+                }
+            }
+            return null;
+        } else {
+            return null;
+        }
     }
 
     public Correction getCorrection(TypeCorrection type) {
@@ -270,62 +286,6 @@ public class ProjectView implements Serializable {
         } else {
             return null;
         }
-    }
-
-    public String getStyleCorrectionTitle() {
-        return styleCorrectionTitle;
-    }
-
-    public void setStyleCorrectionTitle(String styleCorrectionTitle) {
-        this.styleCorrectionTitle = styleCorrectionTitle;
-    }
-
-    public String getStyleCorrectionPlan() {
-        return styleCorrectionPlan;
-    }
-
-    public void setStyleCorrectionPlan(String styleCorrectionPlan) {
-        this.styleCorrectionPlan = styleCorrectionPlan;
-    }
-
-    public String getStyleCorrectionAnexo() {
-        return styleCorrectionAnexo;
-    }
-
-    public void setStyleCorrectionAnexo(String styleCorrectionAnexo) {
-        this.styleCorrectionAnexo = styleCorrectionAnexo;
-    }
-
-    public String getStyleCorrectionCalendar() {
-        return styleCorrectionCalendar;
-    }
-
-    public void setStyleCorrectionCalendar(String styleCorrectionCalendar) {
-        this.styleCorrectionCalendar = styleCorrectionCalendar;
-    }
-
-    public String getStyleCorrectionCoordinates() {
-        return styleCorrectionCoordinates;
-    }
-
-    public void setStyleCorrectionCoordinates(String styleCorrectionCoordinates) {
-        this.styleCorrectionCoordinates = styleCorrectionCoordinates;
-    }
-
-    public String getStyleCorrectionObjetives() {
-        return styleCorrectionObjetives;
-    }
-
-    public void setStyleCorrectionObjetives(String styleCorrectionObjetives) {
-        this.styleCorrectionObjetives = styleCorrectionObjetives;
-    }
-
-    public String getStyleCorrectionSpecificObjetives() {
-        return styleCorrectionSpecificObjetives;
-    }
-
-    public void setStyleCorrectionSpecificObjetives(String styleCorrectionSpecificObjetives) {
-        this.styleCorrectionSpecificObjetives = styleCorrectionSpecificObjetives;
     }
 
     public void handleSchedule(FileUploadEvent event) {
@@ -546,15 +506,15 @@ public class ProjectView implements Serializable {
     }
 
     public String getCorrectionSelectedText() {
-        if (getCorrectionSelected() == null) {
-            return "";
-        } else {
-            if (getCorrectionSelected().getText() == null) {
-                return "";
-            } else {
-                return new String(getCorrectionSelected().getText());
+        String value = "";
+        if (getCorrectionSelected() != null) {
+            if (getCorrectionSelected().getText() != null) {
+                if (getCorrectionSelected().getStatus() != false) {
+                    value = new String(getCorrectionSelected().getText());
+                }
             }
         }
+        return value;
     }
 
     public void setCorrectionSelectedText(String text) {
@@ -599,8 +559,8 @@ public class ProjectView implements Serializable {
         tailFacade.createTailCoordinator(user, getProcess());
         MessageUtils.addSuccessMessage("La solicitud de revision se ha realizado exitosamente");
     }
-    
-    public void acceptChanges(){
+
+    public void acceptChanges() {
         getProcess().setApprovedCareerCoordinator(true);
         finishReview();
     }
@@ -666,7 +626,7 @@ public class ProjectView implements Serializable {
     }
 
     private void changeStatusCorrection() {
-        System.out.println("-------------"+getCorrections().size());
+        System.out.println("-------------" + getCorrections().size());
         if (getCorrections() != null) {
             for (int i = 0; i < getCorrections().size(); i++) {
                 if (getCorrections().get(i).getStatus() == null) {
@@ -682,8 +642,8 @@ public class ProjectView implements Serializable {
         String value = "";
         if (getCorrectionSelected() != null) {
             for (int i = 0; i < getCorrections().size(); i++) {
-                if(getCorrections().get(i).getType().equals(getCorrectionSelected().getType()) && getCorrections().get(i).getStatus()!=null){
-                    //value += new String(getCorrections().get(i).getText());
+                if (getCorrections().get(i).getType().equals(getCorrectionSelected().getType())) {
+                    value += getCorrections().get(i).getTextHistory() + "\n";
                 }
             }
         }

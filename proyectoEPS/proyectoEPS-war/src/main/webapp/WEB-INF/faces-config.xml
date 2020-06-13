@@ -45,6 +45,16 @@
             <to-view-id>/user/createUser.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
+        <navigation-case>
+            <from-outcome>users</from-outcome>
+            <to-view-id>/user/users.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>profile</from-outcome>
+            <to-view-id>/user/userProfile.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
     </navigation-rule>
     <application>                           
         <locale-config>

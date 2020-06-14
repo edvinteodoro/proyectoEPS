@@ -148,7 +148,6 @@ public class ProjectView implements Serializable {
     public Correction getCorrectionTitle() {
         correctionTitle = getCorrection(TITLE);
         if (correctionTitle == null && getCorrections() != null) {
-            System.out.println("---" + getProject());
             getCorrections().add(new Correction(LocalDate.now(), user, TITLE, getProject()));
             correctionTitle = getCorrections().get(getCorrections().size() - 1);
         }
@@ -276,16 +275,19 @@ public class ProjectView implements Serializable {
     }
 
     public Correction getCorrection(TypeCorrection type) {
+        Correction value = null;
         if (getCorrections() != null) {
             for (int i = 0; i < getCorrections().size(); i++) {
                 if (getCorrections().get(i).getType().equals(type)) {
-                    return getCorrections().get(i);
+                    if (getCorrections().get(i).getStatus() == null) {
+                        value = getCorrections().get(i);
+                    }else if(getCorrections().get(i).getStatus() == true){
+                        value = getCorrections().get(i);
+                    }
                 }
             }
-            return null;
-        } else {
-            return null;
         }
+        return value;
     }
 
     public void handleSchedule(FileUploadEvent event) {
@@ -509,7 +511,9 @@ public class ProjectView implements Serializable {
         String value = "";
         if (getCorrectionSelected() != null) {
             if (getCorrectionSelected().getText() != null) {
-                if (getCorrectionSelected().getStatus() != false) {
+                if (getCorrectionSelected().getStatus() == null) {
+                    value = new String(getCorrectionSelected().getText());
+                } else if (getCorrectionSelected().getStatus() == true) {
                     value = new String(getCorrectionSelected().getText());
                 }
             }
@@ -556,6 +560,7 @@ public class ProjectView implements Serializable {
     public void reviewRequeried() {
         clearCorrections();
         getProcess().setState(getRevisionState());
+        changeStatusCorrection();
         tailFacade.createTailCoordinator(user, getProcess());
         MessageUtils.addSuccessMessage("La solicitud de revision se ha realizado exitosamente");
     }
@@ -626,7 +631,6 @@ public class ProjectView implements Serializable {
     }
 
     private void changeStatusCorrection() {
-        System.out.println("-------------" + getCorrections().size());
         if (getCorrections() != null) {
             for (int i = 0; i < getCorrections().size(); i++) {
                 if (getCorrections().get(i).getStatus() == null) {

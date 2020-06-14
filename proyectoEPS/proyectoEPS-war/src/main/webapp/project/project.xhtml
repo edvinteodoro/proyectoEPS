@@ -39,7 +39,6 @@
                         <p:outputLabel for="title" value="Titulo:"/>
                         <p:inputText id="title" styleClass="form-control" pt:placeholder="Titulo del Proyecto"
                                      disabled="#{!projectView.isStuden() or (projectView.process.state==projectView.revisionState)}"
-
                                      pt:required="true"
                                      value="#{projectView.project.title}"/><br></br>
 
@@ -70,7 +69,7 @@
                                         </div>
                                         <div class="form-group col-sm-2">
                                             <p:commandLink  styleClass="btn btn-danger"  actionListener="#{projectView.removeGeneralOBjectives(generalObjectiveStatus)}" 
-                                                            rendered="#{projectView.isStuden()}"
+                                                            rendered="#{projectView.isStuden() and (projectView.process.state!=projectView.revisionState)}"
                                                             update="#{p:component('generalObjectives')}"
                                                             process="#{p:component('generalObjectives')}"
                                                             >
@@ -115,7 +114,7 @@
                                             <p:commandLink  styleClass="btn btn-danger" actionListener="#{projectView.removeSpecificOBjectives(specificObjectiveStatus)}" 
                                                             update="#{p:component('specificObjectives')}"
                                                             process="#{p:component('specificObjectives')}"
-                                                            rendered="#{projectView.isStuden()}"
+                                                            rendered="#{projectView.isStuden() and (projectView.process.state!=projectView.revisionState)}"
                                                             >
                                                 <span class="glyphicon glyphicon-minus"></span> Eliminar
                                             </p:commandLink>
@@ -529,13 +528,6 @@
                                            update="@form,:#{p:component('growl')},:#{p:component('formProject')}"
                                            actionListener="#{projectView.comment('dlgCmt')}">
                                 <span class="glyphicon glyphicon-ok"></span> Comentar
-                            </p:commandLink>
-                            <p:commandLink class="btn btn-primary btn-xs"
-                                           styleClass="btn btn-primary btn-xs"
-                                           rendered="#{!projectView.isStuden()}"
-                                           update="@form,:#{p:component('growl')}"
-                                           actionListener="#{projectView.acceptChanges('dlgCmt')}">
-                                <span class="glyphicon glyphicon-ok"></span> Aceptar Cambios
                             </p:commandLink>
                         </div>
                     </fieldset>

@@ -82,7 +82,7 @@ public class UserService {
             throw new UserException("User is null");
         }
 
-        User updateUser = entityManager.find(User.class, user.getDpi());
+        User updateUser = entityManager.find(User.class, user.getUserId());
         try {
             if (user.getDpi() != null) {
                 updateUser.setDpi(user.getDpi());
@@ -161,7 +161,7 @@ public class UserService {
         Optional<User> user = Optional.ofNullable(entityManager.find(User.class, userID));
 
         if (user.isPresent()) {
-            if (userEmail != null && userEmail.replaceAll(" ", "").isEmpty()
+            if (userEmail != null && !userEmail.replaceAll(" ", "").isEmpty()
                     && user.get().getEmail().equals(userEmail)) {
 
                 return (resetPassword(user.get()) != null);

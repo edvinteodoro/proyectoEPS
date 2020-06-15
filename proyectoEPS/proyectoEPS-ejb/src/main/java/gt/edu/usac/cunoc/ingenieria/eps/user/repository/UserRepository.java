@@ -53,23 +53,25 @@ public class UserRepository {
         if (user == null) {
             throw new UserException("User is null");
         }
+
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
         Root<User> userR = criteriaQuery.from(User.class);
         List<Predicate> predicates = new ArrayList<>();
-        if (user.getUserId() != null) {
+
+        if (user.getUserId() != null && !user.getUserId().isEmpty()) {
             predicates.add(criteriaBuilder.equal(userR.get("userId"), user.getUserId()));
         }
-        if (user.getDpi() != null) {
+        if (user.getDpi() != null && !user.getDpi().isEmpty()) {
             predicates.add(criteriaBuilder.equal(userR.get("dpi"), user.getDpi()));
         }
         if (user.getCodePersonal() != null) {
             predicates.add(criteriaBuilder.like(userR.get("codePersonal"), "%" + user.getCodePersonal() + "%"));
         }
-        if (user.getCarnet() != null) {
+        if (user.getCarnet() != null && !user.getCarnet().isEmpty()) {
             predicates.add(criteriaBuilder.equal(userR.get("carnet"), user.getCarnet()));
         }
-        if (user.getAcademicRegister() != null) {
+        if (user.getAcademicRegister() != null && !user.getAcademicRegister().isEmpty()) {
             predicates.add(criteriaBuilder.equal(userR.get("academicRegister"), user.getAcademicRegister()));
         }
         if (user.getFirstName() != null) {
@@ -79,23 +81,18 @@ public class UserRepository {
             predicates.add(criteriaBuilder.like(userR.get("lastName"), "%" + user.getLastName() + "%"));
         }
         if (user.getEmail() != null) {
-            predicates.add(criteriaBuilder.equal(userR.get("email"), user.getEmail()));
+            predicates.add(criteriaBuilder.like(userR.get("email"),"%" +  user.getEmail()+ "%"));
         }
-        if (user.getPhone() != null) {
+        if (user.getPhone() != null && !user.getPhone().isEmpty()) {
             predicates.add(criteriaBuilder.equal(userR.get("phone"), user.getPhone()));
         }
-        if (user.getPassword() != null) {
-            predicates.add(criteriaBuilder.equal(userR.get("password"), user.getPassword()));
-        }
         if (user.getDirection() != null) {
-            predicates.add(criteriaBuilder.equal(userR.get("direction"), user.getDirection()));
+            predicates.add(criteriaBuilder.like(userR.get("direction"),"%" + user.getDirection()+ "%"));
         }
         if (user.getState() != null) {
             predicates.add(criteriaBuilder.equal(userR.get("state"), user.getState()));
         }
-        if (user.getROLid() != null) {
-            predicates.add(criteriaBuilder.equal(userR.get("ROL_id"), user.getROLid().getId()));
-        }
+
         criteriaQuery.where(predicates.stream().toArray(Predicate[]::new));
         TypedQuery<User> query = entityManager.createQuery(criteriaQuery);
         return query.getResultList();

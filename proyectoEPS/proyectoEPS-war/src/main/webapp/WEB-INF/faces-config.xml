@@ -50,7 +50,7 @@
             <redirect/>
         </navigation-case>
         <navigation-case>
-            <from-outcome>userProfile</from-outcome>
+            <from-outcome>profile</from-outcome>
             <to-view-id>/user/userProfile.xhtml</to-view-id>
             <redirect/>
         </navigation-case>

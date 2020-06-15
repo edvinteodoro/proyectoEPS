@@ -50,6 +50,13 @@ public class Correction implements Serializable {
         this.type=type;
         this.project=project;
     }
+    public Correction(LocalDate date,User user,TypeCorrection type,Project project,Section section){
+        this.date=date;
+        this.user=user;
+        this.type=type;
+        this.project=project;
+        this.section=section;
+    }
 
     public Correction(Integer id) {
         this.id = id;
@@ -144,16 +151,15 @@ public class Correction implements Serializable {
         }
         return value;
     }
-    public String getButtonName(){
-        if(getStatus()==null){
-            return "Reliazar Observacion";
-        }else if(getStatus().equals(true)){
-            return "Reliazar Observacion";
+    public String getTextHistory(){
+        String value="";
+        if(status!=null){
+            if(status==false&&text!=null){
+                value=new String(text);
+            }
         }
-        return null;
+        return value;
     }
-    
-    
     
     
 

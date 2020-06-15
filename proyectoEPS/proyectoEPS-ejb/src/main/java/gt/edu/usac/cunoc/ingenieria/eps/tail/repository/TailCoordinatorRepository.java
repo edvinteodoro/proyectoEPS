@@ -17,7 +17,7 @@ public class TailCoordinatorRepository {
     @PersistenceContext(name = PERSISTENCE_UNIT_NAME)
     private EntityManager entityManager;
 
-    public static final String GET_PROCESS_COORDIANTOR = "SELECT t.process FROM TailCoordinator t WHERE t.userCareer.uSERuserId.userId=:userId ORDER BY t.id DESC";
+    public static final String GET_PROCESS_COORDIANTOR = "SELECT t.process FROM TailCoordinator t WHERE t.userCareer.uSERuserId.userId=:userId ORDER BY t.id ASC";
     public static final String ID_PARAMETER_NAME = "userId";
     
     public void setEntityManager(EntityManager entityManager) {

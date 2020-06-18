@@ -86,6 +86,9 @@ public class User implements Serializable {
     @NotNull
     @Column(name = "state")
     private Boolean state;
+    @Basic(optional = false)
+    @Column(name = "eps_committee")
+    private Boolean epsCommittee;
     @JoinColumn(name = "ROL_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Rol rOLid;
@@ -101,10 +104,17 @@ public class User implements Serializable {
     private Collection<DocumentInitialEps> documentInitialEpsCollection1;
 
     public User() {
+        this.epsCommittee = false;
     }
 
     public User(String userId) {
         this.userId = userId;
+        this.epsCommittee = false;
+    }
+
+    public User(Rol rOLid, Boolean epsCommittee) {
+        this.rOLid = rOLid;
+        this.epsCommittee = epsCommittee;
     }
 
     public User(String userId, String dpi, String firstName, String lastName, String email, String phone, String password, Boolean state) {
@@ -116,6 +126,7 @@ public class User implements Serializable {
         this.phone = phone;
         this.password = password;
         this.state = state;
+        this.epsCommittee = false;
     }
 
     public String getUserId() {
@@ -220,6 +231,14 @@ public class User implements Serializable {
 
     public void setROLid(Rol rOLid) {
         this.rOLid = rOLid;
+    }
+
+    public Boolean getEpsCommittee() {
+        return epsCommittee;
+    }
+
+    public void setEpsCommittee(Boolean epsCommittee) {
+        this.epsCommittee = epsCommittee;
     }
 
     public Collection<Appointment> getAppointmentCollection() {

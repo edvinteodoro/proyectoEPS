@@ -83,44 +83,45 @@ public class UserService {
         }
 
         User updateUser = entityManager.find(User.class, user.getUserId());
-        try {
-            if (user.getDpi() != null) {
-                updateUser.setDpi(user.getDpi());
-            }
-            if (user.getCodePersonal() != null) {
-                updateUser.setCodePersonal(user.getCodePersonal());
-            }
-            if (user.getCarnet() != null) {
-                updateUser.setCarnet(user.getCarnet());
-            }
-            if (user.getAcademicRegister() != null) {
-                updateUser.setAcademicRegister(user.getAcademicRegister());
-            }
-            if (user.getFirstName() != null) {
-                updateUser.setFirstName(user.getFirstName());
-            }
-            if (user.getLastName() != null) {
-                updateUser.setLastName(user.getLastName());
-            }
-            if (user.getEmail() != null) {
-                updateUser.setEmail(user.getEmail());
-            }
-            if (user.getPhone() != null) {
-                updateUser.setPhone(user.getPhone());
-            }
-            if (user.getPassword() != null) {
-                updateUser.setPassword(encryptPass(user.getPassword()));
-            }
-            if (user.getDirection() != null) {
-                updateUser.setDirection(user.getDirection());
-            }
-            if (user.getState() != null) {
-                updateUser.setState(user.getState());
-            }
-            if (user.getROLid() != null) {
-                updateUser.setROLid(user.getROLid());
-            }
-        } catch (NullPointerException e) {
+
+        if (user.getDpi() != null) {
+            updateUser.setDpi(user.getDpi());
+        }
+        if (user.getCodePersonal() != null) {
+            updateUser.setCodePersonal(user.getCodePersonal());
+        }
+        if (user.getCarnet() != null) {
+            updateUser.setCarnet(user.getCarnet());
+        }
+        if (user.getAcademicRegister() != null) {
+            updateUser.setAcademicRegister(user.getAcademicRegister());
+        }
+        if (user.getFirstName() != null) {
+            updateUser.setFirstName(user.getFirstName());
+        }
+        if (user.getLastName() != null) {
+            updateUser.setLastName(user.getLastName());
+        }
+        if (user.getEmail() != null) {
+            updateUser.setEmail(user.getEmail());
+        }
+        if (user.getPhone() != null) {
+            updateUser.setPhone(user.getPhone());
+        }
+        if (user.getPassword() != null) {
+            updateUser.setPassword(encryptPass(user.getPassword()));
+        }
+        if (user.getDirection() != null) {
+            updateUser.setDirection(user.getDirection());
+        }
+        if (user.getState() != null) {
+            updateUser.setState(user.getState());
+        }
+        if (user.getROLid() != null) {
+            updateUser.setROLid(user.getROLid());
+        }
+        if (user.getEpsCommittee() != null) {
+            updateUser.setEpsCommittee(user.getEpsCommittee());
         }
         return updateUser;
     }

@@ -68,13 +68,16 @@
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <p:link  outcome="createUser" value="Crear Usuario"/>
+                                        <p:link  outcome="createUser" value="Crear Usuario" rendered="#{p:ifAnyGranted(constantsRol.SECRETARIAS())}"/>
                                     </li>
                                     <li>
                                         <p:link  outcome="users" value="Ver Usuarios"/>
                                     </li>
                                     <li>
                                         <p:link  outcome="profile" value="Mi Perfil"/>
+                                    </li>
+                                    <li>
+                                        <p:link  outcome="EPSCommittee" value="Comisión EPS" rendered="#{p:ifGranted(constantsRol.COORDINADOR_EPS())}"/>
                                     </li>
                                 </ul>
                             </li>

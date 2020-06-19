@@ -1,4 +1,3 @@
-
 package gt.edu.usac.cunoc.ingenieria.eps.project;
 
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.COORDINADOR_CARRERA;
@@ -33,29 +32,39 @@ public class Correction implements Serializable {
     private LocalDate date;
     @Column(name = "status")
     private Boolean status;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
     @ManyToOne(fetch = FetchType.LAZY)
     private Project project;
     @ManyToOne(fetch = FetchType.LAZY)
     private Section section;
-    
+
     public Correction() {
     }
-    
-    public Correction(LocalDate date,User user,TypeCorrection type,Project project){
-        this.date=date;
-        this.user=user;
-        this.type=type;
-        this.project=project;
+
+    public Correction(LocalDate date, User user, TypeCorrection type, Project project) {
+        this.date = date;
+        this.user = user;
+        this.type = type;
+        this.project = project;
     }
-    public Correction(LocalDate date,User user,TypeCorrection type,Project project,Section section){
-        this.date=date;
-        this.user=user;
-        this.type=type;
-        this.project=project;
-        this.section=section;
+
+    public Correction(LocalDate date, User user, TypeCorrection type, Project project, Section section) {
+        this.date = date;
+        this.user = user;
+        this.type = type;
+        this.project = project;
+        this.section = section;
+    }
+
+    public Correction(LocalDate date, User user, TypeCorrection type, Project project, Section section, byte[] text) {
+        this.date = date;
+        this.user = user;
+        this.type = type;
+        this.project = project;
+        this.section = section;
+        this.text = text;
     }
 
     public Correction(Integer id) {
@@ -107,13 +116,13 @@ public class Correction implements Serializable {
     public void setSection(Section section) {
         this.section = section;
     }
-    
-    public Boolean getStatus(){
+
+    public Boolean getStatus() {
         return status;
     }
-    
-    public void setStatus(Boolean status){
-        this.status=status;
+
+    public void setStatus(Boolean status) {
+        this.status = status;
     }
 
     public Project getProcess() {
@@ -141,27 +150,26 @@ public class Correction implements Serializable {
     }
 
     public String getStyle() {
-        String value="btn btn-danger btn-xs";
-        if(status!=null && this.text!=null){
-            if(status==false){
-                value="btn btn-primary btn-xs";
+        String value = "btn btn-danger btn-xs";
+        if (status != null && this.text != null) {
+            if (status == false) {
+                value = "btn btn-primary btn-xs";
             }
-        }else if(this.text==null){
-            value="btn btn-primary btn-xs";
+        } else if (this.text == null) {
+            value = "btn btn-primary btn-xs";
         }
         return value;
     }
-    public String getTextHistory(){
-        String value="";
-        if(status!=null){
-            if(status==false&&text!=null){
-                value=new String(text);
+
+    public String getTextHistory() {
+        String value = "";
+        if (status != null) {
+            if (status == false && text != null) {
+                value = new String(text);
             }
         }
         return value;
     }
-    
-    
 
     @Override
     public int hashCode() {
@@ -187,5 +195,5 @@ public class Correction implements Serializable {
     public String toString() {
         return "gt.edu.usac.cunoc.ingenieria.eps.project.Correction[ id=" + id + " ]";
     }
-    
+
 }

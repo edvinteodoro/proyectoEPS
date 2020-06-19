@@ -1,0 +1,253 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="../templates/template-one.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:o="http://omnifaces.org/ui"
+                xmlns:cmp="http://xmlns.jcp.org/jsf/composite/components"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <f:metadata>
+        <o:viewParam name="idProcess" required="true" 
+                     value="#{committeeEPSReviewView.processId}"
+                     requiredMessage="Ningun valor">
+            <o:viewParamValidationFailed sendError="404" message="Error parametro"/>
+        </o:viewParam>
+        <o:viewAction action="#{committeeEPSReviewView.loadCurrentProject()}" />
+        <p:importEnum type="gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection"/>
+    </f:metadata>
+
+    <ui:define name="head">
+        Comisión EPS
+    </ui:define>
+
+    <ui:define name="content">
+        <h:outputScript library="js" name="calendar_es.js" />
+        <h:form id="proyect">
+            <fieldset>
+                <legend>Verificacion</legend>
+                <div class="row">
+                    <div class="form-group col-md-8">
+                        <p:outputLabel value="Titulo"/>
+                        <h:outputText value="#{committeeEPSReviewView.actualProcess.project.title}"/>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <p:commandLink class="btn btn-primary btn-xs"
+                                   title="Realizar Comentario"
+                                   oncomplete="PF('observ').show();"
+                                   update=":#{p:component('observ')}"
+                                   actionListener="#{committeeEPSReviewView.getCommentaries(TypeCorrection.TITLE, null)}" >
+                        <span class="glyphicon glyphicon-eye-open"></span> Correcciones
+                    </p:commandLink>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-md-8">
+                        <p:panel header="Objetivos Generales" id="generalObjectives" >
+                            <p:dataView value="#{committeeEPSReviewView.actualProcess.project.objectives}" var="generalObjective" >
+                                <p:dataViewListItem>
+                                    <div class="row">
+                                        <div class="form-group col-sm-10">
+                                            <h:outputText value="#{generalObjective.text}" 
+                                                          rendered="#{committeeEPSReviewView.isGeneralObjective(generalObjective)}"/>
+                                        </div>
+                                    </div>    
+                                </p:dataViewListItem>
+                            </p:dataView>
+
+                            <div class="row">
+                                <p:commandLink class="btn btn-primary btn-xs"
+                                               title="Realizar Comentario"
+                                               oncomplete="PF('observ').show();"
+                                               update=":#{p:component('observ')}"
+                                               actionListener="#{committeeEPSReviewView.getCommentaries(TypeCorrection.OBJETIVES, null)}" >
+                                    <span class="glyphicon glyphicon-eye-open"></span> Correcciones
+                                </p:commandLink>
+                            </div>
+                        </p:panel>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-md-8">
+                        <p:panel header="Objetivos Especificos" id="especificObjectives" >
+                            <p:dataView value="#{committeeEPSReviewView.actualProcess.project.objectives}" var="especificOb" >
+                                <p:dataViewListItem>
+                                    <div class="row">
+                                        <div class="form-group col-sm-10">
+                                            <h:outputText value="#{especificOb}" 
+                                                          rendered="#{!committeeEPSReviewView.isGeneralObjective(especificOb)}"/>
+                                        </div>
+                                    </div>    
+                                </p:dataViewListItem>
+                            </p:dataView>
+                            <div class="row">
+                                <p:commandLink class="btn btn-primary btn-xs"
+                                               title="Realizar Comentario"
+                                               oncomplete="PF('observ').show();"
+                                               update=":#{p:component('observ')}"
+                                               actionListener="#{committeeEPSReviewView.getCommentaries(TypeCorrection.SPECIFIC_OBJETIVES, null)}" >
+                                    <span class="glyphicon glyphicon-eye-open"></span> Correcciones
+                                </p:commandLink>
+                            </div>
+                        </p:panel>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-md-8">
+                        <p:panel id="listSections" header="Secciones">
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    <p:dataView value="#{projectView.project.sections}" var="section">
+                                        <p:dataViewListItem>
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <p:panel id="Section">
+                                                        <div class="row">
+                                                            <div class="form-group col-md-12">
+                                                                <p:outputLabel value="Titulo:"/>
+                                                                <p:outputLabel value="#{section.title.name}"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="form-group col-md-12">
+                                                                <h:outputText value="#{section.title.texto.text}"/>                                                       
+                                                            </div>                                                        
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="form-group col-md-12">
+                                                                <cmp:titleChildren parentTitle="#{section.title}"/>
+                                                            </div>                                                        
+                                                        </div>
+                                                        <div class="row">
+                                                            <p:commandLink class="btn btn-primary btn-xs"
+                                                                           title="Realizar Comentario"
+                                                                           oncomplete="PF('observ').show();"
+                                                                           update=":#{p:component('observ')}"
+                                                                           actionListener="#{committeeEPSReviewView.getCommentaries(TypeCorrection.OTHER, section)}" >
+                                                                <span class="glyphicon glyphicon-eye-open"></span> Correcciones
+                                                            </p:commandLink>
+                                                        </div>
+                                                    </p:panel>
+                                                </div>
+                                            </div>
+                                        </p:dataViewListItem>
+                                    </p:dataView>
+                                </div>
+                            </div>
+                        </p:panel>
+                    </div>
+                </div>
+
+                <div class="row" >
+                    <div class="form-group col-md-8" >
+                        <p:panel id="coordinatesDecimal" header="Coordenadas Decimales">
+                            <p:dataTable id="coordinates" var="coordinate" 
+                                         value="#{committeeEPSReviewView.actualProcess.project.decimalCoordinates}">
+                                <p:column headerText="Latitud">
+                                    <p:outputLabel value="#{coordinate.latitude}"/>
+                                </p:column>
+                                <p:column headerText="Longitud">
+                                    <p:outputLabel value="#{coordinate.longitude}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </p:panel>
+                    </div>
+                </div>
+                <div class="row">
+                    <p:commandLink class="btn btn-primary btn-xs"
+                                   title="Realizar Comentario"
+                                   oncomplete="PF('observ').show();"
+                                   update=":#{p:component('observ')}"
+                                   actionListener="#{committeeEPSReviewView.getCommentaries(TypeCorrection.COORDINATE, null)}" >
+                        <span class="glyphicon glyphicon-eye-open"></span> Correcciones
+                    </p:commandLink>
+                </div>
+
+                <div class="row" >
+                    <div class="form-group col-md-8" >
+                        <p:panel id="bibliografia" header="Bibliografía">
+                            <p:dataTable var="biblio" 
+                                         value="#{committeeEPSReviewView.actualProcess.project.bibliographies}">
+                                <p:column headerText="Título">
+                                    <p:outputLabel value="#{biblio.title}"/>
+                                </p:column>
+                                <p:column headerText="Autor">
+                                    <p:outputLabel value="#{biblio.author}"/>
+                                </p:column>
+                                <p:column headerText="Publicado">
+                                    <p:outputLabel value="#{biblio.publicactionYear}"/>
+                                </p:column>
+                                <p:column headerText="Autor">
+                                    <p:outputLabel value="#{biblio.author}"/>
+                                </p:column>
+                                <p:column headerText="Origen">
+                                    <p:outputLabel value="#{biblio.country}, #{biblio.city}"/>
+                                </p:column>
+                                <p:column headerText="Editorial">
+                                    <p:outputLabel value="#{biblio.editorial}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </p:panel>
+                    </div>
+                </div>
+                <div class="row">
+                    <p:commandLink class="btn btn-primary btn-xs"
+                                   title="Realizar Comentario"
+                                   oncomplete="PF('observ').show();"
+                                   update=":#{p:component('observ')}"
+                                   actionListener="#{committeeEPSReviewView.getCommentaries(TypeCorrection.BIBLIOGRAPHY, null)}" >
+                        <span class="glyphicon glyphicon-eye-open"></span> Correcciones
+                    </p:commandLink>
+                </div>
+            </fieldset>
+        </h:form>
+
+        <p:dialog header="Correcciones" id="observ" widgetVar="observ"
+                  fitViewport="true" modal="true" closeOnEscape="true">
+            <p:ajax event="close" listener="#{committeeEPSReviewView.cleanCorrectionList()}" update="@this" />
+            <h:form>
+                <div class="modal-body">
+                    <fieldset>
+                        <div class="row form-group">
+                            <p:dataTable id="coorrections" var="correction" 
+                                         value="#{committeeEPSReviewView.actualCorrections}">
+                                <p:column headerText="Fecha">
+                                    <p:outputLabel value="#{correction.date}"/>
+                                </p:column>
+                                <p:column headerText="Usuario">
+                                    <p:outputLabel value="#{correction.user.firstName}"/>
+                                </p:column>
+                                <p:column headerText="Correccion">
+                                    <p:outputLabel value="#{correction.text}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </div>
+                        <div class="row form-group">
+                            <p:outputLabel value="Nueva Correccion:" for="note" styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <p:inputTextarea id="note" styleClass="form-control"
+                                                 rows="4" cols="50" maxlength="200" placeholder="Agregue su correccion"
+                                                 autoResize="false" value="#{committeeEPSReviewView.newCorrection}"/>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="modal-footer ">
+                    <p:commandLink styleClass="btn btn-primary btn-xs"
+                                   update="@form,:#{p:component('proyect')}"
+                                   actionListener="#{committeeEPSReviewView.comment('observ')}">
+                        <span class="glyphicon glyphicon-ok-sign"></span> Guardar
+                    </p:commandLink>
+                </div>
+            </h:form>
+        </p:dialog>
+    </ui:define>
+
+</ui:composition>

@@ -1,12 +1,15 @@
 package gt.edu.usac.cunoc.ingenieria.eps.project.facade;
 
+import User.exception.UserException;
 import gt.edu.usac.cunoc.ingenieria.eps.configuration.repository.PropertyRepository;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.LimitException;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.MandatoryException;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Objectives;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
+import gt.edu.usac.cunoc.ingenieria.eps.project.Correction;
 import gt.edu.usac.cunoc.ingenieria.eps.project.repository.ProjectRepository;
+import gt.edu.usac.cunoc.ingenieria.eps.project.service.CorrectionService;
 import gt.edu.usac.cunoc.ingenieria.eps.project.service.ProjectService;
 import gt.edu.usac.cunoc.ingenieria.eps.user.UserCareer;
 import java.io.IOException;
@@ -26,6 +29,9 @@ public class ProjectFacade implements ProjectFacadeLocal {
 
     @EJB
     private ProjectRepository projectRepository;
+
+    @EJB
+    private CorrectionService correctionService;
 
     @Override
     public Project updateProject(Project project, List<Objectives> generalObjective, List<Objectives> specificObjective) throws MandatoryException, LimitException {
@@ -70,7 +76,12 @@ public class ProjectFacade implements ProjectFacadeLocal {
     }
 
     @Override
-    public Project updateProject(Project project) throws MandatoryException, LimitException{
+    public Project updateProject(Project project) throws MandatoryException, LimitException {
         return projectService.update(project);
+    }
+
+    @Override
+    public Correction createCorrection(Correction correction) throws UserException {
+        return correctionService.createCorrection(correction);
     }
 }

@@ -144,7 +144,9 @@ public class Correction implements Serializable {
         String value="btn btn-danger btn-xs";
         if(status!=null && this.text!=null){
             if(status==false){
-                value="btn btn-primary btn-xs";
+                value="btn btn-warning btn-xs";
+            }else if(status==true){
+                value="btn btn-warning btn-xs";
             }
         }else if(this.text==null){
             value="btn btn-primary btn-xs";

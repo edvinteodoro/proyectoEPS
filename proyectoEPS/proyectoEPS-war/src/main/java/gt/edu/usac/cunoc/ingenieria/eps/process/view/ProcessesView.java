@@ -56,7 +56,6 @@ public class ProcessesView implements Serializable {
                     processes = null;
                 }
             }
-            System.out.println("---------------"+processes.size());
         } catch (Exception e) {
             System.out.println("Erro+-------------------------------------------\n"+e);
         }

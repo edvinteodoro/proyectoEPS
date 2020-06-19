@@ -29,9 +29,13 @@ public class UsersView implements Serializable {
     List<User> users;
     List<Career> careers;
 
-    User selectedUser = new User();
+    User selectedUser;
 
-    User searchCriteria = new User();
+    String userID;
+    String DPI;
+    String carnet;
+    String nombre;
+    String apellido;
 
     @PostConstruct
     public void init() {
@@ -44,9 +48,13 @@ public class UsersView implements Serializable {
      */
     public void findUsers() {
         try {
-            setUsers(userFacade.getUser(searchCriteria));
+            if (users != null) {
+                users.clear();
+            }
+            setUsers(userFacade.getUser(new User(userID, DPI, nombre, apellido, null, null, null, null)));
+            MessageUtils.addSuccessMessage("Busqueda realizada");
         } catch (UserException e) {
-            MessageUtils.addSuccessMessage(e.getMessage());
+            MessageUtils.addErrorMessage(e.getMessage());
         }
     }
 
@@ -83,7 +91,11 @@ public class UsersView implements Serializable {
     }
 
     public void cleanCriteria() {
-        this.searchCriteria = new User();
+        userID = null;
+        DPI = null;
+        carnet = null;
+        nombre = null;
+        apellido = null;
     }
 
     public void cleanSelectedUser() {
@@ -109,15 +121,44 @@ public class UsersView implements Serializable {
         this.selectedUser = selectedUser;
     }
 
-    public User getSearchCriteria() {
-        if (searchCriteria == null) {
-            searchCriteria = new User();
-        }
-        return searchCriteria;
+    public String getUserID() {
+        return userID;
     }
 
-    public void setSearchCriteria(User searchCriteria) {
-        this.searchCriteria = searchCriteria;
+    public void setUserID(String userID) {
+        this.userID = userID;
+    }
+
+    public String getDPI() {
+        return DPI;
+    }
+
+    public void setDPI(String DPI) {
+        this.DPI = DPI;
+    }
+
+    public String getCarnet() {
+        return carnet;
+    }
+
+    public void setCarnet(String carnet) {
+        this.carnet = carnet;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getApellido() {
+        return apellido;
+    }
+
+    public void setApellido(String apellido) {
+        this.apellido = apellido;
     }
 
     public List<Career> getCareers() {

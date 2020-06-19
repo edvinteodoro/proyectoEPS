@@ -74,10 +74,16 @@
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <p:link  outcome="createUser" value="Crear Usuario"/>
+                                        <p:link  outcome="createUser" value="Crear Usuario" rendered="#{p:ifAnyGranted(constantsRol.SECRETARIAS())}"/>
                                     </li>
                                     <li>
-                                        <p:link outcome="users" value="Consultar Usuarios"/>
+                                        <p:link  outcome="users" value="Ver Usuarios"/>
+                                    </li>
+                                    <li>
+                                        <p:link  outcome="profile" value="Mi Perfil"/>
+                                    </li>
+                                    <li>
+                                        <p:link  outcome="EPSCommittee" value="Comisión EPS" rendered="#{p:ifGranted(constantsRol.COORDINADOR_EPS())}"/>
                                     </li>
                                 </ul>
                             </li>
@@ -85,11 +91,10 @@
                         <h:form>
                             <ul class="nav navbar-nav navbar-right">
                                 <li jsf:rendered="#{not empty request.userPrincipal}">
-                                    <p class="navbar-text">
-                                        Usuario: 
+                                    <p class="navbar-text">Usuario:  
                                         <h:commandLink styleClass="navbar-link"
-                                                       action="#{logoutView.goToMyProfile()}"
-                                                       value="#{p:remoteUser()} "/>,
+                                                       action="profile"
+                                                       value="#{p:remoteUser()}"/>, 
                                         <h:commandLink styleClass="navbar-link"
                                                        action="#{logoutView.logout()}"
                                                        value="Salir"/>

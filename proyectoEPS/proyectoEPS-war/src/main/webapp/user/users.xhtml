@@ -22,35 +22,35 @@
                         <p:inputText id="userId"
                                      styleClass="form-control"
                                      pt:placeholder="User ID"
-                                     value="#{usersView.searchCriteria.userId}"/>
+                                     value="#{usersView.userID}"/>
                     </div>
                     <div class="form-group col-sm-2">
                         <p:outputLabel for="dpi" value="DPI:" />
                         <p:inputText id="dpi"
                                      styleClass="form-control"
                                      pt:placeholder="Documento Personal de Identificacion"
-                                     value="#{usersView.searchCriteria.dpi}"/>
+                                     value="#{usersView.DPI}"/>
                     </div>
                     <div class="form-group col-sm-2">
                         <p:outputLabel for="carnet" value="Carnet:" />
                         <p:inputText id="carnet"
                                      styleClass="form-control"
                                      pt:placeholder="Carnet"
-                                     value="#{usersView.searchCriteria.carnet}"/>
+                                     value="#{usersView.carnet}"/>
                     </div>
                     <div class="form-group col-sm-3">
                         <p:outputLabel for="nombre" value="Nombre:" />
                         <p:inputText id="nombre"
                                      styleClass="form-control"
                                      pt:placeholder="Nombre"
-                                     value="#{usersView.searchCriteria.firstName}"/>
+                                     value="#{usersView.nombre}"/>
                     </div>
                     <div class="form-group col-sm-3">
                         <p:outputLabel for="apellido" value="Apellido:" />
                         <p:inputText id="apellido"
                                      styleClass="form-control"
                                      pt:placeholder="Apellido"
-                                     value="#{usersView.searchCriteria.lastName}"/>
+                                     value="#{usersView.apellido}"/>
                     </div>
                 </div>
                 <div class="row">
@@ -74,14 +74,20 @@
                         <p:column headerText="ID">
                             <h:outputText value="#{user.userId}" />
                         </p:column>
+                        <p:column headerText="DPI">
+                            <h:outputText value="#{user.dpi}" />
+                        </p:column>
+                        <p:column headerText="Carnet">
+                            <h:outputText value="#{user.carnet}" />
+                        </p:column>
                         <p:column headerText="Nombre">
                             <h:outputText value="#{user.firstName}, #{user.lastName}" />
                         </p:column>
                         <p:column headerText="Correo">
                             <h:outputText value="#{user.email}" />
                         </p:column>
-                        <p:column headerText="Teléfono">
-                            <h:outputText value="#{user.phone}" />
+                        <p:column headerText="Cargo">
+                            <h:outputText value="#{user.ROLid.name}" />
                         </p:column>
                         <p:column headerText="Información" styleClass="text-center">
                             <p data-placement="top" data-toggle="tooltip" title="Información">
@@ -92,7 +98,8 @@
                                 </p:commandLink>
                             </p>
                         </p:column>
-                        <p:column headerText="Reset Contrasena" styleClass="text-center">
+                        <p:column headerText="Reset Contrasena" styleClass="text-center"
+                                  rendered="#{p:ifAnyGranted(constantsRol.SECRETARIAS())}">
                             <p data-placement="top" data-toggle="tooltip" title="reset">
                                 <p:commandLink styleClass="btn btn-primary btn-xs" oncomplete="PF('dlgReset').show();"
                                                update=":#{p:component('dlgReset')}">
@@ -101,7 +108,8 @@
                                 </p:commandLink>
                             </p>
                         </p:column>
-                        <p:column headerText="Editar" styleClass="text-center">
+                        <p:column headerText="Editar" styleClass="text-center"
+                                  rendered="#{p:ifAnyGranted(constantsRol.SECRETARIAS())}">
                             <p data-placement="top" data-toggle="tooltip" title="Editar">
                                 <p:commandLink styleClass="btn btn-primary btn-xs" oncomplete="PF('dlgEdit').show();"
                                                update=":#{p:component('dlgEdit')}">

@@ -49,6 +49,7 @@ CREATE TABLE IF NOT EXISTS `EPS_SYSTEM`.`USER` (
   `ROL_id` INT NOT NULL,
   `direction` VARCHAR(100) NULL,
   `state` TINYINT NOT NULL,
+  `eps_committee` TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`userId`),
   CONSTRAINT `fk_USER_ROL1`
     FOREIGN KEY (`ROL_id`)
@@ -643,7 +644,7 @@ INSERT INTO CAREER(codigo, name) VALUES (35, "Ingeniería Industrial");
 INSERT INTO CAREER(codigo, name) VALUES (36, "Ingeniería Mecánica-Industrial");
 
 INSERT INTO ROL(name) values("Dirección");
-INSERT INTO ROL(name) values("Coordinación_EPS");
+INSERT INTO ROL(name) values("Coordinador_EPS");
 INSERT INTO ROL(name) values("Secretaria_EPS");
 INSERT INTO ROL(name) values("Coordinador_Carrera");
 INSERT INTO ROL(name) values("Secretaria_Coordinación");

@@ -43,6 +43,24 @@ public interface UserFacadeLocal {
 
     public List<User> findUsersByGroupUserCareer(UserCareer userCareer, int id) throws UserException;
 
+    /**
+     * This method allows return 3 different result
+     *
+     * - if isCommitteeMember is null return all users with <b>rolID</b> as
+     * <b>SUPERVISOR_EPS</b>
+     *
+     * - if isCommitteeMember is true return all users <b>SUPERVISOR_EPS</b> and
+     * that are part of the EPS Committee
+     *
+     * - if isCommitteeMember is true return all users <b>SUPERVISOR_EPS</b> and
+     * that are not part of the EPS Committee
+     *
+     * @param isCommitteeMember
+     * @return
+     * @throws UserException
+     */
+    public List<User> getEPSCommitteeUser(Boolean isCommitteeMember) throws UserException;
+
     public List<UserCareer> findAllUserCareer() throws UserException;
 
     /**

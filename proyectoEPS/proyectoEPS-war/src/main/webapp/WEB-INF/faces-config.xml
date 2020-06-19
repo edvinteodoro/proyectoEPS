@@ -54,6 +54,11 @@
             <to-view-id>/user/userProfile.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
+        <navigation-case>
+            <from-outcome>EPSCommittee</from-outcome>
+            <to-view-id>/user/editEPSCommittee.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
     </navigation-rule>
     <application>                           
         <locale-config>

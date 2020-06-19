@@ -3,8 +3,10 @@ package gt.edu.usac.cunoc.ingenieria.eps.user.repository;
 import User.exception.UserException;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.COORDINADOR_CARRERA;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.PERSISTENCE_UNIT_NAME;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.SUPERVISOR_EPS;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
+import gt.edu.usac.cunoc.ingenieria.eps.user.Rol;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -49,6 +51,37 @@ public class UserRepository {
         return query.getResultList();
     }
 
+    /**
+     * This method allows return 3 different result
+     *
+     * - if isCommitteeMember is null return all users with <b>rolID</b> as
+     * <b>SUPERVISOR_EPS</b>
+     *
+     * - if isCommitteeMember is true return all users <b>SUPERVISOR_EPS</b> and
+     * that are part of the EPS Committee
+     *
+     * - if isCommitteeMember is true return all users <b>SUPERVISOR_EPS</b> and
+     * that are not part of the EPS Committee
+     *
+     * @param isCommitteeMember
+     * @return
+     * @throws UserException
+     */
+    public List<User> getEPSCommitteeUser(Boolean isCommitteeMember) throws UserException {
+        if (isCommitteeMember == null) {
+            return getUser(new User(new Rol(null, SUPERVISOR_EPS), null));
+        } else {
+            return getUser(new User(new Rol(null, SUPERVISOR_EPS), isCommitteeMember));
+        }
+    }
+
+    /**
+     * This method use almost all possible parameters to do a search
+     *
+     * @param user
+     * @return
+     * @throws UserException
+     */
     public List<User> getUser(User user) throws UserException {
         if (user == null) {
             throw new UserException("User is null");
@@ -81,16 +114,22 @@ public class UserRepository {
             predicates.add(criteriaBuilder.like(userR.get("lastName"), "%" + user.getLastName() + "%"));
         }
         if (user.getEmail() != null) {
-            predicates.add(criteriaBuilder.like(userR.get("email"),"%" +  user.getEmail()+ "%"));
+            predicates.add(criteriaBuilder.like(userR.get("email"), "%" + user.getEmail() + "%"));
         }
         if (user.getPhone() != null && !user.getPhone().isEmpty()) {
             predicates.add(criteriaBuilder.equal(userR.get("phone"), user.getPhone()));
         }
         if (user.getDirection() != null) {
-            predicates.add(criteriaBuilder.like(userR.get("direction"),"%" + user.getDirection()+ "%"));
+            predicates.add(criteriaBuilder.like(userR.get("direction"), "%" + user.getDirection() + "%"));
         }
         if (user.getState() != null) {
             predicates.add(criteriaBuilder.equal(userR.get("state"), user.getState()));
+        }
+        if (user.getEpsCommittee() != null) {
+            predicates.add(criteriaBuilder.equal(userR.get("epsCommittee"), user.getEpsCommittee()));
+        }
+        if (user.getrOLid() != null && user.getrOLid().getName() != null && !user.getrOLid().getName().replace(" ", "").isEmpty()) {
+            predicates.add(criteriaBuilder.equal(userR.get("rOLid").get("name"), user.getrOLid().getName()));
         }
 
         criteriaQuery.where(predicates.stream().toArray(Predicate[]::new));

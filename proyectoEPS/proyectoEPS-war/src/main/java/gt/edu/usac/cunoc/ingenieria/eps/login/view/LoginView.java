@@ -2,6 +2,7 @@ package gt.edu.usac.cunoc.ingenieria.eps.login.view;
 
 import User.exception.UserException;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.COORDINADOR_CARRERA;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.COORDINADOR_EPS;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.ESTUDIANTE;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.SECRETARIA_EPS;
 import gt.edu.usac.cunoc.ingenieria.eps.user.Rol;
@@ -91,6 +92,9 @@ public class LoginView implements Serializable {
                 break;
             case SECRETARIA_EPS:
                 externalContext.redirect(externalContext.getRequestContextPath() + "/user/createUser.xhtml");
+                break;
+            case COORDINADOR_EPS:
+                externalContext.redirect(externalContext.getRequestContextPath() + "/user/editEPSCommittee.xhtml");
                 break;
             default:
         }

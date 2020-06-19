@@ -150,17 +150,22 @@ public class UserFacade implements UserFacadeLocal {
     }
 
     @Override
+    public List<User> getEPSCommitteeUser(Boolean isCommitteeMember) throws UserException {
+        return userRepository.getEPSCommitteeUser(isCommitteeMember);
+    }
+
+    @Override
     public List<User> getAuthenticatedUser() throws UserException {
         return userService.getAuthenticatedUser();
     }
-    
+
     @Override
-    public User resetPassword(User user) throws UserException{
+    public User resetPassword(User user) throws UserException {
         return userService.resetPassword(user);
     }
-    
+
     @Override
-    public boolean resetPassword(String userID, String userEmail) throws UserException{
+    public boolean resetPassword(String userID, String userEmail) throws UserException {
         return userService.resetPassword(userID, userEmail);
     }
 
@@ -200,7 +205,7 @@ public class UserFacade implements UserFacadeLocal {
     }
 
     @Override
-    public List<User> getCareerCoordinator(Process process) { 
+    public List<User> getCareerCoordinator(Process process) {
         return userRepository.getCareerCoordinator(process);
     }
 
@@ -208,7 +213,5 @@ public class UserFacade implements UserFacadeLocal {
     public UserCareer getUserCareer(User user, String career) {
         return userCareerRepository.getUserCareer(user, career).get(0);
     }
-    
-    
 
 }

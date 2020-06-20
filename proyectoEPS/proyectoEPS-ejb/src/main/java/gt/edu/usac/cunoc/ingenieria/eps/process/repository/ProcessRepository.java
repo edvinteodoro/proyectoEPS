@@ -1,10 +1,12 @@
 package gt.edu.usac.cunoc.ingenieria.eps.process.repository;
 
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.PERSISTENCE_UNIT_NAME;
+import User.exception.UserException;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -26,6 +28,13 @@ public class ProcessRepository {
     public static final String GET_PROCESS_USER = "SELECT c.process FROM UserCareer c WHERE c.uSERuserId.userId=:userId AND c.process IS NOT NULL";
     public static final String ID_PARAMETER_NAME = "userId";
 
+    public Optional<Process> findProcessById(Integer id) throws UserException{
+        if (id == null) {
+            throw new UserException("Debe indicar el ID");
+        }
+        return Optional.ofNullable(entityManager.find(Process.class, id));
+    }
+
     public List<Process> getProcess(Process process) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Process> criteriaQuery = criteriaBuilder.createQuery(Process.class);
@@ -37,7 +46,7 @@ public class ProcessRepository {
         if (process.getUserCareer() != null) {
             predicates.add(criteriaBuilder.equal(processR.get("userCareer"), process.getUserCareer()));
         }
-        if (process.getApprovedCareerCoordinator()!=null){
+        if (process.getApprovedCareerCoordinator() != null) {
             predicates.add(criteriaBuilder.equal(processR.get("approvedCareerCoordinator"), process.getApprovedCareerCoordinator()));
         }
         criteriaQuery.where(predicates.stream().toArray(Predicate[]::new));

@@ -104,12 +104,10 @@ public class User implements Serializable {
     private Collection<DocumentInitialEps> documentInitialEpsCollection1;
 
     public User() {
-        this.epsCommittee = false;
     }
 
     public User(String userId) {
         this.userId = userId;
-        this.epsCommittee = false;
     }
 
     public User(Rol rOLid, Boolean epsCommittee) {
@@ -126,7 +124,6 @@ public class User implements Serializable {
         this.phone = phone;
         this.password = password;
         this.state = state;
-        this.epsCommittee = false;
     }
 
     public String getUserId() {

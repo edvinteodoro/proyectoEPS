@@ -69,6 +69,7 @@
         <web-resource-collection>
             <web-resource-name>tailEPSCommittee</web-resource-name>
             <url-pattern>/committeeEPS/processesCommitteeEPS.xhtml</url-pattern>
+            <url-pattern>/process/committeeEPSReview.xhtml</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <description>Allowed users</description>
@@ -96,20 +97,6 @@
         <web-resource-collection>
             <web-resource-name>user</web-resource-name>
             <url-pattern>/user/users.xhtml</url-pattern>
-            <url-pattern>/user/userProfile.xhtml</url-pattern>
-        </web-resource-collection>
-        <auth-constraint>
-            <description>Allowed users</description>
-            <role-name>Secretaria_EPS</role-name>
-            <role-name>Coordinador_Carrera</role-name>
-            <role-name>Estudiante</role-name>
-        </auth-constraint>
-    </security-constraint> 
-    
-    <security-constraint>
-        <display-name>userProfile</display-name>
-        <web-resource-collection>
-            <web-resource-name>userProfile</web-resource-name>
             <url-pattern>/user/userProfile.xhtml</url-pattern>
         </web-resource-collection>
         <auth-constraint>

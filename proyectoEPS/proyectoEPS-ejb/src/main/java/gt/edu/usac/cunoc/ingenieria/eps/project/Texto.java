@@ -49,7 +49,8 @@ public class Texto implements Serializable {
 
     public String getText() {
         if (this.text != null){
-            return new String(this.text);
+            String result = new String(this.text);
+            return result;
         } else {
             return new String();
         }

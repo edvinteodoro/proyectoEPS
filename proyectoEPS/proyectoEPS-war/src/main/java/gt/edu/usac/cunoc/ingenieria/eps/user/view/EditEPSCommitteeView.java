@@ -42,7 +42,7 @@ public class EditEPSCommitteeView implements Serializable {
             } else {
                 userSelected.setEpsCommittee(false);
                 userFacade.updateUser(userSelected);
-                MessageUtils.addWarningMessage("Eliminado al Comite");
+                MessageUtils.addWarningMessage("Eliminado del Comite");
             }
         } catch (UserException e) {
             MessageUtils.addErrorMessage(e.getMessage());

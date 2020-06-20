@@ -65,7 +65,7 @@ public class ProjectView implements Serializable {
 
     @EJB
     private TailFacadeLocal tailFacade;
-    
+
     @EJB
     private TailCommitteeEPSFacadeLocal tailCommitteeEPSFacade;
 
@@ -621,6 +621,8 @@ public class ProjectView implements Serializable {
     public void acceptChanges() {
         getProcess().setApprovedCareerCoordinator(true);
         finishReview();
+        getProcess().setState(StateProcess.REVISION);
+        processFacade.updateProcess(getProcess());
         tailCommitteeEPSFacade.createTailCommiteeEPS(process);
     }
 
@@ -736,7 +738,7 @@ public class ProjectView implements Serializable {
         }
         return value;
     }
-    
+
     public Boolean stateActived() {
         Boolean value = false;
         if (getProcess().getState() == StateProcess.ACTIVO) {

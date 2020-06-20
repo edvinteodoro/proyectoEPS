@@ -1,6 +1,7 @@
 package gt.edu.usac.cunoc.ingenieria.eps.user.service;
 
 import User.exception.UserException;
+import gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.JAVA_MAIL_SESSION;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.PERSISTENCE_UNIT_NAME;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.SecurityConstants.PBKDF_ITERATIONS;
@@ -66,6 +67,9 @@ public class UserService {
         }
         user.setPassword(encryptPass(user.getPassword()));
         try {
+            if (user.getROLid().getName().equals(Constants.COORDINADOR_EPS)){
+                user.setEpsCommittee(true);
+            }
             entityManager.persist(user);
         } catch (ConstraintViolationException e) {
             // Aqui tira los errores de constraint

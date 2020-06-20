@@ -104,7 +104,7 @@ public class CreateUserView implements Serializable {
             getUser().setUserCareers(getUserCareers());
             getUser().setEpsCommittee(false);
             userFacade.createUser(getUser());
-            MessageUtils.addSuccessMessage("Se ha creado registrado el usuario");
+            MessageUtils.addSuccessMessage("Se ha registrado el usuario");
             cleanUser();
         } catch (Exception ex) {
 

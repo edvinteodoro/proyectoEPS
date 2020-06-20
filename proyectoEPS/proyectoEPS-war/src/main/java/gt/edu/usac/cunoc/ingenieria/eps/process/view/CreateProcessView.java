@@ -112,7 +112,7 @@ public class CreateProcessView implements Serializable {
 
     public void guardar() throws IOException {
         if (!nullFiles()) {
-            if (getProcess().getUserCareer().getProcess() == null) {
+            if (getProcess().getUserCareer().getProcess() == null || getProcess().getUserCareer().getProcess().getState().equals(StateProcess.RECHAZADO)) {
                 getProcess().setApprovedEPSDevelopment(false);
                 getProcess().setApprovedCareerCoordinator(false);
                 getProcess().setState(StateProcess.ACTIVO);

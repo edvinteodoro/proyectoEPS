@@ -50,6 +50,15 @@ public class Correction implements Serializable {
         this.type=type;
         this.project=project;
     }
+    
+    public Correction(LocalDate date,User user,TypeCorrection type,Project project,Boolean status){
+        this.date=date;
+        this.user=user;
+        this.type=type;
+        this.project=project;
+        this.status=status;
+    }
+    
     public Correction(LocalDate date,User user,TypeCorrection type,Project project,Section section){
         this.date=date;
         this.user=user;
@@ -144,7 +153,9 @@ public class Correction implements Serializable {
         String value="btn btn-danger btn-xs";
         if(status!=null && this.text!=null){
             if(status==false){
-                value="btn btn-primary btn-xs";
+                value="btn btn-warning btn-xs";
+            }else if(status==true){
+                value="btn btn-warning btn-xs";
             }
         }else if(this.text==null){
             value="btn btn-primary btn-xs";

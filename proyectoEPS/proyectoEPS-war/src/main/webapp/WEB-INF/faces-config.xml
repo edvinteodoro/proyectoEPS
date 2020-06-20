@@ -59,6 +59,11 @@
             <to-view-id>/user/editEPSCommittee.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
+        <navigation-case>
+            <from-outcome>tailEPSCommittee</from-outcome>
+            <to-view-id>/committeeEPS/processesCommitteeEPS.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
     </navigation-rule>
     <application>                           
         <locale-config>

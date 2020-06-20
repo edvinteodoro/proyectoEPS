@@ -23,6 +23,7 @@ import static gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection.REJECTED;
 import static gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection.SPECIFIC_OBJETIVES;
 import static gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection.TITLE;
 import gt.edu.usac.cunoc.ingenieria.eps.project.facade.ProjectFacadeLocal;
+import gt.edu.usac.cunoc.ingenieria.eps.tail.facade.TailCommitteeEPSFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.tail.facade.TailFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import gt.edu.usac.cunoc.ingenieria.eps.user.facade.UserFacadeLocal;
@@ -64,6 +65,9 @@ public class ProjectView implements Serializable {
 
     @EJB
     private TailFacadeLocal tailFacade;
+    
+    @EJB
+    private TailCommitteeEPSFacadeLocal tailCommitteeEPSFacade;
 
     private User user;
     private User coordinator;
@@ -617,6 +621,7 @@ public class ProjectView implements Serializable {
     public void acceptChanges() {
         getProcess().setApprovedCareerCoordinator(true);
         finishReview();
+        tailCommitteeEPSFacade.createTailCommiteeEPS(process);
     }
 
     public void finishReview() {

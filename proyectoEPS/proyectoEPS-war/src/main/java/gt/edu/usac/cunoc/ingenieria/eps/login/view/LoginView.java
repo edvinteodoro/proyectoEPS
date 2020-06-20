@@ -5,6 +5,7 @@ import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.COORDINAD
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.COORDINADOR_EPS;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.ESTUDIANTE;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.SECRETARIA_EPS;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.SUPERVISOR_EPS;
 import gt.edu.usac.cunoc.ingenieria.eps.user.Rol;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import gt.edu.usac.cunoc.ingenieria.eps.user.facade.UserFacadeLocal;
@@ -95,6 +96,9 @@ public class LoginView implements Serializable {
                 break;
             case COORDINADOR_EPS:
                 externalContext.redirect(externalContext.getRequestContextPath() + "/user/editEPSCommittee.xhtml");
+                break;
+            case SUPERVISOR_EPS:
+                externalContext.redirect(externalContext.getRequestContextPath() + "/committeeEPS/processesCommitteeEPS.xhtml");
                 break;
             default:
         }

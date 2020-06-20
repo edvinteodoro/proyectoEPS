@@ -102,5 +102,9 @@ public class ConstantsRol implements Serializable {
     public String SUPERVISOR_EPS() {
         return SUPERVISOR_EPS;
     }
+    
+    public String COMMITTEE_EPS(){
+        return COORDINADOR_EPS + "," + SUPERVISOR_EPS;
+    }
 
 }

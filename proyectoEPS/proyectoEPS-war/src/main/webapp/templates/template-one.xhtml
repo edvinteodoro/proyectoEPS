@@ -33,7 +33,7 @@
         <title>
             EPS | 
             <ui:insert name="head">
-                page head
+                CUNOC
             </ui:insert>
         </title>
     </h:head>
@@ -66,6 +66,9 @@
                                     </li>
                                     <li>
                                         <p:link  outcome="processes" value="Ver Procesos"/>
+                                    </li>
+                                    <li>
+                                        <p:link outcome="tailEPSCommittee" value="Procesos Comisión EPS" rendered="#{p:ifAnyGranted(constantsRol.COMMITTEE_EPS())}"/>
                                     </li>
                                 </ul>
                             </li>

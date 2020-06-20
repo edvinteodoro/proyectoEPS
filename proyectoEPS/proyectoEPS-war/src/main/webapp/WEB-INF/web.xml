@@ -65,6 +65,19 @@
     </security-constraint>
 
     <security-constraint>
+        <display-name>tailEPSCommittee</display-name>
+        <web-resource-collection>
+            <web-resource-name>tailEPSCommittee</web-resource-name>
+            <url-pattern>/committeeEPS/processesCommitteeEPS.xhtml</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <description>Allowed users</description>
+            <role-name>Coordinador_EPS</role-name>
+            <role-name>Supervisor_EPS</role-name>
+        </auth-constraint>
+    </security-constraint>
+    
+    <security-constraint>
         <display-name>processes</display-name>
         <web-resource-collection>
             <web-resource-name>processes</web-resource-name>
@@ -77,8 +90,6 @@
             <role-name>Estudiante</role-name>
         </auth-constraint>
     </security-constraint>
-    
-
 
     <security-constraint>
         <display-name>allCommon</display-name>

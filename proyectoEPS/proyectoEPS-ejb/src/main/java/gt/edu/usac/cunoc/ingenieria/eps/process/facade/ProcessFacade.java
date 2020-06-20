@@ -1,5 +1,6 @@
 package gt.edu.usac.cunoc.ingenieria.eps.process.facade;
 
+import User.exception.UserException;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Requeriment;
 import gt.edu.usac.cunoc.ingenieria.eps.process.repository.ProcessRepository;
 import gt.edu.usac.cunoc.ingenieria.eps.process.repository.RequerimentRepository;
@@ -9,6 +10,7 @@ import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import gt.edu.usac.cunoc.ingenieria.eps.process.StateProcess;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import java.util.List;
+import java.util.Optional;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -47,6 +49,11 @@ public class ProcessFacade implements ProcessFacadeLocal {
     @Override
     public Process createProcess(Process process) {
         return  processService.createProcess(process);
+    }
+    
+    @Override
+    public Optional<Process> findProcessById(Integer id) throws UserException{
+        return processRepository.findProcessById(id);
     }
 
     @Override

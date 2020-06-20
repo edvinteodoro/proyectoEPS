@@ -65,6 +65,7 @@ public class Correction implements Serializable {
         this.project = project;
         this.section = section;
         this.text = text;
+        this.status = true;
     }
 
     public Correction(Integer id) {

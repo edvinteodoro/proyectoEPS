@@ -17,7 +17,6 @@
             <o:viewParamValidationFailed sendError="404" message="Error parametro"/>
         </o:viewParam>
         <o:viewAction action="#{committeeEPSReviewView.loadCurrentProject()}" />
-        <p:importEnum type="gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection"/>
     </f:metadata>
 
     <ui:define name="head">
@@ -30,10 +29,13 @@
             <fieldset>
                 <legend>Verificacion</legend>
 
-                <p:panel id="titlePr" header="Titulo">
+                <p:panel id="titlePr" header="Titulo" class="form-group col-sm-8">
                     <div class="row">
                         <div class="form-group col-md-8">
                             <p:outputLabel value="Titulo"/>
+                        </div>
+                        <div class="form-group col-md-8">
+
                             <h:outputText value="#{committeeEPSReviewView.actualProcess.project.title}"/>
                         </div>
 
@@ -43,7 +45,7 @@
                                        title="Realizar Comentario"
                                        oncomplete="PF('observ').show();"
                                        update=":#{p:component('observ')}"
-                                       actionListener="#{committeeEPSReviewView.getCommentaries(TypeCorrection.TITLE, null)}" >
+                                       actionListener="#{committeeEPSReviewView.titleComments()}" >
                             <span class="glyphicon glyphicon-eye-open"></span> Correcciones
                         </p:commandLink>
                     </div>
@@ -68,7 +70,7 @@
                                                title="Realizar Comentario"
                                                oncomplete="PF('observ').show();"
                                                update=":#{p:component('observ')}"
-                                               actionListener="#{committeeEPSReviewView.getCommentaries(TypeCorrection.OBJETIVES, null)}" >
+                                               actionListener="#{committeeEPSReviewView.generalObjComments()}" >
                                     <span class="glyphicon glyphicon-eye-open"></span> Correcciones
                                 </p:commandLink>
                             </div>
@@ -83,7 +85,7 @@
                                 <p:dataViewListItem>
                                     <div class="row">
                                         <div class="form-group col-sm-10">
-                                            <h:outputText value="#{especificOb}" 
+                                            <h:outputText value="#{especificOb.text}" 
                                                           rendered="#{!committeeEPSReviewView.isGeneralObjective(especificOb)}"/>
                                         </div>
                                     </div>    
@@ -94,7 +96,7 @@
                                                title="Realizar Comentario"
                                                oncomplete="PF('observ').show();"
                                                update=":#{p:component('observ')}"
-                                               actionListener="#{committeeEPSReviewView.getCommentaries(TypeCorrection.SPECIFIC_OBJETIVES, null)}" >
+                                               actionListener="#{committeeEPSReviewView.specificObjComments()}" >
                                     <span class="glyphicon glyphicon-eye-open"></span> Correcciones
                                 </p:commandLink>
                             </div>
@@ -107,25 +109,20 @@
                         <p:panel id="listSections" header="Secciones">
                             <div class="row">
                                 <div class="form-group col-md-12">
-                                    <p:dataView value="#{projectView.project.sections}" var="section">
+                                    <p:dataView value="#{committeeEPSReviewView.actualProcess.project.sections}" var="section">
                                         <p:dataViewListItem>
                                             <div class="row">
                                                 <div class="form-group col-md-12">
                                                     <p:panel id="Section">
                                                         <div class="row">
                                                             <div class="form-group col-md-12">
-                                                                <p:outputLabel value="Titulo:"/>
-                                                                <p:outputLabel value="#{section.title.name}"/>
+                                                                <p:outputLabel value="Titulo: "/>
+                                                                <h:outputText value="#{section.title.name}"/>
                                                             </div>
                                                         </div>
                                                         <div class="row">
                                                             <div class="form-group col-md-12">
-                                                                <h:outputText value="#{section.title.texto.text}"/>                                                       
-                                                            </div>                                                        
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="form-group col-md-12">
-                                                                <cmp:titleChildren parentTitle="#{section.title}"/>
+                                                                <h:outputText value="#{section.title.texto.text}" escape="false"/>                                                       
                                                             </div>                                                        
                                                         </div>
                                                         <div class="row">
@@ -133,7 +130,7 @@
                                                                            title="Realizar Comentario"
                                                                            oncomplete="PF('observ').show();"
                                                                            update=":#{p:component('observ')}"
-                                                                           actionListener="#{committeeEPSReviewView.getCommentaries(TypeCorrection.OTHER, section)}" >
+                                                                           actionListener="#{committeeEPSReviewView.sectionComments(section)}" >
                                                                 <span class="glyphicon glyphicon-eye-open"></span> Correcciones
                                                             </p:commandLink>
                                                         </div>
@@ -154,28 +151,28 @@
                             <p:dataTable id="coordinates" var="coordinate" 
                                          value="#{committeeEPSReviewView.actualProcess.project.decimalCoordinates}">
                                 <p:column headerText="Latitud">
-                                    <p:outputLabel value="#{coordinate.latitude}"/>
+                                    <h:outputText value="#{coordinate.latitude}"/>
                                 </p:column>
                                 <p:column headerText="Longitud">
-                                    <p:outputLabel value="#{coordinate.longitude}"/>
+                                    <h:outputText value="#{coordinate.longitude}"/>
                                 </p:column>
                             </p:dataTable>
+                            <div class="row">
+                                <p:commandLink class="btn btn-primary btn-xs"
+                                               title="Realizar Comentario"
+                                               oncomplete="PF('observ').show();"
+                                               update=":#{p:component('observ')}"
+                                               actionListener="#{committeeEPSReviewView.coordinatesComments()}" >
+                                    <span class="glyphicon glyphicon-eye-open"></span> Correcciones
+                                </p:commandLink>
+                            </div>
                         </p:panel>
                     </div>
-                </div>
-                <div class="row">
-                    <p:commandLink class="btn btn-primary btn-xs"
-                                   title="Realizar Comentario"
-                                   oncomplete="PF('observ').show();"
-                                   update=":#{p:component('observ')}"
-                                   actionListener="#{committeeEPSReviewView.getCommentaries(TypeCorrection.COORDINATE, null)}" >
-                        <span class="glyphicon glyphicon-eye-open"></span> Correcciones
-                    </p:commandLink>
                 </div>
 
                 <div class="row">
                     <div class="form-group col-sm-8">
-                        <p:outputLabel for="labelSchedule" value="Calendario"/>
+                        <p:outputLabel for="labelSchedule" value="Calendario: "/>
                         <h:commandLink id="labelSchedule" value="#{committeeEPSReviewView.scheduleFileName}" class="text-primary"
                                        target="_blank" actionListener="#{committeeEPSReviewView.reloadSchedule()}">
                             <p:fileDownload value="#{committeeEPSReviewView.scheduleStream}" contentDisposition="inline"/>
@@ -184,7 +181,7 @@
                                                          title="Realizar Comentario"
                                                          oncomplete="PF('observ').show();"
                                                          update=":#{p:component('observ')}"
-                                                         actionListener="#{committeeEPSReviewView.getCommentaries(TypeCorrection.CALENDAR, null)}" >
+                                                         actionListener="#{committeeEPSReviewView.calendarComments()}" >
                             <span class="glyphicon glyphicon-eye-open"></span> Correcciones
                         </p:commandLink>
                     </div>
@@ -192,7 +189,7 @@
 
                 <div class="row">
                     <div class="form-group col-sm-8">
-                        <p:outputLabel for="labelInvestmentPlan" value="Plan de Inversión"/>
+                        <p:outputLabel for="labelInvestmentPlan" value="Plan de Inversión: "/>
                         <h:commandLink id="labelInvestmentPlan" value="#{committeeEPSReviewView.investmentPlanFileName}" class="text-primary"
                                        target="_blank" actionListener="#{committeeEPSReviewView.reloadInvestmentPlan()}">
                             <p:fileDownload value="#{committeeEPSReviewView.investmentPlanStream}" contentDisposition="inline"/>
@@ -201,7 +198,7 @@
                                                          title="Realizar Comentario"
                                                          oncomplete="PF('observ').show();"
                                                          update=":#{p:component('observ')}"
-                                                         actionListener="#{committeeEPSReviewView.getCommentaries(TypeCorrection.PLAN, null)}" >
+                                                         actionListener="#{committeeEPSReviewView.inversionComments()}" >
                             <span class="glyphicon glyphicon-eye-open"></span> Correcciones
                         </p:commandLink>
                     </div>                    
@@ -213,22 +210,22 @@
                             <p:dataTable var="biblio" 
                                          value="#{committeeEPSReviewView.actualProcess.project.bibliographies}">
                                 <p:column headerText="Título">
-                                    <p:outputLabel value="#{biblio.title}"/>
+                                    <h:outputText value="#{biblio.title}"/>
                                 </p:column>
                                 <p:column headerText="Autor">
-                                    <p:outputLabel value="#{biblio.author}"/>
+                                    <h:outputText value="#{biblio.author}"/>
                                 </p:column>
                                 <p:column headerText="Publicado">
-                                    <p:outputLabel value="#{biblio.publicactionYear}"/>
+                                    <h:outputText value="#{biblio.publicactionYear}"/>
                                 </p:column>
                                 <p:column headerText="Autor">
-                                    <p:outputLabel value="#{biblio.author}"/>
+                                    <h:outputText value="#{biblio.author}"/>
                                 </p:column>
                                 <p:column headerText="Origen">
-                                    <p:outputLabel value="#{biblio.country}, #{biblio.city}"/>
+                                    <h:outputText value="#{biblio.country}, #{biblio.city}"/>
                                 </p:column>
                                 <p:column headerText="Editorial">
-                                    <p:outputLabel value="#{biblio.editorial}"/>
+                                    <h:outputText value="#{biblio.editorial}"/>
                                 </p:column>
                             </p:dataTable>
                             <div class="row">
@@ -236,7 +233,7 @@
                                                title="Realizar Comentario"
                                                oncomplete="PF('observ').show();"
                                                update=":#{p:component('observ')}"
-                                               actionListener="#{committeeEPSReviewView.getCommentaries(TypeCorrection.BIBLIOGRAPHY, null)}" >
+                                               actionListener="#{committeeEPSReviewView.bibliographyComments()}" >
                                     <span class="glyphicon glyphicon-eye-open"></span> Correcciones
                                 </p:commandLink>
                             </div>
@@ -246,7 +243,7 @@
 
                 <div class="row">
                     <div class="form-group col-sm-8">
-                        <p:outputLabel for="annexed" value="Anexos"/>
+                        <p:outputLabel for="labelAnnexed" value="Anexos"/>
                         <h:commandLink id="labelAnnexed" value="#{committeeEPSReviewView.annexedFileName}" class="text-primary"
                                        target="_blank" actionListener="#{committeeEPSReviewView.reloadAnnexed()}">
                             <p:fileDownload value="#{committeeEPSReviewView.annexedStream}" contentDisposition="inline"/>
@@ -255,7 +252,7 @@
                                                 title="Realizar Comentario"
                                                 oncomplete="PF('observ').show();"
                                                 update=":#{p:component('observ')}"
-                                                actionListener="#{committeeEPSReviewView.getCommentaries(TypeCorrection.ANEXO, null)}" >
+                                                actionListener="#{committeeEPSReviewView.anexosComments()}" >
                             <span class="glyphicon glyphicon-eye-open"></span> Correcciones
                         </p:commandLink><br></br><br></br>
                     </div>
@@ -263,7 +260,7 @@
             </fieldset>
         </h:form>
 
-        <p:dialog header="Correcciones" id="observ" widgetVar="observ"
+        <p:dialog header="Correcciones" id="observ" widgetVar="observ" 
                   fitViewport="true" modal="true" closeOnEscape="true">
             <p:ajax event="close" listener="#{committeeEPSReviewView.cleanCorrectionList()}" update="@this" />
             <h:form>
@@ -273,13 +270,13 @@
                             <p:dataTable id="coorrections" var="correction" 
                                          value="#{committeeEPSReviewView.actualCorrections}">
                                 <p:column headerText="Fecha">
-                                    <p:outputLabel value="#{correction.date}"/>
+                                    <h:outputText value="#{correction.date}"/>
                                 </p:column>
                                 <p:column headerText="Usuario">
-                                    <p:outputLabel value="#{correction.user.firstName}"/>
+                                    <h:outputText value="#{correction.user.firstName}"/>
                                 </p:column>
                                 <p:column headerText="Correccion">
-                                    <p:outputLabel value="#{correction.text}"/>
+                                    <h:outputText value="#{committeeEPSReviewView.arrayToString(correction.text)}"/>
                                 </p:column>
                             </p:dataTable>
                         </div>

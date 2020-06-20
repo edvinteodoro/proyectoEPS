@@ -16,6 +16,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
@@ -58,21 +59,68 @@ public class committeeEPSReviewView implements Serializable {
     private Section actualSection;
 
     public void loadCurrentProject() {
-        setActualProcess(processFacade.getProcess(new gt.edu.usac.cunoc.ingenieria.eps.process.Process(processId)).get(0));
+        actualProcess = null;
+        Optional<Process> result;
+        try {
+            result = processFacade.findProcessById(processId);
+            if (result.isPresent()) {
+                actualProcess = result.get();
 
-        if (actualProcess != null) {
-            scheduleStream = new DefaultStreamedContent(new ByteArrayInputStream(actualProcess.getProject().getSchedule()), "application/pdf", "Calendario.pdf");
-            scheduleFileName = scheduleStream.getName();
-            investmentPlanStream = new DefaultStreamedContent(new ByteArrayInputStream(actualProcess.getProject().getInvestmentPlan()), "application/pdf", "Plan de Inversion.pdf");
-            investmentPlanFileName = investmentPlanStream.getName();
-            if (actualProcess.getProject().getAnnexed() != null) {
-                annexedStream = new DefaultStreamedContent(new ByteArrayInputStream(actualProcess.getProject().getAnnexed()), "application/pdf", "Anexos.pdf");
-                annexedFileName = annexedStream.getName();
+                if (actualProcess != null) {
+                    scheduleStream = new DefaultStreamedContent(new ByteArrayInputStream(actualProcess.getProject().getSchedule()), "application/pdf", "Calendario.pdf");
+                    scheduleFileName = scheduleStream.getName();
+                    investmentPlanStream = new DefaultStreamedContent(new ByteArrayInputStream(actualProcess.getProject().getInvestmentPlan()), "application/pdf", "Plan de Inversion.pdf");
+                    investmentPlanFileName = investmentPlanStream.getName();
+                    if (actualProcess.getProject().getAnnexed() != null) {
+                        annexedStream = new DefaultStreamedContent(new ByteArrayInputStream(actualProcess.getProject().getAnnexed()), "application/pdf", "Anexos.pdf");
+                        annexedFileName = annexedStream.getName();
+                    }
+                }
+            } else {
+                MessageUtils.addErrorMessage("No se ha encontrado el Proceso");
             }
+        } catch (UserException e) {
+            MessageUtils.addErrorMessage(e.getMessage());
         }
     }
 
-    public void getCommentaries(TypeCorrection correction, Section section) {
+    public void titleComments() {
+        getCommentaries(TypeCorrection.TITLE, null);
+    }
+
+    public void generalObjComments() {
+        getCommentaries(TypeCorrection.OBJETIVES, null);
+    }
+
+    public void specificObjComments() {
+        getCommentaries(TypeCorrection.SPECIFIC_OBJETIVES, null);
+    }
+
+    public void sectionComments(Section section) {
+        getCommentaries(TypeCorrection.OTHER, section);
+    }
+
+    public void coordinatesComments() {
+        getCommentaries(TypeCorrection.COORDINATE, null);
+    }
+
+    public void calendarComments() {
+        getCommentaries(TypeCorrection.CALENDAR, null);
+    }
+
+    public void inversionComments() {
+        getCommentaries(TypeCorrection.PLAN, null);
+    }
+
+    public void bibliographyComments() {
+        getCommentaries(TypeCorrection.BIBLIOGRAPHY, null);
+    }
+
+    public void anexosComments() {
+        getCommentaries(TypeCorrection.ANEXO, null);
+    }
+
+    private void getCommentaries(TypeCorrection correction, Section section) {
 
         actualCorrection = correction;
         actualSection = section;
@@ -165,6 +213,7 @@ public class committeeEPSReviewView implements Serializable {
                         }
                         break;
                 }
+                loadCurrentProject();
                 PrimeFaces.current().executeScript("PF('" + modalIdToClose + "').hide()");
             } else {
                 MessageUtils.addErrorMessage("Debe indicar el dueño de la corrección");
@@ -184,6 +233,11 @@ public class committeeEPSReviewView implements Serializable {
 
     public void reloadAnnexed() {
         this.annexedStream = new DefaultStreamedContent(new ByteArrayInputStream(actualProcess.getProject().getAnnexed()), "application/pdf", "Anexos.pdf");
+    }
+
+    public String arrayToString(byte[] text) {
+        String result = new String(text);
+        return result;
     }
 
     public Integer getProcessId() {

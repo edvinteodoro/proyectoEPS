@@ -19,6 +19,7 @@
 
     <ui:define name="content">
         <div class="row">
+            <p:outputLabel class="text-danger" value="No forma parte de la Comisión EPS" rendered="#{!tailCommitteeEPSView.epsCommittee}"/><br></br><br></br>
             <p:dataTable var="process" value="#{tailCommitteeEPSView.processes}" reflow="true">
                 <p:column headerText="Registro Académico">
                     <h:outputText value="#{process.userCareer.USERuserId.academicRegister}"/> 

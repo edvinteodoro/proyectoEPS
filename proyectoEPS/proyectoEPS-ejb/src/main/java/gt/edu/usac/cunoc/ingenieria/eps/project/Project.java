@@ -60,7 +60,7 @@ public class Project implements Serializable {
     @JoinColumn(name = "PROCESS_id", referencedColumnName = "id")
     private Process pROCESSid;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "project", orphanRemoval = true)
-    @OrderBy("id DESC")
+    @OrderBy("id ASC")
     private List<Correction> corrections;
 
     public Project() {

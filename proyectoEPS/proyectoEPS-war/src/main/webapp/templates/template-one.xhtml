@@ -20,9 +20,10 @@
         <h:outputScript name="bootstrap.js" library="js" />
         <h:outputScript name="core.js" library="primefaces" />
         <style type="text/css">
-            .ui-dialog
-            {
-                position: absolute;
+            @media only screen and (min-width : 768px) {
+                .ui-confirmdialog{
+                    min-width: 425px;
+                }
             }
         </style>
 

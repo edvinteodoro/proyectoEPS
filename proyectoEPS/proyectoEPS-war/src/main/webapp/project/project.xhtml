@@ -35,11 +35,12 @@
                 <legend>Anteproyecto</legend> 
                 <div class="row">
                     <div class="form-group col-md-8">
+                        <p:outputLabel class="text-danger" value="Advertencia:   No se puede editar el proyecto debido a que ha sido rechazado por el coordinador." rendered="#{projectView.stateReject()}"/>
                         <p:outputLabel class="text-danger" value="Advertencia:   No se puede revisar este proyecto debido a que no es el primero en la cola de revision." rendered="#{projectView.renderWarningCoordinator()}"/>
                         <p:outputLabel class="text-danger" value="Advertencia:   No se puede editar el proyecto debido a que se encuentra en un proceso de revision." rendered="#{projectView.stateRevision()}"/><br></br><br></br>
                         <p:outputLabel for="title" value="Titulo:"/>
                         <p:inputText id="title" styleClass="form-control" pt:placeholder="Titulo del Proyecto"
-                                     disabled="#{!projectView.isStuden() or (projectView.process.state==projectView.revisionState)}"
+                                     disabled="#{!projectView.editOptions()}"
                                      pt:required="true"
                                      value="#{projectView.project.title}"/><br></br>
 
@@ -62,7 +63,7 @@
                                     <div class="row">
                                         <div class="form-group col-sm-10">
                                             <p:inputText pt:placeholder="Objetivo General" 
-                                                         disabled="#{!projectView.isStuden() or (projectView.process.state==projectView.revisionState)}"
+                                                         disabled="#{!projectView.editOptions()}"
                                                          value="#{generalObjective.text}"
                                                          class="form-control"
                                                          >
@@ -70,7 +71,7 @@
                                         </div>
                                         <div class="form-group col-sm-2">
                                             <p:commandLink  styleClass="btn btn-danger"  actionListener="#{projectView.removeGeneralOBjectives(generalObjectiveStatus)}" 
-                                                            rendered="#{projectView.isStuden() and (projectView.process.state!=projectView.revisionState)}"
+                                                            rendered="#{projectView.editOptions()}"
                                                             update="#{p:component('generalObjectives')}"
                                                             process="#{p:component('generalObjectives')}"
                                                             >
@@ -82,7 +83,7 @@
                             </p:dataView>
                             <p:commandLink styleClass="btn btn-success" actionListener="#{projectView.addGeneralObjectives()}" update="generalObjectives, growl"
                                            process="#{p:component('generalObjectives')}"
-                                           rendered="#{projectView.isStuden() and (projectView.process.state!=projectView.revisionState)}"
+                                           rendered="#{projectView.editOptions()}"
                                            >
                                 <span class="glyphicon glyphicon-plus"></span> Agregar
                             </p:commandLink>
@@ -105,7 +106,7 @@
                                     <div class="row">
                                         <div class="form-group col-sm-10">
                                             <p:inputText pt:placeholder="Objetivo Especifico" 
-                                                         disabled="#{!projectView.isStuden() or (projectView.process.state==projectView.revisionState)}"
+                                                         disabled="#{!projectView.editOptions()}"
                                                          value="#{specificObjective.text}"
                                                          class="form-control"
                                                          >
@@ -115,7 +116,7 @@
                                             <p:commandLink  styleClass="btn btn-danger" actionListener="#{projectView.removeSpecificOBjectives(specificObjectiveStatus)}" 
                                                             update="#{p:component('specificObjectives')}"
                                                             process="#{p:component('specificObjectives')}"
-                                                            rendered="#{projectView.isStuden() and (projectView.process.state!=projectView.revisionState)}"
+                                                            rendered="#{projectView.editOptions()}"
                                                             >
                                                 <span class="glyphicon glyphicon-minus"></span> Eliminar
                                             </p:commandLink>
@@ -125,7 +126,7 @@
                             </p:dataView>
                             <p:commandLink styleClass="btn btn-success" actionListener="#{projectView.addSpecificObjectives()}" update="specificObjectives, growl"
                                            process="#{p:component('specificObjectives')}"
-                                           rendered="#{projectView.isStuden() and (projectView.process.state!=projectView.revisionState)}"
+                                           rendered="#{projectView.editOptions()}"
                                            >
                                 <span class="glyphicon glyphicon-plus"></span> Agregar
                             </p:commandLink>
@@ -154,7 +155,7 @@
                                                         <div class="row">
                                                             <div class="form-group col-md-12">
                                                                 <p:outputLabel for="titleSection" value="Titulo:"/>
-                                                                <p:inputText id="titleSection" styleClass="form-control" pt:placeholder="Titulo" disabled="#{!projectView.isStuden() or (projectView.process.state==projectView.revisionState)}"
+                                                                <p:inputText id="titleSection" styleClass="form-control" pt:placeholder="Titulo" disabled="#{!projectView.editOptions()}"
                                                                              value="#{section.title.name}"
                                                                              />
                                                             </div>
@@ -162,9 +163,8 @@
                                                         <div class="row">
                                                             <div class="form-group col-md-12">
                                                                 <p:textEditor height="300"
-                                                                              pt:disabled="#{!projectView.isStuden() or (projectView.process.state==projectView.revisionState)}"
                                                                               style="margin-bottom:10px" 
-                                                                              readonly="#{projectView.stateRevision()}"
+                                                                              readonly="#{!projectView.editOptions()}"
                                                                               placeholder="Ingrese su Contenido"
                                                                               value="#{section.title.texto.text}"
                                                                               >
@@ -203,8 +203,7 @@
                                                                 <p:commandLink  styleClass="btn btn-danger" actionListener="#{projectView.removeSection(sectionStatus)}" 
                                                                                 update="#{p:component('listSections')}, :growl"
                                                                                 process="#{p:component('listSections')}"
-                                                                                rendered="#{projectView.isStuden() and (projectView.process.state!=projectView.revisionState)}"
-                                                                                >
+                                                                                rendered="#{projectView.editOptions()}">
                                                                     <span class="glyphicon glyphicon-minus"></span> Eliminar Sección
                                                                 </p:commandLink>
                                                                 <br></br><br></br>
@@ -226,7 +225,7 @@
                                     </p:dataView>
                                     <p:commandLink styleClass="btn btn-success" actionListener="#{projectView.project.addSection()}" update="listSections"
                                                    process="#{p:component('listSections')}"
-                                                   rendered="#{projectView.isStuden() and (projectView.process.state!=projectView.revisionState)}"
+                                                   rendered="#{projectView.editOptions()}"
                                                    >
                                         <span class="glyphicon glyphicon-plus"></span> Agregar Sección
                                     </p:commandLink>
@@ -243,7 +242,7 @@
                                     <div class="row">
                                         <div class="form-group col-sm-4">
                                             <p:inputNumber placeholder="Latitud" 
-                                                           readonly="#{projectView.stateRevision()}"
+                                                           readonly="#{!projectView.editOptions()}"
                                                            decimalPlaces="4" 
                                                            value="#{decimalCoordinate.latitude}"                                                      
                                                            >
@@ -252,7 +251,7 @@
                                         <div class="form-group col-sm-4">
                                             <p:inputNumber placeholder="Longitud" 
                                                            decimalPlaces="4"
-                                                           readonly="#{projectView.stateRevision()}"
+                                                           readonly="#{!projectView.editOptions()}"
                                                            value="#{decimalCoordinate.longitude}"
                                                            >
                                             </p:inputNumber>
@@ -261,7 +260,7 @@
                                             <p:commandLink  styleClass="btn btn-danger" actionListener="#{projectView.project.removeDecimalCoordinates(decimalCoordinateStatus)}" 
                                                             update="#{p:component('coordinatesDecimal')}"
                                                             process="#{p:component('coordinatesDecimal')}"
-                                                            rendered="#{projectView.isStuden() and (projectView.process.state!=projectView.revisionState)}"
+                                                            rendered="#{projectView.editOptions()}"
                                                             >
                                                 <span class="glyphicon glyphicon-minus"></span> Eliminar
                                             </p:commandLink>
@@ -271,8 +270,7 @@
                             </p:dataView>
                             <p:commandLink styleClass="btn btn-success" actionListener="#{projectView.project.addDecimalCoordinates()}" update="coordinatesDecimal"
                                            process="#{p:component('coordinatesDecimal')}"
-                                           rendered="#{projectView.isStuden() and (projectView.process.state!=projectView.revisionState)}"
-                                           >
+                                           rendered="#{projectView.editOptions()}">
                                 <span class="glyphicon glyphicon-plus"></span> Agregar
                             </p:commandLink>
                         </p:panel>
@@ -291,7 +289,7 @@
                     <div class="form-group col-sm-8">
                         <p:outputLabel for="schedule" value="Calendario"/>
                         <p:fileUpload id="schedule" fileUploadListener="#{projectView.handleSchedule}"
-                                      rendered="#{projectView.isStuden() and (projectView.process.state!=projectView.revisionState)}"
+                                      rendered="#{projectView.editOptions()}"
                                       required="true"
                                       skinSimple="true" auto="true"
                                       label="Seleccionar"
@@ -323,7 +321,7 @@
                         <p:outputLabel for="investmentPlan" value="Plan de Inversión"/>
                         <p:fileUpload id="investmentPlan" fileUploadListener="#{projectView.handleInvestmentPlan}"
                                       required="true"
-                                      rendered="#{projectView.isStuden() and (projectView.process.state!=projectView.revisionState)}"
+                                      rendered="#{projectView.editOptions()}"
                                       skinSimple="true" auto="true"
                                       label="Seleccionar"
                                       update="labelInvestmentPlan"
@@ -356,11 +354,11 @@
                                 <p:dataViewListItem>
                                     <div class="row">
                                         <div class="form-group col-sm-4">
-                                            <p:inputText readonly="#{projectView.stateRevision()}" placeholder="Autor" value="#{bibliography.author}" size="26" ></p:inputText>
+                                            <p:inputText readonly="#{!projectView.editOptions()}" placeholder="Autor" value="#{bibliography.author}" size="26" ></p:inputText>
                                         </div>
                                         <div class="form-group col-sm-4">
                                             <p:calendar id="expirationDate" pt:placeholder="Fecha Publicación"
-                                                        readonly="#{projectView.stateRevision()}"
+                                                        readonly="#{!projectView.editOptions()}"
                                                         pattern="dd/MM/yyyy" 
                                                         locale="es"
                                                         value="#{bibliography.publicactionYear}"
@@ -372,34 +370,32 @@
                                             <p:commandLink  styleClass="btn btn-danger" actionListener="#{projectView.project.removeBibliography(bibliographyStatus)}" 
                                                             update="#{p:component('biblioghraphies')}"
                                                             process="#{p:component('biblioghraphies')}"
-                                                            rendered="#{projectView.isStuden() and (projectView.process.state!=projectView.revisionState)}"
-                                                            >
+                                                            rendered="#{projectView.editOptions()}">
                                                 <span class="glyphicon glyphicon-minus"></span> Eliminar
                                             </p:commandLink>
                                         </div>
                                     </div> 
                                     <div class="row">
                                         <div class="form-group col-sm-4">
-                                            <p:inputText readonly="#{projectView.stateRevision()}" placeholder="Titulo" value="#{bibliography.title}" size="26"></p:inputText>
+                                            <p:inputText readonly="#{!projectView.editOptions()}" placeholder="Titulo" value="#{bibliography.title}" size="26"></p:inputText>
                                         </div>
                                         <div class="form-group col-sm-4">
-                                            <p:inputText readonly="#{projectView.stateRevision()}" placeholder="Ciudad" value="#{bibliography.city}" size="26"></p:inputText>
+                                            <p:inputText readonly="#{!projectView.editOptions()}" placeholder="Ciudad" value="#{bibliography.city}" size="26"></p:inputText>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-sm-4">
-                                            <p:inputText readonly="#{projectView.stateRevision()}" placeholder="Pais" value="#{bibliography.country}" size="26"></p:inputText>
+                                            <p:inputText readonly="#{!projectView.editOptions()}" placeholder="Pais" value="#{bibliography.country}" size="26"></p:inputText>
                                         </div>
                                         <div class="form-group col-sm-4">
-                                            <p:inputText readonly="#{projectView.stateRevision()}" placeholder="Editorial" value="#{bibliography.editorial}" size="26"></p:inputText>
+                                            <p:inputText readonly="#{!projectView.editOptions()}" placeholder="Editorial" value="#{bibliography.editorial}" size="26"></p:inputText>
                                         </div>                                    
                                     </div>
                                 </p:dataViewListItem>
                             </p:dataView>
                             <p:commandLink styleClass="btn btn-success" actionListener="#{projectView.project.addBibliography}" update="biblioghraphies"
                                            process="#{p:component('biblioghraphies')}"
-                                           rendered="#{projectView.isStuden() and (projectView.process.state!=projectView.revisionState)}"
-                                           >
+                                           rendered="#{projectView.editOptions()}">
                                 <span class="glyphicon glyphicon-plus"></span> Agregar
                             </p:commandLink>
                         </p:panel>
@@ -419,7 +415,7 @@
                         <p:outputLabel for="annexed" value="Anexos"/>
                         <p:fileUpload id="annexed" fileUploadListener="#{projectView.handleAnnexed}"
                                       skinSimple="true" auto="true"
-                                      rendered="#{projectView.isStuden() and (projectView.process.state!=projectView.revisionState)}"
+                                      rendered="#{projectView.editOptions()}"
                                       label="Seleccionar"
                                       update="labelAnnexed"
                                       sizeLimit="15000000"
@@ -448,10 +444,10 @@
                 <div class="form-group col-sm-2">
                     <p:commandLink styleClass="btn btn-success"
                                    update="@form,:growl"
-                                   rendered="#{projectView.showButtonRevision(null)}"
-                                   action="#{projectView.finishReview()}">
-                        <p:confirm header="Confirmation" message="Esta seguro de rechazar el proyecto?" icon="pi pi-exclamation-triangle" />
+                                   oncomplete="PF('dlgCmtRz').show();"
+                                   rendered="#{projectView.showButtonRevision(null)}">
                         <span class="glyphicon glyphicon-remove"></span> Rechazar Proyecto
+                        <f:setPropertyActionListener value="#{projectView.rejectProject}" target="#{projectView.correctionSelected}"/>
                     </p:commandLink>
                 </div>
                 <div class="form-group col-sm-2">
@@ -485,7 +481,7 @@
                 <div class="form-group col-sm-2">
                     <p:commandLink styleClass="btn btn-primary"
                                    update="@form,:growl" 
-                                   rendered="#{projectView.isStuden()}"
+                                   rendered="#{projectView.editOptions()}"
                                    action="#{projectView.uploadCreate()}">
                         <span class="glyphicon glyphicon-floppy-disk"></span> Guardar Proyecto EPS
                     </p:commandLink>
@@ -494,7 +490,7 @@
                 <div class="form-group col-sm-2">
                     <p:commandLink styleClass="btn btn-info"
                                    actionListener="#{projectView.createPDF()}"
-                                   rendered="#{projectView.isStuden()}"
+                                   rendered="#{projectView.editOptions()}"
                                    update="openFile, :growl">
                         <span class="glyphicon glyphicon-file"></span> Generar Archivo PDF
                     </p:commandLink>
@@ -502,7 +498,7 @@
                 <div class="form-group col-sm-2">
                     <p:commandLink styleClass="btn btn-success"
                                    update="@form,:growl"
-                                   rendered="#{projectView.isStuden() and (projectView.process.state!=projectView.revisionState)}"
+                                   rendered="#{projectView.editOptions()}"
                                    action="#{projectView.reviewRequeried()}">
                         <p:confirm header="Confirmation" message="Al solicitar la revision ya no se podra editar el proyect. ¿quieres solicitar revision?" icon="pi pi-exclamation-triangle" />
                         <span class="glyphicon glyphicon-check"></span> Solicitar Revisión
@@ -548,18 +544,30 @@
         </p:dialog>
         <p:dialog  header="Rechazo Proyecto" id="dlgCmtRz" widgetVar="dlgCmtRz"
                    fitViewport="true" modal="true" closeOnEscape="true" position="center">
-            <p:ajax event="close" update="@this"/>
+            <p:ajax event="close" update="@this" listener="#{projectView.clearCorrectionSelected()}"/>
             <h:form>
                 <div class="modal-body">
                     <fieldset>
-                        <p:inputTextarea  value="" id="cmt" rows="10" cols="80" counter="display" maxlength="10000" counterTemplate="{0} Caracteres Restantes." autoResize="false" />
+                        <h:outputLabel value="Explique la razón por la cual sera rechazado el proyecto:" /><br></br> 
+                        <p:inputTextarea  value="#{projectView.correctionSelectedText}" id="cmt" rows="10" cols="80" counter="displayCmt" maxlength="10000" counterTemplate="{0} Caracteres Restantes." autoResize="false" />
+                        <br/>
+                        <h:outputText id="displayCmt" /><br></br><br></br>
+                        <p:commandLink class="btn btn-primary btn-xs"
+                                       styleClass="btn btn-primary btn-xs"
+                                       rendered="#{!projectView.isStuden()}"
+                                       update="@form,:#{p:component('growl')},:#{p:component('formProject')}"
+                                       actionListener="#{projectView.rejectProject()}">
+                            <span class="glyphicon glyphicon-ok"></span> Confirmar 
+                        </p:commandLink>
                     </fieldset>
                 </div>
             </h:form>
         </p:dialog>
         <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" >
-            <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
-            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+            <div class="col-sm-12 my-auto">
+                <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+            </div>
         </p:confirmDialog> 
     </ui:define>
 </ui:composition>

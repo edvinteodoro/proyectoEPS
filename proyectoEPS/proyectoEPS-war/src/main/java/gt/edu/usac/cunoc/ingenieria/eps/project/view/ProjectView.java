@@ -19,6 +19,7 @@ import static gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection.COORDINATE
 import static gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection.OBJETIVES;
 import static gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection.OTHER;
 import static gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection.PLAN;
+import static gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection.REJECTED;
 import static gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection.SPECIFIC_OBJETIVES;
 import static gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection.TITLE;
 import gt.edu.usac.cunoc.ingenieria.eps.project.facade.ProjectFacadeLocal;
@@ -104,6 +105,7 @@ public class ProjectView implements Serializable {
     private Correction correctionSpecificObjetives;
     private Correction correctionSection;
     private Correction correctionBibliography;
+    private Correction rejectProcess;
 
     @PostConstruct
     public void init() {
@@ -260,6 +262,19 @@ public class ProjectView implements Serializable {
 
     public void setCorrectionBibliography(Correction correctionBibliography) {
         this.correctionBibliography = correctionBibliography;
+    }
+
+    public Correction getRejectProject() {
+        rejectProcess = getCorrection(REJECTED);
+        if (rejectProcess == null && getCorrections() != null) {
+            getCorrections().add(new Correction(LocalDate.now(), user, REJECTED, getProject(), Boolean.TRUE));
+            rejectProcess = getCorrections().get(getCorrections().size() - 1);
+        }
+        return rejectProcess;
+    }
+
+    public void setRejectProject(Correction rejectProcess) {
+        this.rejectProcess = rejectProcess;
     }
 
     public Correction getCorrectionSection(Section section) {
@@ -617,6 +632,19 @@ public class ProjectView implements Serializable {
         }
     }
 
+    public void rejectProject() {
+        try {
+            clearCorrections();
+            changeStatusCorrection();
+            tailFacade.deleteTailCoordinatod(getProcess());
+            getProcess().setState(StateProcess.RECHAZADO);
+            processFacade.updateProcess(getProcess());
+            redirectToProcesses();
+        } catch (Exception e) {
+            MessageUtils.addErrorMessage("No se puederon agregar los cambios");
+        }
+    }
+
     public void createPDF() {
         try {
             this.pdfFile = new DefaultStreamedContent(projectFacade.createPDF(project, process.getUserCareer()), "application/pdf", getProject().getTitle());
@@ -691,6 +719,30 @@ public class ProjectView implements Serializable {
     public Boolean stateRevision() {
         Boolean value = false;
         if (isStuden() && getProcess().getState() == getRevisionState()) {
+            value = true;
+        }
+        return value;
+    }
+
+    public Boolean stateReject() {
+        Boolean value = false;
+        if (getProcess().getState() == StateProcess.RECHAZADO) {
+            value = true;
+        }
+        return value;
+    }
+    
+    public Boolean stateActived() {
+        Boolean value = false;
+        if (getProcess().getState() == StateProcess.ACTIVO) {
+            value = true;
+        }
+        return value;
+    }
+
+    public Boolean editOptions() {
+        Boolean value = false;
+        if (isStuden() && stateActived()) {
             value = true;
         }
         return value;

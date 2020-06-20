@@ -50,6 +50,15 @@ public class Correction implements Serializable {
         this.type=type;
         this.project=project;
     }
+    
+    public Correction(LocalDate date,User user,TypeCorrection type,Project project,Boolean status){
+        this.date=date;
+        this.user=user;
+        this.type=type;
+        this.project=project;
+        this.status=status;
+    }
+    
     public Correction(LocalDate date,User user,TypeCorrection type,Project project,Section section){
         this.date=date;
         this.user=user;

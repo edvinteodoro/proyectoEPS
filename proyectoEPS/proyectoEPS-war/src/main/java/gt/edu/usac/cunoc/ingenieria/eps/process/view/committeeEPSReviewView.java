@@ -174,6 +174,18 @@ public class committeeEPSReviewView implements Serializable {
         }
     }
 
+    public void reloadSchedule() {
+        this.scheduleStream = new DefaultStreamedContent(new ByteArrayInputStream(actualProcess.getProject().getSchedule()), "application/pdf", "Calendario.pdf");
+    }
+
+    public void reloadInvestmentPlan() {
+        this.investmentPlanStream = new DefaultStreamedContent(new ByteArrayInputStream(actualProcess.getProject().getInvestmentPlan()), "application/pdf", "Plan de Inversión.pdf");
+    }
+
+    public void reloadAnnexed() {
+        this.annexedStream = new DefaultStreamedContent(new ByteArrayInputStream(actualProcess.getProject().getAnnexed()), "application/pdf", "Anexos.pdf");
+    }
+
     public Integer getProcessId() {
         return processId;
     }

@@ -29,22 +29,25 @@
         <h:form id="proyect">
             <fieldset>
                 <legend>Verificacion</legend>
-                <div class="row">
-                    <div class="form-group col-md-8">
-                        <p:outputLabel value="Titulo"/>
-                        <h:outputText value="#{committeeEPSReviewView.actualProcess.project.title}"/>
-                    </div>
 
-                </div>
-                <div class="row">
-                    <p:commandLink class="btn btn-primary btn-xs"
-                                   title="Realizar Comentario"
-                                   oncomplete="PF('observ').show();"
-                                   update=":#{p:component('observ')}"
-                                   actionListener="#{committeeEPSReviewView.getCommentaries(TypeCorrection.TITLE, null)}" >
-                        <span class="glyphicon glyphicon-eye-open"></span> Correcciones
-                    </p:commandLink>
-                </div>
+                <p:panel id="titlePr" header="Titulo">
+                    <div class="row">
+                        <div class="form-group col-md-8">
+                            <p:outputLabel value="Titulo"/>
+                            <h:outputText value="#{committeeEPSReviewView.actualProcess.project.title}"/>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <p:commandLink class="btn btn-primary btn-xs"
+                                       title="Realizar Comentario"
+                                       oncomplete="PF('observ').show();"
+                                       update=":#{p:component('observ')}"
+                                       actionListener="#{committeeEPSReviewView.getCommentaries(TypeCorrection.TITLE, null)}" >
+                            <span class="glyphicon glyphicon-eye-open"></span> Correcciones
+                        </p:commandLink>
+                    </div>
+                </p:panel>
 
                 <div class="row">
                     <div class="form-group col-md-8">
@@ -170,6 +173,40 @@
                     </p:commandLink>
                 </div>
 
+                <div class="row">
+                    <div class="form-group col-sm-8">
+                        <p:outputLabel for="labelSchedule" value="Calendario"/>
+                        <h:commandLink id="labelSchedule" value="#{committeeEPSReviewView.scheduleFileName}" class="text-primary"
+                                       target="_blank" actionListener="#{committeeEPSReviewView.reloadSchedule()}">
+                            <p:fileDownload value="#{committeeEPSReviewView.scheduleStream}" contentDisposition="inline"/>
+                        </h:commandLink>
+                        <br></br><br></br><p:commandLink class="btn btn-primary btn-xs"
+                                                         title="Realizar Comentario"
+                                                         oncomplete="PF('observ').show();"
+                                                         update=":#{p:component('observ')}"
+                                                         actionListener="#{committeeEPSReviewView.getCommentaries(TypeCorrection.CALENDAR, null)}" >
+                            <span class="glyphicon glyphicon-eye-open"></span> Correcciones
+                        </p:commandLink>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-sm-8">
+                        <p:outputLabel for="labelInvestmentPlan" value="Plan de Inversión"/>
+                        <h:commandLink id="labelInvestmentPlan" value="#{committeeEPSReviewView.investmentPlanFileName}" class="text-primary"
+                                       target="_blank" actionListener="#{committeeEPSReviewView.reloadInvestmentPlan()}">
+                            <p:fileDownload value="#{committeeEPSReviewView.investmentPlanStream}" contentDisposition="inline"/>
+                        </h:commandLink>
+                        <br></br><br></br><p:commandLink class="btn btn-primary btn-xs"
+                                                         title="Realizar Comentario"
+                                                         oncomplete="PF('observ').show();"
+                                                         update=":#{p:component('observ')}"
+                                                         actionListener="#{committeeEPSReviewView.getCommentaries(TypeCorrection.PLAN, null)}" >
+                            <span class="glyphicon glyphicon-eye-open"></span> Correcciones
+                        </p:commandLink>
+                    </div>                    
+                </div>
+
                 <div class="row" >
                     <div class="form-group col-md-8" >
                         <p:panel id="bibliografia" header="Bibliografía">
@@ -194,17 +231,34 @@
                                     <p:outputLabel value="#{biblio.editorial}"/>
                                 </p:column>
                             </p:dataTable>
+                            <div class="row">
+                                <p:commandLink class="btn btn-primary btn-xs"
+                                               title="Realizar Comentario"
+                                               oncomplete="PF('observ').show();"
+                                               update=":#{p:component('observ')}"
+                                               actionListener="#{committeeEPSReviewView.getCommentaries(TypeCorrection.BIBLIOGRAPHY, null)}" >
+                                    <span class="glyphicon glyphicon-eye-open"></span> Correcciones
+                                </p:commandLink>
+                            </div>
                         </p:panel>
                     </div>
                 </div>
+
                 <div class="row">
-                    <p:commandLink class="btn btn-primary btn-xs"
-                                   title="Realizar Comentario"
-                                   oncomplete="PF('observ').show();"
-                                   update=":#{p:component('observ')}"
-                                   actionListener="#{committeeEPSReviewView.getCommentaries(TypeCorrection.BIBLIOGRAPHY, null)}" >
-                        <span class="glyphicon glyphicon-eye-open"></span> Correcciones
-                    </p:commandLink>
+                    <div class="form-group col-sm-8">
+                        <p:outputLabel for="annexed" value="Anexos"/>
+                        <h:commandLink id="labelAnnexed" value="#{committeeEPSReviewView.annexedFileName}" class="text-primary"
+                                       target="_blank" actionListener="#{committeeEPSReviewView.reloadAnnexed()}">
+                            <p:fileDownload value="#{committeeEPSReviewView.annexedStream}" contentDisposition="inline"/>
+                        </h:commandLink>
+                        <br></br><p:commandLink class="btn btn-primary btn-xs"
+                                                title="Realizar Comentario"
+                                                oncomplete="PF('observ').show();"
+                                                update=":#{p:component('observ')}"
+                                                actionListener="#{committeeEPSReviewView.getCommentaries(TypeCorrection.ANEXO, null)}" >
+                            <span class="glyphicon glyphicon-eye-open"></span> Correcciones
+                        </p:commandLink><br></br><br></br>
+                    </div>
                 </div>
             </fieldset>
         </h:form>

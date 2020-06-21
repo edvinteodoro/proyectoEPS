@@ -455,7 +455,7 @@
                                    update="@form,:growl"
                                    rendered="#{projectView.showButtonRevision(null)}"
                                    action="#{projectView.acceptChanges()}">
-                        <p:confirm header="Confirmation" message="Esta seguro de acpetar el proyecto?" icon="pi pi-exclamation-triangle" />
+                        <p:confirm header="Aceptar Proyecto" message="Esta seguro de aceptar el proyecto?" icon="pi pi-exclamation-triangle" />
                         <span class="glyphicon glyphicon-check"></span> Aceptar Proyecto
                     </p:commandLink>
                 </div>
@@ -500,7 +500,7 @@
                                    update="@form,:growl"
                                    rendered="#{projectView.editOptions()}"
                                    action="#{projectView.reviewRequeried()}">
-                        <p:confirm header="Confirmation" message="Al solicitar la revision ya no se podra editar el proyect. ¿quieres solicitar revision?" icon="pi pi-exclamation-triangle" />
+                        <p:confirm header="Solicitar Revision" message="Al solicitar la revision ya no se podra editar el proyecto. ¿quieres solicitar revision?" icon="pi pi-exclamation-triangle" />
                         <span class="glyphicon glyphicon-check"></span> Solicitar Revisión
                     </p:commandLink>
                 </div>
@@ -542,8 +542,8 @@
                 </div>
             </h:form>
         </p:dialog>
-        <p:dialog  header="Rechazo Proyecto" id="dlgCmtRz" widgetVar="dlgCmtRz"
-                   fitViewport="true" modal="true" closeOnEscape="true" position="center">
+        <p:dialog   class="container center_dialog" header="Rechazo Proyecto" id="dlgCmtRz" widgetVar="dlgCmtRz"
+                   fitViewport="true" modal="true" closeOnEscape="true">
             <p:ajax event="close" update="@this" listener="#{projectView.clearCorrectionSelected()}"/>
             <h:form>
                 <div class="modal-body">
@@ -557,6 +557,7 @@
                                        rendered="#{!projectView.isStuden()}"
                                        update="@form,:#{p:component('growl')},:#{p:component('formProject')}"
                                        actionListener="#{projectView.rejectProject()}">
+                            <p:confirm header="Rechazar Proyecto" message="¿Esta seguro de rechazar completamente el proyecto?" icon="pi pi-exclamation-triangle" />
                             <span class="glyphicon glyphicon-ok"></span> Confirmar 
                         </p:commandLink>
                     </fieldset>
@@ -564,7 +565,7 @@
             </h:form>
         </p:dialog>
         <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" >
-            <div class="col-sm-12 my-auto">
+            <div class="col text-center">
                 <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
                 <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times" />
             </div>

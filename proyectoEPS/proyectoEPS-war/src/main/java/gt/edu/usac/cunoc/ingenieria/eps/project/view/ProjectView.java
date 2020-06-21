@@ -614,7 +614,11 @@ public class ProjectView implements Serializable {
         clearCorrections();
         getProcess().setState(getRevisionState());
         changeStatusCorrection();
-        tailFacade.createTailCoordinator(user, getProcess());
+        if (!getProcess().getApprovedCareerCoordinator()){
+            tailFacade.createTailCoordinator(user, getProcess());
+        } else {
+            tailCommitteeEPSFacade.createTailCommiteeEPS(getProcess());
+        }
         MessageUtils.addSuccessMessage("La solicitud de revision se ha realizado exitosamente");
     }
 

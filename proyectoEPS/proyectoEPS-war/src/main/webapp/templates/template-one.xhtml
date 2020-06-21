@@ -10,7 +10,7 @@
     <h:head>
         <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
         <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700"></link>
-        <link href="#{resource['icons/favicon.png']}" rel="shortcut icon" type="image/x-icon" />
+        <link href="#{resource['icons/Usac_logo.png']}" rel="shortcut icon" type="image/x-icon" />
         <h:outputStylesheet library="css" name="bootstrap.css"/>
         <h:outputStylesheet library="css" name="global.css"/>
         <h:outputStylesheet library="css" name="bootstrap-theme.css"/>
@@ -20,10 +20,17 @@
         <h:outputScript name="bootstrap.js" library="js" />
         <h:outputScript name="core.js" library="primefaces" />
         <style type="text/css">
-            @media only screen and (min-width : 768px) {
-                .ui-confirmdialog{
-                    min-width: 425px;
-                }
+            .center_div{
+                position: absolute;
+                top: 40%;
+                left: 68%;
+                transform: translate(-50%,-50%);
+            }
+            .center_dialog{
+                position: absolute;
+                top: 5%;
+                left: 68%;
+                transform: translate(-50%,-50%);
             }
         </style>
 

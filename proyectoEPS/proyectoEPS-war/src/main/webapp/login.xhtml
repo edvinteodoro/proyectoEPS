@@ -10,56 +10,56 @@
         Login
     </ui:define>
     <ui:define name="content">
-        <div class="abs-center">
-            <h:form id="frmLogin">            
-                <p:focus id="focuss" context="frmLogin" />
-                <p:messages  globalOnly="true"/>
-                <fieldset class="center-block">
-                    <legend>Iniciar sesion</legend>
-                    <div class="row">
-                        <div class="form-group col-sm-2">
-                            <p:outputLabel for="name" value="Nombre usuario" />
+        <div class="container center_div">
+                <h:form id="frmLogin">            
+                    <p:focus id="focuss" context="frmLogin" />
+                    <p:messages  globalOnly="true"/>
+                    <fieldset class="center-block">
+                        <div class="row">
+                            <div  class="form-group col-sm-5">
+                                <h1 align="center" class="display-4">Inicia sesión</h1>
+                            </div>
                         </div>
-                        <div class="form-group col-sm-4">
-                            <p:inputText id="name" styleClass="form-control" pt:placeholder="Usuario" required="true"
-                                         pt:required="true" value="#{loginView.userId}"
-                                         requiredMessage="Ingrese Usuario"
-                                         />
+                        <div class="row">
+                            <div  class="form-group col-sm-5">
+                                <p:inputText id="name" styleClass="form-control" pt:placeholder="Nombre de Usuario" required="true"
+                                             pt:required="true" value="#{loginView.userId}"
+                                             requiredMessage="Ingrese Usuario"
+                                             />
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-sm-2">
-                            <p:outputLabel for="pass" value="Password:" />
+                        <div class="row">
+                            <div  class="form-group col-sm-5">
+                                <p:password id="pass" styleClass="form-control" pt:placeholder="Contraseña" required="true"
+                                            pt:required="true"  value="#{loginView.password}" pt:type="password"
+                                            requiredMessage="Ingrese contrasena"/>
+                            </div>
                         </div>
-                        <div class="form-group col-sm-4">
-                            <p:password id="pass" styleClass="form-control" pt:placeholder="Contrasena" required="true"
-                                        pt:required="true"  value="#{loginView.password}" pt:type="password"
-                                        requiredMessage="Ingrese contrasena"/>
+                        <div class="row">
+                            <div class="form-group col-sm-5">
+                                <p:commandLink styleClass="btn btn-primary btn-block"
+                                               update="@form,:growl" 
+                                               validateClient="true"
+                                               action="#{loginView.login}"   
+                                               >
+                                    <span class="glyphicon glyphicon-circle-arrow-right"></span>   Ingresar
+                                </p:commandLink>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-sm-4">
-                            <p:commandLink styleClass="btn btn-primary"
-                                           update="@form,:growl" 
-                                           validateClient="true"
-                                           action="#{loginView.login}"   
-                                           >
-                                <span class="glyphicon glyphicon-log-in"></span> Ingresar
-                            </p:commandLink>
+                        <div class="row">
+                            <div class="form-group col-sm-5">
+                                <div align="center">
+                                    <p:commandLink styleClass="navbar-link" oncomplete="PF('dlgReset').show();"
+                                                   value="Olvide mi Contraseña"
+                                                   update=":#{p:component('dlgReset')}">
+                                    </p:commandLink>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                <div class="row">
-                    <div class="form-group col-sm-4">
-                        <p:commandLink styleClass="navbar-link" oncomplete="PF('dlgReset').show();"
-                                       value="Olvide mi Contraseña"
-                                       update=":#{p:component('dlgReset')}">
-                        </p:commandLink>
-                    </div>
-                </div>
-                </fieldset>
-            </h:form>
+                    </fieldset>
+                </h:form>
         </div>
-        
+
         <p:dialog header="Recuperar Contrasena" id="dlgReset" widgetVar="dlgReset"
                   fitViewport="true" modal="true" closeOnEscape="true">
             <p:ajax event="close" listener="#{loginView.clean()}" update="@this" />

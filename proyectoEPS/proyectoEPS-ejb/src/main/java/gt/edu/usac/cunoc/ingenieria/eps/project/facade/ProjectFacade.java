@@ -8,6 +8,8 @@ import gt.edu.usac.cunoc.ingenieria.eps.project.Objectives;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Correction;
+import gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection;
+import gt.edu.usac.cunoc.ingenieria.eps.project.repository.CorrectionRepository;
 import gt.edu.usac.cunoc.ingenieria.eps.project.repository.ProjectRepository;
 import gt.edu.usac.cunoc.ingenieria.eps.project.service.CorrectionService;
 import gt.edu.usac.cunoc.ingenieria.eps.project.service.ProjectService;
@@ -32,6 +34,9 @@ public class ProjectFacade implements ProjectFacadeLocal {
 
     @EJB
     private CorrectionService correctionService;
+
+    @EJB
+    private CorrectionRepository correctionRepository;
 
     @Override
     public Project updateProject(Project project, List<Objectives> generalObjective, List<Objectives> specificObjective) throws MandatoryException, LimitException {
@@ -83,5 +88,9 @@ public class ProjectFacade implements ProjectFacadeLocal {
     @Override
     public Correction createCorrection(Correction correction) throws UserException {
         return correctionService.createCorrection(correction);
+    }
+
+    public List<Correction> getCorrections(TypeCorrection typeCorrection, Integer projectID, Integer section) {
+        return correctionRepository.getCorrections(typeCorrection, projectID, section);
     }
 }

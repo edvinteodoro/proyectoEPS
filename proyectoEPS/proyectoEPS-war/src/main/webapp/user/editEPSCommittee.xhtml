@@ -38,13 +38,13 @@
                         <p:column headerText="Comision EPS" styleClass="text-center" 
                                   rendered="#{p:ifGranted(constantsRol.COORDINADOR_EPS())}">
                             <p:commandLink styleClass="btn btn-primary btn-xs" 
-                                           update=":#{p:component('usersTable')}"
+                                           update=":#{p:component('usersTable')},:growl"
                                            rendered="#{!user.epsCommittee}"
                                            action="#{editEPSCommitteeView.updateCommitteeState(user)}" >
                                 <span class="glyphicon glyphicon-plus"></span> Agregar
                             </p:commandLink>
                             <p:commandLink styleClass="btn btn-danger btn-xs" 
-                                           update=":#{p:component('usersTable')}"
+                                           update=":#{p:component('usersTable')},:growl"
                                            rendered="#{user.epsCommittee}"
                                            action="#{editEPSCommitteeView.updateCommitteeState(user)}" >
                                 <span class="glyphicon glyphicon-remove"></span> Eliminar

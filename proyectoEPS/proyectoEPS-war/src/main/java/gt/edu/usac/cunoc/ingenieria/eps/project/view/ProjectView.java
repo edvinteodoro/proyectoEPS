@@ -65,7 +65,7 @@ public class ProjectView implements Serializable {
 
     @EJB
     private TailFacadeLocal tailFacade;
-    
+
     @EJB
     private TailCommitteeEPSFacadeLocal tailCommitteeEPSFacade;
 
@@ -614,13 +614,19 @@ public class ProjectView implements Serializable {
         clearCorrections();
         getProcess().setState(getRevisionState());
         changeStatusCorrection();
-        tailFacade.createTailCoordinator(user, getProcess());
+        if (!getProcess().getApprovedCareerCoordinator()){
+            tailFacade.createTailCoordinator(user, getProcess());
+        } else {
+            tailCommitteeEPSFacade.createTailCommiteeEPS(getProcess());
+        }
         MessageUtils.addSuccessMessage("La solicitud de revision se ha realizado exitosamente");
     }
 
     public void acceptChanges() {
         getProcess().setApprovedCareerCoordinator(true);
         finishReview();
+        getProcess().setState(StateProcess.REVISION);
+        processFacade.updateProcess(getProcess());
         tailCommitteeEPSFacade.createTailCommiteeEPS(process);
     }
 
@@ -736,7 +742,7 @@ public class ProjectView implements Serializable {
         }
         return value;
     }
-    
+
     public Boolean stateActived() {
         Boolean value = false;
         if (getProcess().getState() == StateProcess.ACTIVO) {

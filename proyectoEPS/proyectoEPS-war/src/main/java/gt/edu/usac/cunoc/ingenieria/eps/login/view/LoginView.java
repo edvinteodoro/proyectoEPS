@@ -54,8 +54,7 @@ public class LoginView implements Serializable {
     public void init() {
     }
 
-    public void login()
-            throws IOException, UserException {
+    public void login() throws IOException, UserException {
         Credential credential = new UsernamePasswordCredential(userId, new Password(password));
         AuthenticationStatus status = securityContext.authenticate(
                 getRequest(),

@@ -138,10 +138,10 @@ public class committeeEPSReviewView implements Serializable {
             case ANEXO:
             case TITLE:
             case COORDINATE:
-                setActualCorrections(findCorrection(correction));
+                setActualCorrections(projectFacade.getCorrections(correction, actualProcess.getProject().getId(), null));
                 break;
             case OTHER:
-                setActualCorrections(section.getCorrections());
+                setActualCorrections(projectFacade.getCorrections(correction, actualProcess.getProject().getId(), actualSection.getId()));
                 break;
         }
     }
@@ -213,7 +213,6 @@ public class committeeEPSReviewView implements Serializable {
                         }
                         break;
                 }
-                loadCurrentProject();
                 PrimeFaces.current().executeScript("PF('" + modalIdToClose + "').hide()");
             } else {
                 MessageUtils.addErrorMessage("Debe indicar el dueño de la corrección");

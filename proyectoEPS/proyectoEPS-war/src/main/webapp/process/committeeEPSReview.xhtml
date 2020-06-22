@@ -177,7 +177,7 @@
                                        target="_blank" actionListener="#{committeeEPSReviewView.reloadSchedule()}">
                             <p:fileDownload value="#{committeeEPSReviewView.scheduleStream}" contentDisposition="inline"/>
                         </h:commandLink>
-                        <br></br><br></br><p:commandLink class="btn btn-primary btn-xs"
+                        <br></br><p:commandLink class="btn btn-primary btn-xs"
                                                          title="Realizar Comentario"
                                                          oncomplete="PF('observ').show();"
                                                          update=":#{p:component('observ')}"
@@ -194,7 +194,7 @@
                                        target="_blank" actionListener="#{committeeEPSReviewView.reloadInvestmentPlan()}">
                             <p:fileDownload value="#{committeeEPSReviewView.investmentPlanStream}" contentDisposition="inline"/>
                         </h:commandLink>
-                        <br></br><br></br><p:commandLink class="btn btn-primary btn-xs"
+                        <br></br><p:commandLink class="btn btn-primary btn-xs"
                                                          title="Realizar Comentario"
                                                          oncomplete="PF('observ').show();"
                                                          update=":#{p:component('observ')}"
@@ -254,7 +254,7 @@
                                                 update=":#{p:component('observ')}"
                                                 actionListener="#{committeeEPSReviewView.anexosComments()}" >
                             <span class="glyphicon glyphicon-eye-open"></span> Correcciones
-                        </p:commandLink><br></br><br></br>
+                        </p:commandLink><br></br>
                     </div>
                 </div>
             </fieldset>
@@ -284,7 +284,7 @@
                             <p:outputLabel value="Nueva Correccion:" for="note" styleClass="col-md-4 control-label"/>
                             <div class="col-md-8">
                                 <p:inputTextarea id="note" styleClass="form-control"
-                                                 rows="4" cols="50" maxlength="200" placeholder="Agregue su correccion"
+                                                 rows="4" cols="50" maxlength="10000" placeholder="Agregue su correccion"
                                                  autoResize="false" value="#{committeeEPSReviewView.newCorrection}"/>
                             </div>
                         </div>

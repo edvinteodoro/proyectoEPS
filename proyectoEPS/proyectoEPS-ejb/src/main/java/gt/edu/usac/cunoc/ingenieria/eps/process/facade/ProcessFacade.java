@@ -8,6 +8,7 @@ import gt.edu.usac.cunoc.ingenieria.eps.process.service.ProcessService;
 import gt.edu.usac.cunoc.ingenieria.eps.process.service.RequerimentService;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import gt.edu.usac.cunoc.ingenieria.eps.process.StateProcess;
+import gt.edu.usac.cunoc.ingenieria.eps.tail.TailCoordinator;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import java.util.List;
 import java.util.Optional;
@@ -69,5 +70,10 @@ public class ProcessFacade implements ProcessFacadeLocal {
     @Override
     public Process updateProcess(Process process) {
         return processService.updateProcess(process);
+    }
+
+    @Override
+    public boolean rejectProcess(TailCoordinator tailCoordinator,String title,String msg) {
+        return processRepository.SendEmailStudent(tailCoordinator,title,msg);
     }
 }

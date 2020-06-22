@@ -3,6 +3,7 @@ package gt.edu.usac.cunoc.ingenieria.eps.process.facade;
 import User.exception.UserException;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Requeriment;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
+import gt.edu.usac.cunoc.ingenieria.eps.tail.TailCoordinator;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import java.util.List;
 import java.util.Optional;
@@ -33,4 +34,6 @@ public interface ProcessFacadeLocal {
     public List<Process> getProcessUser(User user);
 
     public Process updateProcess(Process process);
+    
+    public boolean rejectProcess(TailCoordinator tailCoordinator,String title,String msg);
 }

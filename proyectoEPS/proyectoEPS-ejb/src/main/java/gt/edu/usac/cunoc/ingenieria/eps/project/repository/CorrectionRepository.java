@@ -1,4 +1,3 @@
-
 package gt.edu.usac.cunoc.ingenieria.eps.project.repository;
 
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.PERSISTENCE_UNIT_NAME;

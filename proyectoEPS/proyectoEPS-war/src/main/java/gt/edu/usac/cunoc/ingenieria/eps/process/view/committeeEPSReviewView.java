@@ -146,19 +146,6 @@ public class committeeEPSReviewView implements Serializable {
         }
     }
 
-    private List<Correction> findCorrection(TypeCorrection correctionT) {
-        List<Correction> result = new ArrayList<>();
-        if (actualProcess.getProject().getCorrections() != null
-                && !actualProcess.getProject().getCorrections().isEmpty()) {
-            for (Correction correct : actualProcess.getProject().getCorrections()) {
-                if (correct.getType() == correctionT) {
-                    result.add(correct);
-                }
-            }
-        }
-        return result;
-    }
-
     public boolean isGeneralObjective(Objectives objective) {
         return objective.getType().equals(GENERAL_OBJETICVE);
     }
@@ -237,6 +224,31 @@ public class committeeEPSReviewView implements Serializable {
     public String arrayToString(byte[] text) {
         String result = new String(text);
         return result;
+    }
+
+    public String correctionTitle() {
+        if (actualCorrection != null) {
+            switch (actualCorrection) {
+                case BIBLIOGRAPHY:
+                case OBJETIVES:
+                case SPECIFIC_OBJETIVES:
+                case CALENDAR:
+                case PLAN:
+                case ANEXO:
+                case TITLE:
+                case COORDINATE:
+                    return actualCorrection.toText();
+                case OTHER:
+                    if (actualSection != null) {
+                        return actualSection.getTitle().getName();
+                    } else {
+                        MessageUtils.addErrorMessage("Debe colocar texto en la corrección");
+                    }
+            }
+        } else {
+            MessageUtils.addErrorMessage("Debe colocar texto en la corrección");
+        }
+        return null;
     }
 
     public Integer getProcessId() {

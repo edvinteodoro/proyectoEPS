@@ -260,7 +260,7 @@
             </fieldset>
         </h:form>
 
-        <p:dialog header="Correcciones" id="observ" widgetVar="observ" 
+        <p:dialog header="Correcciones - #{committeeEPSReviewView.correctionTitle()}" id="observ" widgetVar="observ" 
                   fitViewport="true" modal="true" closeOnEscape="true">
             <p:ajax event="close" listener="#{committeeEPSReviewView.cleanCorrectionList()}" update="@this" />
             <h:form>

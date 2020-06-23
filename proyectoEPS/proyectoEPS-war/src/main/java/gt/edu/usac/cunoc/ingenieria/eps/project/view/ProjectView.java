@@ -23,6 +23,7 @@ import static gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection.REJECTED;
 import static gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection.SPECIFIC_OBJETIVES;
 import static gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection.TITLE;
 import gt.edu.usac.cunoc.ingenieria.eps.project.facade.ProjectFacadeLocal;
+import gt.edu.usac.cunoc.ingenieria.eps.tail.TailCoordinator;
 import gt.edu.usac.cunoc.ingenieria.eps.tail.facade.TailCommitteeEPSFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.tail.facade.TailFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
@@ -88,6 +89,7 @@ public class ProjectView implements Serializable {
 
     private Project project;
     private Process process;
+    private TailCoordinator tailCoordiantor;
     private List<Objectives> generalObjectves;
     private List<Objectives> specificObjectives;
     private List<Correction> corrections;
@@ -614,17 +616,22 @@ public class ProjectView implements Serializable {
         clearCorrections();
         getProcess().setState(getRevisionState());
         changeStatusCorrection();
-        if (!getProcess().getApprovedCareerCoordinator()){
+        if (!getProcess().getApprovedCareerCoordinator()) {
             tailFacade.createTailCoordinator(user, getProcess());
         } else {
             tailCommitteeEPSFacade.createTailCommiteeEPS(getProcess());
         }
-        MessageUtils.addSuccessMessage("La solicitud de revision se ha realizado exitosamente");
+        MessageUtils.addSuccessMessage("La solicitud de revision se ha realizado exitosamente.");
     }
 
     public void acceptChanges() {
         getProcess().setApprovedCareerCoordinator(true);
-        finishReview();
+        clearCorrections();
+        changeStatusCorrection();
+        processFacade.rejectProcess(tailFacade.getTailCoordianteor(getProcess()), "Proceso Eps Aceptado", "Su projecto ha sido aceptado por el coordinador de carrera.");
+        tailFacade.deleteTailCoordinatod(getProcess());
+        getProcess().setState(StateProcess.ACTIVO);
+        processFacade.updateProcess(getProcess());
         getProcess().setState(StateProcess.REVISION);
         processFacade.updateProcess(getProcess());
         tailCommitteeEPSFacade.createTailCommiteeEPS(process);
@@ -634,25 +641,27 @@ public class ProjectView implements Serializable {
         try {
             clearCorrections();
             changeStatusCorrection();
+            processFacade.rejectProcess(tailFacade.getTailCoordianteor(getProcess()), "Revision Proceso Eps", "Su projecto ha sido revisado, ya es posible editar el documento y realizar los cambios solicitados.");
             tailFacade.deleteTailCoordinatod(getProcess());
             getProcess().setState(StateProcess.ACTIVO);
             processFacade.updateProcess(getProcess());
             redirectToProcesses();
         } catch (Exception e) {
-            MessageUtils.addErrorMessage("No se puederon agregar los cambios");
+            MessageUtils.addErrorMessage("No se pudo finalizar la revision");
         }
     }
 
-    public void rejectProject() {
+    public void rejectThisProject() {
         try {
             clearCorrections();
             changeStatusCorrection();
+            processFacade.rejectProcess(tailFacade.getTailCoordianteor(getProcess()), "Proceso Eps Rechazado", new String(getCorrectionSelected().getText()));
             tailFacade.deleteTailCoordinatod(getProcess());
             getProcess().setState(StateProcess.RECHAZADO);
             processFacade.updateProcess(getProcess());
             redirectToProcesses();
         } catch (Exception e) {
-            MessageUtils.addErrorMessage("No se puederon agregar los cambios");
+            MessageUtils.addErrorMessage("No se pudo rechazar el proyecto");
         }
     }
 

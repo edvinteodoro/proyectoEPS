@@ -69,4 +69,9 @@ public class TailFacade implements TailFacadeLocal {
     public void deleteTailCoordinatod(Process process) {
         tailCoordiantorService.deleteTailCoordiantor(process); 
     }
+
+    @Override
+    public TailCoordinator getTailCoordianteor(Process process) {
+        return tailCoordiantorRepository.getTailCoordinator(process);
+    }
 }

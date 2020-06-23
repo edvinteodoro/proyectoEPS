@@ -4,6 +4,7 @@ import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.JAVA_MAIL
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.PERSISTENCE_UNIT_NAME;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
+import gt.edu.usac.cunoc.ingenieria.eps.tail.TailCoordinator;
 import gt.edu.usac.cunoc.ingenieria.eps.user.service.UserService;
 import static gt.edu.usac.cunoc.ingenieria.eps.user.service.UserService.CONTENT_TYPE;
 import java.util.List;
@@ -36,10 +37,18 @@ public class TailCoordinatorRepository {
     private Session emailSession;
 
     public static final String GET_PROCESS_COORDIANTOR = "SELECT t.process FROM TailCoordinator t WHERE t.userCareer.uSERuserId.userId=:userId ORDER BY t.id ASC";
+    public static final String GET_TAIL_COORDIANTOR = "SELECT t FROM TailCoordinator t WHERE t.process.id=:processId";
     public static final String ID_PARAMETER_NAME = "userId";
+    public static final String ID_PARAMETER_PROCESS = "processId";
     
     public void setEntityManager(EntityManager entityManager) {
         this.entityManager = entityManager;
+    }
+    
+    public TailCoordinator getTailCoordinator(Process process){
+        Query query = entityManager.createQuery(GET_TAIL_COORDIANTOR);
+        query.setParameter(ID_PARAMETER_PROCESS, process.getId());
+        return (TailCoordinator) query.getSingleResult();  
     }
 
     public List<Process> getProcessByCoordinator(User user) {

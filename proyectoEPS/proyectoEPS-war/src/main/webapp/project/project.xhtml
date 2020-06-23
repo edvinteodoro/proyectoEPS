@@ -549,16 +549,16 @@
                 <div class="modal-body">
                     <fieldset>
                         <h:outputLabel value="Explique la razón por la cual sera rechazado el proyecto:" /><br></br> 
-                        <p:inputTextarea  value="#{projectView.correctionSelectedText}" id="cmt" rows="10" cols="80" counter="displayCmt" maxlength="10000" counterTemplate="{0} Caracteres Restantes." autoResize="false" />
+                        <p:inputTextarea required="true" value="#{projectView.correctionSelectedText}" id="cmt" rows="10" cols="80" counter="displayCmt" maxlength="10000" counterTemplate="{0} Caracteres Restantes." autoResize="false" />
                         <br/>
                         <h:outputText id="displayCmt" /><br></br><br></br>
                         <p:commandLink class="btn btn-primary btn-xs"
                                        styleClass="btn btn-primary btn-xs"
                                        rendered="#{!projectView.isStuden()}"
                                        update="@form,:#{p:component('growl')},:#{p:component('formProject')}"
-                                       actionListener="#{projectView.rejectProject()}">
+                                       actionListener="#{projectView.rejectThisProject()}">
                             <p:confirm header="Rechazar Proyecto" message="¿Esta seguro de rechazar completamente el proyecto?" icon="pi pi-exclamation-triangle" />
-                            <span class="glyphicon glyphicon-ok"></span> Confirmar 
+                            <span class="glyphicon glyphicon-ok"></span> Rechazar Proyecto 
                         </p:commandLink>
                     </fieldset>
                 </div>

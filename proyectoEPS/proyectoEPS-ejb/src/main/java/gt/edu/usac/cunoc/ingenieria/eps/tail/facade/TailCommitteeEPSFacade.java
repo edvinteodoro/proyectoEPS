@@ -29,5 +29,10 @@ public class TailCommitteeEPSFacade implements TailCommitteeEPSFacadeLocal{
     public List<Process> getTailCommitteeEPS() {
         return tailCommitteeEPSRepository.getTailCommitteeEPS();
     }
+
+    @Override
+    public void deleteTailCommitteeEPS(Process process) {
+        tailCommitteeEPSService.deleteTailCommitteeEPS(process);
+    }
   
 }

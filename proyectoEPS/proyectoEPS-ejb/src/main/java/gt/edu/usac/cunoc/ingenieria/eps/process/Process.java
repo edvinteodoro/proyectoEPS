@@ -185,7 +185,7 @@ public class Process implements Serializable {
     }
     
     public String getApprovedEPSMessage(){
-        if(approvedEPSDevelopment==false){
+        if(approvalEPSCommission==false){
             return "No";
         }else{
             return "Si";

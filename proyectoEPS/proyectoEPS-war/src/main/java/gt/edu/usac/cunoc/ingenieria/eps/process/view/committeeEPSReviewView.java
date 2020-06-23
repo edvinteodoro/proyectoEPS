@@ -62,7 +62,7 @@ public class committeeEPSReviewView implements Serializable {
         actualProcess = null;
         Optional<Process> result;
         try {
-            result = processFacade.findProcessById(processId);
+            result = processFacade.ProcessAvailableToEPSCommittee(processId);
             if (result.isPresent()) {
                 actualProcess = result.get();
 

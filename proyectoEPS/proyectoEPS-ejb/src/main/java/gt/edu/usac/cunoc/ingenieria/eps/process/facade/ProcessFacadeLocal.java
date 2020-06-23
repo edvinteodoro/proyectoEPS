@@ -22,6 +22,19 @@ public interface ProcessFacadeLocal {
      */
     public Optional<Process> findProcessById(Integer id) throws UserException;
 
+    /**
+     * This method use the Process ID, to verify and return if the process is on
+     * <b>REVISION</b> and had been <b>APROVEED</b> by the Career Coordinator
+     * and had <b>NOT BEEN APROVEED</b> by the EPS Committee
+     *
+     * if null isn't available the process
+     *
+     * @param id
+     * @return
+     * @throws UserException
+     */
+    public Optional<Process> ProcessAvailableToEPSCommittee(Integer id) throws UserException;
+
     public List<Process> getProcess(Process process);
 
     public Requeriment createRequeriment(Requeriment requeriment);

@@ -12,27 +12,13 @@
         <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700"></link>
         <link href="#{resource['icons/Usac_logo.png']}" rel="shortcut icon" type="image/x-icon" />
         <h:outputStylesheet library="css" name="bootstrap.css"/>
-        <h:outputStylesheet library="css" name="global.css"/>
+        <h:outputStylesheet library="css" name="personalizedCss.css"/>
         <h:outputStylesheet library="css" name="bootstrap-theme.css"/>
         <h:outputScript name="jquery/jquery.js" library="primefaces" />
         <h:outputScript name="jquery/jquery-plugins.js" library="primefaces" />
 
         <h:outputScript name="bootstrap.js" library="js" />
         <h:outputScript name="core.js" library="primefaces" />
-        <style type="text/css">
-            .center_div{
-                position: absolute;
-                top: 28%;
-                left: 37%;
-            }
-            .center_dialog{
-                position: absolute;
-                top: 5%;
-                left: 68%;
-                transform: translate(-50%,-50%);
-            }
-        </style>
-
         <ui:insert name="head-extras">
             <!--head extras-->
         </ui:insert>
@@ -46,7 +32,7 @@
 
     <h:body>
         <p:growl id="growl" showDetail="false" />
-        <div class="container theme-showcase" role="main">
+        <div class="container-fluid" role="main">
             <!--<main-menu params="routerObj: routerObj, authModel: authModelObj"></main-menu>-->
             <nav class="navbar navbar-inverse " jsf:rendered="#{not empty request.userPrincipal}">
                 <div class="container-fluid">

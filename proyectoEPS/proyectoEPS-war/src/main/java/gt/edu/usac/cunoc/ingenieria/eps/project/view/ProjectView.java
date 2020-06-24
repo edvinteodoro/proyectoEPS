@@ -626,16 +626,21 @@ public class ProjectView implements Serializable {
     }
 
     public void acceptChanges() {
-        getProcess().setApprovedCareerCoordinator(true);
-        clearCorrections();
-        changeStatusCorrection();
-        processFacade.rejectProcess(tailFacade.getTailCoordianteor(getProcess()), "Proceso Eps Aceptado", "Su projecto ha sido aceptado por el coordinador de carrera.");
-        tailFacade.deleteTailCoordinatod(getProcess());
-        getProcess().setState(StateProcess.ACTIVO);
-        processFacade.updateProcess(getProcess());
-        getProcess().setState(StateProcess.REVISION);
-        processFacade.updateProcess(getProcess());
-        tailCommitteeEPSFacade.createTailCommiteeEPS(process);
+        try {
+            getProcess().setApprovedCareerCoordinator(true);
+            clearCorrections();
+            changeStatusCorrection();
+            processFacade.rejectProcess(tailFacade.getTailCoordianteor(getProcess()), "Proceso Eps Aceptado", "Su projecto ha sido aceptado por el coordinador de carrera.");
+            tailFacade.deleteTailCoordinatod(getProcess());
+            getProcess().setState(StateProcess.ACTIVO);
+            processFacade.updateProcess(getProcess());
+            getProcess().setState(StateProcess.REVISION);
+            processFacade.updateProcess(getProcess());
+            tailCommitteeEPSFacade.createTailCommiteeEPS(process);
+            redirectToProcesses();
+        } catch (Exception e) {
+
+        }
     }
 
     public void finishReview() {

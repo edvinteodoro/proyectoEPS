@@ -616,6 +616,7 @@ public class ProjectView implements Serializable {
         clearCorrections();
         getProcess().setState(getRevisionState());
         changeStatusCorrection();
+        processFacade.updateProcess(getProcess());
         if (!getProcess().getApprovedCareerCoordinator()) {
             tailFacade.createTailCoordinator(user, getProcess());
         } else {

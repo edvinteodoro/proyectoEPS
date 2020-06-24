@@ -10,5 +10,7 @@ public interface TailCommitteeEPSFacadeLocal {
     public void createTailCommiteeEPS(Process process);
     
     public List<Process> getTailCommitteeEPS();
+    
+    public void deleteTailCommitteeEPS(Process process);
 
 }

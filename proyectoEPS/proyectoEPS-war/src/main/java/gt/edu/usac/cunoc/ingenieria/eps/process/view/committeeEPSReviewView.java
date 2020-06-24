@@ -12,13 +12,16 @@ import gt.edu.usac.cunoc.ingenieria.eps.project.facade.ProjectFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.user.facade.UserFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.utils.MessageUtils;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javax.ejb.EJB;
+import javax.faces.context.ExternalContext;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 import org.primefaces.PrimeFaces;
 import org.primefaces.model.DefaultStreamedContent;
@@ -31,6 +34,9 @@ import org.primefaces.model.StreamedContent;
 @Named
 @ViewScoped
 public class committeeEPSReviewView implements Serializable {
+
+    @Inject
+    private ExternalContext externalContext;
 
     @EJB
     private ProcessFacadeLocal processFacade;
@@ -62,7 +68,7 @@ public class committeeEPSReviewView implements Serializable {
         actualProcess = null;
         Optional<Process> result;
         try {
-            result = processFacade.findProcessById(processId);
+            result = processFacade.ProcessAvailableToEPSCommittee(processId);
             if (result.isPresent()) {
                 actualProcess = result.get();
 
@@ -237,6 +243,7 @@ public class committeeEPSReviewView implements Serializable {
                 case ANEXO:
                 case TITLE:
                 case COORDINATE:
+                case REJECTED:
                     return actualCorrection.toText();
                 case OTHER:
                     if (actualSection != null) {
@@ -249,6 +256,45 @@ public class committeeEPSReviewView implements Serializable {
             MessageUtils.addErrorMessage("Debe colocar texto en la corrección");
         }
         return null;
+    }
+
+    public void returnEPSCommitteeCorrections() {
+        try {
+            processFacade.returnEPSCommitteeRevisionToStudent(actualProcess.getId());
+            redirectToEPSCommittee();
+        } catch (UserException e) {
+            MessageUtils.addErrorMessage(e.getMessage());
+        }
+    }
+
+    public void aproveByEPSCommittee() {
+        try {
+            processFacade.aproveedByEPSCommittee(actualProcess.getId());
+            redirectToEPSCommittee();
+        } catch (Exception e) {
+            MessageUtils.addErrorMessage(e.getMessage());
+        }
+    }
+
+    public void rejectByEPSCommittee() {
+        try {
+            processFacade.EPSCommitteeRejectProyect(
+                    actualProcess.getId(),
+                    userFacade.getAuthenticatedUser().get(0),
+                    newCorrection
+            );
+            redirectToEPSCommittee();
+        } catch (Exception e) {
+            MessageUtils.addErrorMessage(e.getMessage());
+        }
+    }
+
+    private void redirectToEPSCommittee() {
+        try {
+            externalContext.redirect(externalContext.getRequestContextPath() + "/committeeEPS/processesCommitteeEPS.xhtml");
+        } catch (IOException e) {
+            MessageUtils.addErrorMessage("Error to redirect");
+        }
     }
 
     public Integer getProcessId() {

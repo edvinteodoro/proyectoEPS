@@ -50,42 +50,42 @@
                     </div>
                 </fieldset>
             </h:form>
-        </div>
 
-        <p:dialog id="dlgReset" widgetVar="dlgReset" width="25%" height="70%"
-                  fitViewport="true" modal="true" closeOnEscape="true" draggable="false" blockScroll="true" >
-            <p:ajax event="close" listener="#{loginView.clean()}" update="@this" />
-            <div class="row form-group">
-                <h3 align="center" class="display-4">Recuperar Contraseña</h3>
-            </div>
-            <h:form>
-                <div class="modal-body">
-                    <fieldset>
-                        <div class="row form-group">
-                            <div class="col-sm-12">
-                                <p:inputText id="carnet" styleClass="form-control" placeholder="Nombre de usuario"
-                                             pt:required="true" maxlength="45" required="true"
-                                             value="#{loginView.userIDReset}"/>
-                            </div>
-                        </div>
-                        <div class="row form-group">
-                            <div class="col-sm-12">
-                                <p:inputText id="emailU" styleClass="form-control" placeholder="Correo electronico"
-                                             maxlength="55" required="true"
-                                             value="#{loginView.email}"/>
-                            </div>
-                        </div>
-                    </fieldset>
+            <p:dialog id="dlgReset" widgetVar="dlgReset"
+                      fitViewport="true" modal="true" closeOnEscape="true" draggable="false" blockScroll="true" >
+                <p:ajax event="close" listener="#{loginView.clean()}" update="@this" />
+                <div class="row form-group">
+                    <h3 align="center" class="display-4">Recuperar Contraseña</h3>
                 </div>
-                <div class="modal-footer ">
-                    <p:commandLink styleClass="btn btn-warning btn-lg" style="width: 100%;"
-                                   update="@form,:#{p:component('growl')}"
-                                   actionListener="#{loginView.resetPassword('dlgReset')}">
-                        <span class="glyphicon glyphicon-ok-sign"></span> Recuperar Contraseña
-                    </p:commandLink>
-                </div>
-            </h:form>
-        </p:dialog>
+                <h:form>
+                    <div class="modal-body">
+                        <fieldset>
+                            <div class="row form-group">
+                                <div class="col-sm-12">
+                                    <p:inputText id="carnet" styleClass="form-control" placeholder="Nombre de usuario"
+                                                 pt:required="true" maxlength="45" required="true"
+                                                 value="#{loginView.userIDReset}"/>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-sm-12">
+                                    <p:inputText id="emailU" styleClass="form-control" placeholder="Correo electronico"
+                                                 maxlength="55" required="true"
+                                                 value="#{loginView.email}"/>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="modal-footer ">
+                        <p:commandLink styleClass="btn btn-warning btn-lg" style="width: 300px;"
+                                       update="@form,:#{p:component('growl')}"
+                                       actionListener="#{loginView.resetPassword('dlgReset')}">
+                            <span class="glyphicon glyphicon-ok-sign"></span> Recuperar Contraseña
+                        </p:commandLink>
+                    </div>
+                </h:form>
+            </p:dialog>
+        </div>
     </ui:define>
 
 </ui:composition>

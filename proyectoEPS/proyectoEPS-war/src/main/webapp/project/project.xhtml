@@ -30,14 +30,14 @@
 
     <ui:define name="content">
         <h:outputScript library="js" name="calendar_es.js" />
-        <h:form id="formProject">
+        <h:form id="formProject" class="bg-modal">
             <fieldset>
                 <legend>Anteproyecto</legend> 
                 <div class="row">
                     <div class="form-group col-md-8">
                         <p:outputLabel class="text-danger" value="Advertencia:   No se puede editar el proyecto debido a que ha sido rechazado por el coordinador." rendered="#{projectView.stateReject()}"/>
                         <p:outputLabel class="text-danger" value="Advertencia:   No se puede revisar este proyecto debido a que no es el primero en la cola de revision." rendered="#{projectView.renderWarningCoordinator()}"/>
-                        <p:outputLabel class="text-danger" value="Advertencia:   No se puede editar el proyecto debido a que se encuentra en un proceso de revision." rendered="#{projectView.stateRevision()}"/><br></br><br></br>
+                        <p:outputLabel class="text-danger" value="Advertencia:   No se puede editar el proyecto debido a que se encuentra en un proceso de revision." rendered="#{projectView.stateRevision()}"/><br></br>
                         <p:outputLabel for="title" value="Titulo:"/>
                         <p:inputText id="title" styleClass="form-control" pt:placeholder="Titulo del Proyecto"
                                      disabled="#{!projectView.editOptions()}"

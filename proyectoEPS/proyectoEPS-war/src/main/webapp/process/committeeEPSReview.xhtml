@@ -25,7 +25,7 @@
 
     <ui:define name="content">
         <h:outputScript library="js" name="calendar_es.js" />
-        <h:form id="proyect">
+        <h:form id="proyect" class="bg-modal">
             <fieldset>
                 <legend>Verificacion</legend>
 
@@ -287,7 +287,7 @@
         </h:form>
 
         <p:dialog header="Correcciones - #{committeeEPSReviewView.correctionTitle()}" id="observ" widgetVar="observ" 
-                  fitViewport="true" modal="true" closeOnEscape="true" position="center top">
+                  fitViewport="true" modal="true" closeOnEscape="true">
             <p:ajax event="close" listener="#{committeeEPSReviewView.cleanCorrectionList()}" update="@this" />
             <h:form>
                 <div class="modal-body">
@@ -327,7 +327,7 @@
         </p:dialog>
 
         <p:dialog header="#{committeeEPSReviewView.correctionTitle()}" id="rechazar" widgetVar="rechazar" 
-                  fitViewport="true" modal="true" closeOnEscape="true" position="center top">
+                  fitViewport="true" modal="true" closeOnEscape="true">
             <p:ajax event="close" listener="#{committeeEPSReviewView.cleanCorrectionList()}" update="@this" />
             <h:form>
                 <div class="modal-body">

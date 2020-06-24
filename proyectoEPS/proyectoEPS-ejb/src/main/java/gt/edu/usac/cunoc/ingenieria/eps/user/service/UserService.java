@@ -67,7 +67,7 @@ public class UserService {
         }
         user.setPassword(encryptPass(user.getPassword()));
         try {
-            if (user.getROLid().getName().equals(Constants.COORDINADOR_EPS)){
+            if (user.getROLid().getName().equals(Constants.COORDINADOR_EPS)) {
                 user.setEpsCommittee(true);
             }
             entityManager.persist(user);
@@ -112,9 +112,6 @@ public class UserService {
         if (user.getPhone() != null) {
             updateUser.setPhone(user.getPhone());
         }
-        if (user.getPassword() != null) {
-            updateUser.setPassword(encryptPass(user.getPassword()));
-        }
         if (user.getDirection() != null) {
             updateUser.setDirection(user.getDirection());
         }
@@ -144,7 +141,17 @@ public class UserService {
 
             String pass = newPassword();
             user.setPassword(pass);
-            User found = updateUser(user);
+            User found = entityManager.find(User.class, user.getUserId());
+
+            if (found == null) {
+                if (user.getPassword() != null) {
+                    found.setPassword(encryptPass(user.getPassword()));
+                    entityManager.merge(found);
+                }
+            } else {
+                throw new UserException("Debe elegir un usuario");
+            }
+
             sendEmail(found.getEmail(), "Cambio de contraseña", emailBody(pass));
             return found;
         } else {

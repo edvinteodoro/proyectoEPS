@@ -8,6 +8,7 @@ import gt.edu.usac.cunoc.ingenieria.eps.project.Objectives;
 import static gt.edu.usac.cunoc.ingenieria.eps.project.Objectives.GENERAL_OBJETICVE;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Section;
 import gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection;
+import static gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection.OTHER;
 import gt.edu.usac.cunoc.ingenieria.eps.project.facade.ProjectFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.user.facade.UserFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.utils.MessageUtils;
@@ -15,7 +16,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import javax.ejb.EJB;
@@ -59,8 +60,10 @@ public class committeeEPSReviewView implements Serializable {
     private String annexedFileName = "";
 
     private List<Correction> actualCorrections;
+    private List<Correction> temporalCorrections = new LinkedList<>();
 
-    private String newCorrection;
+    private Correction newCorrection;
+    private String correctionMessage;
     private TypeCorrection actualCorrection;
     private Section actualSection;
 
@@ -145,9 +148,26 @@ public class committeeEPSReviewView implements Serializable {
             case TITLE:
             case COORDINATE:
                 setActualCorrections(projectFacade.getCorrections(correction, actualProcess.getProject().getId(), null));
+                try {
+                    newCorrection = actualTempCorrectionText();
+                    if (!arrayToString(newCorrection.getText()).isEmpty()) {
+                        setCorrectionMessage(arrayToString(newCorrection.getText()));
+                    }
+                } catch (UserException e) {
+                    MessageUtils.addErrorMessage(e.getMessage());
+                }
                 break;
+
             case OTHER:
                 setActualCorrections(projectFacade.getCorrections(correction, actualProcess.getProject().getId(), actualSection.getId()));
+                try {
+                    newCorrection = actualTempCorrectionText();
+                    if (!arrayToString(newCorrection.getText()).isEmpty()) {
+                        setCorrectionMessage(arrayToString(newCorrection.getText()));
+                    }
+                } catch (UserException e) {
+                    MessageUtils.addErrorMessage(e.getMessage());
+                }
                 break;
         }
     }
@@ -157,7 +177,7 @@ public class committeeEPSReviewView implements Serializable {
     }
 
     public void comment(final String modalIdToClose) {
-        if (newCorrection != null && !newCorrection.isEmpty()) {
+        if (newCorrection != null && correctionMessage != null && !correctionMessage.isEmpty()) {
             if (actualCorrection != null) {
                 switch (actualCorrection) {
                     case BIBLIOGRAPHY:
@@ -168,39 +188,13 @@ public class committeeEPSReviewView implements Serializable {
                     case ANEXO:
                     case TITLE:
                     case COORDINATE:
-                        try {
-                            projectFacade.createCorrection(
-                                    new Correction(
-                                            LocalDate.now(),
-                                            userFacade.getAuthenticatedUser().get(0),
-                                            actualCorrection,
-                                            actualProcess.getProject(),
-                                            null,
-                                            newCorrection.getBytes()
-                                    )
-                            );
-                            MessageUtils.addSuccessMessage("Corrección agregada");
-                        } catch (UserException e) {
-                            MessageUtils.addErrorMessage(e.getMessage());
-                        }
+                        newCorrection.setText(correctionMessage.getBytes());
+                        temporalCorrections.add(newCorrection);
                         break;
                     case OTHER:
                         if (actualSection != null) {
-                            try {
-                                projectFacade.createCorrection(
-                                        new Correction(
-                                                LocalDate.now(),
-                                                userFacade.getAuthenticatedUser().get(0),
-                                                actualCorrection,
-                                                actualProcess.getProject(),
-                                                actualSection,
-                                                newCorrection.getBytes()
-                                        )
-                                );
-                                MessageUtils.addSuccessMessage("Corrección agregada");
-                            } catch (UserException e) {
-                                MessageUtils.addErrorMessage(e.getMessage());
-                            }
+                            newCorrection.setText(correctionMessage.getBytes());
+                            temporalCorrections.add(newCorrection);
                         } else {
                             MessageUtils.addErrorMessage("Debe elegir una sección");
                         }
@@ -258,6 +252,48 @@ public class committeeEPSReviewView implements Serializable {
         return null;
     }
 
+    private Correction actualTempCorrectionText() throws UserException {
+        if (!temporalCorrections.isEmpty()) {
+            for (Correction correction : temporalCorrections) {
+                if (correction.getType() == actualCorrection) {
+                    if (correction.getType() != OTHER) {
+                        return correction;
+                    } else {
+                        if (actualSection != null && correction.getSection().getId().equals(actualSection.getId())) {
+                            return correction;
+                        }
+                    }
+                }
+            }
+        }
+
+        try {
+            if (actualSection == null) {
+                return new Correction(LocalDate.now(), userFacade.getAuthenticatedUser().get(0), actualCorrection, actualProcess.getProject(), null, "".getBytes());
+            } else {
+                return new Correction(LocalDate.now(), userFacade.getAuthenticatedUser().get(0), actualCorrection, actualProcess.getProject(), actualSection, "".getBytes());
+            }
+        } catch (UserException e) {
+            MessageUtils.addErrorMessage(e.getMessage());
+        }
+        throw new UserException("No es posible crear un comentario");
+    }
+
+    public void saveCorrections() {
+        try {
+            if (temporalCorrections != null && !temporalCorrections.isEmpty()) {
+                for (Correction temporalCorrection : temporalCorrections) {
+                    projectFacade.createCorrection(temporalCorrection);
+                }
+                redirectToEPSCommittee();
+            } else {
+                MessageUtils.addErrorMessage("No existen correcciones para guardar");
+            }
+        } catch (UserException e) {
+            MessageUtils.addErrorMessage(e.getMessage());
+        }
+    }
+
     public void returnEPSCommitteeCorrections() {
         try {
             processFacade.returnEPSCommitteeRevisionToStudent(actualProcess.getId());
@@ -281,7 +317,7 @@ public class committeeEPSReviewView implements Serializable {
             processFacade.EPSCommitteeRejectProyect(
                     actualProcess.getId(),
                     userFacade.getAuthenticatedUser().get(0),
-                    newCorrection
+                    correctionMessage
             );
             redirectToEPSCommittee();
         } catch (Exception e) {
@@ -295,6 +331,10 @@ public class committeeEPSReviewView implements Serializable {
         } catch (IOException e) {
             MessageUtils.addErrorMessage("Error to redirect");
         }
+    }
+    
+    public Boolean listTemporalCorrection(){
+        return (temporalCorrections == null || temporalCorrections.isEmpty());
     }
 
     public Integer getProcessId() {
@@ -369,18 +409,18 @@ public class committeeEPSReviewView implements Serializable {
         this.actualCorrections = actualCorrections;
     }
 
-    public String getNewCorrection() {
-        return newCorrection;
+    public String getCorrectionMessage() {
+        return correctionMessage;
     }
 
-    public void setNewCorrection(String newCorrection) {
-        this.newCorrection = newCorrection;
+    public void setCorrectionMessage(String correctionMessage) {
+        this.correctionMessage = correctionMessage;
     }
 
     public void cleanCorrectionList() {
         actualSection = null;
         setActualCorrections(null);
-        setNewCorrection("");
+        correctionMessage = "";
     }
 
 }

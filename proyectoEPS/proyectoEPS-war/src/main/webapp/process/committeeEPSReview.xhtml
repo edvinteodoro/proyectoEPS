@@ -261,6 +261,15 @@
                     <div class="form-group col-sm-2">
                         <p:commandLink styleClass="btn btn-success"
                                        update="@form,:growl"
+                                       rendered="#{!committeeEPSReviewView.listTemporalCorrection()}"
+                                       action="#{committeeEPSReviewView.saveCorrections()}">
+                            <p:confirm header="Guardar Correcciones" message="¿Desea guardar las correcciones?" icon="pi pi-exclamation-triangle" />
+                            <span class="glyphicon glyphicon-info-sign"></span> Aceptar Proyecto
+                        </p:commandLink>
+                    </div>
+                    <div class="form-group col-sm-2">
+                        <p:commandLink styleClass="btn btn-success"
+                                       update="@form,:growl"
                                        action="#{committeeEPSReviewView.aproveByEPSCommittee()}">
                             <p:confirm header="Aceptar Proyecto" message="¿Esta seguro de ACEPTAR el proyecto?" icon="pi pi-exclamation-triangle" />
                             <span class="glyphicon glyphicon-check"></span> Aceptar Proyecto
@@ -311,7 +320,7 @@
                             <div class="col-md-8">
                                 <p:inputTextarea id="note" styleClass="form-control"
                                                  rows="4" cols="50" maxlength="10000" placeholder="Agregue su correccion"
-                                                 autoResize="false" value="#{committeeEPSReviewView.newCorrection}"/>
+                                                 autoResize="false" value="#{committeeEPSReviewView.correctionMessage}"/>
                             </div>
                         </div>
                     </fieldset>
@@ -337,7 +346,7 @@
                             <div class="col-md-8">
                                 <p:inputTextarea id="note" styleClass="form-control" required="true"
                                                  rows="4" cols="50" maxlength="10000" placeholder="Indique los motivos"
-                                                 autoResize="false" value="#{committeeEPSReviewView.newCorrection}"/>
+                                                 autoResize="false" value="#{committeeEPSReviewView.correctionMessage}"/>
                             </div>
                         </div>
                     </fieldset>

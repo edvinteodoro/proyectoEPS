@@ -1,0 +1,40 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 23/06/2020, 19:06:36
+    Author     : teodoro
+*/
+.login{
+    height: 100%;
+    width: 100%;
+    position:absolute;
+    top:0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+.bg-modal{
+    width:100%;  
+    position:absolute;
+    justify-content: center;
+    align-items: center;
+}
+.frmLogin{
+    width: 500px;
+    height: 300px;
+    text-align: center;
+}
+#inputLogin{
+    width: 80%;
+    display: block;
+    margin: 15px auto;
+}
+#dlgReset{
+    min-width: 500px;
+    min-height: 300px;
+    text-align: center;
+}

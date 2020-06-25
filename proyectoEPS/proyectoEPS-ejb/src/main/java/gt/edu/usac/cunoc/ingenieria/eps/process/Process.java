@@ -60,23 +60,22 @@ public class Process implements Serializable {
     private Boolean approvedEPSDevelopment;
     @Column(name = "progress")
     private Integer progress;
-    @OneToOne(mappedBy="pROCESSid",cascade = CascadeType.PERSIST)
+    @OneToOne(mappedBy = "pROCESSid", cascade = CascadeType.PERSIST)
     private Requeriment requeriment;
-    @OneToOne(mappedBy="process",cascade =CascadeType.REFRESH)
+    @OneToOne(mappedBy = "process", cascade = CascadeType.REFRESH)
     private UserCareer userCareer;
-    @OneToOne(mappedBy="pROCESSid",cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "pROCESSid", cascade = CascadeType.ALL)
     private Project project;
-    
 
     public Process() {
     }
-    
+
     public Process(UserCareer userCareer) {
-        this.userCareer=userCareer;
+        this.userCareer = userCareer;
     }
-    
+
     public Process(Boolean approvedCareerCoordinator) {
-        this.approvedCareerCoordinator=approvedCareerCoordinator;
+        this.approvedCareerCoordinator = approvedCareerCoordinator;
     }
 
     public Process(Integer id) {
@@ -175,20 +174,24 @@ public class Process implements Serializable {
     public void setUserCareer(UserCareer userCareer) {
         this.userCareer = userCareer;
     }
-    
-    public String getApprovedCareerCoordinatorMessage(){
-        if(approvedCareerCoordinator==false){
+
+    public String getApprovedCareerCoordinatorMessage() {
+        if (approvedCareerCoordinator == false) {
             return "No Aprobado";
-        }else{
+        } else {
             return "Aprobado";
         }
     }
-    
-    public String getApprovedEPSMessage(){
-        if(approvalEPSCommission==false){
-            return "No";
+
+    public String getApprovedEPSMessage() {
+        if (approvalEPSCommission != null) {
+            if (approvalEPSCommission == false) {
+                return "No";
+            } else {
+                return "Si";
+            }
         }else{
-            return "Si";
+            return "Pendiente";
         }
     }
 
@@ -207,7 +210,7 @@ public class Process implements Serializable {
     public void setProject(Project project) {
         this.project = project;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -232,5 +235,5 @@ public class Process implements Serializable {
     public String toString() {
         return "gt.edu.usac.cunoc.ingenieria.eps.process.Process[ id=" + id + " ]";
     }
-    
+
 }

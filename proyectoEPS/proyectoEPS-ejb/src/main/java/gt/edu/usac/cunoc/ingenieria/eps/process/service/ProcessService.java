@@ -15,19 +15,21 @@ public class ProcessService {
 
     @PersistenceContext(name = PERSISTENCE_UNIT_NAME)
     private EntityManager entityManager;
-    
-    public Process createProcess(Process process){
-        UserCareer userCareer=process.getUserCareer();
+
+    public Process createProcess(Process process) {
+        UserCareer userCareer = process.getUserCareer();
         userCareer.setProcess(process);
-        entityManager.merge(userCareer);
+        if (userCareer.getId() != null) {
+            entityManager.merge(userCareer);
+        } else {
+            entityManager.persist(userCareer);
+        }
         return process;
     }
-    
-    public Process updateProcess(Process process){
+
+    public Process updateProcess(Process process) {
         entityManager.merge(process);
         return process;
     }
-    
-    
-    
+
 }

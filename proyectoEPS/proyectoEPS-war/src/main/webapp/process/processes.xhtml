@@ -14,7 +14,7 @@
 
 
     <ui:define name="content">
-        <p:dataTable id="processesTable" var="process" value="#{processesView.processes}" reflow="true">
+        <p:dataTable id="processesTable" var="process" value="#{processesView.processes}" reflow="true" rowStyleClass="#{process.sudentStyleRow}">
             <p:column headerText="Nombres" rendered="#{processesView.isCareerCoordinator()}">
                 <h:outputText value="#{process.userCareer.USERuserId.firstName}"/>
             </p:column>

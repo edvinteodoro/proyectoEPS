@@ -10,7 +10,8 @@ and open the template in the editor.
 .login{
     height: 100%;
     width: 100%;
-    position:absolute;
+    position:static;
+    padding-left: 0px;
     top:0;
     display: flex;
     justify-content: center;
@@ -37,4 +38,14 @@ and open the template in the editor.
     min-width: 500px;
     min-height: 300px;
     text-align: center;
+}
+.disabled-row {
+    background-color: rgba(220, 20, 60,0.5);
+    background-image: none;
+    color: #000000;
+}
+.enabled-row {
+    background-color:rgba(20, 219, 80,0.3);
+    background-image: none;
+    color: #000000;
 }

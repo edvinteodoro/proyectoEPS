@@ -705,7 +705,6 @@ public class ProjectView implements Serializable {
                 }
             }
             clearCorrections();
-            //getCorrections().add(correction);
             projectFacade.updateProject(getProject());
             clearCorrectionSelected();
             PrimeFaces.current().executeScript("PF('" + modalIdToClose + "').hide()");

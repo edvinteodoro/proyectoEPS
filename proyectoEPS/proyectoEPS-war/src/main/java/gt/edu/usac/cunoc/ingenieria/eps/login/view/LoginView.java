@@ -6,7 +6,6 @@ import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.COORDINAD
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.ESTUDIANTE;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.SECRETARIA_EPS;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.SUPERVISOR_EPS;
-import gt.edu.usac.cunoc.ingenieria.eps.user.Rol;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import gt.edu.usac.cunoc.ingenieria.eps.user.facade.UserFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.utils.MessageUtils;
@@ -25,6 +24,7 @@ import javax.security.enterprise.authentication.mechanism.http.AuthenticationPar
 import javax.security.enterprise.credential.Credential;
 import javax.security.enterprise.credential.Password;
 import javax.security.enterprise.credential.UsernamePasswordCredential;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.primefaces.PrimeFaces;
@@ -45,6 +45,9 @@ public class LoginView implements Serializable {
     @Inject
     private FacesContext facesContext;
 
+    @Inject
+    private HttpServletRequest request;
+
     private String userId;
     private String password;
     private String userIDReset;
@@ -52,6 +55,14 @@ public class LoginView implements Serializable {
 
     @PostConstruct
     public void init() {
+        try {
+            User user = userFacade.getAuthenticatedUser().get(0);
+            if (user != null) {
+                redirectToIndex();
+            }
+        } catch (Exception e) {
+        }
+
     }
 
     public void login() throws IOException, UserException {
@@ -151,6 +162,11 @@ public class LoginView implements Serializable {
         setPassword("");
         setUserIDReset("");
         setEmail("");
+    }
+
+    public void logout() throws ServletException {
+        request.logout();
+        request.getSession().invalidate();
     }
 
 }

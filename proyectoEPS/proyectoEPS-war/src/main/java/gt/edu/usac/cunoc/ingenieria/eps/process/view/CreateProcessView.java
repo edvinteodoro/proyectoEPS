@@ -55,8 +55,6 @@ public class CreateProcessView implements Serializable {
 
     private Process process;
 
-    private Process processExist;
-
     private User user;
 
     private List<Career> careers;
@@ -80,7 +78,7 @@ public class CreateProcessView implements Serializable {
             careers = userFacade.getCareersOfUser(user);
             userCareers = userFacade.getUserCareer(user);
         } catch (Exception e) {
-            System.out.println("No se pudo obtener usuario");
+            System.out.println("No se pudo obtener usuario" + e);
         }
     }
 
@@ -110,11 +108,21 @@ public class CreateProcessView implements Serializable {
         this.user = user;
     }
 
+    private Boolean crearProceso() {
+        Boolean value = false;
+        if (getProcess().getUserCareer().getProcess() == null) {
+            value = true;
+        } else if (getProcess().getUserCareer().getProcess().getState().equals(StateProcess.RECHAZADO)) {
+            getProcess().setUserCareer(new UserCareer(getProcess().getUserCareer().getCAREERcodigo(), getProcess().getUserCareer().getUSERuserId()));
+            value = true;
+        }
+        return value;
+    }
+
     public void guardar() throws IOException {
         if (!nullFiles()) {
-            if (getProcess().getUserCareer().getProcess() == null || getProcess().getUserCareer().getProcess().getState().equals(StateProcess.RECHAZADO)) {
+            if (crearProceso()) {
                 getProcess().setApprovedEPSDevelopment(false);
-                getProcess().setApprovedCareerCoordinator(false);
                 getProcess().setState(StateProcess.ACTIVO);
                 getProcess().setProgress(0);
                 getRequeriment().setEPSpreproject(epsPreProject.getContents());
@@ -127,7 +135,7 @@ public class CreateProcessView implements Serializable {
                 if (aeioSettlement != null) {
                     getRequeriment().setAEIOsettlement(aeioSettlement.getContents());
                 }
-                List<User> coordinadors=userFacade.getCareerCoordinator(getProcess());
+                List<User> coordinadors = userFacade.getCareerCoordinator(getProcess());
                 if (coordinadors != null && !coordinadors.isEmpty()) {
                     processFacade.createProcess(getProcess());
                     MessageUtils.addSuccessMessage("Se ha creado registrado el proceso");

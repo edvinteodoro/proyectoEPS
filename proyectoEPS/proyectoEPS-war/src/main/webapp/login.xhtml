@@ -18,7 +18,7 @@
                         <p:messages  globalOnly="true"/>
                     </div>
                     <div>
-                        <h1 class="display-4">Inicia sesión</h1>
+                        <h1 class="text-primary">Inicia sesión</h1>
                     </div>
                     <div id="inputLogin">
                         <p:inputText id="name" styleClass="form-control" pt:placeholder="Nombre de Usuario" required="true"
@@ -60,26 +60,22 @@
                 <h:form>
                     <div class="modal-body">
                         <fieldset>
-                            <div class="row form-group">
-                                <div class="col-sm-12">
-                                    <p:inputText id="carnet" styleClass="form-control" placeholder="Nombre de usuario"
-                                                 pt:required="true" maxlength="45" required="true"
-                                                 value="#{loginView.userIDReset}"/>
-                                </div>
+                            <div id="inputLogin">
+                                <p:inputText id="carnet" styleClass="form-control" placeholder="Nombre de usuario"
+                                             pt:required="true" maxlength="45" required="true"
+                                             value="#{loginView.userIDReset}"/>
                             </div>
-                            <div class="row form-group">
-                                <div class="col-sm-12">
-                                    <p:inputText id="emailU" styleClass="form-control" placeholder="Correo electronico"
-                                                 maxlength="55" required="true"
-                                                 value="#{loginView.email}"/>
-                                </div>
+                            <div id="inputLogin">
+                                <p:inputText id="emailU" styleClass="form-control" placeholder="Correo electronico"
+                                             maxlength="55" required="true"
+                                             value="#{loginView.email}"/>
                             </div>
                         </fieldset>
                     </div>
-                    <div class="modal-footer ">
-                        <p:commandLink styleClass="btn btn-warning btn-lg" style="width: 300px;"
-                                       update="@form,:#{p:component('growl')}"
-                                       actionListener="#{loginView.resetPassword('dlgReset')}">
+                    <div id="inputLogin">
+                        <p:commandLink  styleClass="btn btn-warning btn-lg"
+                                        update="@form,:#{p:component('growl')}"
+                                        actionListener="#{loginView.resetPassword('dlgReset')}">
                             <span class="glyphicon glyphicon-ok-sign"></span> Recuperar Contraseña
                         </p:commandLink>
                     </div>

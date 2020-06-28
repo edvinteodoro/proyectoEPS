@@ -14,6 +14,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -89,6 +90,15 @@ public class User implements Serializable {
     @Basic(optional = false)
     @Column(name = "eps_committee")
     private Boolean epsCommittee;
+    @Column(name = "name_company_work")
+    private String nameCompanyWork;
+    @Column(name = "phone_company_work")
+    private String phoneCompanyWork;
+    @Column(name = "direction_company_work")
+    private String directionCompanyWork;
+    @Lob
+    @Column(name = "personal_resume")
+    private byte[] personalResume;
     @JoinColumn(name = "ROL_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Rol rOLid;
@@ -126,6 +136,22 @@ public class User implements Serializable {
         this.state = state;
     }
 
+    public User(String userId, String dpi, String firstName, String lastName, String email, String phone, String direction, String nameCompanyWork, String phoneCompanyWork, String directionCompanyWork, byte[] personalResume, Rol rOLid) {
+        this.userId = userId;
+        this.dpi = dpi;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.phone = phone;
+        this.direction = direction;
+        this.nameCompanyWork = nameCompanyWork;
+        this.phoneCompanyWork = phoneCompanyWork;
+        this.directionCompanyWork = directionCompanyWork;
+        this.personalResume = personalResume;
+        this.rOLid = rOLid;
+    }
+    
+    
     public String getUserId() {
         return userId;
     }
@@ -236,6 +262,38 @@ public class User implements Serializable {
 
     public void setEpsCommittee(Boolean epsCommittee) {
         this.epsCommittee = epsCommittee;
+    }
+
+    public String getNameCompanyWork() {
+        return nameCompanyWork;
+    }
+
+    public void setNameCompanyWork(String nameCompanyWork) {
+        this.nameCompanyWork = nameCompanyWork;
+    }
+
+    public String getPhoneCompanyWork() {
+        return phoneCompanyWork;
+    }
+
+    public void setPhoneCompanyWork(String phoneCompanyWork) {
+        this.phoneCompanyWork = phoneCompanyWork;
+    }
+
+    public String getDirectionCompanyWork() {
+        return directionCompanyWork;
+    }
+
+    public void setDirectionCompanyWork(String directionCompanyWork) {
+        this.directionCompanyWork = directionCompanyWork;
+    }
+
+    public byte[] getPersonalResume() {
+        return personalResume;
+    }
+
+    public void setPersonalResume(byte[] personalResume) {
+        this.personalResume = personalResume;
     }
 
     public Collection<Appointment> getAppointmentCollection() {

@@ -42,7 +42,7 @@ public class ProcessesView implements Serializable {
         try {
             careerCoordinator = false;
             user = userFacade.getAuthenticatedUser().get(0);
-            switch (user.getROLid().getName()){    
+            switch (user.getROLid().getName()) {
                 case ESTUDIANTE:
                     processes = processFacade.getProcessUser(user);
                     break;
@@ -57,7 +57,7 @@ public class ProcessesView implements Serializable {
                 }
             }
         } catch (Exception e) {
-            System.out.println("Erro+-------------------------------------------\n"+e);
+            System.out.println("Erro+-------------------------------------------\n" + e);
         }
     }
 
@@ -75,6 +75,19 @@ public class ProcessesView implements Serializable {
 
     public Boolean isCareerCoordinator() {
         return careerCoordinator;
+    }
+
+    public String redirectProcessTo() {
+        String value = "";
+        switch (user.getROLid().getName()) {
+            case ESTUDIANTE:
+                value = "project";
+                break;
+            case COORDINADOR_CARRERA:
+                value = "projectReview";
+                break;
+        }
+        return value;
     }
 
     public Boolean getIsFirst(Integer id) {

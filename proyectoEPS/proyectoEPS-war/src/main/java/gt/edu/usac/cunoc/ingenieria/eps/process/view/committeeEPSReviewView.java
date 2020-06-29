@@ -3,6 +3,7 @@ package gt.edu.usac.cunoc.ingenieria.eps.process.view;
 import User.exception.UserException;
 import gt.edu.usac.cunoc.ingenieria.eps.process.facade.ProcessFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
+import gt.edu.usac.cunoc.ingenieria.eps.process.StateProcess;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Correction;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Objectives;
 import static gt.edu.usac.cunoc.ingenieria.eps.project.Objectives.GENERAL_OBJETICVE;
@@ -10,6 +11,8 @@ import gt.edu.usac.cunoc.ingenieria.eps.project.Section;
 import gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection;
 import static gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection.OTHER;
 import gt.edu.usac.cunoc.ingenieria.eps.project.facade.ProjectFacadeLocal;
+import gt.edu.usac.cunoc.ingenieria.eps.tail.facade.TailCommitteeEPSFacadeLocal;
+import gt.edu.usac.cunoc.ingenieria.eps.tail.facade.TailFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.user.facade.UserFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.utils.MessageUtils;
 import java.io.ByteArrayInputStream;
@@ -48,6 +51,12 @@ public class committeeEPSReviewView implements Serializable {
     @EJB
     private ProjectFacadeLocal projectFacade;
 
+    @EJB
+    private TailFacadeLocal tailFacade;
+
+    @EJB
+    private TailCommitteeEPSFacadeLocal tailCommitteeEPSFacade;
+
     private Process actualProcess;
 
     private Integer processId;
@@ -68,27 +77,19 @@ public class committeeEPSReviewView implements Serializable {
     private Section actualSection;
 
     public void loadCurrentProject() {
-        actualProcess = null;
-        Optional<Process> result;
         try {
-            result = processFacade.ProcessAvailableToEPSCommittee(processId);
-            if (result.isPresent()) {
-                actualProcess = result.get();
-
-                if (actualProcess != null) {
-                    scheduleStream = new DefaultStreamedContent(new ByteArrayInputStream(actualProcess.getProject().getSchedule()), "application/pdf", "Calendario.pdf");
-                    scheduleFileName = scheduleStream.getName();
-                    investmentPlanStream = new DefaultStreamedContent(new ByteArrayInputStream(actualProcess.getProject().getInvestmentPlan()), "application/pdf", "Plan de Inversion.pdf");
-                    investmentPlanFileName = investmentPlanStream.getName();
-                    if (actualProcess.getProject().getAnnexed() != null) {
-                        annexedStream = new DefaultStreamedContent(new ByteArrayInputStream(actualProcess.getProject().getAnnexed()), "application/pdf", "Anexos.pdf");
-                        annexedFileName = annexedStream.getName();
-                    }
+            actualProcess = processFacade.getProcess(new Process(processId)).get(0);
+            if (actualProcess != null) {
+                scheduleStream = new DefaultStreamedContent(new ByteArrayInputStream(actualProcess.getProject().getSchedule()), "application/pdf", "Calendario.pdf");
+                scheduleFileName = scheduleStream.getName();
+                investmentPlanStream = new DefaultStreamedContent(new ByteArrayInputStream(actualProcess.getProject().getInvestmentPlan()), "application/pdf", "Plan de Inversion.pdf");
+                investmentPlanFileName = investmentPlanStream.getName();
+                if (actualProcess.getProject().getAnnexed() != null) {
+                    annexedStream = new DefaultStreamedContent(new ByteArrayInputStream(actualProcess.getProject().getAnnexed()), "application/pdf", "Anexos.pdf");
+                    annexedFileName = annexedStream.getName();
                 }
-            } else {
-                MessageUtils.addErrorMessage("No se ha encontrado el Proceso");
             }
-        } catch (UserException e) {
+        } catch (Exception e) {
             MessageUtils.addErrorMessage(e.getMessage());
         }
     }
@@ -127,6 +128,14 @@ public class committeeEPSReviewView implements Serializable {
 
     public void anexosComments() {
         getCommentaries(TypeCorrection.ANEXO, null);
+    }
+    
+    public String titlePage(){
+        String value="Anteproyecto";
+        if(getActualProcess().getApprovalEPSCommission()!=null){
+            value="Proyecto";
+        }
+        return value;
     }
 
     private void getCommentaries(TypeCorrection correction, Section section) {
@@ -303,13 +312,27 @@ public class committeeEPSReviewView implements Serializable {
         }
     }
 
-    public void aproveByEPSCommittee() {
+    public void aprovedProject() {
         try {
-            processFacade.aproveedByEPSCommittee(actualProcess.getId());
-            redirectToEPSCommittee();
+            if (getActualProcess().getApprovedCareerCoordinator() == null) {
+                processFacade.rejectProcess(tailFacade.getTailCoordianteor(getActualProcess()), "Proceso Eps Aceptado", "Su projecto ha sido aceptado por el coordinador de carrera.");
+                tailFacade.deleteTailCoordinatod(getActualProcess());
+                getActualProcess().setState(StateProcess.REVISION);
+                getActualProcess().setApprovedCareerCoordinator(true);
+                processFacade.updateProcess(getActualProcess());
+                tailCommitteeEPSFacade.createTailCommiteeEPS(getActualProcess());
+                redirectToProcesses();
+            } else if (getActualProcess().getApprovedCareerCoordinator()) {
+                processFacade.aproveedByEPSCommittee(actualProcess.getId());
+                redirectToEPSCommittee();
+            }
         } catch (Exception e) {
             MessageUtils.addErrorMessage(e.getMessage());
         }
+    }
+
+    private void redirectToProcesses() throws IOException {
+        externalContext.redirect(externalContext.getRequestContextPath() + "/process/processes.xhtml");
     }
 
     public void rejectByEPSCommittee() {
@@ -332,8 +355,8 @@ public class committeeEPSReviewView implements Serializable {
             MessageUtils.addErrorMessage("Error to redirect");
         }
     }
-    
-    public Boolean listTemporalCorrection(){
+
+    public Boolean listTemporalCorrection() {
         return (temporalCorrections == null || temporalCorrections.isEmpty());
     }
 

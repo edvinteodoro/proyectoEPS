@@ -129,11 +129,13 @@ public class committeeEPSReviewView implements Serializable {
     public void anexosComments() {
         getCommentaries(TypeCorrection.ANEXO, null);
     }
-    
-    public String titlePage(){
-        String value="Anteproyecto";
-        if(getActualProcess().getApprovalEPSCommission()!=null){
-            value="Proyecto";
+
+    public String titlePage() {
+        String value = "Anteproyecto";
+        if (getActualProcess().getApprovalEPSCommission() != null) {
+            if (getActualProcess().getApprovalEPSCommission()) {
+                value = "Proyecto";
+            }
         }
         return value;
     }
@@ -305,9 +307,17 @@ public class committeeEPSReviewView implements Serializable {
 
     public void returnEPSCommitteeCorrections() {
         try {
-            processFacade.returnEPSCommitteeRevisionToStudent(actualProcess.getId());
-            redirectToEPSCommittee();
-        } catch (UserException e) {
+            if (getActualProcess().getApprovedCareerCoordinator() == null) {
+                processFacade.rejectProcess(tailFacade.getTailCoordianteor(getActualProcess()), "Revision Proceso Eps", "Su projecto ha sido revisado, ya es posible editar el documento y realizar los cambios solicitados.");
+                tailFacade.deleteTailCoordinatod(getActualProcess());
+                getActualProcess().setState(StateProcess.ACTIVO);
+                processFacade.updateProcess(getActualProcess());
+                redirectToProcesses();
+            } else if (getActualProcess().getApprovedCareerCoordinator()) {
+                processFacade.returnEPSCommitteeRevisionToStudent(actualProcess.getId());
+                redirectToEPSCommittee();
+            }
+        } catch (Exception e) {
             MessageUtils.addErrorMessage(e.getMessage());
         }
     }

@@ -49,5 +49,11 @@ and open the template in the editor.
     background-image: none;
     color: #000000;
 }
-legend {
+.center {
+    width:90%;  
+    position:absolute;
+    height: 90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

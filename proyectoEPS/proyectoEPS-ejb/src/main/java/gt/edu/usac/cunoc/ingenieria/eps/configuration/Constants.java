@@ -15,5 +15,7 @@ public class Constants {
     public static final String COORDINADOR_EPS = "Coordinador_EPS";
     public static final String SUPERVISOR_EPS = "Supervisor_EPS";
     public static final String ESTUDIANTE = "Estudiante";
+    public static final String REVISOR = "Revisor";
+    public static final String ASESOR = "Asesor";
 
 }

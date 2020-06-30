@@ -14,27 +14,56 @@
     <ui:define name="content">
         <h:form>            
             <p:messages  globalOnly="true"/>
-            <fieldset class="center-block">
-                <legend>Crear Usuario</legend>
-
+            <fieldset id="userForm" class="center-block">
+                <legend>Registrar Usuario</legend>
+                
                 <div class="row">
                     <div class="form-group col-sm-2">
-                        <p:outputLabel for="dpi" value="Dpi:" />
+                        <p:outputLabel for="rolUser" value="Tipo de Usuario:" />
+                    </div>
+                    <div class="form-group col-sm-4">
+                        <p:selectOneMenu id="rolUser"  value="#{createUserView.user.ROLid}" converter="rolUserConverter">
+                            <f:selectItems value="#{createUserView.rolUsers}" var="rolUser"
+                                           itemValue="#{rolUser}"
+                                           itemLabel="#{rolUser.name}"/>
+                            <p:ajax listener="#{createUserView.verifyView()}" update="@form"/>
+                        </p:selectOneMenu>
+                    </div>
+                </div>
+                
+                <div class="row" >
+                    <div class="form-group col-sm-2">
+                        <p:outputLabel for="dpi" value="Dpi:"/>
                     </div>
                     <div class="form-group col-sm-4">
                         <p:inputText id="dpi" styleClass="form-control" pt:placeholder="Dpi" required="true"
                                      pt:required="true" value="#{createUserView.user.dpi}"/>
                     </div>
                 </div>
-
+                
+                
                 <div class="row">
                     <div class="form-group col-sm-2">
-                        <p:outputLabel for="carnet" value="Carnet:" />
+                        <p:outputLabel for="personalCode" value="Código de Personal:" rendered="#{createUserView.personalCodeFlag}"/>
                     </div>
                     <div class="form-group col-sm-4">
-                        <p:inputText id="carnet" styleClass="form-control" pt:placeholder="Carnet" value="#{createUserView.user.carnet}"/>
+                        <p:inputText id="personalCode" styleClass="form-control" pt:placeholder="Código de Personal" required="true"
+                                     pt:required="true" value="#{createUserView.user.codePersonal}"
+                                     rendered="#{createUserView.personalCodeFlag}"/>
                     </div>
                 </div>
+                
+                <div class="row">
+                    <div class="form-group col-sm-2">
+                        <p:outputLabel for="academicRegister" value="Registro Académico:" rendered="#{createUserView.academicRegisterFlag}"/>
+                    </div>
+                    <div class="form-group col-sm-4">
+                        <p:inputText id="academicRegister" styleClass="form-control" pt:placeholder="Registro Académico" required="true"
+                                     pt:required="true" value="#{createUserView.user.academicRegister}"
+                                     rendered="#{createUserView.academicRegisterFlag}"/>
+                    </div>
+                </div>
+
                 <div class="row">
                     <div class="form-group col-sm-2">
                         <p:outputLabel for="fname" value="Nombres:" />
@@ -57,7 +86,7 @@
 
                 <div class="row">
                     <div class="form-group col-sm-2">
-                        <p:outputLabel for="email" value="Correo:" />
+                        <p:outputLabel for="email" value="Correo Electrónico:" />
                     </div>
                     <div class="form-group col-sm-4">
                         <p:inputText id="email" styleClass="form-control" pt:placeholder="Correo" required="true"
@@ -67,33 +96,43 @@
 
                 <div class="row">
                     <div class="form-group col-sm-2">
-                        <p:outputLabel for="phone" value="Numero de telefono:" />
+                        <p:outputLabel for="phone1" value="Número de teléfono:" />
                     </div>
                     <div class="form-group col-sm-4">
-                        <p:inputText id="phone" styleClass="form-control" pt:placeholder="Telefono" required="true"
-                                     pt:required="true" value="#{createUserView.user.phone}"/>
+                        <p:inputText id="phone1" styleClass="form-control" pt:placeholder="Teléfono" required="true"
+                                     pt:required="true" value="#{createUserView.user.phone1}"/>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="form-group col-sm-2">
+                        <p:outputLabel for="phone2" value="Número de teléfono:" />
+                    </div>
+                    <div class="form-group col-sm-4">
+                        <p:inputText id="phone2" styleClass="form-control" pt:placeholder="Teléfono" 
+                                     value="#{createUserView.user.phone2}"/>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="form-group col-sm-2">
-                        <p:outputLabel for="rolUser" value="Tipo de Usuario:" />
+                        <p:outputLabel for="direction" value="Dirección:" />
                     </div>
                     <div class="form-group col-sm-4">
-                        <p:selectOneMenu id="rolUser"  value="#{createUserView.user.ROLid}" converter="rolUserConverter">
-                            <f:selectItems value="#{createUserView.rolUsers}" var="rolUser"
-                                           itemValue="#{rolUser}"
-                                           itemLabel="#{rolUser.name}"/>
-                        </p:selectOneMenu>
+                        <p:inputText id="direction" styleClass="form-control" pt:placeholder="Dirección" 
+                                     value="#{createUserView.user.direction}"/>
                     </div>
                 </div>
-
+                
                 <div class="row">
                     <div class="form-group col-sm-2">
-                        <p:outputLabel for="career" value="Seleccion Carrera:" />
+                        <p:outputLabel for="career" value="Selección Carrera:" rendered="#{createUserView.careerSelectionFlag}"/>
                     </div>
                     <div class="form-group col-sm-4">
-                        <p:selectManyCheckbox id="career" value="#{createUserView.selectedCareers}" converter="careerConverter"  layout="grid" columns="1">
+                        <p:selectManyCheckbox id="career" value="#{createUserView.selectedCareers}" converter="careerConverter"  layout="grid" columns="1"
+                                              rendered="#{createUserView.careerSelectionFlag}"
+                                              required="true"
+                                              >
                             <f:selectItems value="#{createUserView.careers}" var="career" itemLabel="#{career.name}" itemValue="#{career}" />
                         </p:selectManyCheckbox>
                     </div>
@@ -125,7 +164,7 @@
                         <p:commandLink styleClass="btn btn-primary"
                                        update="@form,:growl" 
                                        action="#{createUserView.createUser()}">
-                            <span class="glyphicon glyphicon-log-in"></span> Crear Usuario
+                            <span class="glyphicon glyphicon-log-in"></span> Registrar Usuario
                         </p:commandLink>
                     </div>
                 </div>

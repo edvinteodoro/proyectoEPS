@@ -93,19 +93,16 @@ public class UserRepository {
         List<Predicate> predicates = new ArrayList<>();
 
         if (user.getUserId() != null && !user.getUserId().isEmpty()) {
-            predicates.add(criteriaBuilder.equal(userR.get("userId"), user.getUserId()));
+            predicates.add(criteriaBuilder.like(userR.get("userId"), "%" + user.getUserId() + "%"));
         }
         if (user.getDpi() != null && !user.getDpi().isEmpty()) {
-            predicates.add(criteriaBuilder.equal(userR.get("dpi"), user.getDpi()));
+            predicates.add(criteriaBuilder.like(userR.get("dpi"), "%" + user.getDpi() + "%"));
         }
         if (user.getCodePersonal() != null) {
             predicates.add(criteriaBuilder.like(userR.get("codePersonal"), "%" + user.getCodePersonal() + "%"));
         }
-        if (user.getCarnet() != null && !user.getCarnet().isEmpty()) {
-            predicates.add(criteriaBuilder.equal(userR.get("carnet"), user.getCarnet()));
-        }
         if (user.getAcademicRegister() != null && !user.getAcademicRegister().isEmpty()) {
-            predicates.add(criteriaBuilder.equal(userR.get("academicRegister"), user.getAcademicRegister()));
+            predicates.add(criteriaBuilder.like(userR.get("academicRegister"), "%" + user.getAcademicRegister() + "%"));
         }
         if (user.getFirstName() != null) {
             predicates.add(criteriaBuilder.like(userR.get("firstName"), "%" + user.getFirstName() + "%"));
@@ -116,14 +113,14 @@ public class UserRepository {
         if (user.getEmail() != null) {
             predicates.add(criteriaBuilder.like(userR.get("email"), "%" + user.getEmail() + "%"));
         }
-        if (user.getPhone() != null && !user.getPhone().isEmpty()) {
-            predicates.add(criteriaBuilder.equal(userR.get("phone"), user.getPhone()));
+        if (user.getPhone1() != null && !user.getPhone1().isEmpty()) {
+            predicates.add(criteriaBuilder.like(userR.get("phone"), "%" + user.getPhone1() + "%"));
         }
         if (user.getDirection() != null) {
             predicates.add(criteriaBuilder.like(userR.get("direction"), "%" + user.getDirection() + "%"));
         }
-        if (user.getState() != null) {
-            predicates.add(criteriaBuilder.equal(userR.get("state"), user.getState()));
+        if (user.getStatus()!= null) {
+            predicates.add(criteriaBuilder.equal(userR.get("status"), user.getStatus()));
         }
         if (user.getEpsCommittee() != null) {
             predicates.add(criteriaBuilder.equal(userR.get("epsCommittee"), user.getEpsCommittee()));

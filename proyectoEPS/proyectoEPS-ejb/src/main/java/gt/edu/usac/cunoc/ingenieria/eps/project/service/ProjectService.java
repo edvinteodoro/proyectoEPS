@@ -220,7 +220,7 @@ public class ProjectService {
         document.add(new Paragraph().add(new Text("\n")));
         document.add(new Paragraph("Por").addStyle(titleStyle).setTextAlignment(TextAlignment.CENTER));
         document.add(new Paragraph(userCareer.getUSERuserId().getFirstName() + " " + userCareer.getUSERuserId().getLastName()).addStyle(titleStyle).setTextAlignment(TextAlignment.CENTER));
-        document.add(new Paragraph(userCareer.getUSERuserId().getCarnet()).addStyle(titleStyle).setTextAlignment(TextAlignment.CENTER));
+        document.add(new Paragraph(userCareer.getUSERuserId().getAcademicRegister()).addStyle(titleStyle).setTextAlignment(TextAlignment.CENTER));
         for (int i = 0; i < 7; i++) {
             document.add(new Paragraph().add(new Text("\n")));
         }

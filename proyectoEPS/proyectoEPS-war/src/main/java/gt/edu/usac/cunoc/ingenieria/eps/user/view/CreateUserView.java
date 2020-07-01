@@ -1,6 +1,6 @@
 package gt.edu.usac.cunoc.ingenieria.eps.user.view;
 
-import User.exception.UserException;
+import gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants;
 import gt.edu.usac.cunoc.ingenieria.eps.user.Career;
 import gt.edu.usac.cunoc.ingenieria.eps.user.Rol;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
@@ -10,8 +10,6 @@ import gt.edu.usac.cunoc.ingenieria.eps.utils.MessageUtils;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
@@ -24,16 +22,22 @@ public class CreateUserView implements Serializable {
     @EJB
     private UserFacadeLocal userFacade;
 
-    List<Career> careers;
-    List<Career> selectedCareers;
-    List<Rol> rolUsers;
-    List<UserCareer> userCareers;
-    User user;
+    private List<Career> careers;
+    private List<Career> selectedCareers;
+    private List<Rol> rolUsers;
+    private List<UserCareer> userCareers;
+
+    private User user;
+
+    private Boolean personalCodeFlag;
+    private Boolean academicRegisterFlag;
+    private Boolean careerSelectionFlag;
 
     @PostConstruct
     public void init() {
         rolUsers = userFacade.getAllRolUser();
         careers = userFacade.getAllCareer();
+        verifyView();
     }
 
     public UserFacadeLocal getUserFacade() {
@@ -95,24 +99,74 @@ public class CreateUserView implements Serializable {
         this.userCareers = userCareers;
     }
 
+    public Boolean getPersonalCodeFlag() {
+        return personalCodeFlag;
+    }
+
+    public void setPersonalCodeFlag(Boolean personalCodeFlag) {
+        this.personalCodeFlag = personalCodeFlag;
+    }
+
+    public Boolean getAcademicRegisterFlag() {
+        return academicRegisterFlag;
+    }
+
+    public void setAcademicRegisterFlag(Boolean academicRegisterFlag) {
+        this.academicRegisterFlag = academicRegisterFlag;
+    }
+
+    public Boolean getCareerSelectionFlag() {
+        return careerSelectionFlag;
+    }
+
+    public void setCareerSelectionFlag(Boolean careerSelectionFlag) {
+        this.careerSelectionFlag = careerSelectionFlag;
+    }
+
     public void createUser() {
         try {
             for (int i = 0; i < getSelectedCareers().size(); i++) {
                 getUserCareers().add(new UserCareer(getSelectedCareers().get(i), getUser()));
             }
-            getUser().setState(Boolean.TRUE); 
             getUser().setUserCareers(getUserCareers());
-            getUser().setEpsCommittee(false);
             userFacade.createUser(getUser());
-            MessageUtils.addSuccessMessage("Se ha registrado el usuario");
+            MessageUtils.addSuccessMessage("Se ha registrado el usuario correctamente");
             cleanUser();
         } catch (Exception ex) {
-
+            MessageUtils.addErrorMessage(ex.getMessage());
         }
     }
-    
-    private void cleanUser(){
-        user=null;
+
+    public void verifyView() {
+        if (getUser().getROLid() != null) {
+            switch (getUser().getROLid().getName()) {
+                case Constants.ESTUDIANTE:
+                    personalCodeFlag = false;
+                    academicRegisterFlag = true;
+                    careerSelectionFlag = true;
+                    break;
+                case Constants.COORDINADOR_CARRERA:
+                case Constants.REVISOR:
+                case Constants.ASESOR:
+                case Constants.SUPERVISOR_EPS:
+                    personalCodeFlag = true;
+                    academicRegisterFlag = false;
+                    careerSelectionFlag = true;
+                    break;
+                default:
+                    personalCodeFlag = true;
+                    academicRegisterFlag = false;
+                    careerSelectionFlag = false;
+            }
+        } else {
+            personalCodeFlag = true;
+            academicRegisterFlag = false;
+            careerSelectionFlag = false;
+        }
+    }
+
+    private void cleanUser() {
+        user = null;
         getSelectedCareers().clear();
         getUserCareers().clear();
     }

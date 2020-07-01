@@ -21,7 +21,7 @@ public class ProcessService {
         userCareer.setProcess(process);
         if (userCareer.getId() != null) {
             entityManager.merge(userCareer);
-        } else {
+        }else{
             entityManager.persist(userCareer);
         }
         return process;

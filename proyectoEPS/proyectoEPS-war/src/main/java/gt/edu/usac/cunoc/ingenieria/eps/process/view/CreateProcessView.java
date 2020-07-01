@@ -12,6 +12,7 @@ import gt.edu.usac.cunoc.ingenieria.eps.utils.MessageUtils;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -57,8 +58,6 @@ public class CreateProcessView implements Serializable {
 
     private User user;
 
-    private List<Career> careers;
-
     private List<UserCareer> userCareers;
 
     private Boolean creando;
@@ -75,10 +74,27 @@ public class CreateProcessView implements Serializable {
         try {
             creando = false;
             user = userFacade.getAuthenticatedUser().get(0);
-            careers = userFacade.getCareersOfUser(user);
-            userCareers = userFacade.getUserCareer(user);
+            userCareers = new ArrayList<>();
+            setCarrerToList();
         } catch (Exception e) {
             System.out.println("No se pudo obtener usuario" + e);
+        }
+    }
+
+    private void setCarrerToList() {
+        List<UserCareer> values = userFacade.getUserCareer(user);
+        for (int i = 0; i < values.size(); i++) {
+            if (userCareers.isEmpty()) {
+                userCareers.add(values.get(i));
+            } else {
+                for (int j = 0; j < userCareers.size(); j++) {
+                    if (userCareers.get(j).getCAREERcodigo().equals(values.get(i).getCAREERcodigo())) {
+                        break;
+                    } else if (j == userCareers.size() - 1) {
+                        userCareers.add(values.get(i));
+                    }
+                }
+            }
         }
     }
 
@@ -332,14 +348,6 @@ public class CreateProcessView implements Serializable {
 
     public void reloadAeioSettlemen() {
         writtenRequestStream = new DefaultStreamedContent(new ByteArrayInputStream(writtenRequest.getContents()), "application/pdf", "Solicitud Escrita.pdf");
-    }
-
-    public List<Career> getCareers() {
-        return careers;
-    }
-
-    public void setCareers(List<Career> careers) {
-        this.careers = careers;
     }
 
     public List<UserCareer> getUserCareers() {

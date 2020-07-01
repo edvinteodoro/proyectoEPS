@@ -20,7 +20,7 @@ public class UserCareerRepository {
     public static final String FIND_CAREER_OF_USERS = "SELECT c.cAREERcodigo FROM UserCareer c WHERE c.uSERuserId.userId=:userId";
     public static final String FIND_USER_CAREER_OF_USER = "SELECT c FROM UserCareer c WHERE c.cAREERcodigo.codigo=:careerCode";
     public static final String FIND_USER_CAREER = "SELECT c FROM UserCareer c WHERE c.id = :id";   
-    public static final String FIND_USER_CAREER_USER = "SELECT c FROM UserCareer c WHERE c.uSERuserId.userId = :userId";  
+    public static final String FIND_USER_CAREER_USER = "SELECT c FROM UserCareer c WHERE c.uSERuserId.userId = :userId ORDER BY c.id DESC";  
     public static final String FIND_USERCAREER_BY_CAREER_AND_USER = "SELECT g FROM UserCareer g WHERE g.group.codigo = :cAREERcodigo AND g.user.userId = :uSERuserId";
     public static final String GET_ALL_CAREER_USERS = "SELECT gu FROM UserCareer gu";
     public static final String CAREER_PARAMETER_NAME = "cAREERcodigo";

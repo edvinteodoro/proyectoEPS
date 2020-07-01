@@ -13,13 +13,12 @@
 
     <ui:define name="content">
         <h:form id="miInfo">            
-            <p:messages  globalOnly="true"/>
             <fieldset class="center-block">
                 <legend>Mi Perfil</legend>
 
                 <div class="row">
                     <div class="form-group col-sm-2">
-                        <p:outputLabel value="ID:" />
+                        <p:outputLabel value="Usuario:" />
                     </div>
                     <div class="form-group col-sm-4">
                         <h:outputText value="#{userProfileView.user.userId}" />
@@ -39,14 +38,6 @@
                     </div>
                     <div class="form-group col-sm-4">
                         <h:outputText value="#{userProfileView.user.codePersonal}" />
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-sm-2">
-                        <p:outputLabel value="Carnet:" />
-                    </div>
-                    <div class="form-group col-sm-4">
-                        <h:outputText value="#{userProfileView.user.carnet}" />
                     </div>
                 </div>
                 <div class="row">
@@ -88,11 +79,31 @@
 
                 <div class="row">
                     <div class="form-group col-sm-2">
-                        <p:outputLabel for="phone" value="Numero de telefono:" />
+                        <p:outputLabel for="phone1" value="Numero de telefono:" />
                     </div>
                     <div class="form-group col-sm-4">
-                        <p:inputText id="phone" styleClass="form-control" pt:placeholder="Telefono" required="true"
-                                     pt:required="true" value="#{userProfileView.user.phone}"/>
+                        <p:inputText id="phone1" styleClass="form-control" pt:placeholder="Telefono" required="true"
+                                     pt:required="true" value="#{userProfileView.user.phone1}"/>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="form-group col-sm-2">
+                        <p:outputLabel for="phone2" value="Numero de telefono:" />
+                    </div>
+                    <div class="form-group col-sm-4">
+                        <p:inputText id="phone2" styleClass="form-control" pt:placeholder="Telefono" 
+                                     value="#{userProfileView.user.phone2}"/>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="form-group col-sm-2">
+                        <p:outputLabel for="direction" value="Dirección:" />
+                    </div>
+                    <div class="form-group col-sm-4">
+                        <p:inputText id="direction" styleClass="form-control" pt:placeholder="Dirección" 
+                                     value="#{userProfileView.user.direction}"/>
                     </div>
                 </div>
 

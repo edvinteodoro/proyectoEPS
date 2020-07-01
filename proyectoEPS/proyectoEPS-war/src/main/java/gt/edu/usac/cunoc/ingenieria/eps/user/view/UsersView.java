@@ -15,10 +15,6 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import org.primefaces.PrimeFaces;
 
-/**
- *
- * @author angelrg
- */
 @Named
 @ViewScoped
 public class UsersView implements Serializable {
@@ -33,10 +29,9 @@ public class UsersView implements Serializable {
 
     String userID;
     String DPI;
-    String carnet;
     String nombre;
     String apellido;
-
+    
     @PostConstruct
     public void init() {
         findUsers();
@@ -89,11 +84,24 @@ public class UsersView implements Serializable {
         cleanSelectedUser();
         PrimeFaces.current().executeScript("PF('" + modalIdToClose + "').hide()");
     }
+    
+    public void changeStatusUser(User user){
+        try {
+            user.setStatus(!user.getStatus()); 
+            userFacade.updateUser(user);
+            if (user.getStatus()){
+                MessageUtils.addSuccessMessage("Usuario Activado");
+            } else {
+                MessageUtils.addSuccessMessage("Usuario Desactivado");
+            }
+        } catch (UserException ex) {
+            MessageUtils.addErrorMessage(ex.getMessage());
+        }
+    }
 
     public void cleanCriteria() {
         userID = null;
         DPI = null;
-        carnet = null;
         nombre = null;
         apellido = null;
     }
@@ -116,7 +124,7 @@ public class UsersView implements Serializable {
         }
         return selectedUser;
     }
-
+   
     public void setSelectedUser(User selectedUser) {
         this.selectedUser = selectedUser;
     }
@@ -135,14 +143,6 @@ public class UsersView implements Serializable {
 
     public void setDPI(String DPI) {
         this.DPI = DPI;
-    }
-
-    public String getCarnet() {
-        return carnet;
-    }
-
-    public void setCarnet(String carnet) {
-        this.carnet = carnet;
     }
 
     public String getNombre() {

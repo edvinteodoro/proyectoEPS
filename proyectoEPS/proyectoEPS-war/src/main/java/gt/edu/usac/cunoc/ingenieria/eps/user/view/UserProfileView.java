@@ -60,6 +60,7 @@ public class UserProfileView implements Serializable {
     public void saveChanges() {
         try {
             userFacade.updateUser(user);
+            MessageUtils.addSuccessMessage("Cambios realizados exitosamente");
         } catch (UserException e) {
             MessageUtils.addErrorMessage(e.getMessage());
         }

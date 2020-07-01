@@ -181,10 +181,14 @@ public class Process implements Serializable {
     }
 
     public String getApprovedCareerCoordinatorMessage() {
-        if (approvedCareerCoordinator == false) {
-            return "No Aprobado";
+        if (approvedCareerCoordinator != null) {
+            if (approvedCareerCoordinator == false) {
+                return "No";
+            } else {
+                return "Si";
+            }
         } else {
-            return "Aprobado";
+            return "Pendiente";
         }
     }
 
@@ -195,7 +199,7 @@ public class Process implements Serializable {
             } else {
                 return "Si";
             }
-        }else{
+        } else {
             return "Pendiente";
         }
     }
@@ -216,6 +220,14 @@ public class Process implements Serializable {
         this.project = project;
     }
 
+    public String getSudentStyleRow() {
+        String value = "";
+        if (this.state.equals(StateProcess.ACTIVO)) {
+            value = "enabled-row";
+        }
+        return value;
+    }
+    
     public User getSupervisorEPS() {
         return supervisorEPS;
     }

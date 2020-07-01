@@ -12,8 +12,8 @@
         <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700"></link>
         <link href="#{resource['icons/Usac_logo.png']}" rel="shortcut icon" type="image/x-icon" />
         <h:outputStylesheet library="css" name="bootstrap.css"/>
-        <h:outputStylesheet library="css" name="personalizedCss.css"/>
         <h:outputStylesheet library="css" name="bootstrap-theme.css"/>
+        <h:outputStylesheet library="css" name="personalizedCss.css"/>
         <h:outputScript name="jquery/jquery.js" library="primefaces" />
         <h:outputScript name="jquery/jquery-plugins.js" library="primefaces" />
 
@@ -32,16 +32,10 @@
 
     <h:body>
         <p:growl id="growl" showDetail="false" />
-        <nav class="navbar navbar-inverse " jsf:rendered="#{not empty request.userPrincipal}">
+        <nav class="navbar navbar-inverse" jsf:rendered="#{not empty request.userPrincipal}">
             <div class="container-fluid">
                 <!-- Brand and toggle get grouped for better mobile display -->
                 <div class="navbar-header">
-                    <button type="button" aria-expanded="false" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar1">
-                        <span class="sr-only">Menu</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
                     <a class="navbar-brand" href="#">Sistema EPS</a>
                 </div>
                 <div class="collapse navbar-collapse" id="navbar1">

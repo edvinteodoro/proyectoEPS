@@ -12,6 +12,7 @@ import gt.edu.usac.cunoc.ingenieria.eps.utils.MessageUtils;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -55,11 +56,7 @@ public class CreateProcessView implements Serializable {
 
     private Process process;
 
-    private Process processExist;
-
     private User user;
-
-    private List<Career> careers;
 
     private List<UserCareer> userCareers;
 
@@ -77,10 +74,27 @@ public class CreateProcessView implements Serializable {
         try {
             creando = false;
             user = userFacade.getAuthenticatedUser().get(0);
-            careers = userFacade.getCareersOfUser(user);
-            userCareers = userFacade.getUserCareer(user);
+            userCareers = new ArrayList<>();
+            setCarrerToList();
         } catch (Exception e) {
-            System.out.println("No se pudo obtener usuario");
+            System.out.println("No se pudo obtener usuario" + e);
+        }
+    }
+
+    private void setCarrerToList() {
+        List<UserCareer> values = userFacade.getUserCareer(user);
+        for (int i = 0; i < values.size(); i++) {
+            if (userCareers.isEmpty()) {
+                userCareers.add(values.get(i));
+            } else {
+                for (int j = 0; j < userCareers.size(); j++) {
+                    if (userCareers.get(j).getCAREERcodigo().equals(values.get(i).getCAREERcodigo())) {
+                        break;
+                    } else if (j == userCareers.size() - 1) {
+                        userCareers.add(values.get(i));
+                    }
+                }
+            }
         }
     }
 
@@ -110,11 +124,21 @@ public class CreateProcessView implements Serializable {
         this.user = user;
     }
 
+    private Boolean crearProceso() {
+        Boolean value = false;
+        if (getProcess().getUserCareer().getProcess() == null) {
+            value = true;
+        } else if (getProcess().getUserCareer().getProcess().getState().equals(StateProcess.RECHAZADO)) {
+            getProcess().setUserCareer(new UserCareer(getProcess().getUserCareer().getCAREERcodigo(), getProcess().getUserCareer().getUSERuserId()));
+            value = true;
+        }
+        return value;
+    }
+
     public void guardar() throws IOException {
         if (!nullFiles()) {
-            if (getProcess().getUserCareer().getProcess() == null || getProcess().getUserCareer().getProcess().getState().equals(StateProcess.RECHAZADO)) {
+            if (crearProceso()) {
                 getProcess().setApprovedEPSDevelopment(false);
-                getProcess().setApprovedCareerCoordinator(false);
                 getProcess().setState(StateProcess.ACTIVO);
                 getProcess().setProgress(0);
                 getRequeriment().setEPSpreproject(epsPreProject.getContents());
@@ -127,7 +151,7 @@ public class CreateProcessView implements Serializable {
                 if (aeioSettlement != null) {
                     getRequeriment().setAEIOsettlement(aeioSettlement.getContents());
                 }
-                List<User> coordinadors=userFacade.getCareerCoordinator(getProcess());
+                List<User> coordinadors = userFacade.getCareerCoordinator(getProcess());
                 if (coordinadors != null && !coordinadors.isEmpty()) {
                     processFacade.createProcess(getProcess());
                     MessageUtils.addSuccessMessage("Se ha creado registrado el proceso");
@@ -324,14 +348,6 @@ public class CreateProcessView implements Serializable {
 
     public void reloadAeioSettlemen() {
         writtenRequestStream = new DefaultStreamedContent(new ByteArrayInputStream(writtenRequest.getContents()), "application/pdf", "Solicitud Escrita.pdf");
-    }
-
-    public List<Career> getCareers() {
-        return careers;
-    }
-
-    public void setCareers(List<Career> careers) {
-        this.careers = careers;
     }
 
     public List<UserCareer> getUserCareers() {

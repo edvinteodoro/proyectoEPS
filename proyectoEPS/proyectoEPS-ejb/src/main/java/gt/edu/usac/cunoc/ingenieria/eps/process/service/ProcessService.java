@@ -27,11 +27,15 @@ public class ProcessService {
     public Process createProcess(Process process){
         UserCareer userCareer=process.getUserCareer();
         userCareer.setProcess(process);
-        entityManager.merge(userCareer);
+        if (userCareer.getId() != null) {
+            entityManager.merge(userCareer);
+        }else{
+            entityManager.persist(userCareer);
+        }
         return process;
     }
-    
-    public Process updateProcess(Process process){
+
+    public Process updateProcess(Process process) {
         entityManager.merge(process);
         return process;
     }

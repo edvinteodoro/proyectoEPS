@@ -46,7 +46,7 @@ public class ProcessRepository {
     @Resource(name = JAVA_MAIL_SESSION)
     private Session emailSession;
 
-    public static final String GET_PROCESS_USER = "SELECT c.process FROM UserCareer c WHERE c.uSERuserId.userId=:userId AND c.process IS NOT NULL";
+    public static final String GET_PROCESS_USER = "SELECT c.process FROM UserCareer c WHERE c.uSERuserId.userId=:userId AND c.process IS NOT NULL ORDER BY c.process.id DESC";
     public static final String ID_PARAMETER_NAME = "userId";
 
     public Optional<Process> findProcessById(Integer id) throws UserException {

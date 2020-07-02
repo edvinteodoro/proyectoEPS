@@ -28,13 +28,14 @@
         <h:form id="proyect" class="bg-modal">
             <fieldset>
                 <legend>#{committeeEPSReviewView.titlePage()}</legend>
+                <div class="row">
+                    <div class="form-group col-md-8">
+                        <p:staticMessage severity="warn" summary="Advertencia! " detail="No se puede revisar este proyecto debido a que no es el primero en la cola de revision."  rendered="#{committeeEPSReviewView.renderWarningCoordinator()}"/><br></br>
+                    </div>
+                </div>
                 <p:panel id="titlePr" header="Titulo" class="form-group col-sm-8">
                     <div class="row">
                         <div class="form-group col-md-8">
-                            <p:outputLabel value="Titulo"/>
-                        </div>
-                        <div class="form-group col-md-8">
-
                             <h:outputText value="#{committeeEPSReviewView.actualProcess.project.title}"/>
                         </div>
 
@@ -260,7 +261,7 @@
                     <div class="form-group col-sm-2">
                         <p:commandLink styleClass="btn btn-success"
                                        update="@form,:growl"
-                                       rendered="#{!committeeEPSReviewView.listTemporalCorrection()}"
+                                       rendered="#{!committeeEPSReviewView.listTemporalCorrection()and!committeeEPSReviewView.renderWarningCoordinator()}"
                                        action="#{committeeEPSReviewView.saveCorrections()}">
                             <p:confirm header="Guardar Correcciones" message="¿Desea guardar las correcciones?" icon="pi pi-exclamation-triangle" />
                             <span class="glyphicon glyphicon-info-sign"></span> Guardar Correcciones
@@ -269,6 +270,8 @@
                     <div class="form-group col-sm-2">
                         <p:commandLink styleClass="btn btn-success"
                                        update="@form,:growl"
+                                       onclick="PF('progressBar').show();"
+                                       rendered="#{!committeeEPSReviewView.renderWarningCoordinator()}"
                                        action="#{committeeEPSReviewView.aprovedProject()}">
                             <p:confirm header="Aceptar Proyecto" message="¿Esta seguro de ACEPTAR el proyecto?" icon="pi pi-exclamation-triangle" />
                             <span class="glyphicon glyphicon-check"></span> Aceptar Proyecto
@@ -277,14 +280,16 @@
                     <div class="form-group col-sm-2">
                         <p:commandLink styleClass="btn btn-danger"
                                        update="@form,:growl"
-                                       oncomplete="PF('rechazar').show();">
-
+                                       oncomplete="PF('rechazar').show();"
+                                       rendered="#{!committeeEPSReviewView.renderWarningCoordinator()}">
                             <span class="glyphicon glyphicon-remove"></span> Rechazar Proyecto
                         </p:commandLink>
                     </div>
                     <div class="form-group col-sm-2">
                         <p:commandLink styleClass="btn btn-warning"
                                        update="@form,:growl"
+                                       onclick="PF('progressBar').show();"
+                                       rendered="#{!committeeEPSReviewView.renderWarningCoordinator()}"
                                        action="#{committeeEPSReviewView.returnEPSCommitteeCorrections()}">
                             <p:confirm header="Correcciones" message="¿Desea enviar las correciones?" icon="pi pi-exclamation-triangle" />
                             <span class="glyphicon glyphicon-comment"></span> Enviar Correcciones
@@ -351,14 +356,26 @@
                     </fieldset>
                 </div>
                 <div class="modal-footer ">
-                    <p:commandLink styleClass="btn btn-warming"
+                    <p:commandLink styleClass="btn btn-primary btn-xs"
                                    update="@form,:#{p:component('proyect')}"
-                                   actionListener="#{committeeEPSReviewView.rejectByEPSCommittee()}">
+                                   onclick="PF('progressBar').show();"
+                                   actionListener="#{committeeEPSReviewView.rejectProcess()}">
                         <p:confirm header="Aceptar Proyecto" message="¿Esta seguro de RECHAZAR el proyecto?" icon="pi pi-exclamation-triangle" />
                         <span class="glyphicon glyphicon-trash"></span> Rechazar Proyecto
                     </p:commandLink>
                 </div>
             </h:form>
+        </p:dialog>
+
+        <p:dialog id="progressBar" widgetVar="progressBar" closable="false" width="20%" showHeader="false" resizable="false"
+                  fitViewport="true" modal="true" closeOnEscape="true">
+            <p:ajax event="close" update="@this" />
+            <div align="center">
+                <p:outputLabel>Realizando operacion, espere un momento.</p:outputLabel>
+            </div>
+            <div class="form-group col-md-12" align="center">
+                <p:progressBar id="progressBarIndeterminate" style="height:6px" mode="indeterminate"/>
+            </div>
         </p:dialog>
 
         <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">

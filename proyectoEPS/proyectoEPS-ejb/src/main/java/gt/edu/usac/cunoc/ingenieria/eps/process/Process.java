@@ -60,6 +60,9 @@ public class Process implements Serializable {
     private Boolean approvedEPSDevelopment;
     @Column(name = "progress")
     private Integer progress;
+    @JoinColumn(name = "APPOINTMENT_id", referencedColumnName = "id")
+    @OneToOne
+    private Appointment appointmentId;
     @OneToOne(mappedBy = "pROCESSid", cascade = CascadeType.PERSIST)
     private Requeriment requeriment;
     @OneToOne(mappedBy = "process", cascade = CascadeType.REFRESH)
@@ -167,6 +170,14 @@ public class Process implements Serializable {
         this.progress = progress;
     }
 
+    public Appointment getAppointmentId() {
+        return appointmentId;
+    }
+
+    public void setAppointmentId(Appointment appointmentId) {
+        this.appointmentId = appointmentId;
+    }
+
     public UserCareer getUserCareer() {
         return userCareer;
     }
@@ -222,7 +233,6 @@ public class Process implements Serializable {
         }
         return value;
     }
-    
 
     @Override
     public int hashCode() {

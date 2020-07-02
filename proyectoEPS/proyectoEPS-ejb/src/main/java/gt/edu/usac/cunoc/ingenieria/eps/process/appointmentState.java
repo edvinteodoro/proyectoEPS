@@ -5,7 +5,7 @@ package gt.edu.usac.cunoc.ingenieria.eps.process;
  * @author angelrg
  */
 public enum appointmentState {
-    APPROVED, CHANGE, REVIEW;
+    APPROVED, CHANGE, REVIEW, NEW;
 
     public String stateToText() {
         switch (this) {
@@ -15,6 +15,8 @@ public enum appointmentState {
                 return "Cambiar";
             case REVIEW:
                 return "En revisión";
+            case NEW:
+                return "Nuevo en Revisión";
         }
         return null;
     }

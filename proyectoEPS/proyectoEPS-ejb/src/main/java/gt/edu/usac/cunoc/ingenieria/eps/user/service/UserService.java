@@ -2,8 +2,10 @@ package gt.edu.usac.cunoc.ingenieria.eps.user.service;
 
 import User.exception.UserException;
 import gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.ASESOR;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.JAVA_MAIL_SESSION;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.PERSISTENCE_UNIT_NAME;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.REVISOR;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.SecurityConstants.PBKDF_ITERATIONS;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.SecurityConstants.PBKDF_SALT_SIZE;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
@@ -78,6 +80,47 @@ public class UserService {
             }
         }
         return user;
+    }
+
+    /**
+     * This method create a unique password and userID base on rolName+DPI, and
+     * is inactive until a SUpervisor approves the new user
+     *
+     * This is focus on Reviewer and Advisor creation
+     *
+     * @param user
+     * @return
+     * @throws UserException
+     */
+    public User createTempUser(User user) throws UserException {
+        if (user == null) {
+            throw new UserException("User is null");
+        }
+        user.setPassword(newPassword());
+        user.setUserId(user.getrOLid().getName().concat(user.getDpi()));
+        user.setState(false);
+        user.setEpsCommittee(false);
+        return createUser(user);
+    }
+
+    /**
+     * Allow to delete Advisor or Reviewer that are Inactive
+     *
+     * @param user
+     * @throws UserException
+     */
+    public void deleteUser(User user) throws UserException {
+        User removeUser = entityManager.find(User.class, user.getUserId());
+        if (removeUser == null) {
+            throw new UserException("User is null");
+        }
+
+        if (!removeUser.getState() && removeUser.getROLid().getName().equals(ASESOR)
+                || removeUser.getROLid().getName().equals(REVISOR)) {
+            entityManager.remove(removeUser);
+        } else {
+            throw new UserException("Solo se permite eliminar Asesores o Revisores Inactivos");
+        }
     }
 
     public User updateUser(User user) throws UserException {

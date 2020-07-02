@@ -17,6 +17,18 @@ public interface UserFacadeLocal {
 
     public User createUser(User user) throws UserException;
 
+    /**
+     * This method create a unique password and userID base on rolName+DPI, and
+     * is inactive until a SUpervisor approves the new user
+     *
+     * This is focus on Reviewer and Advisor creation
+     *
+     * @param user
+     * @return
+     * @throws UserException
+     */
+    public User createTempUser(User user) throws UserException;
+
     public User updateUser(User user) throws UserException;
 
     public List<User> getUser(User user) throws UserException;

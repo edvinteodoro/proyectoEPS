@@ -80,8 +80,6 @@ public interface ProcessFacadeLocal {
     public Requeriment updaterequeriment(Requeriment requeriment);
 
     public Process createProcess(Process process);
-    
-    
 
     public List<Process> getProcessUser(User user);
 

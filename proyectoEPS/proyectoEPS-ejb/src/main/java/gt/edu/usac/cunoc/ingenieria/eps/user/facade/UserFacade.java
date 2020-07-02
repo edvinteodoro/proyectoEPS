@@ -80,6 +80,37 @@ public class UserFacade implements UserFacadeLocal {
         return userService.createUser(user);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public User createTempUser(User user) throws UserException {
+        User search = new User();
+        search.setrOLid(user.getROLid());
+        search.setDpi(user.getDpi());
+
+        List<User> result = userRepository.getUser(search);
+
+        if (result.isEmpty()) {
+            return userService.createTempUser(user);
+        } else {
+            throw new UserException("El " + user.getrOLid().getName() + " ya existe");
+        }
+
+    }
+
+    /**
+     * Allow to delete Advisor or Reviewer that are Inactive
+     *
+     * TODO validate user doesn't have projects history
+     *
+     * @param user
+     * @throws UserException
+     */
+    public void removeAppointmentUser(User user) throws UserException {
+        userService.deleteUser(user);
+    }
+
     @Override
     public User updateUser(User user) throws UserException {
         return userService.updateUser(user);

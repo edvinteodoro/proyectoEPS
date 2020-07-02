@@ -13,6 +13,7 @@ import static gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection.OTHER;
 import gt.edu.usac.cunoc.ingenieria.eps.project.facade.ProjectFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.tail.facade.TailCommitteeEPSFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.tail.facade.TailFacadeLocal;
+import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import gt.edu.usac.cunoc.ingenieria.eps.user.facade.UserFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.utils.MessageUtils;
 import java.io.ByteArrayInputStream;
@@ -57,7 +58,11 @@ public class committeeEPSReviewView implements Serializable {
     @EJB
     private TailCommitteeEPSFacadeLocal tailCommitteeEPSFacade;
 
+    private Boolean isFirstProcess;
+
     private Process actualProcess;
+
+    private User user;
 
     private Integer processId;
     private StreamedContent scheduleStream;
@@ -78,6 +83,8 @@ public class committeeEPSReviewView implements Serializable {
 
     public void loadCurrentProject() {
         try {
+            isFirstProcess = false;
+            user = userFacade.getAuthenticatedUser().get(0);
             actualProcess = processFacade.getProcess(new Process(processId)).get(0);
             if (actualProcess != null) {
                 scheduleStream = new DefaultStreamedContent(new ByteArrayInputStream(actualProcess.getProject().getSchedule()), "application/pdf", "Calendario.pdf");
@@ -87,6 +94,15 @@ public class committeeEPSReviewView implements Serializable {
                 if (actualProcess.getProject().getAnnexed() != null) {
                     annexedStream = new DefaultStreamedContent(new ByteArrayInputStream(actualProcess.getProject().getAnnexed()), "application/pdf", "Anexos.pdf");
                     annexedFileName = annexedStream.getName();
+                }
+                Process firstProcess;
+                if (getActualProcess().getApprovedCareerCoordinator() == null) {
+                    firstProcess = tailFacade.getProcessByCoordinator(user).get(0);
+                } else {
+                    firstProcess = tailCommitteeEPSFacade.getTailCommitteeEPS().get(0);
+                }
+                if (getActualProcess().equals(firstProcess)) {
+                    isFirstProcess = true;
                 }
             }
         } catch (Exception e) {
@@ -130,12 +146,28 @@ public class committeeEPSReviewView implements Serializable {
         getCommentaries(TypeCorrection.ANEXO, null);
     }
 
+    public Boolean getIsFirstProcess() {
+        return isFirstProcess;
+    }
+
+    public void setIsFirstProcess(Boolean isFirstProcess) {
+        this.isFirstProcess = isFirstProcess;
+    }
+
     public String titlePage() {
         String value = "Anteproyecto";
         if (getActualProcess().getApprovalEPSCommission() != null) {
             if (getActualProcess().getApprovalEPSCommission()) {
                 value = "Proyecto";
             }
+        }
+        return value;
+    }
+
+    public Boolean renderWarningCoordinator() {
+        Boolean value = false;
+        if (getActualProcess().getState() == StateProcess.REVISION && !getIsFirstProcess()) {
+            value = true;
         }
         return value;
     }
@@ -345,13 +377,22 @@ public class committeeEPSReviewView implements Serializable {
         externalContext.redirect(externalContext.getRequestContextPath() + "/process/processes.xhtml");
     }
 
-    public void rejectByEPSCommittee() {
+    public void rejectProcess() {
         try {
-            processFacade.EPSCommitteeRejectProyect(
-                    actualProcess.getId(),
-                    userFacade.getAuthenticatedUser().get(0),
-                    correctionMessage
-            );
+            if (getActualProcess().getApprovedCareerCoordinator() == null) {
+                processFacade.rejectProcess(tailFacade.getTailCoordianteor(getActualProcess()), "Proceso Eps Rechazado", correctionMessage);
+                tailFacade.deleteTailCoordinatod(getActualProcess());
+                getActualProcess().setState(StateProcess.RECHAZADO);
+                getActualProcess().setApprovedCareerCoordinator(false);
+                processFacade.updateProcess(getActualProcess()); 
+                redirectToProcesses();
+            } else if (getActualProcess().getApprovedCareerCoordinator()) {
+                processFacade.EPSCommitteeRejectProyect(
+                        actualProcess.getId(),
+                        userFacade.getAuthenticatedUser().get(0),
+                        correctionMessage
+                );
+            }
             redirectToEPSCommittee();
         } catch (Exception e) {
             MessageUtils.addErrorMessage(e.getMessage());

@@ -181,6 +181,7 @@ public class ProcessFacade implements ProcessFacadeLocal {
             if (result.isPresent()) {
                 if (processes.get(0).getId() == result.get().getId()) {
                     result.get().setState(RECHAZADO);
+                    result.get().setApprovalEPSCommission(false);
                     updateProcess(result.get());
                     tailCommitteeEPSFacadeLocal.deleteTailCommitteeEPS(result.get());
                     projectFacade.createCorrection(new Correction(LocalDate.now(), user, TypeCorrection.REJECTED, result.get().getProject(), null, message.getBytes()));

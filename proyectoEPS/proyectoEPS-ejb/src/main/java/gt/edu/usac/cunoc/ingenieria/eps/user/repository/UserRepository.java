@@ -25,7 +25,7 @@ import javax.persistence.criteria.Root;
 @LocalBean
 public class UserRepository {
 
-    public static final String GET_CAREER_COORDINATOR = "SELECT u.uSERuserId FROM UserCareer u WHERE u.uSERuserId.state=TRUE AND u.cAREERcodigo.codigo=:codigo AND u.uSERuserId.rOLid.name=:rolName";
+    public static final String GET_CAREER_COORDINATOR = "SELECT u.uSERuserId FROM UserCareer u WHERE u.uSERuserId.status=TRUE AND u.cAREERcodigo.codigo=:codigo AND u.uSERuserId.rOLid.name=:rolName";
 
     @PersistenceContext(name = PERSISTENCE_UNIT_NAME)
     private EntityManager entityManager;

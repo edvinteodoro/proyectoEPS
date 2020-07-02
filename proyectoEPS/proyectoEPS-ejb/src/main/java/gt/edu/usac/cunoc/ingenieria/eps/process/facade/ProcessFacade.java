@@ -1,6 +1,7 @@
 package gt.edu.usac.cunoc.ingenieria.eps.process.facade;
 
 import User.exception.UserException;
+import gt.edu.usac.cunoc.ingenieria.eps.exception.ValidationException;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Requeriment;
 import gt.edu.usac.cunoc.ingenieria.eps.process.repository.ProcessRepository;
 import gt.edu.usac.cunoc.ingenieria.eps.process.repository.RequerimentRepository;
@@ -15,6 +16,7 @@ import gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection;
 import gt.edu.usac.cunoc.ingenieria.eps.project.facade.ProjectFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.tail.TailCoordinator;
 import gt.edu.usac.cunoc.ingenieria.eps.tail.facade.TailCommitteeEPSFacadeLocal;
+import gt.edu.usac.cunoc.ingenieria.eps.user.Career;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import java.time.LocalDate;
 import java.util.List;
@@ -196,6 +198,22 @@ public class ProcessFacade implements ProcessFacadeLocal {
         }
 
         return Optional.ofNullable(null);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void assignEPSSUpervisorToProcess(Career career, Process process) throws ValidationException {
+        processService.assignEPSSUpervisorToProcess(career, process);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Process> getProcessBySupervisorEPS(User supervisorEPS) {
+        return processRepository.getProcessBySupervisorEPS(supervisorEPS);
     }
 
 }

@@ -16,7 +16,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -70,7 +69,7 @@ public class Process implements Serializable {
     @OneToOne(mappedBy = "pROCESSid", cascade = CascadeType.ALL)
     private Project project;
     @ManyToOne(fetch = FetchType.LAZY)
-    private User supervisorEPS;
+    private User supervisor_EPS;
 
     public Process() {
     }
@@ -227,13 +226,13 @@ public class Process implements Serializable {
         }
         return value;
     }
-    
-    public User getSupervisorEPS() {
-        return supervisorEPS;
+
+    public User getSupervisor_EPS() {
+        return supervisor_EPS;
     }
 
-    public void setSupervisorEPS(User supervisorEPS) {
-        this.supervisorEPS = supervisorEPS;
+    public void setSupervisor_EPS(User supervisor_EPS) {
+        this.supervisor_EPS = supervisor_EPS;
     }
 
     @Override

@@ -2,7 +2,9 @@
 package gt.edu.usac.cunoc.ingenieria.eps.committeeEPS.view;
 
 import User.exception.UserException;
+import gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
+import gt.edu.usac.cunoc.ingenieria.eps.process.facade.ProcessFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.tail.facade.TailCommitteeEPSFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import gt.edu.usac.cunoc.ingenieria.eps.user.facade.UserFacadeLocal;
@@ -23,6 +25,9 @@ public class tailCommitteeEPSView implements Serializable{
     
     @EJB
     private UserFacadeLocal userFacade;
+    
+    @EJB
+    private ProcessFacadeLocal processFacade;
         
     private List<Process> processes;
 
@@ -51,8 +56,12 @@ public class tailCommitteeEPSView implements Serializable{
         try {
             user = userFacade.getAuthenticatedUser().get(0);
             this.epsCommittee = user.getEpsCommittee();
-            if (epsCommittee){
-                this.processes = tailCommitteeEPSFacade.getTailCommitteeEPS();
+            if (user.getROLid().getName().equals(Constants.SUPERVISOR_EPS) || user.getROLid().getName().equals(Constants.COORDINADOR_EPS) ){
+                if (epsCommittee){
+                    this.processes = tailCommitteeEPSFacade.getTailCommitteeEPS();
+                } else {
+                    this.processes = processFacade.getProcessBySupervisorEPS(user);
+                }
             } else {
                 this.processes = new ArrayList<>();
             }

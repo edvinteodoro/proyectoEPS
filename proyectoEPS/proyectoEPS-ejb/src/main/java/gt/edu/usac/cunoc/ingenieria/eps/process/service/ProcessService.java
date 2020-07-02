@@ -55,18 +55,18 @@ public class ProcessService {
             for (int i = 0; i < supervisorEPS.size()-1; i++) {
                 currentUser = supervisorEPS.get(i);
                 nextUser = supervisorEPS.get(i + 1);
-                int countProcessesCurrentUser = userRepository.getNumberProcessesBySupervisorEPS(currentUser);
-                int countProcessesNextUser = userRepository.getNumberProcessesBySupervisorEPS(nextUser);
+                long countProcessesCurrentUser = userRepository.getNumberProcessesBySupervisorEPS(currentUser);
+                long countProcessesNextUser = userRepository.getNumberProcessesBySupervisorEPS(nextUser);
                 if (countProcessesCurrentUser > countProcessesNextUser){
                     supervisorEPSToAssign = nextUser;
                 } else {
                     supervisorEPSToAssign = currentUser;
                 }
-                process.setSupervisorEPS(supervisorEPSToAssign);
+                process.setSupervisor_EPS(supervisorEPSToAssign);
             }   
         } else if (supervisorEPS.size() == 1){
             supervisorEPSToAssign = supervisorEPS.get(0);
-            process.setSupervisorEPS(supervisorEPSToAssign);
+            process.setSupervisor_EPS(supervisorEPSToAssign);
         } else {
             throw new ValidationException("No existe Supervisor de EPS para su Carrera");
         }

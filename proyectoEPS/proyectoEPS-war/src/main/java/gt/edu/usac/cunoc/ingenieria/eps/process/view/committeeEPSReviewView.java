@@ -329,6 +329,7 @@ public class committeeEPSReviewView implements Serializable {
                 tailFacade.deleteTailCoordinatod(getActualProcess());
                 getActualProcess().setState(StateProcess.REVISION);
                 getActualProcess().setApprovedCareerCoordinator(true);
+                processFacade.assignEPSSUpervisorToProcess(getActualProcess().getUserCareer().getCAREERcodigo(), getActualProcess());
                 processFacade.updateProcess(getActualProcess());
                 tailCommitteeEPSFacade.createTailCommiteeEPS(getActualProcess());
                 redirectToProcesses();

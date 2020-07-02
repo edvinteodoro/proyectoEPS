@@ -6,6 +6,7 @@ import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.PERSISTEN
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.SUPERVISOR_EPS;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
+import gt.edu.usac.cunoc.ingenieria.eps.process.StateProcess;
 import gt.edu.usac.cunoc.ingenieria.eps.user.Career;
 import gt.edu.usac.cunoc.ingenieria.eps.user.Rol;
 import java.util.ArrayList;
@@ -26,8 +27,8 @@ import javax.persistence.criteria.Root;
 @LocalBean
 public class UserRepository {
 
-    public static final String GET_USER_CAREER_ROL = "SELECT u.uSERuserId FROM UserCareer u WHERE u.uSERuserId.state=TRUE AND u.cAREERcodigo.codigo=:codigo AND u.uSERuserId.rOLid.name=:rolName";
-    public static final String GET_NUMBER_PROCESSES_SUPERVISOR_EPS = "SELECT COUNT(c) FROM Process c WHERE c.status != 'RECHAZADO' OR c.status != 'INACTIVO' AND c.supervisorEPS.userId = :userIdSupervisorEPS";
+    public static final String GET_USER_CAREER_ROL = "SELECT u.uSERuserId FROM UserCareer u WHERE u.uSERuserId.status=TRUE AND u.cAREERcodigo.codigo=:codigo AND u.uSERuserId.rOLid.name=:rolName";
+    public static final String GET_NUMBER_PROCESSES_SUPERVISOR_EPS = "SELECT COUNT(c.id) FROM Process c WHERE c.supervisor_EPS.userId=:userIdSupervisorEPS AND (c.state != :RECHAZADO OR c.state != :INACTIVO)";
     
     @PersistenceContext(name = PERSISTENCE_UNIT_NAME)
     private EntityManager entityManager;
@@ -153,9 +154,11 @@ public class UserRepository {
      * @param supervisorEPS
      * @return 
      */
-    public Integer getNumberProcessesBySupervisorEPS(User supervisorEPS){
+    public Long getNumberProcessesBySupervisorEPS(User supervisorEPS){
         Query query = entityManager.createQuery(GET_NUMBER_PROCESSES_SUPERVISOR_EPS);
         query.setParameter("userIdSupervisorEPS", supervisorEPS.getUserId());
-        return (Integer) query.getSingleResult();
+        query.setParameter("RECHAZADO", StateProcess.RECHAZADO);
+        query.setParameter("INACTIVO", StateProcess.INACTIVO);
+        return (Long) query.getSingleResult();
     }
 }

@@ -104,9 +104,9 @@ public class User implements Serializable {
     private Rol rOLid;
     @OneToMany(mappedBy="uSERuserId",cascade = CascadeType.ALL)
     private List<UserCareer> userCareers;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "uSERadviser")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userAdviser")
     private Collection<Appointment> appointmentCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "uSERreviewer")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userReviewer")
     private Collection<Appointment> appointmentCollection1;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "uSERadviserProposal")
     private Collection<DocumentInitialEps> documentInitialEpsCollection;

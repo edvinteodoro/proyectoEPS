@@ -38,10 +38,10 @@ public class Appointment implements Serializable {
     @Enumerated(EnumType.STRING)
     private appointmentState reviewerState;
     @JoinColumn(name = "USER_adviser", referencedColumnName = "userId")
-    @ManyToOne(optional = false)
+    @ManyToOne
     private User userAdviser;
     @JoinColumn(name = "USER_reviewer", referencedColumnName = "userId")
-    @ManyToOne(optional = false)
+    @ManyToOne
     private User userReviewer;
 
     public Appointment() {

@@ -24,10 +24,13 @@
             <p:column headerText="Carrera">
                 <h:outputText value="#{process.userCareer.CAREERcodigo.name}" />
             </p:column>
+            <p:column headerText="Telefono">
+                <h:outputText value="#{process.userCareer.USERuserId.phone1}" />
+            </p:column>
             <p:column headerText="Aprobacion de coordinador" rendered="#{!processesView.isCareerCoordinator()}">
                 <h:outputText value="#{process.approvedCareerCoordinatorMessage}" />
             </p:column>
-            <p:column headerText="Aprobacion EPS">
+            <p:column headerText="Aprobacion EPS" rendered="#{!processesView.isCareerCoordinator()}">
                 <h:outputText value="#{process.approvedEPSMessage}" />
             </p:column>
             <p:column headerText="Estado Proceso" rendered="#{!processesView.isCareerCoordinator()}">

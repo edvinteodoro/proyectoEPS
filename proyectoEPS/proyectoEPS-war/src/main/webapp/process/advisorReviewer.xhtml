@@ -162,7 +162,23 @@
                                              value="#{advisorReviewerView.actualUser.directionCompanyWork}"/>
                             </div>
                         </div>
-                        <!-- Missing personal_resume file Upload-->
+                        <div class="row">
+                            <div class="form-group col-sm-3">
+                                <p:outputLabel for="userResume" value="Curriculum: "/>
+                            </div>
+                            <div class="form-group col-sm-5">
+                                <p:fileUpload id="userResume" fileUploadListener="#{advisorReviewerView.handlePersonalResume}" 
+                                              required="true"   
+                                              styleClass="in-dialog"
+                                              skinSimple="true" auto="true" allowTypes="/(\.|\/)(pdf)$/"
+                                              update="@parent"
+                                              label="Seleccionar"
+                                              invalidFileMessage="Solo se puede cargar archivos pdf"/>  
+                            </div>
+                            <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{advisorReviewerView.reloadPersonalResume()}">
+                                <p:fileDownload value="#{advisorReviewerView.personalResumeStream}" contentDisposition="inline"/>
+                            </h:commandLink>
+                        </div>
                     </fieldset>
                 </div>
                 <div class="modal-footer ">
@@ -219,7 +235,7 @@
                 </div>
             </h:form>
         </p:dialog>
-        
+
         <p:dialog header="Estado: ######" id="infoAbout" widgetVar="infoAbout"
                   fitViewport="true" modal="true" closeOnEscape="true">
             <p:ajax event="close" listener="#{advisorReviewerView.clean()}" update="@this" />
@@ -280,6 +296,13 @@
                                 <h:outputText value="#{advisorReviewerView.actualUser.directionCompanyWork}" />
                             </div>
                         </div>
+                        <div class="row form-group">
+                            <p:outputLabel value="Curriculum:" styleClass="col-md-4 control-label"/>
+                            <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{advisorReviewerView.reloadPersonalResume()}">
+                                <p:fileDownload value="#{advisorReviewerView.personalResumeStream}" contentDisposition="inline"/>
+                            </h:commandLink>
+                        </div>
+                        
                     </fieldset>
                 </div>
             </h:form>

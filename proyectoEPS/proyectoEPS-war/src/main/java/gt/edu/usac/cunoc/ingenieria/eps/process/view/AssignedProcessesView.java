@@ -1,12 +1,11 @@
-package gt.edu.usac.cunoc.ingenieria.eps.committeeEPS.view;
+package gt.edu.usac.cunoc.ingenieria.eps.process.view;
 
 import User.exception.UserException;
-import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
-import gt.edu.usac.cunoc.ingenieria.eps.tail.facade.TailCommitteeEPSFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
+import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
+import gt.edu.usac.cunoc.ingenieria.eps.process.facade.ProcessFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.user.facade.UserFacadeLocal;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -15,19 +14,17 @@ import javax.inject.Named;
 
 @Named
 @ViewScoped
-public class tailCommitteeEPSView implements Serializable {
-
-    @EJB
-    private TailCommitteeEPSFacadeLocal tailCommitteeEPSFacade;
+public class AssignedProcessesView implements Serializable {
 
     @EJB
     private UserFacadeLocal userFacade;
-
+    
+    @EJB
+    private ProcessFacadeLocal processFacade;
+    
     private List<Process> processes;
 
     private User user;
-
-    private Boolean epsCommittee;
 
     public List<Process> getProcesses() {
         return processes;
@@ -37,27 +34,13 @@ public class tailCommitteeEPSView implements Serializable {
         this.processes = processes;
     }
 
-    public Boolean getEpsCommittee() {
-        return epsCommittee;
-    }
-
-    public void setEpsCommittee(Boolean epsCommittee) {
-        this.epsCommittee = epsCommittee;
-    }
-
     @PostConstruct
     public void init() {
         try {
             user = userFacade.getAuthenticatedUser().get(0);
-            this.epsCommittee = user.getEpsCommittee();
-            if (epsCommittee) {
-                this.processes = tailCommitteeEPSFacade.getTailCommitteeEPS();
-            } else {
-                this.processes = new ArrayList<>();
-            }
+            setProcesses(processFacade.getProcessBySupervisorEPS(user));
         } catch (UserException ex) {
             System.out.println("Error Autenticación");
         }
     }
-
 }

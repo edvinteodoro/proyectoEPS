@@ -10,16 +10,15 @@
                 xmlns:o="http://omnifaces.org/ui">
 
     <ui:define name="head">
-        Revisión Comité EPS  
+        Procesos Asignados  
     </ui:define>
 
     <ui:define name="title">
-        Revisión Comité EPS
+        Procesos Asignados
     </ui:define>
 
     <ui:define name="content">
-        <p:staticMessage severity="warn" summary="Advertencia! " detail="No forma parte de la Comisión EPS." rendered="#{!tailCommitteeEPSView.epsCommittee}"/><br></br><br></br>
-        <p:dataTable var="process" value="#{tailCommitteeEPSView.processes}" reflow="true">
+        <p:dataTable var="process" value="#{assignedProcessesView.processes}" reflow="true">
             <p:column headerText="Registro Académico">
                 <h:outputText value="#{process.userCareer.USERuserId.academicRegister}"/> 
             </p:column>
@@ -32,8 +31,11 @@
             <p:column headerText="Carrera">
                 <h:outputText value="#{process.userCareer.CAREERcodigo.name}" />
             </p:column>
-            <p:column headerText="Aprobacion de coordinador" rendered="#{!processesView.isCareerCoordinator()}">
+            <p:column headerText="Aprobacion de coordinador">
                 <h:outputText value="#{process.approvedCareerCoordinatorMessage}" />
+            </p:column>
+            <p:column headerText="Aprobacion de Comite EPS">
+                <h:outputText value="#{process.approvedEPSMessage}" />
             </p:column>
             <p:column headerText="Requisitos" styleClass="text-center">
                 <p data-placement="top" data-toggle="tooltip" title="Requisitos">

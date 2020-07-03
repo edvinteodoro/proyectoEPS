@@ -2,6 +2,7 @@ package gt.edu.usac.cunoc.ingenieria.eps.process;
 
 import static gt.edu.usac.cunoc.ingenieria.eps.process.StateProcess.ACTIVO;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
+import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import gt.edu.usac.cunoc.ingenieria.eps.user.UserCareer;
 import java.io.Serializable;
 import java.util.List;
@@ -11,11 +12,12 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
@@ -69,6 +71,8 @@ public class Process implements Serializable {
     private UserCareer userCareer;
     @OneToOne(mappedBy = "pROCESSid", cascade = CascadeType.ALL)
     private Project project;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User supervisor_EPS;
 
     public Process() {
     }
@@ -232,6 +236,14 @@ public class Process implements Serializable {
             value = "enabled-row";
         }
         return value;
+    }
+
+    public User getSupervisor_EPS() {
+        return supervisor_EPS;
+    }
+
+    public void setSupervisor_EPS(User supervisor_EPS) {
+        this.supervisor_EPS = supervisor_EPS;
     }
 
     @Override

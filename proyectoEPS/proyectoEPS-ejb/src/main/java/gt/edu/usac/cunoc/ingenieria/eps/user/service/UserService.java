@@ -70,8 +70,11 @@ public class UserService {
         user.setPassword(encryptPass(user.getPassword()));
         try {
             if (user.getROLid().getName().equals(Constants.COORDINADOR_EPS)) {
-                user.setEpsCommittee(true);
+                user.setEpsCommittee(Boolean.TRUE);
+            } else {
+                user.setEpsCommittee(Boolean.FALSE);
             }
+            user.setStatus(Boolean.TRUE);
             entityManager.persist(user);
         } catch (ConstraintViolationException e) {
             // Aqui tira los errores de constraint
@@ -137,9 +140,6 @@ public class UserService {
         if (user.getCodePersonal() != null) {
             updateUser.setCodePersonal(user.getCodePersonal());
         }
-        if (user.getCarnet() != null) {
-            updateUser.setCarnet(user.getCarnet());
-        }
         if (user.getAcademicRegister() != null) {
             updateUser.setAcademicRegister(user.getAcademicRegister());
         }
@@ -152,14 +152,14 @@ public class UserService {
         if (user.getEmail() != null) {
             updateUser.setEmail(user.getEmail());
         }
-        if (user.getPhone() != null) {
-            updateUser.setPhone(user.getPhone());
+        if (user.getPhone1()!= null) {
+            updateUser.setPhone1(user.getPhone1());
         }
         if (user.getDirection() != null) {
             updateUser.setDirection(user.getDirection());
         }
-        if (user.getState() != null) {
-            updateUser.setState(user.getState());
+        if (user.getStatus()!= null) {
+            updateUser.setStatus(user.getStatus());
         }
         if (user.getROLid() != null) {
             updateUser.setROLid(user.getROLid());

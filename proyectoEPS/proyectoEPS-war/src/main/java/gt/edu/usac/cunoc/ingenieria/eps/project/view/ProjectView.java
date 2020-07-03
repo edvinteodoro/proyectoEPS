@@ -202,7 +202,6 @@ public class ProjectView implements Serializable {
 
     public void setCorrectionAnexo(Correction correctionAnexo) {
         this.correctionAnexo = correctionAnexo;
-
     }
 
     public Correction getCorrectionCalendar() {
@@ -499,6 +498,7 @@ public class ProjectView implements Serializable {
                         getProject().setAnnexed(annexed.getContents());
                     }
                     projectFacade.createProject(getProject(), getGeneralObjectves(), getSpecificObjectives(), process);
+                    flagUpdate = true;
                     MessageUtils.addSuccessMessage("Se ha Creado el Proyecto");
                 }
             }
@@ -617,12 +617,20 @@ public class ProjectView implements Serializable {
         getProcess().setState(getRevisionState());
         changeStatusCorrection();
         processFacade.updateProcess(getProcess());
-        if (!getProcess().getApprovedCareerCoordinator()) {
+        if (getProcess().getApprovedCareerCoordinator() == null) {
             tailFacade.createTailCoordinator(user, getProcess());
-        } else {
+        } else if (getProcess().getApprovedCareerCoordinator()) {
             tailCommitteeEPSFacade.createTailCommiteeEPS(getProcess());
         }
         MessageUtils.addSuccessMessage("La solicitud de revision se ha realizado exitosamente.");
+    }
+
+    public String titlePage() {
+        String value = "Anteproyecto";
+        if (getProcess().getApprovalEPSCommission() != null) {
+            value = "Proyecto";
+        }
+        return value;
     }
 
     public void acceptChanges() {
@@ -782,14 +790,6 @@ public class ProjectView implements Serializable {
                 }
             }
         } else if (!isStuden() && getIsFirstProcess()) {
-            value = true;
-        }
-        return value;
-    }
-
-    public Boolean renderWarningCoordinator() {
-        Boolean value = false;
-        if (!isStuden() && getProcess().getState() == getRevisionState() && !getIsFirstProcess()) {
             value = true;
         }
         return value;

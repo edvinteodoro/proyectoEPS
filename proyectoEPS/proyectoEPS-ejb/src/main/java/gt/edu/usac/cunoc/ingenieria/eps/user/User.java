@@ -1,11 +1,8 @@
 package gt.edu.usac.cunoc.ingenieria.eps.user;
 
 import gt.edu.usac.cunoc.ingenieria.eps.process.Appointment;
-import gt.edu.usac.cunoc.ingenieria.eps.project.Correction;
 import gt.edu.usac.cunoc.ingenieria.eps.process.DocumentInitialEps;
-import gt.edu.usac.cunoc.ingenieria.eps.user.UserCareer;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import javax.persistence.Basic;
@@ -16,18 +13,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-/**
- *
- * @author teodoro
- */
 @Entity
 @Table(name = "USER")
 public class User implements Serializable {
@@ -47,9 +37,6 @@ public class User implements Serializable {
     @Size(max = 45)
     @Column(name = "codePersonal")
     private String codePersonal;
-    @Size(max = 45)
-    @Column(name = "carnet")
-    private String carnet;
     @Size(max = 45)
     @Column(name = "academicRegister")
     private String academicRegister;
@@ -73,8 +60,10 @@ public class User implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
-    @Column(name = "phone")
-    private String phone;
+    @Column(name = "phone1")
+    private String phone1;
+    @Column(name = "phone2")
+    private String phone2;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 400)
@@ -85,8 +74,8 @@ public class User implements Serializable {
     private String direction;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "state")
-    private Boolean state;
+    @Column(name = "status")
+    private Boolean status;
     @Basic(optional = false)
     @Column(name = "eps_committee")
     private Boolean epsCommittee;
@@ -125,15 +114,15 @@ public class User implements Serializable {
         this.epsCommittee = epsCommittee;
     }
 
-    public User(String userId, String dpi, String firstName, String lastName, String email, String phone, String password, Boolean state) {
+    public User(String userId, String dpi, String firstName, String lastName, String email, String phone1, String password, Boolean status) {
         this.userId = userId;
         this.dpi = dpi;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.phone = phone;
+        this.phone1 = phone1;
         this.password = password;
-        this.state = state;
+        this.status = status;
     }
 
     public User(String userId, String dpi, String firstName, String lastName, String email, String phone, String direction, String nameCompanyWork, String phoneCompanyWork, String directionCompanyWork, byte[] personalResume, Rol rOLid) {
@@ -176,14 +165,6 @@ public class User implements Serializable {
         this.codePersonal = codePersonal;
     }
 
-    public String getCarnet() {
-        return carnet;
-    }
-
-    public void setCarnet(String carnet) {
-        this.carnet = carnet;
-    }
-
     public String getAcademicRegister() {
         return academicRegister;
     }
@@ -216,14 +197,22 @@ public class User implements Serializable {
         this.email = email;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getPhone1() {
+        return phone1;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setPhone1(String phone1) {
+        this.phone1 = phone1;
     }
 
+    public String getPhone2() {
+        return phone2;
+    }
+
+    public void setPhone2(String phone2) {
+        this.phone2 = phone2;
+    }
+    
     public String getPassword() {
         return password;
     }
@@ -240,12 +229,12 @@ public class User implements Serializable {
         this.direction = direction;
     }
 
-    public Boolean getState() {
-        return state;
+    public Boolean getStatus() {
+        return status;
     }
 
-    public void setState(Boolean state) {
-        this.state = state;
+    public void setStatus(Boolean status) {
+        this.status = status;
     }
 
     public Rol getROLid() {
@@ -343,8 +332,6 @@ public class User implements Serializable {
     public void setUserCareers(List<UserCareer> userCareers) {
         this.userCareers = userCareers;
     }
-    
-    
 
     @Override
     public int hashCode() {

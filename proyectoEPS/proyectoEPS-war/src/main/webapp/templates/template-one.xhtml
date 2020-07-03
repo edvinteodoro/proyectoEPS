@@ -54,6 +54,9 @@
                                 <li>
                                     <p:link outcome="tailEPSCommittee" value="Procesos Comisión EPS" rendered="#{p:ifAnyGranted(constantsRol.COMMITTEE_EPS())}"/>
                                 </li>
+                                 <li>
+                                     <p:link outcome="assignedProcesses" value="Procesos Asignados" rendered="#{p:ifGranted(constantsRol.SUPERVISOR_EPS())}"/>
+                                </li>
                                 <li>
                                     <p:link outcome="adviserReviewer" value="Asesor y Revisor"/>
                                 </li>
@@ -65,10 +68,10 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <p:link  outcome="createUser" value="Crear Usuario" rendered="#{p:ifAnyGranted(constantsRol.SECRETARIAS())}"/>
+                                    <p:link  outcome="createUser" value="Registro Usuario" rendered="#{p:ifAnyGranted(constantsRol.SECRETARIAS())}"/>
                                 </li>
                                 <li>
-                                    <p:link  outcome="users" value="Ver Usuarios"/>
+                                    <p:link  outcome="users" value="Consulta de Usuarios"/>
                                 </li>
                                 <li>
                                     <p:link  outcome="profile" value="Mi Perfil"/>

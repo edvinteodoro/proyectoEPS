@@ -27,7 +27,7 @@
             <p:column headerText="Aprobacion de coordinador" rendered="#{!processesView.isCareerCoordinator()}">
                 <h:outputText value="#{process.approvedCareerCoordinatorMessage}" />
             </p:column>
-            <p:column headerText="Aprobacion EPS">
+            <p:column headerText="Aprobacion EPS" rendered="#{!processesView.isCareerCoordinator()}">
                 <h:outputText value="#{process.approvedEPSMessage}" />
             </p:column>
             <p:column headerText="Estado Proceso" rendered="#{!processesView.isCareerCoordinator()}">
@@ -46,7 +46,7 @@
             </p:column>
             <p:column headerText="Anteproyecto" styleClass="text-center">
                 <p data-placement="top" data-toggle="tooltip" title="Anteproyecto">
-                    <button jsf:outcome="project" styleClass="btn btn-success btn-xs" >
+                    <button jsf:outcome="#{processesView.redirectProcessTo()}" styleClass="btn btn-success btn-xs" >
                         <f:param name="idProcess" value="#{process.id}"/>
                         <span class="glyphicon glyphicon-log-in"></span>
                     </button>

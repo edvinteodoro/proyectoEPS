@@ -1,9 +1,11 @@
 package gt.edu.usac.cunoc.ingenieria.eps.process.facade;
 
 import User.exception.UserException;
+import gt.edu.usac.cunoc.ingenieria.eps.exception.ValidationException;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Requeriment;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import gt.edu.usac.cunoc.ingenieria.eps.tail.TailCoordinator;
+import gt.edu.usac.cunoc.ingenieria.eps.user.Career;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import java.util.List;
 import java.util.Optional;
@@ -81,11 +83,24 @@ public interface ProcessFacadeLocal {
 
     public Process createProcess(Process process);
     
-    
-
     public List<Process> getProcessUser(User user);
 
     public Process updateProcess(Process process);
 
     public boolean rejectProcess(TailCoordinator tailCoordinator, String title, String msg);
+    
+    /**
+     * This method assign a SUPERVISOR_EPS to the Process
+     * @param career    Career to belong the student owning the process
+     * @param process  Process to Assign the SUPERVISOR_EPS
+     * @throws ValidationException if not exist a SUPERVISOR_EPS for the career
+     */
+    public void assignEPSSUpervisorToProcess(Career career, Process process) throws ValidationException;
+    
+    /**
+     * This method gets The Processes that have assign the SUPERVISOR_EPS
+     * @param supervisorEPS
+     * @return List of processes
+     */
+    public List<Process> getProcessBySupervisorEPS(User supervisorEPS);
 }

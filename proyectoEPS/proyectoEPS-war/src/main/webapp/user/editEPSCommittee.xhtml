@@ -12,48 +12,47 @@
     </ui:define>
 
     <ui:define name="content">
-        <h:form>            
-            <p:messages  globalOnly="true"/>
-            <fieldset>
-                <legend>Usuarios para la Comisión</legend>
 
-                <div class="row">
-                    <p:dataTable id="usersTable" var="user" value="#{editEPSCommitteeView.users}"
-                                 reflow="true">
-                        <p:column headerText="ID">
-                            <h:outputText value="#{user.userId}" />
-                        </p:column>
-                        <p:column headerText="Nombre">
-                            <h:outputText value="#{user.firstName}, #{user.lastName}" />
-                        </p:column>
-                        <p:column headerText="Cargo">
-                            <h:outputText value="#{user.ROLid.name}" />
-                        </p:column>
-                        <p:column headerText="Correo">
-                            <h:outputText value="#{user.email}" />
-                        </p:column>
-                        <p:column headerText="Teléfono">
-                            <h:outputText value="#{user.phone1}" />
-                        </p:column>
-                        <p:column headerText="Comision EPS" styleClass="text-center" 
-                                  rendered="#{p:ifGranted(constantsRol.COORDINADOR_EPS())}">
-                            <p:commandLink styleClass="btn btn-primary btn-xs" 
-                                           update=":#{p:component('usersTable')},:growl"
-                                           rendered="#{!user.epsCommittee}"
-                                           action="#{editEPSCommitteeView.updateCommitteeState(user)}" >
-                                <span class="glyphicon glyphicon-plus"></span> Agregar
-                            </p:commandLink>
-                            <p:commandLink styleClass="btn btn-danger btn-xs" 
-                                           update=":#{p:component('usersTable')},:growl"
-                                           rendered="#{user.epsCommittee}"
-                                           action="#{editEPSCommitteeView.updateCommitteeState(user)}" >
-                                <span class="glyphicon glyphicon-remove"></span> Eliminar
-                            </p:commandLink>
-                        </p:column>
-                    </p:dataTable>
-                </div>
-            </fieldset>
-        </h:form>
+        <p:messages  globalOnly="true"/>
+        <fieldset>
+            <legend>Usuarios para la Comisión</legend>
+            <p:dataTable id="usersTable" var="user" value="#{editEPSCommitteeView.users}"
+                         reflow="true">
+                <p:column headerText="ID">
+                    <h:outputText value="#{user.userId}" />
+                </p:column>
+                <p:column headerText="Nombre">
+                    <h:outputText value="#{user.firstName}, #{user.lastName}" />
+                </p:column>
+                <p:column headerText="Cargo">
+                    <h:outputText value="#{user.ROLid.name}" />
+                </p:column>
+                <p:column headerText="Correo">
+                    <h:outputText value="#{user.email}" />
+                </p:column>
+                <p:column headerText="Teléfono">
+                    <h:outputText value="#{user.phone1}" />
+                </p:column>
+                <p:column headerText="Teléfono">
+                    <h:outputText value="#{user.phone2}" />
+                </p:column>
+                <p:column headerText="Comision EPS" styleClass="text-center" 
+                          rendered="#{p:ifGranted(constantsRol.COORDINADOR_EPS())}">
+                    <p:commandLink styleClass="btn btn-primary btn-xs" 
+                                   update=":#{p:component('usersTable')},:growl"
+                                   rendered="#{!user.epsCommittee}"
+                                   action="#{editEPSCommitteeView.updateCommitteeState(user)}" >
+                        <span class="glyphicon glyphicon-plus"></span> Agregar
+                    </p:commandLink>
+                    <p:commandLink styleClass="btn btn-danger btn-xs" 
+                                   update=":#{p:component('usersTable')},:growl"
+                                   rendered="#{user.epsCommittee}"
+                                   action="#{editEPSCommitteeView.updateCommitteeState(user)}" >
+                        <span class="glyphicon glyphicon-remove"></span> Eliminar
+                    </p:commandLink>
+                </p:column>
+            </p:dataTable>
+        </fieldset>
     </ui:define>
 
 </ui:composition>

@@ -4,10 +4,9 @@ import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.PERSISTEN
 import User.exception.UserException;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.JAVA_MAIL_SESSION;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
+import gt.edu.usac.cunoc.ingenieria.eps.process.StateProcess;
 import gt.edu.usac.cunoc.ingenieria.eps.tail.TailCoordinator;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
-import gt.edu.usac.cunoc.ingenieria.eps.user.UserCareer;
-import static gt.edu.usac.cunoc.ingenieria.eps.user.UserCareer_.process;
 import gt.edu.usac.cunoc.ingenieria.eps.user.service.UserService;
 import static gt.edu.usac.cunoc.ingenieria.eps.user.service.UserService.CONTENT_TYPE;
 import java.util.ArrayList;
@@ -39,6 +38,8 @@ import javax.persistence.criteria.Root;
 @Stateless
 @LocalBean
 public class ProcessRepository {
+    
+    public static final String GET_PROCESSES_SUPERVISOR_EPS = "SELECT c FROM Process c WHERE c.supervisor_EPS.userId=:userIdSupervisorEPS AND (c.state != :RECHAZADO OR c.state != :INACTIVO)";
 
     @PersistenceContext(name = PERSISTENCE_UNIT_NAME)
     private EntityManager entityManager;
@@ -110,5 +111,13 @@ public class ProcessRepository {
                 +"<p>"+ tailCoordinator.getUserCareer().getUSERuserId().getFirstName() + " " + tailCoordinator.getUserCareer().getUSERuserId().getLastName() + "</p>"
                 + "<p><span style=\"color: #000000;\">" + mensaje + "</span></p>"
                 + "<p>Divisi&oacute;n de Ciencias de la Ingenieria - Centro Universitario de Occidente</p>");
+    }
+    
+    public List<Process> getProcessBySupervisorEPS(User supervisorEPS){
+        Query query = entityManager.createQuery(GET_PROCESSES_SUPERVISOR_EPS);
+        query.setParameter("userIdSupervisorEPS", supervisorEPS.getUserId());
+        query.setParameter("RECHAZADO", StateProcess.RECHAZADO);
+        query.setParameter("INACTIVO", StateProcess.INACTIVO);
+        return query.getResultList();
     }
 }

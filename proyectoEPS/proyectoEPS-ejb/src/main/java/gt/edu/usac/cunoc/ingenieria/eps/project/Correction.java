@@ -1,6 +1,5 @@
 package gt.edu.usac.cunoc.ingenieria.eps.project;
 
-import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.COORDINADOR_CARRERA;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import java.io.Serializable;
 import java.time.LocalDate;

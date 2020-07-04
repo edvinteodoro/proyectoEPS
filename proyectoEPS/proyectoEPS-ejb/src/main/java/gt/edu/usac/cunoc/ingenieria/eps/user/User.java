@@ -1,7 +1,6 @@
 package gt.edu.usac.cunoc.ingenieria.eps.user;
 
 import gt.edu.usac.cunoc.ingenieria.eps.process.Appointment;
-import gt.edu.usac.cunoc.ingenieria.eps.process.DocumentInitialEps;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
@@ -87,10 +86,6 @@ public class User implements Serializable {
     private Collection<Appointment> appointmentCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "uSERreviewer")
     private Collection<Appointment> appointmentCollection1;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "uSERadviserProposal")
-    private Collection<DocumentInitialEps> documentInitialEpsCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "uSERreviewerProposal")
-    private Collection<DocumentInitialEps> documentInitialEpsCollection1;
 
     public User() {
     }
@@ -241,22 +236,6 @@ public class User implements Serializable {
 
     public void setAppointmentCollection1(Collection<Appointment> appointmentCollection1) {
         this.appointmentCollection1 = appointmentCollection1;
-    }
-
-    public Collection<DocumentInitialEps> getDocumentInitialEpsCollection() {
-        return documentInitialEpsCollection;
-    }
-
-    public void setDocumentInitialEpsCollection(Collection<DocumentInitialEps> documentInitialEpsCollection) {
-        this.documentInitialEpsCollection = documentInitialEpsCollection;
-    }
-
-    public Collection<DocumentInitialEps> getDocumentInitialEpsCollection1() {
-        return documentInitialEpsCollection1;
-    }
-
-    public void setDocumentInitialEpsCollection1(Collection<DocumentInitialEps> documentInitialEpsCollection1) {
-        this.documentInitialEpsCollection1 = documentInitialEpsCollection1;
     }
 
     public Rol getrOLid() {

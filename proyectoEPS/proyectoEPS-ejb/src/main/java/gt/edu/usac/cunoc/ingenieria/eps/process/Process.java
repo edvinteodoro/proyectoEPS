@@ -1,11 +1,9 @@
 package gt.edu.usac.cunoc.ingenieria.eps.process;
 
-import static gt.edu.usac.cunoc.ingenieria.eps.process.StateProcess.ACTIVO;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import gt.edu.usac.cunoc.ingenieria.eps.user.UserCareer;
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;

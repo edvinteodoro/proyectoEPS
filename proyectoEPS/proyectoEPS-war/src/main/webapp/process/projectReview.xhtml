@@ -298,9 +298,8 @@
                 </div>
             </fieldset>
         </h:form>
-
-        <p:dialog header="Correcciones - #{committeeEPSReviewView.correctionTitle()}" id="observ" widgetVar="observ" 
-                  fitViewport="true" modal="true" closeOnEscape="true">
+        <p:dialog  header="Correcciones - #{committeeEPSReviewView.correctionTitle()}" id="observ" widgetVar="observ" appendTo="@(body)" position="center"
+                   modal="true" closeOnEscape="true" draggable="false">
             <p:ajax event="close" listener="#{committeeEPSReviewView.cleanCorrectionList()}" update="@this" />
             <h:form>
                 <div class="modal-body">
@@ -338,9 +337,9 @@
                 </div>
             </h:form>
         </p:dialog>
-
+        
         <p:dialog header="#{committeeEPSReviewView.correctionTitle()}" id="rechazar" widgetVar="rechazar" 
-                  fitViewport="true" modal="true" closeOnEscape="true">
+                  modal="true" closeOnEscape="true">
             <p:ajax event="close" listener="#{committeeEPSReviewView.cleanCorrectionList()}" update="@this" />
             <h:form>
                 <div class="modal-body">
@@ -368,7 +367,7 @@
         </p:dialog>
 
         <p:dialog id="progressBar" widgetVar="progressBar" closable="false" width="20%" showHeader="false" resizable="false"
-                  fitViewport="true" modal="true" closeOnEscape="true">
+                  modal="true" closeOnEscape="true">
             <p:ajax event="close" update="@this" />
             <div align="center">
                 <p:outputLabel>Realizando operacion, espere un momento.</p:outputLabel>

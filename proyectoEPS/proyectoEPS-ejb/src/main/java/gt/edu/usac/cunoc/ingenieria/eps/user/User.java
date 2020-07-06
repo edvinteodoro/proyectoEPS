@@ -1,5 +1,7 @@
 package gt.edu.usac.cunoc.ingenieria.eps.user;
 
+import gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.ASESOR;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Appointment;
 import gt.edu.usac.cunoc.ingenieria.eps.process.DocumentInitialEps;
 import java.io.Serializable;
@@ -91,12 +93,12 @@ public class User implements Serializable {
     @JoinColumn(name = "ROL_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Rol rOLid;
-    @OneToMany(mappedBy="uSERuserId",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "uSERuserId", cascade = CascadeType.ALL)
     private List<UserCareer> userCareers;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userAdviser")
-    private Collection<Appointment> appointmentCollection;
+    private List<Appointment> appointmentAdvisor;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userReviewer")
-    private Collection<Appointment> appointmentCollection1;
+    private List<Appointment> appointmentReviewer;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "uSERadviserProposal")
     private Collection<DocumentInitialEps> documentInitialEpsCollection;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "uSERreviewerProposal")
@@ -131,7 +133,7 @@ public class User implements Serializable {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.phone = phone;
+        this.phone1 = phone;
         this.direction = direction;
         this.nameCompanyWork = nameCompanyWork;
         this.phoneCompanyWork = phoneCompanyWork;
@@ -139,8 +141,7 @@ public class User implements Serializable {
         this.personalResume = personalResume;
         this.rOLid = rOLid;
     }
-    
-    
+
     public String getUserId() {
         return userId;
     }
@@ -212,7 +213,7 @@ public class User implements Serializable {
     public void setPhone2(String phone2) {
         this.phone2 = phone2;
     }
-    
+
     public String getPassword() {
         return password;
     }
@@ -285,20 +286,20 @@ public class User implements Serializable {
         this.personalResume = personalResume;
     }
 
-    public Collection<Appointment> getAppointmentCollection() {
-        return appointmentCollection;
+    public List<Appointment> getAppointmentAdvisor() {
+        return appointmentAdvisor;
     }
 
-    public void setAppointmentCollection(Collection<Appointment> appointmentCollection) {
-        this.appointmentCollection = appointmentCollection;
+    public void setAppointmentAdvisor(List<Appointment> appointmentAdvisor) {
+        this.appointmentAdvisor = appointmentAdvisor;
     }
 
-    public Collection<Appointment> getAppointmentCollection1() {
-        return appointmentCollection1;
+    public List<Appointment> getAppointmentReviewer() {
+        return appointmentReviewer;
     }
 
-    public void setAppointmentCollection1(Collection<Appointment> appointmentCollection1) {
-        this.appointmentCollection1 = appointmentCollection1;
+    public void setAppointmentReviewer(List<Appointment> appointmentReviewer) {
+        this.appointmentReviewer = appointmentReviewer;
     }
 
     public Collection<DocumentInitialEps> getDocumentInitialEpsCollection() {
@@ -333,6 +334,18 @@ public class User implements Serializable {
         this.userCareers = userCareers;
     }
 
+    /**
+     * This method verify if the user is inactive and it's role is Advisor or
+     * Reviewer and if have any process assigned
+     *
+     * @return true when have all this
+     */
+    public boolean removable() {
+        return (!this.status && (this.rOLid.getName().equals(ASESOR) || this.rOLid.getName().equals(Constants.REVISOR))
+                && (!(this.appointmentAdvisor != null && !this.appointmentAdvisor.isEmpty())
+                || !(this.appointmentReviewer != null && !this.appointmentReviewer.isEmpty())));
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -357,5 +370,5 @@ public class User implements Serializable {
     public String toString() {
         return "gt.edu.usac.cunoc.ingenieria.User[ userId=" + userId + " ]";
     }
-    
+
 }

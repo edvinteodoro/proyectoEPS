@@ -245,4 +245,19 @@ public class UserFacade implements UserFacadeLocal {
         return userCareerRepository.getUserCareer(user, career).get(0);
     }
 
+    @Override
+    public User aproveUser(User userApproved, String processName, String studentName) throws UserException {
+        return userService.aproveUser(userApproved, processName, studentName);
+    }
+
+    @Override
+    public void deleteUser(User user) throws UserException {
+        userService.deleteUser(user);
+    }
+
+    @Override
+    public User updatePassword(User user) throws UserException {
+        return userService.updatePassword(user);
+    }
+
 }

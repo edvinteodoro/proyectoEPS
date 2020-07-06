@@ -7,10 +7,7 @@ import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.ASESOR;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.REVISOR;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Appointment;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
-import static gt.edu.usac.cunoc.ingenieria.eps.process.appointmentState.APPROVED;
-import static gt.edu.usac.cunoc.ingenieria.eps.process.appointmentState.CHANGE;
-import static gt.edu.usac.cunoc.ingenieria.eps.process.appointmentState.NEW;
-import static gt.edu.usac.cunoc.ingenieria.eps.process.appointmentState.REVIEW;
+import static gt.edu.usac.cunoc.ingenieria.eps.process.appointmentState.*;
 import gt.edu.usac.cunoc.ingenieria.eps.process.facade.ProcessFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.user.Rol;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
@@ -60,13 +57,19 @@ public class advisorReviewerView implements Serializable {
         try {
             Optional<User> currentUser = Optional.ofNullable(userFacade.getAuthenticatedUser().get(0));
             if (currentUser.isPresent()) {
-                if (currentUser.get().getROLid().getName().equals(ESTUDIANTE)) {
-                    setProcessAvailable(findProcessAvailable(processFacade.getProcessUser(currentUser.get())));
-                } else if (currentUser.get().getROLid().getName().equals(SUPERVISOR_EPS)) {
-                    //TO-DO logic to manage supervisor
-                } else {
-                    MessageUtils.addErrorMessage("No cuenta con los permisos");
+                switch (currentUser.get().getROLid().getName()) {
+                    case ESTUDIANTE:
+                        setProcessAvailable(findProcessAvailable(processFacade.getProcessUser(currentUser.get())));
+                        break;
+                    case SUPERVISOR_EPS:
+                        setProcessAvailable(processFacade.getProcessBySupervisorEPS(currentUser.get()));
+                        break;
+                    default:
+                        MessageUtils.addErrorMessage("No cuenta con los permisos");
+                        break;
                 }
+            } else {
+                MessageUtils.addErrorMessage("Debe iniciar sesión");
             }
         } catch (UserException e) {
             MessageUtils.addErrorMessage(e.getMessage());
@@ -88,6 +91,48 @@ public class advisorReviewerView implements Serializable {
         return result;
     }
 
+    /**
+     * Change the state of the Reviewer or the Advisor to APPROVED, don't
+     * persist the information until the user respond the student
+     *
+     * @param modalIdToClose
+     */
+    public void acceptUser(final String modalIdToClose) {
+        if (actualUser != null) {
+            if (isAdvisor) {
+                processSelected.getAppointmentId().setAdviserState(APPROVED);
+                PrimeFaces.current().executeScript("PF('" + modalIdToClose + "').hide()");
+                MessageUtils.addSuccessMessage("Asesor aceptado");
+            } else {
+                processSelected.getAppointmentId().setReviewerState(APPROVED);
+                PrimeFaces.current().executeScript("PF('" + modalIdToClose + "').hide()");
+                MessageUtils.addSuccessMessage("Revisor aceptado");
+            }
+        }
+    }
+
+    public void denyUser(final String modalIdToClose) {
+        if (actualUser != null) {
+            if (isAdvisor) {
+                processSelected.getAppointmentId().setAdviserState(CHANGE);
+                processSelected.getAppointmentId().setUserAdviser(null);
+                PrimeFaces.current().executeScript("PF('" + modalIdToClose + "').hide()");
+                MessageUtils.addWarningMessage("Asesor eliminado");
+            } else {
+                processSelected.getAppointmentId().setReviewerState(CHANGE);
+                processSelected.getAppointmentId().setUserReviewer(null);
+                PrimeFaces.current().executeScript("PF('" + modalIdToClose + "').hide()");
+                MessageUtils.addWarningMessage("Revisor eliminado");
+            }
+        }
+    }
+
+    /**
+     * create a empty user with the role set, this is for the User
+     *
+     * @param process
+     * @param advisor
+     */
     public void createNewUser(Process process, boolean advisor) {
         processSelected = process;
         isAdvisor = advisor;
@@ -112,6 +157,11 @@ public class advisorReviewerView implements Serializable {
         }
     }
 
+    /**
+     * Save in memory the user added by the Student
+     *
+     * @param modalIdToClose
+     */
     public void saveNewUser(final String modalIdToClose) {
         try {
             if (existsUser(actualUser)) {
@@ -119,8 +169,10 @@ public class advisorReviewerView implements Serializable {
             } else {
                 if (isAdvisor) {
                     processSelected.getAppointmentId().setUserAdviser(actualUser);
+                    processSelected.getAppointmentId().setAdviserState(NEW);
                 } else {
                     processSelected.getAppointmentId().setUserReviewer(actualUser);
+                    processSelected.getAppointmentId().setAdviserState(NEW);
                 }
                 PrimeFaces.current().executeScript("PF('" + modalIdToClose + "').hide()");
                 MessageUtils.addSuccessMessage("Usuario agregado");
@@ -131,20 +183,65 @@ public class advisorReviewerView implements Serializable {
         }
     }
 
+    /**
+     * If the user already exist, just is added to the Appointment. It's
+     * student's method.
+     *
+     * @param modalIdToClose
+     * @param user is the Reviewer or advisor
+     */
     public void saveSelectedUser(final String modalIdToClose, User user) {
 
         if (user != null) {
             if (isAdvisor) {
                 processSelected.getAppointmentId().setUserAdviser(user);
-                PrimeFaces.current().executeScript("PF('" + modalIdToClose + "').hide()");
-                MessageUtils.addSuccessMessage("Asesor agregado");
+                processSelected.getAppointmentId().setAdviserState(REVIEW);
             } else {
                 processSelected.getAppointmentId().setUserReviewer(user);
-                PrimeFaces.current().executeScript("PF('" + modalIdToClose + "').hide()");
-                MessageUtils.addSuccessMessage("Revisor agregado");
+                processSelected.getAppointmentId().setReviewerState(REVIEW);
             }
+            PrimeFaces.current().executeScript("PF('" + modalIdToClose + "').hide()");
+            MessageUtils.addSuccessMessage("Usuario agregado");
         } else {
             MessageUtils.addErrorMessage("Debe elegir un usuario");
+        }
+    }
+
+    /**
+     * If the user already exist, just is added to the Appointment
+     *
+     * @param modalIdToClose
+     * @param user
+     */
+    public void saveSelectedUserBySupervisor(final String modalIdToClose, User user) {
+
+        if (user != null) {
+            if (isAdvisor) {
+                processSelected.getAppointmentId().setUserAdviser(user);
+                processSelected.getAppointmentId().setAdviserState(ELECTION);
+            } else {
+                processSelected.getAppointmentId().setUserReviewer(user);
+                processSelected.getAppointmentId().setReviewerState(ELECTION);
+            }
+            PrimeFaces.current().executeScript("PF('" + modalIdToClose + "').hide()");
+            MessageUtils.addSuccessMessage("Usuario agregado");
+        } else {
+            MessageUtils.addErrorMessage("Debe elegir un usuario");
+        }
+    }
+
+    /**
+     * TODO all
+     *
+     * @param process
+     */
+    public void returnAppointmentToStudent(Process process) {
+        processSelected = process;
+        try {
+            processFacade.returnAppointmentToStudent(processSelected);
+            MessageUtils.addErrorMessage("Se ha notificado a los interesados de la desición");
+        } catch (UserException e) {
+            MessageUtils.addErrorMessage(e.getMessage());
         }
     }
 
@@ -154,50 +251,16 @@ public class advisorReviewerView implements Serializable {
      * @param process
      */
     public void sendAppointmentToSupervisor(Process process) {
-        processSelected = process;
 
-        if (processSelected != null && processSelected.getAppointmentId() != null) {
-
-            try {
-                if (processSelected.getAppointmentId().getUserAdviser() != null && processSelected.getAppointmentId().getUserReviewer() != null) {
-
-                    if (processSelected.getAppointmentId().getAdviserState() == null || processSelected.getAppointmentId().getAdviserState() != APPROVED) {
-
-                        if (existsUser(processSelected.getAppointmentId().getUserAdviser())) {
-                            processSelected.getAppointmentId().setAdviserState(REVIEW);
-                        } else {
-                            processSelected.getAppointmentId().setUserAdviser(userFacade.createTempUser(processSelected.getAppointmentId().getUserAdviser()));
-                            processSelected.getAppointmentId().setAdviserState(NEW);
-                        }
-                    }
-                    if (processSelected.getAppointmentId().getReviewerState() == null
-                            || processSelected.getAppointmentId().getReviewerState() != APPROVED) {
-
-                        if (existsUser(processSelected.getAppointmentId().getUserReviewer())) {
-                            processSelected.getAppointmentId().setReviewerState(REVIEW);
-                        } else {
-                            processSelected.getAppointmentId().setUserReviewer(userFacade.createTempUser(processSelected.getAppointmentId().getUserReviewer()));
-                            processSelected.getAppointmentId().setReviewerState(NEW);
-                        }
-                    }
-
-                    processFacade.updateProcess(processSelected);
-                    MessageUtils.addSuccessMessage("Se ha enviado a su supervisor");
-                    clean();
-                    init();
-                } else {
-                    if (processSelected.getAppointmentId().getUserAdviser() == null) {
-                        MessageUtils.addErrorMessage("Debe indicar el Asesor");
-                    } else {
-                        MessageUtils.addErrorMessage("Debe indicar el Revisor");
-                    }
-                }
-            } catch (UserException e) {
-                MessageUtils.addErrorMessage(e.getMessage());
-            }
-        } else {
-            MessageUtils.addErrorMessage("Debe elegir un proceso");
+        try {
+            processFacade.sendAppointmentToSupervisor(process);
+            MessageUtils.addSuccessMessage("Se ha enviado a su supervisor");
+            clean();
+            init();
+        } catch (UserException e) {
+            MessageUtils.addErrorMessage(e.getMessage());
         }
+
     }
 
     private boolean existsUser(User user) throws UserException {
@@ -237,21 +300,47 @@ public class advisorReviewerView implements Serializable {
             personalResumeStream = new DefaultStreamedContent(new ByteArrayInputStream(actualUser.getPersonalResume()), "application/pdf", "Corriculum.pdf");
         } else if (!advisor && processSelected.getAppointmentId().getUserReviewer() != null) {
             actualUser = processSelected.getAppointmentId().getUserReviewer();
+            personalResumeStream = new DefaultStreamedContent(new ByteArrayInputStream(actualUser.getPersonalResume()), "application/pdf", "Corriculum.pdf");
         } else {
             clean();
             MessageUtils.addErrorMessage("El usuario inexistente");
         }
     }
 
-//    public String showUserStatus(Process process, boolean advisor){
-//        if (advisor) {
-//            return
-//        }
-//    }
+    /**
+     * This method render the estate for view at list
+     *
+     * @param process
+     * @param advisor
+     * @return
+     */
+    public String showUserStatus(Process process, boolean advisor) {
+        if (advisor && process != null) {
+            return process.getAppointmentId().getAdviserState().stateToText();
+        } else if (!advisor && process != null) {
+            return process.getAppointmentId().getReviewerState().stateToText();
+        }
+        return "";
+    }
+
+    /**
+     * This method render the state of the user on memory
+     *
+     * @return
+     */
+    public String showUserStatus() {
+        if (isAdvisor && processSelected != null) {
+            return processSelected.getAppointmentId().getAdviserState().stateToText();
+        } else if (!isAdvisor && processSelected != null) {
+            return processSelected.getAppointmentId().getReviewerState().stateToText();
+        }
+        return "";
+    }
+
     private void loadAdvisors() {
         try {
             User searchU = new User(new Rol(null, ASESOR), null);
-            searchU.setState(true);
+            searchU.setStatus(true);
             setElegible(userFacade.getUser(searchU));
         } catch (UserException e) {
             MessageUtils.addErrorMessage(e.getMessage());
@@ -261,7 +350,7 @@ public class advisorReviewerView implements Serializable {
     private void loadAReviewer() {
         try {
             User searchU = new User(new Rol(null, REVISOR), null);
-            searchU.setState(true);
+            searchU.setStatus(true);
             setElegible(userFacade.getUser(searchU));
         } catch (UserException e) {
             MessageUtils.addErrorMessage(e.getMessage());
@@ -269,7 +358,7 @@ public class advisorReviewerView implements Serializable {
     }
 
     /**
-     * Indicate if the advisor was acepted or had been set
+     * Indicate if the advisor was accepted or had been set
      *
      * @param process
      * @return
@@ -280,7 +369,7 @@ public class advisorReviewerView implements Serializable {
     }
 
     /**
-     * Indicate if the reviewer was acepted or had been set
+     * Indicate if the reviewer was accepted or had been set
      *
      * @param process
      * @return
@@ -288,6 +377,42 @@ public class advisorReviewerView implements Serializable {
     public Boolean reviewerAlreadyExist(Process process) {
         return ((process.getAppointmentId() != null && process.getAppointmentId().getReviewerState() != null && process.getAppointmentId().getReviewerState() == APPROVED)
                 || (process.getAppointmentId() != null && process.getAppointmentId().getUserReviewer() != null));
+    }
+
+    /**
+     * Verify if advisor's status is CHANGE
+     *
+     * @param process
+     * @return
+     */
+    public Boolean advisorAvailableToChange(Process process) {
+        return ((process.getAppointmentId() != null && process.getAppointmentId().getAdviserState() != null && process.getAppointmentId().getAdviserState() == CHANGE)
+                || (process.getAppointmentId() != null && process.getAppointmentId().getUserAdviser() == null));
+    }
+
+    /**
+     * Verify if reviewer's status is CHANGE
+     *
+     * @param process
+     * @return
+     */
+    public Boolean reviewerAvailableToChange(Process process) {
+        return ((process.getAppointmentId() != null && process.getAppointmentId().getReviewerState() != null && process.getAppointmentId().getReviewerState() == CHANGE)
+                || (process.getAppointmentId() != null && process.getAppointmentId().getReviewerState() == null));
+    }
+
+    public Boolean pendingReview() {
+        if (isAdvisor && processSelected != null) {
+            return ((processSelected.getAppointmentId() != null && processSelected.getAppointmentId().getAdviserState() != null
+                    && (processSelected.getAppointmentId().getAdviserState() == REVIEW || processSelected.getAppointmentId().getAdviserState() == NEW))
+                    || (processSelected.getAppointmentId() != null && processSelected.getAppointmentId().getUserAdviser() != null));
+        } else if (!isAdvisor && processSelected != null) {
+            return ((processSelected.getAppointmentId() != null && processSelected.getAppointmentId().getReviewerState() != null
+                    && (processSelected.getAppointmentId().getReviewerState() == REVIEW || processSelected.getAppointmentId().getReviewerState() == NEW))
+                    || (processSelected.getAppointmentId() != null && processSelected.getAppointmentId().getUserReviewer() != null));
+        }
+        return false;
+
     }
 
     public String actualSelect() {

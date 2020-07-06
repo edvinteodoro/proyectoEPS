@@ -2,6 +2,7 @@ package gt.edu.usac.cunoc.ingenieria.eps.process;
 
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,9 +13,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
@@ -22,8 +23,6 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "APPOINTMENT")
-@NamedQueries({
-    @NamedQuery(name = "Appointment.findAll", query = "SELECT a FROM Appointment a")})
 public class Appointment implements Serializable {
 
     @Id
@@ -37,6 +36,9 @@ public class Appointment implements Serializable {
     @Column(name = "reviewer_state")
     @Enumerated(EnumType.STRING)
     private appointmentState reviewerState;
+    @Basic(optional = false)
+    @Column(name = "date_action")
+    private LocalDateTime dateAction;
     @JoinColumn(name = "USER_adviser", referencedColumnName = "userId")
     @ManyToOne
     private User userAdviser;
@@ -85,6 +87,14 @@ public class Appointment implements Serializable {
 
     public void setReviewerState(appointmentState reviewerState) {
         this.reviewerState = reviewerState;
+    }
+
+    public LocalDateTime getDateAction() {
+        return dateAction;
+    }
+
+    public void setDateAction(LocalDateTime dateAction) {
+        this.dateAction = dateAction;
     }
 
     @Override

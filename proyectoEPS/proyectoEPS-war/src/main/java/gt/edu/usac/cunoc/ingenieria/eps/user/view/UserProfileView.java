@@ -77,7 +77,7 @@ public class UserProfileView implements Serializable {
             if (status == SUCCESS) {
                 try {
                     user.setPassword(getNewPassword());
-                    userFacade.updateUser(user);
+                    userFacade.updatePassword(user);
                     MessageUtils.addSuccessMessage("Se actualizo la contraseña");
                 } catch (UserException e) {
                     MessageUtils.addErrorMessage(e.getMessage());

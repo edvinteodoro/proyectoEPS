@@ -59,10 +59,10 @@ public class advisorReviewerView implements Serializable {
             if (currentUser.isPresent()) {
                 switch (currentUser.get().getROLid().getName()) {
                     case ESTUDIANTE:
-                        setProcessAvailable(findProcessAvailable(processFacade.getProcessUser(currentUser.get())));
+                        setProcessAvailable(findProcessAvailableStudent(processFacade.getProcessUser(currentUser.get())));
                         break;
                     case SUPERVISOR_EPS:
-                        setProcessAvailable(processFacade.getProcessBySupervisorEPS(currentUser.get()));
+                        setProcessAvailable(findProcessAvailableSupervisor(processFacade.getProcessBySupervisorEPS(currentUser.get())));
                         break;
                     default:
                         MessageUtils.addErrorMessage("No cuenta con los permisos");
@@ -76,7 +76,7 @@ public class advisorReviewerView implements Serializable {
         }
     }
 
-    private List<Process> findProcessAvailable(List<Process> process) {
+    private List<Process> findProcessAvailableStudent(List<Process> process) {
         List<Process> result = new LinkedList<>();
 
         for (Process proces : process) {
@@ -84,6 +84,20 @@ public class advisorReviewerView implements Serializable {
                     && (proces.getApprovalEPSCommission() != null && proces.getApprovalEPSCommission())
                     && (proces.getAppointmentId() == null || (proces.getAppointmentId().getAdviserState() == CHANGE)
                     || (proces.getAppointmentId().getReviewerState() == CHANGE))) {
+                result.add(proces);
+            }
+        }
+
+        return result;
+    }
+    
+    private List<Process> findProcessAvailableSupervisor(List<Process> process) {
+        List<Process> result = new LinkedList<>();
+
+        for (Process proces : process) {
+            if ((proces.getApprovedCareerCoordinator() != null && proces.getApprovedCareerCoordinator())
+                    && (proces.getApprovalEPSCommission() != null && proces.getApprovalEPSCommission())
+                    && (proces.getAppointmentId() != null)) {
                 result.add(proces);
             }
         }
@@ -172,7 +186,7 @@ public class advisorReviewerView implements Serializable {
                     processSelected.getAppointmentId().setAdviserState(NEW);
                 } else {
                     processSelected.getAppointmentId().setUserReviewer(actualUser);
-                    processSelected.getAppointmentId().setAdviserState(NEW);
+                    processSelected.getAppointmentId().setReviewerState(NEW);
                 }
                 PrimeFaces.current().executeScript("PF('" + modalIdToClose + "').hide()");
                 MessageUtils.addSuccessMessage("Usuario agregado");
@@ -413,6 +427,10 @@ public class advisorReviewerView implements Serializable {
         }
         return false;
 
+    }
+
+    public Boolean appointmentApproved(Process process) {
+        return (process.getAppointmentId() != null && process.getAppointmentId().getAdviserState() == APPROVED && process.getAppointmentId().getReviewerState() == APPROVED);
     }
 
     public String actualSelect() {

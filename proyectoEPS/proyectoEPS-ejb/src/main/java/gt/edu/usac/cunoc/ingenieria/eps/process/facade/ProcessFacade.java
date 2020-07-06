@@ -32,6 +32,8 @@ import javax.ejb.Stateless;
 @Stateless
 @LocalBean
 public class ProcessFacade implements ProcessFacadeLocal {
+    
+    String DEBE_BORRARSE = "Mensaje q se debe borrar";
 
     @EJB
     RequerimentService requerimentService;
@@ -277,7 +279,7 @@ public class ProcessFacade implements ProcessFacadeLocal {
                     if (resultProcess.get().getAppointmentId().getAdviserState() == NEW && process.getAppointmentId().getAdviserState() == APPROVED
                             && resultProcess.get().getAppointmentId().getUserAdviser().getUserId().equals(process.getAppointmentId().getUserAdviser().getUserId())) {
 
-                        userFacade.aproveUser(resultProcess.get().getAppointmentId().getUserAdviser(),
+                        userFacade.aproveUser(resultProcess.get().getAppointmentId().getUserAdviser(), 
                                 resultProcess.get().getProject().getTitle(),
                                 resultProcess.get().getUserCareer().getUSERuserId().getFirstName().concat(" ").concat(process.getUserCareer().getUSERuserId().getLastName())
                         );
@@ -401,6 +403,7 @@ public class ProcessFacade implements ProcessFacadeLocal {
                         || resultProcess.get().getAppointmentId().getReviewerState() == CHANGE
                         || resultProcess.get().getAppointmentId().getReviewerState() == ELECTION)) {
                     resultProcess = Optional.ofNullable(updateProcess(resultProcess.get()));
+                    updateProcess(resultProcess.get());
                     mailService.emailNotifyStudent(
                             resultProcess.get().getAppointmentId().getUserAdviser(),
                             resultProcess.get().getAppointmentId().getAdviserState(),
@@ -408,7 +411,8 @@ public class ProcessFacade implements ProcessFacadeLocal {
                             resultProcess.get().getAppointmentId().getReviewerState(),
                             resultProcess.get().getSupervisor_EPS(),
                             resultProcess.get().getProject().getTitle(),
-                            resultProcess.get().getUserCareer().getUSERuserId());
+                            resultProcess.get().getUserCareer().getUSERuserId()
+                    );
                     return resultProcess.get();
                 } else {
                     throw new UserException("Debe dar una respuesta del Asesor y Revisor para enviarlo");

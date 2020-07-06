@@ -112,6 +112,7 @@
                 <p data-placement="top" data-toggle="tooltip" title="Enviar">
                     <p:commandLink styleClass="btn btn-warning btn-xs"
                                    update=":#{p:component('processesTable')}" 
+                                   rendered="#{!advisorReviewerView.appointmentApproved(process)}"
                                    actionListener="#{advisorReviewerView.returnAppointmentToStudent(process)}">
                         <span class="glyphicon glyphicon-send"></span> Enviar
                     </p:commandLink>
@@ -348,7 +349,7 @@
                                 <p:fileDownload value="#{advisorReviewerView.personalResumeStream}" contentDisposition="inline"/>
                             </h:commandLink>
                         </div>
-                        <div class="row form-group">
+                        <div class="row form-group" >
                             <p:commandLink styleClass="btn btn-danger"
                                            rendered="#{p:ifGranted(constantsRol.SUPERVISOR_EPS()) and advisorReviewerView.pendingReview()}"
                                            update="@form,:#{p:component('processesTable')},:#{p:component('growl')}"

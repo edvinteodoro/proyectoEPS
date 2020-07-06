@@ -278,13 +278,13 @@ public class ProcessFacade implements ProcessFacadeLocal {
                             && resultProcess.get().getAppointmentId().getUserAdviser().getUserId().equals(process.getAppointmentId().getUserAdviser().getUserId())) {
 
                         userFacade.aproveUser(resultProcess.get().getAppointmentId().getUserAdviser(),
-                                process.getProject().getTitle(),
-                                process.getUserCareer().getUSERuserId().getFirstName().concat(" ").concat(process.getUserCareer().getUSERuserId().getLastName())
+                                resultProcess.get().getProject().getTitle(),
+                                resultProcess.get().getUserCareer().getUSERuserId().getFirstName().concat(" ").concat(process.getUserCareer().getUSERuserId().getLastName())
                         );
                         resultProcess.get().getAppointmentId().setAdviserState(APPROVED);
 
                     } else if (resultProcess.get().getAppointmentId().getAdviserState() == NEW && process.getAppointmentId().getAdviserState() == CHANGE
-                            && process.getAppointmentId().getUserAdviser() == null) {
+                            && resultProcess.get().getAppointmentId().getUserAdviser() == null) {
 
                         userFacade.removeAppointmentUser(resultProcess.get().getAppointmentId().getUserAdviser());
                         resultProcess.get().getAppointmentId().setUserAdviser(null);
@@ -298,8 +298,8 @@ public class ProcessFacade implements ProcessFacadeLocal {
                         resultProcess.get().getAppointmentId().setAdviserState(ELECTION);
                         mailService.emailNotifyAdvisorOrReviewer(
                                 resultProcess.get().getAppointmentId().getUserAdviser(),
-                                process.getProject().getTitle(),
-                                process.getUserCareer().getUSERuserId().getFirstName().concat(" ").concat(process.getUserCareer().getUSERuserId().getLastName())
+                                resultProcess.get().getProject().getTitle(),
+                                resultProcess.get().getUserCareer().getUSERuserId().getFirstName().concat(" ").concat(process.getUserCareer().getUSERuserId().getLastName())
                         );
 
                         //When adviser already exist and is active
@@ -308,26 +308,26 @@ public class ProcessFacade implements ProcessFacadeLocal {
 
                         mailService.emailNotifyAdvisorOrReviewer(
                                 resultProcess.get().getAppointmentId().getUserAdviser(),
-                                process.getProject().getTitle(),
-                                process.getUserCareer().getUSERuserId().getFirstName().concat(" ").concat(process.getUserCareer().getUSERuserId().getLastName())
+                                resultProcess.get().getProject().getTitle(),
+                                resultProcess.get().getUserCareer().getUSERuserId().getFirstName().concat(" ").concat(process.getUserCareer().getUSERuserId().getLastName())
                         );
                         resultProcess.get().getAppointmentId().setAdviserState(APPROVED);
 
                     } else if (resultProcess.get().getAppointmentId().getAdviserState() == REVIEW && process.getAppointmentId().getAdviserState() == CHANGE
-                            && process.getAppointmentId().getUserAdviser() == null) {
+                            && resultProcess.get().getAppointmentId().getUserAdviser() == null) {
 
                         resultProcess.get().getAppointmentId().setUserAdviser(null);
                         resultProcess.get().getAppointmentId().setAdviserState(CHANGE);
 
                     } else if (resultProcess.get().getAppointmentId().getAdviserState() == REVIEW && process.getAppointmentId().getAdviserState() == ELECTION
-                            && process.getAppointmentId().getUserAdviser() != null) {
+                            && resultProcess.get().getAppointmentId().getUserAdviser() != null) {
 
                         resultProcess.get().getAppointmentId().setUserAdviser(process.getAppointmentId().getUserAdviser());
                         resultProcess.get().getAppointmentId().setAdviserState(ELECTION);
                         mailService.emailNotifyAdvisorOrReviewer(
                                 resultProcess.get().getAppointmentId().getUserAdviser(),
-                                process.getProject().getTitle(),
-                                process.getUserCareer().getUSERuserId().getFirstName().concat(" ").concat(process.getUserCareer().getUSERuserId().getLastName())
+                                resultProcess.get().getProject().getTitle(),
+                                resultProcess.get().getUserCareer().getUSERuserId().getFirstName().concat(" ").concat(process.getUserCareer().getUSERuserId().getLastName())
                         );
                     }
                 }
@@ -340,13 +340,13 @@ public class ProcessFacade implements ProcessFacadeLocal {
                             && resultProcess.get().getAppointmentId().getUserReviewer().getUserId().equals(process.getAppointmentId().getUserReviewer().getUserId())) {
 
                         userFacade.aproveUser(resultProcess.get().getAppointmentId().getUserReviewer(),
-                                process.getProject().getTitle(),
-                                process.getUserCareer().getUSERuserId().getFirstName().concat(" ").concat(process.getUserCareer().getUSERuserId().getLastName())
+                                resultProcess.get().getProject().getTitle(),
+                                resultProcess.get().getUserCareer().getUSERuserId().getFirstName().concat(" ").concat(process.getUserCareer().getUSERuserId().getLastName())
                         );
                         resultProcess.get().getAppointmentId().setReviewerState(APPROVED);
 
                     } else if (resultProcess.get().getAppointmentId().getReviewerState() == NEW && process.getAppointmentId().getReviewerState() == CHANGE
-                            && process.getAppointmentId().getUserReviewer() == null) {
+                            && resultProcess.get().getAppointmentId().getUserReviewer() == null) {
 
                         userFacade.removeAppointmentUser(resultProcess.get().getAppointmentId().getUserReviewer());
                         resultProcess.get().getAppointmentId().setUserReviewer(null);
@@ -360,8 +360,8 @@ public class ProcessFacade implements ProcessFacadeLocal {
                         resultProcess.get().getAppointmentId().setReviewerState(ELECTION);
                         mailService.emailNotifyAdvisorOrReviewer(
                                 resultProcess.get().getAppointmentId().getUserReviewer(),
-                                process.getProject().getTitle(),
-                                process.getUserCareer().getUSERuserId().getFirstName().concat(" ").concat(process.getUserCareer().getUSERuserId().getLastName())
+                                resultProcess.get().getProject().getTitle(),
+                                resultProcess.get().getUserCareer().getUSERuserId().getFirstName().concat(" ").concat(process.getUserCareer().getUSERuserId().getLastName())
                         );
 
                         //When reviewer already exist and is active
@@ -370,26 +370,26 @@ public class ProcessFacade implements ProcessFacadeLocal {
 
                         mailService.emailNotifyAdvisorOrReviewer(
                                 resultProcess.get().getAppointmentId().getUserReviewer(),
-                                process.getProject().getTitle(),
-                                process.getUserCareer().getUSERuserId().getFirstName().concat(" ").concat(process.getUserCareer().getUSERuserId().getLastName())
+                                resultProcess.get().getProject().getTitle(),
+                                resultProcess.get().getUserCareer().getUSERuserId().getFirstName().concat(" ").concat(process.getUserCareer().getUSERuserId().getLastName())
                         );
                         resultProcess.get().getAppointmentId().setReviewerState(APPROVED);
 
                     } else if (resultProcess.get().getAppointmentId().getReviewerState() == REVIEW && process.getAppointmentId().getReviewerState() == CHANGE
-                            && process.getAppointmentId().getUserReviewer() == null) {
+                            && resultProcess.get().getAppointmentId().getUserReviewer() == null) {
 
                         resultProcess.get().getAppointmentId().setUserReviewer(null);
                         resultProcess.get().getAppointmentId().setReviewerState(CHANGE);
 
                     } else if (resultProcess.get().getAppointmentId().getReviewerState() == REVIEW && process.getAppointmentId().getReviewerState() == ELECTION
-                            && process.getAppointmentId().getUserReviewer() != null) {
+                            && resultProcess.get().getAppointmentId().getUserReviewer() != null) {
 
                         resultProcess.get().getAppointmentId().setUserReviewer(process.getAppointmentId().getUserReviewer());
                         resultProcess.get().getAppointmentId().setReviewerState(ELECTION);
                         mailService.emailNotifyAdvisorOrReviewer(
                                 resultProcess.get().getAppointmentId().getUserReviewer(),
-                                process.getProject().getTitle(),
-                                process.getUserCareer().getUSERuserId().getFirstName().concat(" ").concat(process.getUserCareer().getUSERuserId().getLastName())
+                                resultProcess.get().getProject().getTitle(),
+                                resultProcess.get().getUserCareer().getUSERuserId().getFirstName().concat(" ").concat(process.getUserCareer().getUSERuserId().getLastName())
                         );
                     }
                 }

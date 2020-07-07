@@ -121,7 +121,7 @@
         </p:dataTable>
 
         <p:dialog header="Agregar Usuario" id="newUser" widgetVar="newUser"
-                  fitViewport="true" modal="true" closeOnEscape="true">
+                  modal="true" closeOnEscape="true">
             <p:ajax event="close" listener="#{advisorReviewerView.clean()}" update="@this" />
             <h:form>
                 <div class="modal-body">
@@ -234,7 +234,7 @@
         </p:dialog>
 
         <p:dialog header="Elegir #{advisorReviewerView.actualSelect()}" id="selectUser" widgetVar="selectUser"
-                  fitViewport="true" modal="true" closeOnEscape="true">
+                  modal="true" closeOnEscape="true">
             <p:ajax event="close" listener="#{advisorReviewerView.clean()}" update="@this" />
             <h:form>
                 <div class="modal-body">
@@ -284,7 +284,7 @@
         </p:dialog>
 
         <p:dialog header="Estado: #{advisorReviewerView.showUserStatus()}" id="infoAbout" widgetVar="infoAbout"
-                  fitViewport="true" modal="true" closeOnEscape="true">
+                  modal="true" closeOnEscape="true">
             <p:ajax event="close" listener="#{advisorReviewerView.clean()}" update="@this" />
             <h:form>
                 <div class="modal-body">
@@ -351,13 +351,13 @@
                         </div>
                         <div class="row form-group" >
                             <p:commandLink styleClass="btn btn-danger"
-                                           rendered="#{p:ifGranted(constantsRol.SUPERVISOR_EPS()) and advisorReviewerView.pendingReview()}"
+                                           rendered="#{advisorReviewerView.pendingReview()}"
                                            update="@form,:#{p:component('processesTable')},:#{p:component('growl')}"
                                            actionListener="#{advisorReviewerView.denyUser('infoAbout')}">
                                 <span class="glyphicon glyphicon-remove"></span> Rechazar
                             </p:commandLink>
                             <p:commandLink styleClass="btn btn-success"
-                                           rendered="#{p:ifGranted(constantsRol.SUPERVISOR_EPS()) and advisorReviewerView.pendingReview()}"
+                                           rendered="#{advisorReviewerView.pendingReview()}"
                                            update="@form,:#{p:component('processesTable')},:#{p:component('growl')}"
                                            actionListener="#{advisorReviewerView.acceptUser('infoAbout')}">
                                 <span class="glyphicon glyphicon-ok-sign"></span> Aceptar

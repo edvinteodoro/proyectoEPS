@@ -6,6 +6,7 @@ import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import gt.edu.usac.cunoc.ingenieria.eps.user.UserCareer;
 import java.io.Serializable;
 import java.util.List;
+import java.time.LocalDate;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -50,14 +51,10 @@ public class Process implements Serializable {
     @Lob
     @Column(name = "documentApprovedCareerCoordinator")
     private byte[] documentApprovedCareerCoordinator;
-    @Column(name = "DocumentsToEPSCareerSupervisor")
-    private Boolean documentsToEPSCareerSupervisor;
-    @Column(name = "DocumentsToEPSCommission")
-    private Boolean documentsToEPSCommission;
-    @Column(name = "PreProjectToEPSCommission")
-    private Boolean preProjectToEPSCommission;
     @Column(name = "approvalEPSCommission")
     private Boolean approvalEPSCommission;
+    @Column(name = "date_ApproveddEpsDevelopment")
+    private LocalDate dateApproveddEpsDevelopment;
     @Basic(optional = false)
     @NotNull
     @Column(name = "approvedEPSDevelopment")
@@ -138,30 +135,6 @@ public class Process implements Serializable {
         this.documentApprovedCareerCoordinator = documentApprovedCareerCoordinator;
     }
 
-    public Boolean getDocumentsToEPSCareerSupervisor() {
-        return documentsToEPSCareerSupervisor;
-    }
-
-    public void setDocumentsToEPSCareerSupervisor(Boolean documentsToEPSCareerSupervisor) {
-        this.documentsToEPSCareerSupervisor = documentsToEPSCareerSupervisor;
-    }
-
-    public Boolean getDocumentsToEPSCommission() {
-        return documentsToEPSCommission;
-    }
-
-    public void setDocumentsToEPSCommission(Boolean documentsToEPSCommission) {
-        this.documentsToEPSCommission = documentsToEPSCommission;
-    }
-
-    public Boolean getPreProjectToEPSCommission() {
-        return preProjectToEPSCommission;
-    }
-
-    public void setPreProjectToEPSCommission(Boolean preProjectToEPSCommission) {
-        this.preProjectToEPSCommission = preProjectToEPSCommission;
-    }
-
     public Boolean getApprovalEPSCommission() {
         return approvalEPSCommission;
     }
@@ -176,6 +149,14 @@ public class Process implements Serializable {
 
     public void setApprovedEPSDevelopment(Boolean approvedEPSDevelopment) {
         this.approvedEPSDevelopment = approvedEPSDevelopment;
+    }
+
+    public LocalDate getDateApproveddEpsDevelopment() {
+        return dateApproveddEpsDevelopment;
+    }
+
+    public void setDateApproveddEpsDevelopment(LocalDate dateApproveddEpsDevelopment) {
+        this.dateApproveddEpsDevelopment = dateApproveddEpsDevelopment;
     }
 
     public Integer getProgress() {

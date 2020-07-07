@@ -82,25 +82,51 @@ public interface ProcessFacadeLocal {
     public Requeriment updaterequeriment(Requeriment requeriment);
 
     public Process createProcess(Process process);
-    
+
     public List<Process> getProcessUser(User user);
 
     public Process updateProcess(Process process);
 
     public boolean rejectProcess(TailCoordinator tailCoordinator, String title, String msg);
-    
+
     /**
      * This method assign a SUPERVISOR_EPS to the Process
-     * @param career    Career to belong the student owning the process
-     * @param process  Process to Assign the SUPERVISOR_EPS
+     *
+     * @param career Career to belong the student owning the process
+     * @param process Process to Assign the SUPERVISOR_EPS
      * @throws ValidationException if not exist a SUPERVISOR_EPS for the career
      */
     public void assignEPSSUpervisorToProcess(Career career, Process process) throws ValidationException;
-    
+
     /**
      * This method gets The Processes that have assign the SUPERVISOR_EPS
+     *
      * @param supervisorEPS
      * @return List of processes
      */
     public List<Process> getProcessBySupervisorEPS(User supervisorEPS);
+
+    /**
+     * Allow Student to send the Advisor and Reviewer, if set users are new,
+     * their are going to be create as inactive users
+     *
+     * @param process
+     * @return
+     * @throws UserException
+     */
+    public Process sendAppointmentToSupervisor(Process process) throws UserException;
+    
+    /**
+     * Apply action on Advisor and Reviewer base on Supervisor's resolution, and
+     * send emails to notify the advisor and reviewer when have been assigned to
+     * a Project and notify the resolution to the student.
+     *
+     *
+     * Verify if the logged user as Supervisor is in charge of the process.
+     *
+     * @param process modified by the supervisor
+     * @return
+     * @throws UserException
+     */
+    public Process returnAppointmentToStudent(Process process) throws UserException;
 }

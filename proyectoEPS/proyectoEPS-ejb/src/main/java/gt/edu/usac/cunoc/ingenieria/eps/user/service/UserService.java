@@ -2,8 +2,13 @@ package gt.edu.usac.cunoc.ingenieria.eps.user.service;
 
 import User.exception.UserException;
 import gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.ASESOR;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.JAVA_MAIL_SESSION;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.PERSISTENCE_UNIT_NAME;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.REVISOR;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.SecurityConstants.PBKDF_ITERATIONS;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.SecurityConstants.PBKDF_SALT_SIZE;
+import gt.edu.usac.cunoc.ingenieria.eps.configuration.mail.MailService;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import gt.edu.usac.cunoc.ingenieria.eps.user.repository.UserRepository;
 import java.util.HashMap;
@@ -55,6 +60,9 @@ public class UserService {
     @EJB
     UserRepository userRepository;
 
+    @EJB
+    MailService mailService;
+
     public void setEntityManager(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
@@ -79,6 +87,74 @@ public class UserService {
             }
         }
         return user;
+    }
+
+    /**
+     * This method create a unique password and userID base on rolName+DPI, and
+     * is inactive until a SUpervisor approves the new user
+     *
+     * This is focus on Reviewer and Advisor creation
+     *
+     * @param user
+     * @return
+     * @throws UserException
+     */
+    public User createTempUser(User user) throws UserException {
+        if (user == null) {
+            throw new UserException("User is null");
+        }
+        user.setPassword(newPassword());
+        user.setUserId(user.getrOLid().getName().concat(user.getDpi()));
+        user.setStatus(false);
+        user.setEpsCommittee(false);
+        return createUser(user);
+    }
+
+    /**
+     * Allow to delete Advisor or Reviewer that are Inactive
+     *
+     * @param user
+     * @throws UserException
+     */
+    public void deleteUser(User user) throws UserException {
+        User removeUser = entityManager.find(User.class, user.getUserId());
+        if (removeUser == null) {
+            throw new UserException("User is null");
+        }
+
+        if (removeUser.removable()) {
+            entityManager.remove(removeUser);
+        } else {
+            throw new UserException("Solo se permite eliminar Asesores o Revisores Inactivos");
+        }
+    }
+
+    /**
+     * This method enable the new user and notify with the ID and Password, to
+     * access in the system
+     *
+     * @param userApproved is the user to enable
+     * @param processName is the new of the EPS work
+     * @param studentName
+     * @return
+     * @throws UserException
+     */
+    public User aproveUser(User userApproved, String processName, String studentName) throws UserException {
+        User newUser = entityManager.find(User.class, userApproved.getUserId());
+        if (newUser == null) {
+            throw new UserException("User is null");
+        }
+
+        if (newUser.removable()) {
+            String pass = newPassword();
+            newUser.setPassword(encryptPass(pass));
+            newUser.setStatus(true);
+            entityManager.merge(newUser);
+            mailService.emailApprovedAdvisorOrReviewer(pass, newUser, processName, studentName);
+            return newUser;
+        } else {
+            throw new UserException("El usuario ya esta activo");
+        }
     }
 
     public User updateUser(User user) throws UserException {
@@ -107,13 +183,13 @@ public class UserService {
         if (user.getEmail() != null) {
             updateUser.setEmail(user.getEmail());
         }
-        if (user.getPhone1()!= null) {
+        if (user.getPhone1() != null) {
             updateUser.setPhone1(user.getPhone1());
         }
         if (user.getDirection() != null) {
             updateUser.setDirection(user.getDirection());
         }
-        if (user.getStatus()!= null) {
+        if (user.getStatus() != null) {
             updateUser.setStatus(user.getStatus());
         }
         if (user.getROLid() != null) {
@@ -123,6 +199,32 @@ public class UserService {
             updateUser.setEpsCommittee(user.getEpsCommittee());
         }
         return updateUser;
+    }
+
+    /**
+     * Update the password
+     *
+     * @param user
+     * @return
+     * @throws UserException
+     */
+    public User updatePassword(User user) throws UserException {
+        if (user != null) {
+
+            User found = entityManager.find(User.class, user.getUserId());
+
+            if (found != null) {
+                if (user.getPassword() != null) {
+                    found.setPassword(encryptPass(user.getPassword()));
+                    entityManager.merge(found);
+                }
+            } else {
+                throw new UserException("Debe elegir un usuario");
+            }
+            return found;
+        } else {
+            throw new UserException("Debe elegir un usuario");
+        }
     }
 
     /**
@@ -141,7 +243,7 @@ public class UserService {
             user.setPassword(pass);
             User found = entityManager.find(User.class, user.getUserId());
 
-            if (found == null) {
+            if (found != null) {
                 if (user.getPassword() != null) {
                     found.setPassword(encryptPass(user.getPassword()));
                     entityManager.merge(found);
@@ -150,7 +252,7 @@ public class UserService {
                 throw new UserException("Debe elegir un usuario");
             }
 
-            sendEmail(found.getEmail(), "Cambio de contraseña", emailBody(pass));
+            mailService.resetPasswordMessage(pass, found);
             return found;
         } else {
             throw new UserException("Debe elegir un usuario");
@@ -206,27 +308,4 @@ public class UserService {
     public String newPassword() {
         return UUID.randomUUID().toString();
     }
-
-    @Asynchronous
-    private Future<Void> sendEmail(final String to, final String subject, final String body) {
-        try {
-            Message message = new MimeMessage(emailSession);
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
-            message.setSubject(subject);
-            message.setContent(body, CONTENT_TYPE);
-            Transport.send(message);
-        } catch (MessagingException ex) {
-            Logger.getLogger(UserService.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return new AsyncResult<>(null);
-    }
-
-    private String emailBody(String password) {
-        return ("<h2><strong>Se ha requerido un cambio de Contrase&ntilde;a</strong></h2>"
-                + "<p>se ha reiniciado tu contrase&ntilde;a de EPS de la Division de Ciencias de la Ingenieria. Tu nueva contrase&ntilde;a es:</p>"
-                + "<p><span style=\"color: #ff0000;\">" + password + "</span></p>"
-                + "<p>Ahora puedes ingresar con tu ID e ingresar esta nueva contrase&ntilde;a. Se recomienda cambiarla inmediatamente luego de ingresar al portal.</p>"
-                + "<p>Divisi&oacute;n de Ciencias de la Ingenieria - Centro Universitario de Occidente</p>");
-    }
-
 }

@@ -1,5 +1,7 @@
 package gt.edu.usac.cunoc.ingenieria.eps.user;
 
+import gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.ASESOR;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Appointment;
 import java.io.Serializable;
 import java.util.Collection;
@@ -10,6 +12,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -77,15 +80,24 @@ public class User implements Serializable {
     @Basic(optional = false)
     @Column(name = "eps_committee")
     private Boolean epsCommittee;
+    @Column(name = "name_company_work")
+    private String nameCompanyWork;
+    @Column(name = "phone_company_work")
+    private String phoneCompanyWork;
+    @Column(name = "direction_company_work")
+    private String directionCompanyWork;
+    @Lob
+    @Column(name = "personal_resume")
+    private byte[] personalResume;
     @JoinColumn(name = "ROL_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Rol rOLid;
-    @OneToMany(mappedBy="uSERuserId",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "uSERuserId", cascade = CascadeType.ALL)
     private List<UserCareer> userCareers;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "uSERadviser")
-    private Collection<Appointment> appointmentCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "uSERreviewer")
-    private Collection<Appointment> appointmentCollection1;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userAdviser")
+    private List<Appointment> appointmentAdvisor;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userReviewer")
+    private List<Appointment> appointmentReviewer;
 
     public User() {
     }
@@ -108,6 +120,21 @@ public class User implements Serializable {
         this.phone1 = phone1;
         this.password = password;
         this.status = status;
+    }
+
+    public User(String userId, String dpi, String firstName, String lastName, String email, String phone, String direction, String nameCompanyWork, String phoneCompanyWork, String directionCompanyWork, byte[] personalResume, Rol rOLid) {
+        this.userId = userId;
+        this.dpi = dpi;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.phone1 = phone;
+        this.direction = direction;
+        this.nameCompanyWork = nameCompanyWork;
+        this.phoneCompanyWork = phoneCompanyWork;
+        this.directionCompanyWork = directionCompanyWork;
+        this.personalResume = personalResume;
+        this.rOLid = rOLid;
     }
 
     public String getUserId() {
@@ -181,7 +208,7 @@ public class User implements Serializable {
     public void setPhone2(String phone2) {
         this.phone2 = phone2;
     }
-    
+
     public String getPassword() {
         return password;
     }
@@ -222,20 +249,52 @@ public class User implements Serializable {
         this.epsCommittee = epsCommittee;
     }
 
-    public Collection<Appointment> getAppointmentCollection() {
-        return appointmentCollection;
+    public String getNameCompanyWork() {
+        return nameCompanyWork;
     }
 
-    public void setAppointmentCollection(Collection<Appointment> appointmentCollection) {
-        this.appointmentCollection = appointmentCollection;
+    public void setNameCompanyWork(String nameCompanyWork) {
+        this.nameCompanyWork = nameCompanyWork;
     }
 
-    public Collection<Appointment> getAppointmentCollection1() {
-        return appointmentCollection1;
+    public String getPhoneCompanyWork() {
+        return phoneCompanyWork;
     }
 
-    public void setAppointmentCollection1(Collection<Appointment> appointmentCollection1) {
-        this.appointmentCollection1 = appointmentCollection1;
+    public void setPhoneCompanyWork(String phoneCompanyWork) {
+        this.phoneCompanyWork = phoneCompanyWork;
+    }
+
+    public String getDirectionCompanyWork() {
+        return directionCompanyWork;
+    }
+
+    public void setDirectionCompanyWork(String directionCompanyWork) {
+        this.directionCompanyWork = directionCompanyWork;
+    }
+
+    public byte[] getPersonalResume() {
+        return personalResume;
+    }
+
+    public void setPersonalResume(byte[] personalResume) {
+        this.personalResume = personalResume;
+    }
+
+    public List<Appointment> getAppointmentAdvisor() {
+        return appointmentAdvisor;
+    }
+
+    public void setAppointmentAdvisor(List<Appointment> appointmentAdvisor) {
+        this.appointmentAdvisor = appointmentAdvisor;
+    }
+
+    public List<Appointment> getAppointmentReviewer() {
+        return appointmentReviewer;
+    }
+
+    public void setAppointmentReviewer(List<Appointment> appointmentReviewer) {
+        this.appointmentReviewer = appointmentReviewer;
     }
 
     public Rol getrOLid() {
@@ -252,6 +311,18 @@ public class User implements Serializable {
 
     public void setUserCareers(List<UserCareer> userCareers) {
         this.userCareers = userCareers;
+    }
+
+    /**
+     * This method verify if the user is inactive and it's role is Advisor or
+     * Reviewer and if have any process assigned
+     *
+     * @return true when have all this
+     */
+    public boolean removable() {
+        return (!this.status && (this.rOLid.getName().equals(ASESOR) || this.rOLid.getName().equals(Constants.REVISOR))
+                && (!(this.appointmentAdvisor != null && !this.appointmentAdvisor.isEmpty())
+                || !(this.appointmentReviewer != null && !this.appointmentReviewer.isEmpty())));
     }
 
     @Override
@@ -278,5 +349,5 @@ public class User implements Serializable {
     public String toString() {
         return "gt.edu.usac.cunoc.ingenieria.User[ userId=" + userId + " ]";
     }
-    
+
 }

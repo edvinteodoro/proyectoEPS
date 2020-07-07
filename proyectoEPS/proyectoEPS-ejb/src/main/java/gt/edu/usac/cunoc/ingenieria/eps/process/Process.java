@@ -72,7 +72,7 @@ public class Process implements Serializable {
     private Project project;
     @ManyToOne(fetch = FetchType.LAZY)
     private User supervisor_EPS;
-
+    
     public Process() {
     }
 

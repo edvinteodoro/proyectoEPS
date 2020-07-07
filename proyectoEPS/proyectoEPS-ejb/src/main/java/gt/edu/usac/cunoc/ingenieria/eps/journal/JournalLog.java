@@ -1,5 +1,6 @@
 package gt.edu.usac.cunoc.ingenieria.eps.journal;
 
+import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -34,9 +36,11 @@ public class JournalLog implements Serializable {
     private List<Image> images;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "journalLog", orphanRemoval = true)
     private List<Link> links;
-     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "journalLog", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "journalLog", orphanRemoval = true)
     private List<Commentary> commentaries;
-    
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Process process;
 
     public JournalLog() {
         this.images = new ArrayList<>();
@@ -84,13 +88,13 @@ public class JournalLog implements Serializable {
         this.images = images;
     }
 
-    public void addImage(){
+    public void addImage() {
         Image newImage = new Image();
         images.add(newImage);
         newImage.setJournalLog(this);
     }
-    
-    public void removeImage(Integer imageIndex){
+
+    public void removeImage(Integer imageIndex) {
         images.get(imageIndex).setJournalLog(null);
         images.remove(imageIndex.intValue());
     }
@@ -102,14 +106,14 @@ public class JournalLog implements Serializable {
     public void setLinks(List<Link> links) {
         this.links = links;
     }
-    
-    public void addLink(){
+
+    public void addLink() {
         Link newLink = new Link();
         links.add(newLink);
         newLink.setJournalLog(this);
     }
-    
-    public void removeLink(Integer linkIndex){
+
+    public void removeLink(Integer linkIndex) {
         links.get(linkIndex).setJournalLog(null);
         links.remove(linkIndex.intValue());
     }
@@ -121,18 +125,26 @@ public class JournalLog implements Serializable {
     public void setCommentaries(List<Commentary> commentaries) {
         this.commentaries = commentaries;
     }
-    
-    public void addCommentay(){
+
+    public void addCommentay() {
         Commentary newCommentary = new Commentary();
         commentaries.add(newCommentary);
         newCommentary.setJournalLog(this);
     }
-    
-    public void removeComentary(Integer commentaryIndex){
+
+    public void removeComentary(Integer commentaryIndex) {
         commentaries.get(commentaryIndex).setJournalLog(null);
         commentaries.remove(commentaryIndex.intValue());
     }
-    
+
+    public Process getProcess() {
+        return process;
+    }
+
+    public void setProcess(Process process) {
+        this.process = process;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;

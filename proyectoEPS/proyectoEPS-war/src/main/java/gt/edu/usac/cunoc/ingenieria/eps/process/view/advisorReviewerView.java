@@ -44,6 +44,7 @@ public class advisorReviewerView implements Serializable {
 
     private List<Process> processAvailable;
     private List<User> elegible;
+    Optional<User> currentUser;
 
     private Process processSelected;
     private User actualUser;
@@ -55,7 +56,7 @@ public class advisorReviewerView implements Serializable {
     @PostConstruct
     public void init() {
         try {
-            Optional<User> currentUser = Optional.ofNullable(userFacade.getAuthenticatedUser().get(0));
+            currentUser = Optional.ofNullable(userFacade.getAuthenticatedUser().get(0));
             if (currentUser.isPresent()) {
                 switch (currentUser.get().getROLid().getName()) {
                     case ESTUDIANTE:
@@ -416,14 +417,12 @@ public class advisorReviewerView implements Serializable {
     }
 
     public Boolean pendingReview() {
-        if (isAdvisor && processSelected != null) {
-            return ((processSelected.getAppointmentId() != null && processSelected.getAppointmentId().getAdviserState() != null
-                    && (processSelected.getAppointmentId().getAdviserState() == REVIEW || processSelected.getAppointmentId().getAdviserState() == NEW))
-                    || (processSelected.getAppointmentId() != null && processSelected.getAppointmentId().getUserAdviser() != null));
+        if (isAdvisor && processSelected != null && processSelected.getAppointmentId() != null && actualUser != null) {
+            return ((processSelected.getAppointmentId().getAdviserState() != null && actualUser.getrOLid().getName().equals(SUPERVISOR_EPS)
+                    && (processSelected.getAppointmentId().getAdviserState() == REVIEW || processSelected.getAppointmentId().getAdviserState() == NEW)));
         } else if (!isAdvisor && processSelected != null) {
-            return ((processSelected.getAppointmentId() != null && processSelected.getAppointmentId().getReviewerState() != null
-                    && (processSelected.getAppointmentId().getReviewerState() == REVIEW || processSelected.getAppointmentId().getReviewerState() == NEW))
-                    || (processSelected.getAppointmentId() != null && processSelected.getAppointmentId().getUserReviewer() != null));
+            return ((processSelected.getAppointmentId().getReviewerState() != null && actualUser.getrOLid().getName().equals(SUPERVISOR_EPS)
+                    && (processSelected.getAppointmentId().getReviewerState() == REVIEW || processSelected.getAppointmentId().getReviewerState() == NEW)));
         }
         return false;
 

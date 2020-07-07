@@ -17,6 +17,18 @@ public interface UserFacadeLocal {
 
     public User createUser(User user) throws UserException;
 
+    /**
+     * This method create a unique password and userID base on rolName+DPI, and
+     * is inactive until a SUpervisor approves the new user
+     *
+     * This is focus on Reviewer and Advisor creation
+     *
+     * @param user
+     * @return
+     * @throws UserException
+     */
+    public User createTempUser(User user) throws UserException;
+
     public User updateUser(User user) throws UserException;
 
     public List<User> getUser(User user) throws UserException;
@@ -62,6 +74,15 @@ public interface UserFacadeLocal {
     public List<User> getEPSCommitteeUser(Boolean isCommitteeMember) throws UserException;
 
     public List<UserCareer> findAllUserCareer() throws UserException;
+    
+    /**
+     * Update the password
+     *
+     * @param user
+     * @return
+     * @throws UserException
+     */
+    public User updatePassword(User user) throws UserException;
 
     /**
      * This feature is design to generate a new password
@@ -101,4 +122,25 @@ public interface UserFacadeLocal {
     public List<User> getCareerCoordinator(Process process);
 
     public UserCareer getUserCareer(User user, String career);
+
+    /**
+     * This method enable the new user and notify with the ID and Password, to
+     * access in the system
+     *
+     * @param userApproved is the user to enable
+     * @param processName is the new of the EPS work
+     * @param studentName
+     * @return
+     * @throws UserException
+     */
+    public User aproveUser(User userApproved, String processName, String studentName) throws UserException;
+
+    /**
+     * Allow to delete Advisor or Reviewer that are Inactive
+     *
+     * @param user
+     * @throws UserException
+     */
+    public void deleteUser(User user) throws UserException;
+
 }

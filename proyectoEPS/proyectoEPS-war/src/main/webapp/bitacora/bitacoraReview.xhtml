@@ -4,13 +4,31 @@
                 template="../templates/template-one.xhtml"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
-                xmlns:jsf="http://xmlns.jcp.org/jsf"
                 xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
-                xmlns:f="http://xmlns.jcp.org/jsf/core">
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:o="http://omnifaces.org/ui"
+                xmlns:cmp="http://xmlns.jcp.org/jsf/composite/components"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <f:metadata>
+        <o:viewParam name="idProcess" required="true" 
+                     value="#{bitacoraReview.processId}"
+                     requiredMessage="Ningun valor">
+            <o:viewParamValidationFailed sendError="404" message="Error parametro"/>
+        </o:viewParam>
+        <o:viewAction action="#{bitacoraReview.loadCurrentProject()}" />
+    </f:metadata>
     <ui:define name="title">
         Bitacora
     </ui:define>
     <ui:define name="content">
+        <p:dataView value="#{bitacoraReview.journalsLog}" var="journalLog" pt:rowIndexVar="journalStatus">
+            <p:panel id="JournalLog" header="Fecha - #{journalLog.dateTime}">
+                <div>
+                    
+                </div>
+            </p:panel>
+        </p:dataView>
     </ui:define>
 
 </ui:composition>

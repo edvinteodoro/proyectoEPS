@@ -74,6 +74,11 @@
             <to-view-id>/process/assignedProcesses.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
+        <navigation-case>
+            <from-outcome>bitacoraReview</from-outcome>
+            <to-view-id>/bitacora/bitacoraReview.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
     </navigation-rule>
     <application>                           
         <locale-config>

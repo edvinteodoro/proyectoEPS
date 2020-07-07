@@ -53,6 +53,14 @@
                     </button>
                 </p>
             </p:column>
+            <p:column headerText="Bitacora" styleClass="text-center">
+                <p data-placement="top" data-toggle="tooltip" title="Bitacora">
+                    <button jsf:outcome="bitacoraReview" styleClass="btn btn-success btn-xs" >
+                        <f:param name="idProcess" value="#{process.id}"/>
+                        <span class="glyphicon glyphicon-log-in"></span>
+                    </button>
+                </p>
+            </p:column>
         </p:dataTable>
     </ui:define>
 </ui:composition>

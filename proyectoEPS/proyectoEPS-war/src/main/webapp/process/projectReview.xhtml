@@ -9,7 +9,6 @@
                 xmlns:o="http://omnifaces.org/ui"
                 xmlns:cmp="http://xmlns.jcp.org/jsf/composite/components"
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
-
     <f:metadata>
         <o:viewParam name="idProcess" required="true" 
                      value="#{committeeEPSReviewView.processId}"
@@ -337,7 +336,7 @@
                 </div>
             </h:form>
         </p:dialog>
-        
+
         <p:dialog header="#{committeeEPSReviewView.correctionTitle()}" id="rechazar" widgetVar="rechazar" 
                   modal="true" closeOnEscape="true">
             <p:ajax event="close" listener="#{committeeEPSReviewView.cleanCorrectionList()}" update="@this" />

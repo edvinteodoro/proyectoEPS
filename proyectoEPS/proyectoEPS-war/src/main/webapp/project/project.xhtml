@@ -57,7 +57,7 @@
                 <div class="row">
                     <div class="form-group col-md-8">
                         <p:panel header="Objetivos Generales" id="generalObjectives" >
-                            <p:dataView value="#{projectView.generalObjectves}" var="generalObjective" rowIndexVar="generalObjectiveStatus">
+                            <p:dataView value="#{projectView.generalObjectves}" var="generalObjective" pt:rowIndexVar="generalObjectiveStatus">
                                 <p:dataViewListItem>
                                     <div class="row">
                                         <div class="form-group col-sm-10">
@@ -100,7 +100,7 @@
                 <div class="row">
                     <div class="form-group col-md-8">
                         <p:panel header="Objetivos Especificos" id="specificObjectives" >
-                            <p:dataView value="#{projectView.specificObjectives}" var="specificObjective" rowIndexVar="specificObjectiveStatus">
+                            <p:dataView value="#{projectView.specificObjectives}" var="specificObjective" pt:rowIndexVar="specificObjectiveStatus">
                                 <p:dataViewListItem>
                                     <div class="row">
                                         <div class="form-group col-sm-10">
@@ -146,7 +146,7 @@
                         <p:panel id="listSections" header="Secciones">
                             <div class="row">
                                 <div class="form-group col-md-12">
-                                    <p:dataView value="#{projectView.project.sections}" var="section" rowIndexVar="sectionStatus">
+                                    <p:dataView value="#{projectView.project.sections}" var="section" pt:rowIndexVar="sectionStatus">
                                         <p:dataViewListItem>
                                             <div class="row">
                                                 <div class="form-group col-md-12">
@@ -236,7 +236,7 @@
                 <div class="row" >
                     <div class="form-group col-md-8" >
                         <p:panel id="coordinatesDecimal" header="Coordenadas Decimales">
-                            <p:dataView value="#{projectView.project.decimalCoordinates}" var="decimalCoordinate" rowIndexVar="decimalCoordinateStatus" >
+                            <p:dataView value="#{projectView.project.decimalCoordinates}" var="decimalCoordinate" pt:rowIndexVar="decimalCoordinateStatus" >
                                 <p:dataViewListItem>
                                     <div class="row">
                                         <div class="form-group col-sm-4">
@@ -349,7 +349,7 @@
                 <div class="row">
                     <div class="form-group col-md-8">
                         <p:panel id="biblioghraphies" header="Bibliografía">
-                            <p:dataView value="#{projectView.project.bibliographies}" var="bibliography" rowIndexVar="bibliographyStatus">
+                            <p:dataView value="#{projectView.project.bibliographies}" var="bibliography" pt:rowIndexVar="bibliographyStatus">
                                 <p:dataViewListItem>
                                     <div class="row">
                                         <div class="form-group col-sm-4">

@@ -65,6 +65,11 @@
             <redirect/>
         </navigation-case>
         <navigation-case>
+            <from-outcome>adviserReviewer</from-outcome>
+            <to-view-id>/process/advisorReviewer.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
             <from-outcome>tailEPSCommittee</from-outcome>
             <to-view-id>/committeeEPS/processesCommitteeEPS.xhtml</to-view-id>
             <redirect/>

@@ -80,6 +80,37 @@ public class UserFacade implements UserFacadeLocal {
         return userService.createUser(user);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public User createTempUser(User user) throws UserException {
+        User search = new User();
+        search.setrOLid(user.getROLid());
+        search.setDpi(user.getDpi());
+
+        List<User> result = userRepository.getUser(search);
+
+        if (result.isEmpty()) {
+            return userService.createTempUser(user);
+        } else {
+            throw new UserException("El " + user.getrOLid().getName() + " ya existe");
+        }
+
+    }
+
+    /**
+     * Allow to delete Advisor or Reviewer that are Inactive
+     *
+     * TODO validate user doesn't have projects history
+     *
+     * @param user
+     * @throws UserException
+     */
+    public void removeAppointmentUser(User user) throws UserException {
+        userService.deleteUser(user);
+    }
+
     @Override
     public User updateUser(User user) throws UserException {
         return userService.updateUser(user);
@@ -212,6 +243,21 @@ public class UserFacade implements UserFacadeLocal {
     @Override
     public UserCareer getUserCareer(User user, String career) {
         return userCareerRepository.getUserCareer(user, career).get(0);
+    }
+
+    @Override
+    public User aproveUser(User userApproved, String processName, String studentName) throws UserException {
+        return userService.aproveUser(userApproved, processName, studentName);
+    }
+
+    @Override
+    public void deleteUser(User user) throws UserException {
+        userService.deleteUser(user);
+    }
+
+    @Override
+    public User updatePassword(User user) throws UserException {
+        return userService.updatePassword(user);
     }
 
 }

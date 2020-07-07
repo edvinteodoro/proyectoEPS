@@ -1,25 +1,21 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package gt.edu.usac.cunoc.ingenieria.eps.process;
 
-import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import java.io.Serializable;
-import java.util.Collection;
+import java.time.LocalDateTime;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
@@ -27,28 +23,30 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @Table(name = "APPOINTMENT")
-@NamedQueries({
-    @NamedQuery(name = "Appointment.findAll", query = "SELECT a FROM Appointment a")})
 public class Appointment implements Serializable {
 
-    private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @NotNull
     @Column(name = "id")
     private Integer id;
+    @Column(name = "adviser_state")
+    @Enumerated(EnumType.STRING)
+    private appointmentState adviserState;
+    @Column(name = "reviewer_state")
+    @Enumerated(EnumType.STRING)
+    private appointmentState reviewerState;
+    @Basic(optional = false)
+    @Column(name = "date_action")
+    private LocalDateTime dateAction;
     @JoinColumn(name = "USER_adviser", referencedColumnName = "userId")
-    @ManyToOne(optional = false)
-    private User uSERadviser;
+    @ManyToOne
+    private User userAdviser;
     @JoinColumn(name = "USER_reviewer", referencedColumnName = "userId")
-    @ManyToOne(optional = false)
-    private User uSERreviewer;
+    @ManyToOne
+    private User userReviewer;
 
     public Appointment() {
-    }
-
-    public Appointment(Integer id) {
-        this.id = id;
     }
 
     public Integer getId() {
@@ -59,20 +57,44 @@ public class Appointment implements Serializable {
         this.id = id;
     }
 
-    public User getUSERadviser() {
-        return uSERadviser;
+    public User getUserAdviser() {
+        return userAdviser;
     }
 
-    public void setUSERadviser(User uSERadviser) {
-        this.uSERadviser = uSERadviser;
+    public void setUserAdviser(User userAdviser) {
+        this.userAdviser = userAdviser;
     }
 
-    public User getUSERreviewer() {
-        return uSERreviewer;
+    public User getUserReviewer() {
+        return userReviewer;
     }
 
-    public void setUSERreviewer(User uSERreviewer) {
-        this.uSERreviewer = uSERreviewer;
+    public void setUserReviewer(User userReviewer) {
+        this.userReviewer = userReviewer;
+    }
+
+    public appointmentState getAdviserState() {
+        return adviserState;
+    }
+
+    public void setAdviserState(appointmentState adviserState) {
+        this.adviserState = adviserState;
+    }
+
+    public appointmentState getReviewerState() {
+        return reviewerState;
+    }
+
+    public void setReviewerState(appointmentState reviewerState) {
+        this.reviewerState = reviewerState;
+    }
+
+    public LocalDateTime getDateAction() {
+        return dateAction;
+    }
+
+    public void setDateAction(LocalDateTime dateAction) {
+        this.dateAction = dateAction;
     }
 
     @Override
@@ -99,5 +121,5 @@ public class Appointment implements Serializable {
     public String toString() {
         return "gt.edu.usac.cunoc.ingenieria.Appointment[ id=" + id + " ]";
     }
-    
+
 }

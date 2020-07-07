@@ -507,42 +507,48 @@ public class ProjectView implements Serializable {
         }
     }
 
-    public void loadCurrentProject() {
-        this.process = processFacade.getProcess(new Process(processId)).get(0);
-        if (!isStuden()) {
-            Process firstProcess = tailFacade.getProcessByCoordinator(user).get(0);
-            if (getProcess().equals(firstProcess)) {
-                isFirstProcess = true;
-            }
-        }
-        //coordinator = userFacade.getCareerCoordinator(getProcess()).get(0);
-        //System.out.println(coordinator.getFirstName());
-        this.project = process.getProject();
-        if (project != null) {
-            this.corrections = project.getCorrections();
-        }
-        flagUpdate = true;
-        if (this.project == null) {
-            this.project = new Project();
-            flagUpdate = false;
-        } else {
-            flagUpdate = true;
-            scheduleStream = new DefaultStreamedContent(new ByteArrayInputStream(project.getSchedule()), "application/pdf", "Calendario.pdf");
-            scheduleFileName = scheduleStream.getName();
-            investmentPlanStream = new DefaultStreamedContent(new ByteArrayInputStream(project.getInvestmentPlan()), "application/pdf", "Plan de Inversión.pdf");
-            investmentPlanFileName = investmentPlanStream.getName();
-            if (project.getAnnexed() != null) {
-                annexedStream = new DefaultStreamedContent(new ByteArrayInputStream(project.getAnnexed()), "application/pdf", "Anexos.pdf");
-                annexedFileName = annexedStream.getName();
-            }
-        }
+    public void loadCurrentProject() throws IOException {
+        try {
+            this.process = processFacade.getProcess(new Process(processId)).get(0);
+            if (this.process.getUserCareer().getUSERuserId().equals(this.user)) {
+                if (!isStuden()) {
+                    Process firstProcess = tailFacade.getProcessByCoordinator(user).get(0);
+                    if (getProcess().equals(firstProcess)) {
+                        isFirstProcess = true;
+                    }
+                }
+                this.project = process.getProject();
+                if (project != null) {
+                    this.corrections = project.getCorrections();
+                }
+                flagUpdate = true;
+                if (this.project == null) {
+                    this.project = new Project();
+                    flagUpdate = false;
+                } else {
+                    flagUpdate = true;
+                    scheduleStream = new DefaultStreamedContent(new ByteArrayInputStream(project.getSchedule()), "application/pdf", "Calendario.pdf");
+                    scheduleFileName = scheduleStream.getName();
+                    investmentPlanStream = new DefaultStreamedContent(new ByteArrayInputStream(project.getInvestmentPlan()), "application/pdf", "Plan de Inversión.pdf");
+                    investmentPlanFileName = investmentPlanStream.getName();
+                    if (project.getAnnexed() != null) {
+                        annexedStream = new DefaultStreamedContent(new ByteArrayInputStream(project.getAnnexed()), "application/pdf", "Anexos.pdf");
+                        annexedFileName = annexedStream.getName();
+                    }
+                }
 
-        for (int i = 0; i < project.getObjectives().size(); i++) {
-            if (Objects.equals(project.getObjectives().get(i).getType(), Objectives.GENERAL_OBJETICVE)) {
-                generalObjectves.add(project.getObjectives().get(i));
+                for (int i = 0; i < project.getObjectives().size(); i++) {
+                    if (Objects.equals(project.getObjectives().get(i).getType(), Objectives.GENERAL_OBJETICVE)) {
+                        generalObjectves.add(project.getObjectives().get(i));
+                    } else {
+                        specificObjectives.add(project.getObjectives().get(i));
+                    }
+                }
             } else {
-                specificObjectives.add(project.getObjectives().get(i));
+                externalContext.redirect(externalContext.getRequestContextPath() + "/error/error-404.xhtml");
             }
+        } catch (Exception e) {
+            externalContext.redirect(externalContext.getRequestContextPath() + "/error/error-404.xhtml");
         }
     }
 

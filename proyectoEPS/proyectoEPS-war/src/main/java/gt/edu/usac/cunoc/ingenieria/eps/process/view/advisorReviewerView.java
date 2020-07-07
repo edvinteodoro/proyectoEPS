@@ -90,7 +90,7 @@ public class advisorReviewerView implements Serializable {
 
         return result;
     }
-    
+
     private List<Process> findProcessAvailableSupervisor(List<Process> process) {
         List<Process> result = new LinkedList<>();
 
@@ -430,7 +430,13 @@ public class advisorReviewerView implements Serializable {
     }
 
     public Boolean appointmentApproved(Process process) {
-        return (process.getAppointmentId() != null && process.getAppointmentId().getAdviserState() == APPROVED && process.getAppointmentId().getReviewerState() == APPROVED);
+        try {
+            Optional<Process> result = processFacade.findProcessById(process.getId());
+            return (result.isPresent() && result.get().getAppointmentId().getAdviserState() == APPROVED && result.get().getAppointmentId().getReviewerState() == APPROVED);
+        } catch (UserException e) {
+            MessageUtils.addErrorMessage(e.getMessage());
+        }
+        return false;
     }
 
     public String actualSelect() {

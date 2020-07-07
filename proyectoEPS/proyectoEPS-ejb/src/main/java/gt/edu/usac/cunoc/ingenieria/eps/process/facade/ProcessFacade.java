@@ -288,14 +288,14 @@ public class ProcessFacade implements ProcessFacadeLocal {
                     } else if (resultProcess.get().getAppointmentId().getAdviserState() == NEW && process.getAppointmentId().getAdviserState() == CHANGE
                             && resultProcess.get().getAppointmentId().getUserAdviser() == null) {
 
-                        userFacade.removeAppointmentUser(resultProcess.get().getAppointmentId().getUserAdviser());
+//                        userFacade.removeAppointmentUser(resultProcess.get().getAppointmentId().getUserAdviser());
                         resultProcess.get().getAppointmentId().setUserAdviser(null);
                         resultProcess.get().getAppointmentId().setAdviserState(CHANGE);
 
                     } else if (resultProcess.get().getAppointmentId().getAdviserState() == NEW && process.getAppointmentId().getAdviserState() == ELECTION
                             && resultProcess.get().getAppointmentId().getUserAdviser() != null && process.getAppointmentId().getUserAdviser() != null) {
 
-                        userFacade.removeAppointmentUser(resultProcess.get().getAppointmentId().getUserAdviser());
+//                        userFacade.removeAppointmentUser(resultProcess.get().getAppointmentId().getUserAdviser());
                         resultProcess.get().getAppointmentId().setUserAdviser(process.getAppointmentId().getUserAdviser());
                         resultProcess.get().getAppointmentId().setAdviserState(ELECTION);
                         mailService.emailNotifyAdvisorOrReviewer(
@@ -350,14 +350,14 @@ public class ProcessFacade implements ProcessFacadeLocal {
                     } else if (resultProcess.get().getAppointmentId().getReviewerState() == NEW && process.getAppointmentId().getReviewerState() == CHANGE
                             && resultProcess.get().getAppointmentId().getUserReviewer() == null) {
 
-                        userFacade.removeAppointmentUser(resultProcess.get().getAppointmentId().getUserReviewer());
+//                        userFacade.removeAppointmentUser(resultProcess.get().getAppointmentId().getUserReviewer());
                         resultProcess.get().getAppointmentId().setUserReviewer(null);
                         resultProcess.get().getAppointmentId().setReviewerState(CHANGE);
 
                     } else if (resultProcess.get().getAppointmentId().getReviewerState() == NEW && process.getAppointmentId().getReviewerState() == ELECTION
                             && resultProcess.get().getAppointmentId().getUserReviewer() != null && process.getAppointmentId().getUserReviewer() != null) {
 
-                        userFacade.removeAppointmentUser(resultProcess.get().getAppointmentId().getUserReviewer());
+//                        userFacade.removeAppointmentUser(resultProcess.get().getAppointmentId().getUserReviewer());
                         resultProcess.get().getAppointmentId().setUserReviewer(process.getAppointmentId().getUserReviewer());
                         resultProcess.get().getAppointmentId().setReviewerState(ELECTION);
                         mailService.emailNotifyAdvisorOrReviewer(

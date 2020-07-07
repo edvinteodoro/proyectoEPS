@@ -120,7 +120,7 @@
             </p:column>
         </p:dataTable>
 
-        <p:dialog header="Agregar #{advisorReviewerView.actualSelect()}" id="newUser" widgetVar="newUser"
+        <p:dialog header="Agregar Usuario" id="newUser" widgetVar="newUser"
                   fitViewport="true" modal="true" closeOnEscape="true">
             <p:ajax event="close" listener="#{advisorReviewerView.clean()}" update="@this" />
             <h:form>

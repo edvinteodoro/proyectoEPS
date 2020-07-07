@@ -1,0 +1,111 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="../templates/template-one.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:o="http://omnifaces.org/ui">
+    <f:metadata>
+        <o:viewParam name="idProcess" required="true" 
+                     value="#{journalView.processId}"
+                     requiredMessage="Ningun valor">
+            <o:viewParamValidationFailed sendError="404" message="Error parametro"/>
+        </o:viewParam>
+        <o:viewAction action="#{journalView.loadCurrentJournal()}" />
+    </f:metadata>
+
+    <ui:define name="head">
+        Bitácora
+    </ui:define>
+
+    <ui:define name="title">
+        Bitácora
+    </ui:define>
+
+    <ui:define name="content">
+        <h:outputScript library="js" name="calendar_es.js" />
+        <p:dataTable id="journalTable" var="journalLog" reflow="true" emptyMessage="Registro Vacío" value="#{journalView.journals}">
+            <p:column headerText="Fecha">
+                <h:outputText value="#{journalLog.dateTime}"/>
+            </p:column>
+            <p:column headerText="Actividad">
+                <h:outputText value="#{journalLog.activity}"/>
+            </p:column>
+            <p:column headerText="Descripción">
+                <h:outputText value="#{journalLog.description}"/>
+            </p:column>
+            <p:column headerText="Enlaces">
+
+            </p:column>
+            <p:column headerText="Imágenes">
+
+            </p:column>
+        </p:dataTable>
+        <div class="btn-group pull-right">
+            <p:commandLink styleClass="btn btn-success" 
+                           oncomplete="PF('dlgNew').show();"
+                           update=":#{p:component('dlgNew')}">
+                <f:setPropertyActionListener value="#{journalLog}" target="#{journalView.newJournalLog}"/>
+                <span class="glyphicon glyphicon-plus"></span> Nuevo Registro
+            </p:commandLink>
+        </div>
+
+        <p:dialog header="Nuevo Registro" id="dlgNew" widgetVar="dlgNew" 
+                  modal="true" closeOnEscape="true" position="center">
+            <p:ajax event="close" listener="#{journalView.cleanNewJournal()}" update="@this" />
+            <h:form>
+                <div class="modal-header">
+                    <p:staticMessage severity="warn" summary="Advertencia! " detail="No se puede crear mas de un registro con la misma fecha" />
+                </div>
+                <div class="modal-body">
+                    <div class="row form-group">
+                        <p:outputLabel for="dateLog" value="Fecha" styleClass="col-md-4 control-label"/>
+                        <div class="col-md-8">
+                            <p:calendar id="dateLog" pt:placeholder="Fecha"
+                                        pattern="dd/MM/yyyy" 
+                                        locale="es"
+                                        required="true"
+                                        value="#{journalView.newJournalLog.dateTime}"
+                                        >
+                                <f:convertDateTime type="localDate" pattern="dd/MM/yyyy" />
+                            </p:calendar>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <p:outputLabel for="activity" value="Actividad" styleClass="col-md-4 control-label"/>
+                        <div class="col-md-8">
+                            <p:inputText id="activity" styleClass="form-control" pt:placeholder="Actividad"
+                                         required="true"
+                                         value="#{journalView.newJournalLog.activity}"
+                                         />
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <p:outputLabel for="description" value="Descripción" styleClass="col-md-4 control-label"/>
+                        <div class="col-md-8">
+                            <p:inputTextarea id="description" counter="display" maxlength="200" 
+                                             counterTemplate="{0} Caracteres Restantes." autoResize="false"
+                                             required="true"
+                                             style="width: 100%;"
+                                             value="#{journalView.newJournalLog.description}"/>
+                            <br />
+                            <h:outputText id="display" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <p:commandLink styleClass="btn btn-warning btn-lg" style="width: 100%;"
+                                   actionListener="#{journalView.createJournalLog('dlgNew')}"
+                                   update="@form,:#{p:component('journalTable')},:#{p:component('growl')}"
+                                   >
+                        <span class="glyphicon glyphicon-ok-sign"></span> Guardar
+                    </p:commandLink>
+                </div>
+            </h:form>
+        </p:dialog>
+
+    </ui:define>
+
+</ui:composition>

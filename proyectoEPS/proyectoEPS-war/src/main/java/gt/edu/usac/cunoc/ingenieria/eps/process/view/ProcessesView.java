@@ -1,7 +1,10 @@
 package gt.edu.usac.cunoc.ingenieria.eps.process.view;
 
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.ASESOR;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.COORDINADOR_CARRERA;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.ESTUDIANTE;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.REVISOR;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.SUPERVISOR_EPS;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import gt.edu.usac.cunoc.ingenieria.eps.process.facade.ProcessFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.tail.facade.TailFacadeLocal;
@@ -85,6 +88,21 @@ public class ProcessesView implements Serializable {
                 break;
             case COORDINADOR_CARRERA:
                 value = "projectReview";
+                break;
+        }
+        return value;
+    }
+    
+    public String redirectJournalTo(){
+        String value = "";
+        switch (user.getROLid().getName()) {
+            case ESTUDIANTE:
+                value = "journal";
+                break;
+            case SUPERVISOR_EPS:
+            case REVISOR:
+            case ASESOR: 
+                value = "journalReview";
                 break;
         }
         return value;

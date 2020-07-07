@@ -84,6 +84,11 @@
             <to-view-id>/bitacora/bitacoraReview.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
+        <navigation-case>
+            <from-outcome>journal</from-outcome>
+            <to-view-id>/journal/journal.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
     </navigation-rule>
     <application>                           
         <locale-config>

@@ -94,6 +94,21 @@
                             <h:outputText id="display" />
                         </div>
                     </div>
+                    <div class="row form-group">
+                        <p:outputLabel value="Imagenes" styleClass="col-md-4 control-label"/>
+                        <div class="col-md-8">
+                            <p:fileUpload id="iamges" 
+                                          style="width: 100%;"
+                                          skinSimple="true" auto="true"
+                                          label="Agregar"
+                                          sizeLimit="15000000"
+                                          allowTypes="/(\.|\/)(jpe?g|png)$/"
+                                          invalidFileMessage="Solo se puede cargar archivos jpe, jpeg o png"
+                                          invalidSizeMessage="Imagen demasiado grande, limite de 15MB"
+                                          fileUploadListener="#{journalView.handleFileUpload}">                                       
+                            </p:fileUpload>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <p:commandLink styleClass="btn btn-warning btn-lg" style="width: 100%;"

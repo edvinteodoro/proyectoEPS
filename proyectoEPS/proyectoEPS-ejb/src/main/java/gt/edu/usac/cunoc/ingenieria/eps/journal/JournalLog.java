@@ -32,7 +32,7 @@ public class JournalLog implements Serializable {
     @Column(name = "description")
     private String description;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "journalLog", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "journal_Log", orphanRemoval = true)
     private List<Image> images;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "journalLog", orphanRemoval = true)
     private List<Link> links;
@@ -88,10 +88,8 @@ public class JournalLog implements Serializable {
         this.images = images;
     }
 
-    public void addImage() {
-        Image newImage = new Image();
+    public void addImage(Image newImage) {
         images.add(newImage);
-        newImage.setJournalLog(this);
     }
 
     public void removeImage(Integer imageIndex) {

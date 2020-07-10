@@ -5,6 +5,7 @@ import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.ESTUDIANT
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.SUPERVISOR_EPS;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.ASESOR;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.REVISOR;
+import gt.edu.usac.cunoc.ingenieria.eps.exception.ValidationException;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Appointment;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import static gt.edu.usac.cunoc.ingenieria.eps.process.appointmentState.*;
@@ -44,7 +45,7 @@ public class advisorReviewerView implements Serializable {
 
     private List<Process> processAvailable;
     private List<User> elegible;
-    Optional<User> currentUser;
+    Optional<User> loggedUser;
 
     private Process processSelected;
     private User actualUser;
@@ -56,14 +57,14 @@ public class advisorReviewerView implements Serializable {
     @PostConstruct
     public void init() {
         try {
-            currentUser = Optional.ofNullable(userFacade.getAuthenticatedUser().get(0));
-            if (currentUser.isPresent()) {
-                switch (currentUser.get().getROLid().getName()) {
+            loggedUser = Optional.ofNullable(userFacade.getAuthenticatedUser().get(0));
+            if (loggedUser.isPresent()) {
+                switch (loggedUser.get().getROLid().getName()) {
                     case ESTUDIANTE:
-                        setProcessAvailable(findProcessAvailableStudent(processFacade.getProcessUser(currentUser.get())));
+                        setProcessAvailable(findProcessAvailableStudent(processFacade.getProcessUser(loggedUser.get())));
                         break;
                     case SUPERVISOR_EPS:
-                        setProcessAvailable(findProcessAvailableSupervisor(processFacade.getProcessBySupervisorEPS(currentUser.get())));
+                        setProcessAvailable(findProcessAvailableSupervisor(processFacade.getProcessBySupervisorEPS(loggedUser.get())));
                         break;
                     default:
                         MessageUtils.addErrorMessage("No cuenta con los permisos");
@@ -184,10 +185,10 @@ public class advisorReviewerView implements Serializable {
             } else {
                 if (isAdvisor) {
                     processSelected.getAppointmentId().setUserAdviser(actualUser);
-                    processSelected.getAppointmentId().setAdviserState(NEW);
+                    processSelected.getAppointmentId().setAdviserState(REVIEW);
                 } else {
                     processSelected.getAppointmentId().setUserReviewer(actualUser);
-                    processSelected.getAppointmentId().setReviewerState(NEW);
+                    processSelected.getAppointmentId().setReviewerState(REVIEW);
                 }
                 PrimeFaces.current().executeScript("PF('" + modalIdToClose + "').hide()");
                 MessageUtils.addSuccessMessage("Usuario agregado");
@@ -254,8 +255,8 @@ public class advisorReviewerView implements Serializable {
         processSelected = process;
         try {
             processFacade.returnAppointmentToStudent(processSelected);
-            MessageUtils.addErrorMessage("Se ha notificado a los interesados de la desición");
-        } catch (UserException e) {
+            MessageUtils.addSuccessMessage("Se ha notificado a los interesados de la desición");
+        } catch ( UserException | ValidationException e) {
             MessageUtils.addErrorMessage(e.getMessage());
         }
     }
@@ -417,12 +418,14 @@ public class advisorReviewerView implements Serializable {
     }
 
     public Boolean pendingReview() {
-        if (isAdvisor && processSelected != null && processSelected.getAppointmentId() != null && actualUser != null) {
-            return ((processSelected.getAppointmentId().getAdviserState() != null && actualUser.getrOLid().getName().equals(SUPERVISOR_EPS)
-                    && (processSelected.getAppointmentId().getAdviserState() == REVIEW || processSelected.getAppointmentId().getAdviserState() == NEW)));
-        } else if (!isAdvisor && processSelected != null) {
-            return ((processSelected.getAppointmentId().getReviewerState() != null && actualUser.getrOLid().getName().equals(SUPERVISOR_EPS)
-                    && (processSelected.getAppointmentId().getReviewerState() == REVIEW || processSelected.getAppointmentId().getReviewerState() == NEW)));
+        if (loggedUser.isPresent() && loggedUser.get().getROLid() != null && loggedUser.get().getROLid().getName().equals(SUPERVISOR_EPS)) {
+            if (processSelected != null && processSelected.getAppointmentId() != null) {
+                if (isAdvisor) {
+                    return (processSelected.getAppointmentId().getAdviserState() == REVIEW);
+                } else {
+                    return (processSelected.getAppointmentId().getReviewerState() == REVIEW);
+                }
+            }
         }
         return false;
 

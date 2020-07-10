@@ -14,111 +14,115 @@
 
 
     <ui:define name="content">
-        <p:dataTable id="processesTable" var="process" value="#{advisorReviewerView.processAvailable}">
-            <p:column headerText="Nombre" >
-                <h:outputText value="#{process.userCareer.USERuserId.firstName} - #{process.userCareer.USERuserId.lastName}"/>
-            </p:column>
-            <p:column headerText="Carrera">
-                <h:outputText value="#{process.userCareer.CAREERcodigo.name}" />
-            </p:column>
-            <p:column headerText="Asesor" styleClass="text-center" rendered="#{p:ifGranted(constantsRol.ESTUDIANTE())}">
-                <p:commandLink styleClass="btn btn-primary btn-xs" 
-                               oncomplete="PF('selectUser').show();"
-                               update=":#{p:component('selectUser')}"
-                               rendered="#{!advisorReviewerView.advisorAlreadyExist(process)}"
-                               actionListener="#{advisorReviewerView.loadElegibleUsers(process, true)}">
-                    <span class="glyphicon glyphicon-search"></span> Elegir
-                </p:commandLink>
-                <p:commandLink styleClass="btn btn-warning btn-xs"
-                               oncomplete="PF('newUser').show();" 
-                               update=":#{p:component('newUser')}"
-                               rendered="#{!advisorReviewerView.advisorAlreadyExist(process)}"
-                               actionListener="#{advisorReviewerView.createNewUser(process, true)}">
-                    <span class="glyphicon glyphicon-plus"></span> Nuevo
-                </p:commandLink>
-                <p:commandLink styleClass="btn btn-primary btn-xs"
-                               oncomplete="PF('infoAbout').show();" 
-                               update=":#{p:component('infoAbout')}"
-                               rendered="#{advisorReviewerView.advisorAlreadyExist(process)}"
-                               actionListener="#{advisorReviewerView.showUserInformation(process, true)}">
-                    <span class="glyphicon glyphicon-eye-open"></span> #{advisorReviewerView.showUserStatus(process, true)}
-                </p:commandLink>
-            </p:column>
-            <p:column headerText="Revisor" styleClass="text-center" rendered="#{p:ifGranted(constantsRol.ESTUDIANTE())}">
-                <p:commandLink styleClass="btn btn-primary btn-xs" 
-                               oncomplete="PF('selectUser').show();"
-                               update=":#{p:component('selectUser')}" 
-                               rendered="#{!advisorReviewerView.reviewerAlreadyExist(process)}"
-                               actionListener="#{advisorReviewerView.loadElegibleUsers(process, false)}">
-                    <span class="glyphicon glyphicon-search"></span> Elegir
-                </p:commandLink>
-                <p:commandLink styleClass="btn btn-warning btn-xs"
-                               oncomplete="PF('newUser').show();" 
-                               update=":#{p:component('newUser')}" 
-                               rendered="#{!advisorReviewerView.reviewerAlreadyExist(process)}"
-                               actionListener="#{advisorReviewerView.createNewUser(process, false)}">
-                    <span class="glyphicon glyphicon-plus"></span> Nuevo
-                </p:commandLink>
-                <p:commandLink styleClass="btn btn-primary btn-xs"
-                               oncomplete="PF('infoAbout').show();" 
-                               update=":#{p:component('infoAbout')}"
-                               rendered="#{advisorReviewerView.reviewerAlreadyExist(process)}"
-                               actionListener="#{advisorReviewerView.showUserInformation(process, false)}">
-                    <span class="glyphicon glyphicon-eye-open"></span> #{advisorReviewerView.showUserStatus(process, true)}
-                </p:commandLink>
-            </p:column>
-            <p:column headerText="Asesor" styleClass="text-center" rendered="#{p:ifGranted(constantsRol.SUPERVISOR_EPS())}">
-                <p:commandLink styleClass="btn btn-primary btn-xs" 
-                               oncomplete="PF('selectUser').show();"
-                               update=":#{p:component('selectUser')}"
-                               rendered="#{advisorReviewerView.advisorAvailableToChange(process)}"
-                               actionListener="#{advisorReviewerView.loadElegibleUsers(process, true)}">
-                    <span class="glyphicon glyphicon-search"></span> Elegir
-                </p:commandLink>
-                <p:commandLink styleClass="btn btn-primary btn-xs"
-                               oncomplete="PF('infoAbout').show();" 
-                               update=":#{p:component('infoAbout')}"
-                               rendered="#{!advisorReviewerView.advisorAvailableToChange(process)}"
-                               actionListener="#{advisorReviewerView.showUserInformation(process, true)}">
-                    <span class="glyphicon glyphicon-eye-open"></span> #{advisorReviewerView.showUserStatus(process, true)}
-                </p:commandLink>
-            </p:column>
-            <p:column headerText="Revisor" styleClass="text-center" rendered="#{p:ifGranted(constantsRol.SUPERVISOR_EPS())}">
-                <p:commandLink styleClass="btn btn-primary btn-xs" 
-                               oncomplete="PF('selectUser').show();"
-                               update=":#{p:component('selectUser')}" 
-                               rendered="#{advisorReviewerView.reviewerAvailableToChange(process)}"
-                               actionListener="#{advisorReviewerView.loadElegibleUsers(process, false)}">
-                    <span class="glyphicon glyphicon-search"></span> Elegir
-                </p:commandLink>
-                <p:commandLink styleClass="btn btn-primary btn-xs"
-                               oncomplete="PF('infoAbout').show();" 
-                               update=":#{p:component('infoAbout')}"
-                               rendered="#{!advisorReviewerView.reviewerAvailableToChange(process)}"
-                               actionListener="#{advisorReviewerView.showUserInformation(process, false)}">
-                    <span class="glyphicon glyphicon-eye-open"></span> #{advisorReviewerView.showUserStatus(process, false)}
-                </p:commandLink>
-            </p:column>
-            <p:column headerText="Enviar" styleClass="text-center" rendered="#{p:ifGranted(constantsRol.ESTUDIANTE())}">
-                <p data-placement="top" data-toggle="tooltip" title="Enviar">
-                    <p:commandLink styleClass="btn btn-warning btn-xs"
-                                   update=":#{p:component('processesTable')}" 
-                                   actionListener="#{advisorReviewerView.sendAppointmentToSupervisor(process)}">
-                        <span class="glyphicon glyphicon-send"></span> Enviar
+        <h:form>
+            <p:dataTable id="processesTable" var="process" value="#{advisorReviewerView.processAvailable}">
+                <p:column headerText="Nombre" >
+                    <h:outputText value="#{process.userCareer.USERuserId.firstName} - #{process.userCareer.USERuserId.lastName}"/>
+                </p:column>
+                <p:column headerText="Carrera">
+                    <h:outputText value="#{process.userCareer.CAREERcodigo.name}" />
+                </p:column>
+                <p:column headerText="Asesor" styleClass="text-center" rendered="#{p:ifGranted(constantsRol.ESTUDIANTE())}">
+                    <p:commandLink styleClass="btn btn-primary btn-xs" 
+                                   oncomplete="PF('selectUser').show();"
+                                   update=":#{p:component('selectUser')}"
+                                   rendered="#{!advisorReviewerView.advisorAlreadyExist(process)}"
+                                   actionListener="#{advisorReviewerView.loadElegibleUsers(process, true)}">
+                        <span class="glyphicon glyphicon-search"></span> Elegir
                     </p:commandLink>
-                </p>
-            </p:column>
-            <p:column headerText="Enviar" styleClass="text-center" rendered="#{p:ifGranted(constantsRol.SUPERVISOR_EPS())}">
-                <p data-placement="top" data-toggle="tooltip" title="Enviar">
                     <p:commandLink styleClass="btn btn-warning btn-xs"
-                                   update=":#{p:component('processesTable')}" 
-                                   rendered="#{!advisorReviewerView.appointmentApproved(process)}"
-                                   actionListener="#{advisorReviewerView.returnAppointmentToStudent(process)}">
-                        <span class="glyphicon glyphicon-send"></span> Enviar
+                                   oncomplete="PF('newUser').show();" 
+                                   update=":#{p:component('newUser')}"
+                                   rendered="#{!advisorReviewerView.advisorAlreadyExist(process)}"
+                                   actionListener="#{advisorReviewerView.createNewUser(process, true)}">
+                        <span class="glyphicon glyphicon-plus"></span> Nuevo
                     </p:commandLink>
-                </p>
-            </p:column>
-        </p:dataTable>
+                    <p:commandLink styleClass="btn btn-primary btn-xs"
+                                   oncomplete="PF('infoAbout').show();" 
+                                   update=":#{p:component('infoAbout')}"
+                                   rendered="#{advisorReviewerView.advisorAlreadyExist(process)}"
+                                   actionListener="#{advisorReviewerView.showUserInformation(process, true)}">
+                        <span class="glyphicon glyphicon-eye-open"></span> #{advisorReviewerView.showUserStatus(process, true)}
+                    </p:commandLink>
+                </p:column>
+                <p:column headerText="Revisor" styleClass="text-center" rendered="#{p:ifGranted(constantsRol.ESTUDIANTE())}">
+                    <p:commandLink styleClass="btn btn-primary btn-xs" 
+                                   oncomplete="PF('selectUser').show();"
+                                   update=":#{p:component('selectUser')}" 
+                                   rendered="#{!advisorReviewerView.reviewerAlreadyExist(process)}"
+                                   actionListener="#{advisorReviewerView.loadElegibleUsers(process, false)}">
+                        <span class="glyphicon glyphicon-search"></span> Elegir
+                    </p:commandLink>
+                    <p:commandLink styleClass="btn btn-warning btn-xs"
+                                   oncomplete="PF('newUser').show();" 
+                                   update=":#{p:component('newUser')}" 
+                                   rendered="#{!advisorReviewerView.reviewerAlreadyExist(process)}"
+                                   actionListener="#{advisorReviewerView.createNewUser(process, false)}">
+                        <span class="glyphicon glyphicon-plus"></span> Nuevo
+                    </p:commandLink>
+                    <p:commandLink styleClass="btn btn-primary btn-xs"
+                                   oncomplete="PF('infoAbout').show();" 
+                                   update=":#{p:component('infoAbout')}"
+                                   rendered="#{advisorReviewerView.reviewerAlreadyExist(process)}"
+                                   actionListener="#{advisorReviewerView.showUserInformation(process, false)}">
+                        <span class="glyphicon glyphicon-eye-open"></span> #{advisorReviewerView.showUserStatus(process, true)}
+                    </p:commandLink>
+                </p:column>
+                <p:column headerText="Asesor" styleClass="text-center" rendered="#{p:ifGranted(constantsRol.SUPERVISOR_EPS())}">
+                    <p:commandLink styleClass="btn btn-primary btn-xs" 
+                                   oncomplete="PF('selectUser').show();"
+                                   update=":#{p:component('selectUser')}"
+                                   rendered="#{advisorReviewerView.advisorAvailableToChange(process)}"
+                                   actionListener="#{advisorReviewerView.loadElegibleUsers(process, true)}">
+                        <span class="glyphicon glyphicon-search"></span> Elegir
+                    </p:commandLink>
+                    <p:commandLink styleClass="btn btn-primary btn-xs"
+                                   oncomplete="PF('infoAbout').show();" 
+                                   update=":#{p:component('infoAbout')}"
+                                   rendered="#{!advisorReviewerView.advisorAvailableToChange(process)}"
+                                   actionListener="#{advisorReviewerView.showUserInformation(process, true)}">
+                        <span class="glyphicon glyphicon-eye-open"></span> #{advisorReviewerView.showUserStatus(process, true)}
+                    </p:commandLink>
+                </p:column>
+                <p:column headerText="Revisor" styleClass="text-center" rendered="#{p:ifGranted(constantsRol.SUPERVISOR_EPS())}">
+                    <p:commandLink styleClass="btn btn-primary btn-xs" 
+                                   oncomplete="PF('selectUser').show();"
+                                   update=":#{p:component('selectUser')}" 
+                                   rendered="#{advisorReviewerView.reviewerAvailableToChange(process)}"
+                                   actionListener="#{advisorReviewerView.loadElegibleUsers(process, false)}">
+                        <span class="glyphicon glyphicon-search"></span> Elegir
+                    </p:commandLink>
+                    <p:commandLink styleClass="btn btn-primary btn-xs"
+                                   oncomplete="PF('infoAbout').show();" 
+                                   update=":#{p:component('infoAbout')}"
+                                   rendered="#{!advisorReviewerView.reviewerAvailableToChange(process)}"
+                                   actionListener="#{advisorReviewerView.showUserInformation(process, false)}">
+                        <span class="glyphicon glyphicon-eye-open"></span> #{advisorReviewerView.showUserStatus(process, false)}
+                    </p:commandLink>
+                </p:column>
+                <p:column headerText="Enviar" styleClass="text-center" rendered="#{p:ifGranted(constantsRol.ESTUDIANTE())}">
+                    <p data-placement="top" data-toggle="tooltip" title="Enviar">
+                        <p:commandLink styleClass="btn btn-warning btn-xs"
+                                       update="@form,:#{p:component('processesTable')}"
+                                       onclick="PF('progressBar').show();"
+                                       actionListener="#{advisorReviewerView.sendAppointmentToSupervisor(process)}">
+                            <span class="glyphicon glyphicon-send"></span> Enviar
+                        </p:commandLink>
+                    </p>
+                </p:column>
+                <p:column headerText="Enviar" styleClass="text-center" rendered="#{p:ifGranted(constantsRol.SUPERVISOR_EPS())}">
+                    <p data-placement="top" data-toggle="tooltip" title="Enviar">
+                        <p:commandLink styleClass="btn btn-warning btn-xs"
+                                       update="@form,:#{p:component('processesTable')}" 
+                                       onclick="PF('progressBar').show();"
+                                       rendered="#{!advisorReviewerView.appointmentApproved(process)}"
+                                       actionListener="#{advisorReviewerView.returnAppointmentToStudent(process)}">
+                            <span class="glyphicon glyphicon-send"></span> Enviar
+                        </p:commandLink>
+                    </p>
+                </p:column>
+            </p:dataTable>
+        </h:form>
 
         <p:dialog header="Agregar Usuario" id="newUser" widgetVar="newUser"
                   modal="true" closeOnEscape="true">
@@ -352,13 +356,13 @@
                         <div class="row form-group" >
                             <p:commandLink styleClass="btn btn-danger"
                                            rendered="#{advisorReviewerView.pendingReview()}"
-                                           update="@form,:#{p:component('processesTable')},:#{p:component('growl')}"
+                                           update=":#{p:component('processesTable')},:#{p:component('growl')}"
                                            actionListener="#{advisorReviewerView.denyUser('infoAbout')}">
                                 <span class="glyphicon glyphicon-remove"></span> Rechazar
                             </p:commandLink>
                             <p:commandLink styleClass="btn btn-success"
                                            rendered="#{advisorReviewerView.pendingReview()}"
-                                           update="@form,:#{p:component('processesTable')},:#{p:component('growl')}"
+                                           update=":#{p:component('processesTable')},:#{p:component('growl')}"
                                            actionListener="#{advisorReviewerView.acceptUser('infoAbout')}">
                                 <span class="glyphicon glyphicon-ok-sign"></span> Aceptar
                             </p:commandLink>
@@ -366,6 +370,17 @@
                     </fieldset>
                 </div>
             </h:form>
+        </p:dialog>
+
+        <p:dialog id="progressBar" widgetVar="progressBar" closable="false" width="20%" showHeader="false" resizable="false"
+                  modal="true" closeOnEscape="true">
+            <p:ajax event="close" update="@this" />
+            <div align="center">
+                <p:outputLabel>Realizando operacion, espere un momento.</p:outputLabel>
+            </div>
+            <div class="form-group col-md-12" align="center">
+                <p:progressBar id="progressBarIndeterminate" style="height:6px" mode="indeterminate"/>
+            </div>
         </p:dialog>
     </ui:define>
 </ui:composition>

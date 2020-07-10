@@ -32,7 +32,7 @@ import javax.ejb.Stateless;
 @Stateless
 @LocalBean
 public class ProcessFacade implements ProcessFacadeLocal {
-    
+
     String DEBE_BORRARSE = "Mensaje q se debe borrar";
 
     @EJB
@@ -239,6 +239,12 @@ public class ProcessFacade implements ProcessFacadeLocal {
 
                     process.getAppointmentId().setDateAction(LocalDateTime.now());
                     updateProcess(process);
+                    mailService.emailNotifySupervisor(
+                            process.getSupervisor_EPS(),
+                            process.getAppointmentId(),
+                            process.getProject().getTitle(),
+                            actualUser.get()
+                    );
                     return process;
                 } else {
                     if (process.getAppointmentId().getUserAdviser() == null) {

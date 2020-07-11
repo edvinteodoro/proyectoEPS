@@ -22,6 +22,9 @@
                 <p:column headerText="Carrera">
                     <h:outputText value="#{process.userCareer.CAREERcodigo.name}" />
                 </p:column>
+                <p:column headerText="Fecha de la Solicitud" rendered="#{p:ifGranted(constantsRol.SUPERVISOR_EPS())}">
+                    <h:outputText value="#{process.appointmentId.dateAction}" />
+                </p:column>
                 <p:column headerText="Asesor" styleClass="text-center" rendered="#{p:ifGranted(constantsRol.ESTUDIANTE())}">
                     <p:commandLink styleClass="btn btn-primary btn-xs" 
                                    oncomplete="PF('selectUser').show();"
@@ -65,7 +68,7 @@
                                    update=":#{p:component('infoAbout')}"
                                    rendered="#{advisorReviewerView.reviewerAlreadyExist(process)}"
                                    actionListener="#{advisorReviewerView.showUserInformation(process, false)}">
-                        <span class="glyphicon glyphicon-eye-open"></span> #{advisorReviewerView.showUserStatus(process, true)}
+                        <span class="glyphicon glyphicon-eye-open"></span> #{advisorReviewerView.showUserStatus(process, false)}
                     </p:commandLink>
                 </p:column>
                 <p:column headerText="Asesor" styleClass="text-center" rendered="#{p:ifGranted(constantsRol.SUPERVISOR_EPS())}">
@@ -104,8 +107,10 @@
                     <p data-placement="top" data-toggle="tooltip" title="Enviar">
                         <p:commandLink styleClass="btn btn-warning btn-xs"
                                        update="@form,:#{p:component('processesTable')}"
-                                       onclick="PF('progressBar').show();"
-                                       actionListener="#{advisorReviewerView.sendAppointmentToSupervisor(process)}">
+                                       onstart="PF('progressBar').show();"
+                                       
+                                       oncomplete="PF('progressBar').close();"
+                                       actionListener="#{advisorReviewerView.sendAppointmentToSupervisor('progressBar',process)}">
                             <span class="glyphicon glyphicon-send"></span> Enviar
                         </p:commandLink>
                     </p>
@@ -114,9 +119,10 @@
                     <p data-placement="top" data-toggle="tooltip" title="Enviar">
                         <p:commandLink styleClass="btn btn-warning btn-xs"
                                        update="@form,:#{p:component('processesTable')}" 
-                                       onclick="PF('progressBar').show();"
-                                       rendered="#{!advisorReviewerView.appointmentApproved(process)}"
-                                       actionListener="#{advisorReviewerView.returnAppointmentToStudent(process)}">
+                                       onstart="PF('progressBar').show();"
+                                       oncomplete="PF('progressBar').close();"
+                                       rendered="#{advisorReviewerView.appointmentAvailableToReturn(process)}"
+                                       actionListener="#{advisorReviewerView.returnAppointmentToStudent('progressBar',process)}">
                             <span class="glyphicon glyphicon-send"></span> Enviar
                         </p:commandLink>
                     </p>
@@ -130,6 +136,23 @@
             <h:form>
                 <div class="modal-body">
                     <fieldset>
+                        <div class="row">
+                            <div class="form-group col-sm-3">
+                                <p:outputLabel for="userResume" value="Curriculum: "/>
+                            </div>
+                            <div class="form-group col-sm-5">
+                                <p:fileUpload id="userResume" fileUploadListener="#{advisorReviewerView.handlePersonalResume}" 
+                                              required="true"   
+                                              styleClass="in-dialog"
+                                              skinSimple="true" auto="true" allowTypes="/(\.|\/)(pdf)$/"
+                                              update="@parent"
+                                              label="Seleccionar"
+                                              invalidFileMessage="Solo se puede cargar archivos pdf"/>  
+                                <h:commandLink value="#{advisorReviewerView.namePersonalResume}"  target="_blank" actionListener="#{advisorReviewerView.reloadPersonalResume()}">
+                                    <p:fileDownload value="#{advisorReviewerView.personalResumeStream}" contentDisposition="inline"/>
+                                </h:commandLink>
+                            </div>
+                        </div>
                         <div class="row form-group">
                             <p:outputLabel for="name" value="Nombres: " styleClass="col-md-4 control-label"/>
                             <div class="col-md-8">
@@ -171,12 +194,6 @@
                             </div>
                         </div>
                         <div class="row form-group">
-                            <p:outputLabel for="cargo" value="Cargo: " styleClass="col-md-4 control-label"/>
-                            <div class="col-md-8">
-                                <h:outputText id="cargo" value="#{advisorReviewerView.actualUser.getrOLid.name}"/>
-                            </div>
-                        </div>
-                        <div class="row form-group">
                             <p:outputLabel for="direction" value="Dirección: " styleClass="col-md-4 control-label"/>
                             <div class="col-md-8">
                                 <p:inputText id="direction" styleClass="form-control" 
@@ -207,23 +224,6 @@
                                              pt:required="true" maxlength="45" required="true"
                                              value="#{advisorReviewerView.actualUser.directionCompanyWork}"/>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-sm-3">
-                                <p:outputLabel for="userResume" value="Curriculum: "/>
-                            </div>
-                            <div class="form-group col-sm-5">
-                                <p:fileUpload id="userResume" fileUploadListener="#{advisorReviewerView.handlePersonalResume}" 
-                                              required="true"   
-                                              styleClass="in-dialog"
-                                              skinSimple="true" auto="true" allowTypes="/(\.|\/)(pdf)$/"
-                                              update="@parent"
-                                              label="Seleccionar"
-                                              invalidFileMessage="Solo se puede cargar archivos pdf"/>  
-                            </div>
-                            <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{advisorReviewerView.reloadPersonalResume()}">
-                                <p:fileDownload value="#{advisorReviewerView.personalResumeStream}" contentDisposition="inline"/>
-                            </h:commandLink>
                         </div>
                     </fieldset>
                 </div>
@@ -293,6 +293,7 @@
             <h:form>
                 <div class="modal-body">
                     <fieldset>
+                        
                         <div class="row form-group">
                             <p:outputLabel value="DPI:" styleClass="col-md-4 control-label"/>
                             <div class="col-md-8">
@@ -346,12 +347,6 @@
                             <div class="col-md-8">
                                 <h:outputText value="#{advisorReviewerView.actualUser.directionCompanyWork}" />
                             </div>
-                        </div>
-                        <div class="row form-group">
-                            <p:outputLabel value="Curriculum:" styleClass="col-md-4 control-label"/>
-                            <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{advisorReviewerView.reloadPersonalResume()}">
-                                <p:fileDownload value="#{advisorReviewerView.personalResumeStream}" contentDisposition="inline"/>
-                            </h:commandLink>
                         </div>
                         <div class="row form-group" >
                             <p:commandLink styleClass="btn btn-danger"

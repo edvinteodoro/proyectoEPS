@@ -113,8 +113,9 @@ public interface ProcessFacadeLocal {
      * @param process
      * @return
      * @throws UserException
+     * @throws gt.edu.usac.cunoc.ingenieria.eps.exception.ValidationException
      */
-    public Process sendAppointmentToSupervisor(Process process) throws UserException;
+    public Process sendAppointmentToSupervisor(Process process) throws UserException, ValidationException;
 
     /**
      * Apply action on Advisor and Reviewer base on Supervisor's resolution, and

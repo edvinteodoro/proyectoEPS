@@ -33,8 +33,6 @@ import javax.ejb.Stateless;
 @LocalBean
 public class ProcessFacade implements ProcessFacadeLocal {
 
-    String DEBE_BORRARSE = "Mensaje q se debe borrar";
-
     @EJB
     RequerimentService requerimentService;
 
@@ -217,49 +215,8 @@ public class ProcessFacade implements ProcessFacadeLocal {
      * {@inheritDoc}
      */
     @Override
-    public Process sendAppointmentToSupervisor(Process process) throws UserException {
-        Optional<User> actualUser = Optional.ofNullable(userFacade.getAuthenticatedUser().get(0));
-
-        if (process != null && process.getAppointmentId() != null) {
-
-            if (actualUser.isPresent() && process.getUserCareer().getUSERuserId().getUserId().equals(actualUser.get().getUserId())) {
-
-                if (process.getAppointmentId().getUserAdviser() != null && process.getAppointmentId().getUserReviewer() != null) {
-
-                    if (process.getAppointmentId().getAdviserState() == null
-                            || process.getAppointmentId().getAdviserState() != APPROVED
-                            && !existsUser(process.getAppointmentId().getUserAdviser())) {
-                        process.getAppointmentId().setUserAdviser(userFacade.createTempUser(process.getAppointmentId().getUserAdviser()));
-                    }
-                    if (process.getAppointmentId().getReviewerState() == null
-                            || process.getAppointmentId().getReviewerState() != APPROVED
-                            && !existsUser(process.getAppointmentId().getUserReviewer())) {
-                        process.getAppointmentId().setUserReviewer(userFacade.createTempUser(process.getAppointmentId().getUserReviewer()));
-                    }
-
-                    process.getAppointmentId().setDateAction(LocalDateTime.now());
-                    updateProcess(process);
-                    mailService.emailNotifySupervisor(
-                            process.getSupervisor_EPS(),
-                            process.getAppointmentId(),
-                            process.getProject().getTitle(),
-                            actualUser.get()
-                    );
-                    return process;
-                } else {
-                    if (process.getAppointmentId().getUserAdviser() == null) {
-                        throw new UserException("Debe indicar el Asesor");
-                    } else {
-                        throw new UserException("Debe indicar el Revisor");
-                    }
-                }
-            } else {
-                throw new UserException("El usuario no es dueño del Proyecto");
-            }
-        } else {
-            throw new UserException("Debe elegir un proceso");
-        }
-
+    public Process sendAppointmentToSupervisor(Process process) throws UserException, ValidationException {
+        return processService.sendAppointmentToSupervisor(process);
     }
 
     /**

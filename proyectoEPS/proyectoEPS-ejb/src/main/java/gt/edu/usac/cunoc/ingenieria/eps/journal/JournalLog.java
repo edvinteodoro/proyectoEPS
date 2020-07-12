@@ -105,8 +105,7 @@ public class JournalLog implements Serializable {
         this.links = links;
     }
 
-    public void addLink() {
-        Link newLink = new Link();
+    public void addLink(Link newLink) {
         links.add(newLink);
         newLink.setJournalLog(this);
     }

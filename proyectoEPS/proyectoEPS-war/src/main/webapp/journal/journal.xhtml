@@ -100,6 +100,29 @@
                             <h:outputText id="display" />
                         </div>
                     </div>
+
+                    <div class="row form-group">
+                        <p:outputLabel for="link" value="Enlaces" styleClass="col-md-4 control-label"/>
+                        <div class="col-md-8">
+                            <p:inputText id="link" styleClass="form-control" pt:placeholder="Enlace"
+                                         value="#{journalView.linkStringNewJournalLog}"/>
+                        </div>
+                    </div>
+                    
+                    <div class="row form-group">
+                        <div class="col-md-4">
+                        </div>
+                        <div class="col-md-8">
+                            <p:commandLink styleClass="btn btn-success btn-lg"
+                                           actionListener="#{journalView.addLinkNewJournal()}"
+                                           update=":#{p:component('link')},:#{p:component('growl')}"
+                                           process="@this link"
+                                           >
+                                <span class="glyphicon glyphicon-plus"></span> Agregar
+                            </p:commandLink>
+                        </div>
+                    </div>
+
                     <div class="row form-group">
                         <p:outputLabel value="Imagenes" styleClass="col-md-4 control-label"/>
                         <div class="col-md-8">
@@ -135,8 +158,7 @@
                             value="#{journalView.selectedJournalLog.images}" var="image"
                             autoPlay="false"
                             showFilmstrip="true"
-                            showCaption="false"
-                            >
+                            showCaption="false">
                     <p:graphicImage value="#{journalView.image}" stream="true">
                         <f:param name="imageId" value="#{image.id}" />
                     </p:graphicImage>

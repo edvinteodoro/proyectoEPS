@@ -37,6 +37,7 @@ public class JournalView implements Serializable {
     private Process process;
 
     private JournalLog newJournalLog;
+    private String linkStringNewJournalLog;
     private JournalLog selectedJournalLog;
 
     private List<UploadedFile> imagesUploadedFile;
@@ -100,6 +101,14 @@ public class JournalView implements Serializable {
         this.selectedJournalLog = selectedJournalLog;
     }
 
+    public String getLinkStringNewJournalLog() {
+        return linkStringNewJournalLog;
+    }
+
+    public void setLinkStringNewJournalLog(String linkStringNewJournalLog) {
+        this.linkStringNewJournalLog = linkStringNewJournalLog;
+    }
+
     public void loadCurrentJournal() {
         this.process = processFacade.getProcess(new Process(processId)).get(0);
         this.journals = journalFacade.getJournal(processId);
@@ -140,6 +149,7 @@ public class JournalView implements Serializable {
 
     public void cleanNewJournalLog() {
         this.newJournalLog = null;
+        this.linkStringNewJournalLog = null;
     }
 
     public StreamedContent getImage() {
@@ -151,8 +161,20 @@ public class JournalView implements Serializable {
             // So, browser is requesting the image. Return a real StreamedContent with the image bytes.
             String imageId = context.getExternalContext().getRequestParameterMap().get("imageId");
             Image image = journalFacade.getImageById(Integer.valueOf(imageId));
-            return new DefaultStreamedContent(new ByteArrayInputStream(image.getImage()),"image/jpg","imagen.jpg");
+            return new DefaultStreamedContent(new ByteArrayInputStream(image.getImage()), "image/jpg", "imagen.jpg");
         }
     }
 
+    public void addLinkNewJournal() {
+        if (!linkStringNewJournalLog.isEmpty()) {
+            Link newLink = new Link();
+            newLink.setJournalLog(getNewJournalLog());
+            newLink.setLink(linkStringNewJournalLog.getBytes());
+            getNewJournalLog().addLink(newLink);
+            linkStringNewJournalLog = null;
+            MessageUtils.addSuccessMessage("Cargado nuevo enlace");
+        } else {
+            MessageUtils.addErrorMessage("No existe enlace a cargar");
+        }
+    }
 }

@@ -121,7 +121,7 @@ public class ProcessService {
 
                     if (process.getAppointmentId().getReviewerState() != null && process.getAppointmentId().getReviewerState() == REVIEW) {
 
-                        if (!existsUser(process.getAppointmentId().getUserAdviser())) {
+                        if (!existsUser(process.getAppointmentId().getUserReviewer())) {
                             resultProcess.get().getAppointmentId().setUserReviewer(userService.createTempUser(process.getAppointmentId().getUserReviewer()));
                         } else {
                             resultProcess.get().getAppointmentId().setUserReviewer(process.getAppointmentId().getUserReviewer());

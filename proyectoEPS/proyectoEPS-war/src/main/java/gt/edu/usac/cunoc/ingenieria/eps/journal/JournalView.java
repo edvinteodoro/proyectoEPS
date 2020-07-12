@@ -7,19 +7,24 @@ import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import java.io.Serializable;
 import java.util.List;
 import javax.ejb.EJB;
-import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import gt.edu.usac.cunoc.ingenieria.eps.journal.facade.JournalLogFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.utils.MessageUtils;
+import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import javax.annotation.PostConstruct;
+import javax.enterprise.context.SessionScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.event.PhaseId;
 import org.primefaces.PrimeFaces;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
 
 @Named
-@ViewScoped
+@SessionScoped
 public class JournalView implements Serializable {
 
     @EJB
@@ -32,7 +37,8 @@ public class JournalView implements Serializable {
     private Process process;
 
     private JournalLog newJournalLog;
-    
+    private JournalLog selectedJournalLog;
+
     private List<UploadedFile> imagesUploadedFile;
     private List<JournalLog> journals;
 
@@ -86,6 +92,14 @@ public class JournalView implements Serializable {
         this.imagesUploadedFile = imagesUploadedFile;
     }
 
+    public JournalLog getSelectedJournalLog() {
+        return selectedJournalLog;
+    }
+
+    public void setSelectedJournalLog(JournalLog selectedJournalLog) {
+        this.selectedJournalLog = selectedJournalLog;
+    }
+
     public void loadCurrentJournal() {
         this.process = processFacade.getProcess(new Process(processId)).get(0);
         this.journals = journalFacade.getJournal(processId);
@@ -109,8 +123,8 @@ public class JournalView implements Serializable {
     public void handleFileUpload(FileUploadEvent event) {
         this.imagesUploadedFile.add(event.getFile());
     }
-    
-    private void convertFilesUploadedToImages(){
+
+    private void convertFilesUploadedToImages() {
         Image newImage;
         for (UploadedFile uploadedFile : imagesUploadedFile) {
             newImage = new Image();
@@ -119,4 +133,26 @@ public class JournalView implements Serializable {
             getNewJournalLog().addImage(newImage);
         }
     }
+
+    public void cleanSelectedJournalLog() {
+        this.selectedJournalLog = null;
+    }
+
+    public void cleanNewJournalLog() {
+        this.newJournalLog = null;
+    }
+
+    public StreamedContent getImage() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        if (context.getCurrentPhaseId() == PhaseId.RENDER_RESPONSE) {
+            // So, we're rendering the HTML. Return a stub StreamedContent so that it will generate right URL.
+            return new DefaultStreamedContent();
+        } else {
+            // So, browser is requesting the image. Return a real StreamedContent with the image bytes.
+            String imageId = context.getExternalContext().getRequestParameterMap().get("imageId");
+            Image image = journalFacade.getImageById(Integer.valueOf(imageId));
+            return new DefaultStreamedContent(new ByteArrayInputStream(image.getImage()),"image/jpg","imagen.jpg");
+        }
+    }
+
 }

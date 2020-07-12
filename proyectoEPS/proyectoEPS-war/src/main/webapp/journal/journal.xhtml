@@ -36,11 +36,16 @@
             <p:column headerText="Descripción">
                 <h:outputText value="#{journalLog.description}"/>
             </p:column>
-            <p:column headerText="Enlaces">
+            <p:column headerText="Enlaces" styleClass="text-center">
 
             </p:column>
-            <p:column headerText="Imágenes">
-
+            <p:column headerText="Imágenes" styleClass="text-center">
+                <p:commandLink styleClass="btn btn-primary btn-xs"
+                               oncomplete="PF('dlgImages').show();"
+                               update=":#{p:component('dlgImages')},:#{p:component('galleria')}">
+                    <f:setPropertyActionListener value="#{journalLog}" target="#{journalView.selectedJournalLog}"/>
+                    <span class="glyphicon glyphicon-picture"></span>
+                </p:commandLink>
             </p:column>
         </p:dataTable>
         <div class="btn-group pull-right">
@@ -54,7 +59,7 @@
 
         <p:dialog header="Nuevo Registro" id="dlgNew" widgetVar="dlgNew" 
                   modal="true" closeOnEscape="true" position="center">
-            <p:ajax event="close" listener="#{journalView.cleanNewJournal()}" update="@this" />
+            <p:ajax event="close" listener="#{journalView.cleanNewJournalLog()}" update="@this" />
             <h:form>
                 <div class="modal-header">
                     <p:staticMessage severity="warn" summary="Advertencia! " detail="No se puede crear mas de un registro con la misma fecha" />
@@ -87,6 +92,7 @@
                         <div class="col-md-8">
                             <p:inputTextarea id="description" counter="display" maxlength="200" 
                                              counterTemplate="{0} Caracteres Restantes." autoResize="false"
+                                             placeholder="Descripción"
                                              required="true"
                                              style="width: 100%;"
                                              value="#{journalView.newJournalLog.description}"/>
@@ -97,7 +103,7 @@
                     <div class="row form-group">
                         <p:outputLabel value="Imagenes" styleClass="col-md-4 control-label"/>
                         <div class="col-md-8">
-                            <p:fileUpload id="iamges" 
+                            <p:fileUpload id="images" 
                                           style="width: 100%;"
                                           skinSimple="true" auto="true"
                                           label="Agregar"
@@ -119,6 +125,23 @@
                     </p:commandLink>
                 </div>
             </h:form>
+        </p:dialog>
+
+        <p:dialog id="dlgImages" widgetVar="dlgImages" 
+                  modal="true" closeOnEscape="true" position="center">
+            <p:ajax event="close" listener="#{journalView.cleanSelectedJournalLog()}" update="@this" />
+            <div class="modal-body">
+                <p:galleria id="galleria" 
+                            value="#{journalView.selectedJournalLog.images}" var="image"
+                            autoPlay="false"
+                            showFilmstrip="true"
+                            showCaption="false"
+                            >
+                    <p:graphicImage value="#{journalView.image}" stream="true">
+                        <f:param name="imageId" value="#{image.id}" />
+                    </p:graphicImage>
+                </p:galleria>
+            </div>
         </p:dialog>
 
     </ui:define>

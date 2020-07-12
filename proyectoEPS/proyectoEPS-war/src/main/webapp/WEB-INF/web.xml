@@ -29,7 +29,7 @@
     </session-config>
     <filter>
         <filter-name> PrimeFaces FileUpload Filter </filter-name>
-        <filter-class> org.primefaces.webapp.filter.FileUploadFilter </filter-class>
+        <filter-class>org.primefaces.webapp.filter.FileUploadFilter </filter-class>
     </filter>
     <filter-mapping>
         <filter-name> PrimeFaces FileUpload Filter </filter-name>
@@ -98,6 +98,7 @@
         <web-resource-collection>
             <web-resource-name>assignedProcesses</web-resource-name>
             <url-pattern>/process/assignedProcesses.xhtml</url-pattern>
+            <url-pattern>/bitacora/bitacoraReview.xhtml</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <description>Allowed users</description>

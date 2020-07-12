@@ -1,13 +1,21 @@
 package gt.edu.usac.cunoc.ingenieria.eps.bitacora.view;
 
+import gt.edu.usac.cunoc.ingenieria.eps.journal.Commentary;
+import gt.edu.usac.cunoc.ingenieria.eps.journal.Image;
 import gt.edu.usac.cunoc.ingenieria.eps.journal.JournalLog;
 import java.io.Serializable;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import gt.edu.usac.cunoc.ingenieria.eps.process.facade.ProcessFacadeLocal;
+import gt.edu.usac.cunoc.ingenieria.eps.user.User;
+import gt.edu.usac.cunoc.ingenieria.eps.user.facade.UserFacadeLocal;
+import java.io.ByteArrayInputStream;
+import java.time.LocalDate;
 import java.util.List;
 import javax.ejb.EJB;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 
 @Named
 @ViewScoped
@@ -16,11 +24,31 @@ public class BitacoraReview implements Serializable {
     @EJB
     private ProcessFacadeLocal processFacade;
 
+    @EJB
+    private UserFacadeLocal userFacade;
+
     private Integer processId;
     private Process process;
+    private StreamedContent image;
+    private JournalLog journalSelected;
+    private String commentText;
+    private LocalDate dateNow;
+
+    private User autenticatedUser;
 
     public void loadCurrentProject() {
-        this.process = processFacade.getProcess(new Process(processId)).get(0);
+        try {
+            dateNow = LocalDate.now();
+            autenticatedUser = userFacade.getAuthenticatedUser().get(0);
+            this.process = processFacade.getProcess(new Process(processId)).get(0);
+        } catch (Exception e) {
+            System.out.println("--------"+e+"--------");
+        }
+    }
+
+    public StreamedContent getImageContent(Image image) {
+        StreamedContent img = new DefaultStreamedContent(new ByteArrayInputStream(image.getImage()), "image/png", "imagen.png");
+        return img;
     }
 
     public Integer getProcessId() {
@@ -39,12 +67,38 @@ public class BitacoraReview implements Serializable {
         this.process = process;
     }
 
+    public JournalLog getJournalSelected() {
+        return journalSelected;
+    }
+
+    public void setJournalSelected(JournalLog journalSelected) {
+        this.journalSelected = journalSelected;
+    }
+
+    public String getCommentText() {
+        return commentText;
+    }
+
+    public void setCommentText(String commentText) {
+        this.commentText = commentText;
+    }
+
     public List<JournalLog> getJournalsLog() {
-        return this.process.getJournalLog();
+        return getProcess().getJournalLog();
+    }
+
+    public void setJournalsLogs(List<JournalLog> journalsLog) {
+        getProcess().setJournalLog(journalsLog);
+    }
+
+    public void comment() {
+        getJournalSelected().getCommentaries().add(new Commentary(getCommentText(), dateNow, getJournalSelected(),autenticatedUser)); 
+        processFacade.updateProcess(process);
     }
     
-    public void setJournalsLogs(List<JournalLog> journalsLog){
-        this.process.setJournalLog(journalsLog); 
+    public void cleanJournalSelected(){
+        setCommentText("");
+        setJournalSelected(null);
     }
 
 }

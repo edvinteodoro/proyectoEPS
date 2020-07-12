@@ -52,14 +52,6 @@
                     </button>
                 </p>
             </p:column>
-            <p:column headerText="Bitácora" styleClass="text-center">
-                <p data-placement="top" data-toggle="tooltip" title="Bitácora">
-                    <button jsf:outcome="#{processesView.redirectJournalTo()}" styleClass="btn btn-success btn-xs" >
-                        <f:param name="idProcess" value="#{process.id}"/>
-                        <span class="glyphicon glyphicon-log-in"></span>
-                    </button>
-                </p>
-            </p:column>
             <p:column headerText="Asesor y Revisor" styleClass="text-center">
                 <p:commandLink styleClass="btn btn-primary btn-xs"
                                oncomplete="PF('infoAbout').show();" 
@@ -73,6 +65,14 @@
                                rendered="#{!processesView.studentAppointmentApproved(process)}">
                     <span class="glyphicon glyphicon-log-in"></span>
                 </p:commandLink>
+            </p:column>
+            <p:column headerText="Bitácora" styleClass="text-center">
+                <p data-placement="top" data-toggle="tooltip" title="Bitácora">
+                    <button jsf:outcome="#{processesView.redirectJournalTo()}" styleClass="btn btn-success btn-xs" >
+                        <f:param name="idProcess" value="#{process.id}"/>
+                        <span class="glyphicon glyphicon-log-in"></span>
+                    </button>
+                </p>
             </p:column>
         </p:dataTable>
 

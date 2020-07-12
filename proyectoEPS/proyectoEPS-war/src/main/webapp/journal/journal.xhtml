@@ -26,28 +26,43 @@
 
     <ui:define name="content">
         <h:outputScript library="js" name="calendar_es.js" />
-        <p:dataTable id="journalTable" var="journalLog" reflow="true" emptyMessage="Registro Vacío" value="#{journalView.journals}">
-            <p:column headerText="Fecha">
-                <h:outputText value="#{journalLog.dateTime}"/>
-            </p:column>
-            <p:column headerText="Actividad">
-                <h:outputText value="#{journalLog.activity}"/>
-            </p:column>
-            <p:column headerText="Descripción">
-                <h:outputText value="#{journalLog.description}"/>
-            </p:column>
-            <p:column headerText="Enlaces" styleClass="text-center">
-
-            </p:column>
-            <p:column headerText="Imágenes" styleClass="text-center">
-                <p:commandLink styleClass="btn btn-primary btn-xs"
-                               oncomplete="PF('dlgImages').show();"
-                               update=":#{p:component('dlgImages')},:#{p:component('galleria')}">
-                    <f:setPropertyActionListener value="#{journalLog}" target="#{journalView.selectedJournalLog}"/>
-                    <span class="glyphicon glyphicon-picture"></span>
-                </p:commandLink>
-            </p:column>
-        </p:dataTable>
+        <p:accordionPanel id="journalTable" value="#{journalView.journals}" var="journalLog" activeIndex="-2">
+            <p:tab id="JournalLog" title="Fecha - #{journalLog.dateTime.dayOfMonth} / #{journalLog.dateTime.monthValue} / #{journalLog.dateTime.year}" >
+                <div>
+                    <h4 class="text-primary">Actividad:</h4>
+                </div>
+                <div>
+                    <h:outputLabel value="#{journalLog.activity}"/>
+                </div>
+                <div>
+                    <h4 class="text-primary">Descripcion:</h4>
+                </div>
+                <div>
+                    <h:outputLabel value="#{journalLog.description}"/>
+                </div>
+                <div>
+                    <h4 class="text-primary">Imagenes:</h4>
+                </div>
+                <div>
+                    <p:galleria value="#{journalLog.images}" var="image" >
+                        <o:graphicImage value="#{image.image}" dataURI="true" height="450" width="600"/>
+                    </p:galleria>
+                </div>
+                <div>
+                    <h4 class="text-primary">Links:</h4>
+                </div>
+                <div>
+                    <p:dataView value="#{journalLog.links}" var="link" >
+                        <p:dataViewListItem>
+                            <div>
+                                <a href="#{link.linkText}" target="_blank">#{link.linkText}</a>
+                            </div>    
+                        </p:dataViewListItem>
+                    </p:dataView>
+                </div>
+            </p:tab>
+        </p:accordionPanel>
+        
         <div class="btn-group pull-right">
             <p:commandLink styleClass="btn btn-success" 
                            oncomplete="PF('dlgNew').show();"

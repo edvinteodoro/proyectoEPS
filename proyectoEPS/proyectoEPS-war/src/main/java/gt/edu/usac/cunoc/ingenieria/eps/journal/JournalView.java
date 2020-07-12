@@ -17,6 +17,7 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.PhaseId;
+import javax.faces.view.ViewScoped;
 import org.primefaces.PrimeFaces;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
@@ -24,7 +25,7 @@ import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
 
 @Named
-@SessionScoped
+@ViewScoped
 public class JournalView implements Serializable {
 
     @EJB
@@ -112,7 +113,7 @@ public class JournalView implements Serializable {
     public void loadCurrentJournal() {
         this.process = processFacade.getProcess(new Process(processId)).get(0);
         this.journals = journalFacade.getJournal(processId);
-        this.newJournalLog = null;
+        cleanNewJournalLog();
         this.imagesUploadedFile.clear();
     }
 

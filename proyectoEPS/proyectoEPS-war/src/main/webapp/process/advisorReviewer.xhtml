@@ -348,6 +348,12 @@
                                 <h:outputText value="#{advisorReviewerView.actualUser.directionCompanyWork}" />
                             </div>
                         </div>
+                        <div class="row form-group">
+                            <p:outputLabel value="Curriculum:" styleClass="col-md-4 control-label"/>
+                            <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{advisorReviewerView.reloadPersonalResume()}">
+                                <p:fileDownload value="#{advisorReviewerView.personalResumeStream}" contentDisposition="inline"/>
+                            </h:commandLink>
+                        </div>
                         <div class="row form-group" >
                             <p:commandLink styleClass="btn btn-danger"
                                            rendered="#{advisorReviewerView.pendingReview()}"

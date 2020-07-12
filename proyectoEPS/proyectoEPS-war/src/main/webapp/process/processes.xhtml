@@ -60,7 +60,146 @@
                     </button>
                 </p>
             </p:column>
+            <p:column headerText="Asesor y Revisor" styleClass="text-center">
+                <p:commandLink styleClass="btn btn-primary btn-xs"
+                               oncomplete="PF('infoAbout').show();" 
+                               update=":#{p:component('infoAbout')}"
+                               rendered="#{processesView.studentAppointmentApproved(process)}">
+                    <f:setPropertyActionListener value="#{process.appointmentId}" target="#{processesView.appointment}"/>
+                    <span class="glyphicon glyphicon-eye-open"></span> Ver
+                </p:commandLink>
+                <p:commandLink styleClass="btn btn-success btn-xs"
+                               action="adviserReviewer"
+                               rendered="#{!processesView.studentAppointmentApproved(process)}">
+                    <span class="glyphicon glyphicon-log-in"></span>
+                </p:commandLink>
+            </p:column>
         </p:dataTable>
+
+        <p:dialog header="Asesor y Revisor" id="infoAbout" widgetVar="infoAbout"
+                  modal="true" closeOnEscape="true">
+            <p:ajax event="close" listener="#{processesView.clean()}" update="@this" />
+            <h:form>
+                <div class="modal-body">
+                    <fieldset>
+                        <p:tabView>
+                            <p:tab title="Asesor">
+                                <div class="row form-group">
+                                    <p:outputLabel value="DPI:" styleClass="col-md-4 control-label"/>
+                                    <div class="col-md-8">
+                                        <h:outputText value="#{processesView.appointment.userAdviser.dpi}"/>
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <p:outputLabel value="Nombre:" styleClass="col-md-4 control-label"/>
+                                    <div class="col-md-8">
+                                        <h:outputText value="#{processesView.appointment.userAdviser.firstName}, #{processesView.appointment.userAdviser.lastName}"/>
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <p:outputLabel value="Correo Electrónico:" styleClass="col-md-4 control-label"/>
+                                    <div class="col-md-8">
+                                        <h:outputText value="#{processesView.appointment.userAdviser.email}" />
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <p:outputLabel value="Telefono:" styleClass="col-md-4 control-label"/>
+                                    <div class="col-md-8">
+                                        <h:outputText value="#{processesView.appointment.userAdviser.phone1}" />
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <p:outputLabel value="Estado:" styleClass="col-md-4 control-label"/>
+                                    <div class="col-md-8">
+                                        <p:selectBooleanCheckbox value="#{processesView.appointment.userAdviser.status}"  disabled="true"/>
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <p:outputLabel value="Nombre de la Empresa:" styleClass="col-md-4 control-label"/>
+                                    <div class="col-md-8">
+                                        <h:outputText value="#{processesView.appointment.userAdviser.nameCompanyWork}"/>
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <p:outputLabel value="Telefono de la Empresa:" styleClass="col-md-4 control-label"/>
+                                    <div class="col-md-8">
+                                        <h:outputText value="#{processesView.appointment.userAdviser.phoneCompanyWork}" />
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <p:outputLabel value="Dirección de la Empresa:" styleClass="col-md-4 control-label"/>
+                                    <div class="col-md-8">
+                                        <h:outputText value="#{processesView.appointment.userAdviser.directionCompanyWork}" />
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <p:outputLabel value="Curriculum:" styleClass="col-md-4 control-label"/>
+                                    <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{processesView.reloadAdviserResume()}">
+                                        <p:fileDownload value="#{processesView.adviserResumeStream}" contentDisposition="inline"/>
+                                    </h:commandLink>
+                                </div>
+                            </p:tab>
+                            <p:tab title="Revisor">
+                                <div class="row form-group">
+                                    <p:outputLabel value="DPI:" styleClass="col-md-4 control-label"/>
+                                    <div class="col-md-8">
+                                        <h:outputText value="#{processesView.appointment.userReviewer.dpi}"/>
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <p:outputLabel value="Nombre:" styleClass="col-md-4 control-label"/>
+                                    <div class="col-md-8">
+                                        <h:outputText value="#{processesView.appointment.userReviewer.firstName}, #{processesView.appointment.userReviewer.lastName}"/>
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <p:outputLabel value="Correo Electrónico:" styleClass="col-md-4 control-label"/>
+                                    <div class="col-md-8">
+                                        <h:outputText value="#{processesView.appointment.userReviewer.email}" />
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <p:outputLabel value="Telefono:" styleClass="col-md-4 control-label"/>
+                                    <div class="col-md-8">
+                                        <h:outputText value="#{processesView.appointment.userReviewer.phone1}" />
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <p:outputLabel value="Estado:" styleClass="col-md-4 control-label"/>
+                                    <div class="col-md-8">
+                                        <p:selectBooleanCheckbox value="#{processesView.appointment.userReviewer.status}"  disabled="true"/>
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <p:outputLabel value="Nombre de la Empresa:" styleClass="col-md-4 control-label"/>
+                                    <div class="col-md-8">
+                                        <h:outputText value="#{processesView.appointment.userReviewer.nameCompanyWork}"/>
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <p:outputLabel value="Telefono de la Empresa:" styleClass="col-md-4 control-label"/>
+                                    <div class="col-md-8">
+                                        <h:outputText value="#{processesView.appointment.userReviewer.phoneCompanyWork}" />
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <p:outputLabel value="Dirección de la Empresa:" styleClass="col-md-4 control-label"/>
+                                    <div class="col-md-8">
+                                        <h:outputText value="#{processesView.appointment.userReviewer.directionCompanyWork}" />
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <p:outputLabel value="Curriculum:" styleClass="col-md-4 control-label"/>
+                                    <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{processesView.reloadReviewerResume()}">
+                                        <p:fileDownload value="#{processesView.reviewerResumeStream}" contentDisposition="inline"/>
+                                    </h:commandLink>
+                                </div>
+                            </p:tab>
+                        </p:tabView>
+                    </fieldset>
+                </div>
+            </h:form>
+        </p:dialog>
     </ui:define>
 </ui:composition>
 

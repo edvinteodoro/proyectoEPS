@@ -102,9 +102,13 @@ public class ConstantsRol implements Serializable {
     public String SUPERVISOR_EPS() {
         return SUPERVISOR_EPS;
     }
-    
-    public String COMMITTEE_EPS(){
+
+    public String COMMITTEE_EPS() {
         return COORDINADOR_EPS + "," + SUPERVISOR_EPS;
+    }
+
+    public String ADVISOR_REVIEWER_EDITORS() {
+        return ESTUDIANTE + "," + SUPERVISOR_EPS;
     }
 
 }

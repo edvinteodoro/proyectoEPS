@@ -113,20 +113,22 @@ public interface ProcessFacadeLocal {
      * @param process
      * @return
      * @throws UserException
+     * @throws gt.edu.usac.cunoc.ingenieria.eps.exception.ValidationException
      */
-    public Process sendAppointmentToSupervisor(Process process) throws UserException;
-    
+    public Process sendAppointmentToSupervisor(Process process) throws UserException, ValidationException;
+
     /**
      * Apply action on Advisor and Reviewer base on Supervisor's resolution, and
      * send emails to notify the advisor and reviewer when have been assigned to
-     * a Project and notify the resolution to the student.
+     * a Project and notify the resolution to the student.Verify if the logged
+     * user as Supervisor is in charge of the process.
      *
      *
-     * Verify if the logged user as Supervisor is in charge of the process.
      *
      * @param process modified by the supervisor
      * @return
-     * @throws UserException
+     * @throws UserException when problem create or removing temporalUser
+     * @throws ValidationException when data is missing
      */
-    public Process returnAppointmentToStudent(Process process) throws UserException;
+    public Process returnAppointmentToStudent(Process process) throws UserException, ValidationException;
 }

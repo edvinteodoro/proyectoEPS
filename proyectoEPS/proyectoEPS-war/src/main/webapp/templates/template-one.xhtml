@@ -46,19 +46,19 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <p:link  outcome="createProcess" value="Crear Proceso"/>
+                                    <p:link  outcome="createProcess" value="Crear Proceso" rendered="#{p:ifAnyGranted(constantsRol.ESTUDIANTE())}"/>
                                 </li>
                                 <li>
-                                    <p:link  outcome="processes" value="Ver Procesos"/>
+                                    <p:link  outcome="processes" value="Ver Procesos" rendered="#{p:ifAnyGranted(constantsRol.ESTUDIANTE())}"/>
                                 </li>
                                 <li>
                                     <p:link outcome="tailEPSCommittee" value="Procesos Comisión EPS" rendered="#{p:ifAnyGranted(constantsRol.COMMITTEE_EPS())}"/>
                                 </li>
-                                 <li>
-                                     <p:link outcome="assignedProcesses" value="Procesos Asignados" rendered="#{p:ifGranted(constantsRol.SUPERVISOR_EPS())}"/>
+                                <li>
+                                    <p:link outcome="assignedProcesses" value="Procesos Asignados" rendered="#{p:ifGranted(constantsRol.SUPERVISOR_EPS())}"/>
                                 </li>
                                 <li>
-                                    <p:link outcome="adviserReviewer" value="Asesor y Revisor"/>
+                                    <p:link outcome="adviserReviewer" value="Asesor y Revisor" rendered="#{p:ifAnyGranted(constantsRol.ADVISOR_REVIEWER_EDITORS())}"/>
                                 </li>
                             </ul>
                         </li>

@@ -1,10 +1,6 @@
 package gt.edu.usac.cunoc.ingenieria.eps.user;
 
-import gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants;
-import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.ASESOR;
-import gt.edu.usac.cunoc.ingenieria.eps.process.Appointment;
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -78,6 +74,10 @@ public class User implements Serializable {
     @Column(name = "status")
     private Boolean status;
     @Basic(optional = false)
+    @NotNull
+    @Column(name = "removable")
+    private Boolean removable;
+    @Basic(optional = false)
     @Column(name = "eps_committee")
     private Boolean epsCommittee;
     @Column(name = "name_company_work")
@@ -94,10 +94,6 @@ public class User implements Serializable {
     private Rol rOLid;
     @OneToMany(mappedBy = "uSERuserId", cascade = CascadeType.ALL)
     private List<UserCareer> userCareers;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userAdviser")
-    private List<Appointment> appointmentAdvisor;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userReviewer")
-    private List<Appointment> appointmentReviewer;
 
     public User() {
     }
@@ -233,6 +229,14 @@ public class User implements Serializable {
         this.status = status;
     }
 
+    public Boolean getRemovable() {
+        return removable;
+    }
+
+    public void setRemovable(Boolean removable) {
+        this.removable = removable;
+    }
+
     public Rol getROLid() {
         return rOLid;
     }
@@ -281,22 +285,6 @@ public class User implements Serializable {
         this.personalResume = personalResume;
     }
 
-    public List<Appointment> getAppointmentAdvisor() {
-        return appointmentAdvisor;
-    }
-
-    public void setAppointmentAdvisor(List<Appointment> appointmentAdvisor) {
-        this.appointmentAdvisor = appointmentAdvisor;
-    }
-
-    public List<Appointment> getAppointmentReviewer() {
-        return appointmentReviewer;
-    }
-
-    public void setAppointmentReviewer(List<Appointment> appointmentReviewer) {
-        this.appointmentReviewer = appointmentReviewer;
-    }
-
     public Rol getrOLid() {
         return rOLid;
     }
@@ -311,18 +299,6 @@ public class User implements Serializable {
 
     public void setUserCareers(List<UserCareer> userCareers) {
         this.userCareers = userCareers;
-    }
-
-    /**
-     * This method verify if the user is inactive and it's role is Advisor or
-     * Reviewer and if have any process assigned
-     *
-     * @return true when have all this
-     */
-    public boolean removable() {
-        return (!this.status && (this.rOLid.getName().equals(ASESOR) || this.rOLid.getName().equals(Constants.REVISOR))
-                && (!(this.appointmentAdvisor != null && !this.appointmentAdvisor.isEmpty())
-                || !(this.appointmentReviewer != null && !this.appointmentReviewer.isEmpty())));
     }
 
     @Override

@@ -2,6 +2,7 @@ package gt.edu.usac.cunoc.ingenieria.eps.process.facade;
 
 import User.exception.UserException;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.ValidationException;
+import gt.edu.usac.cunoc.ingenieria.eps.process.Appointment;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Requeriment;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import gt.edu.usac.cunoc.ingenieria.eps.tail.TailCoordinator;
@@ -80,6 +81,12 @@ public interface ProcessFacadeLocal {
     public Requeriment createRequeriment(Requeriment requeriment);
 
     public Requeriment updaterequeriment(Requeriment requeriment);
+
+    public Appointment createAppointment(Appointment appointment);
+
+    public Appointment updateAppointment(Appointment appointment);
+
+    public Optional<Appointment> findAppointmentById(Integer id);
 
     public Process createProcess(Process process);
 

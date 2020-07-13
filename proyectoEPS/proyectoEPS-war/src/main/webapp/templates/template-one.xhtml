@@ -49,7 +49,7 @@
                                     <p:link  outcome="createProcess" value="Crear Proceso" rendered="#{p:ifAnyGranted(constantsRol.ESTUDIANTE())}"/>
                                 </li>
                                 <li>
-                                    <p:link  outcome="processes" value="Ver Procesos" rendered="#{p:ifAnyGranted(constantsRol.ESTUDIANTE())}"/>
+                                    <p:link  outcome="processes" value="Ver Procesos" rendered="#{p:ifAnyGranted(constantsRol.PROCESS_VIEWER())}"/>
                                 </li>
                                 <li>
                                     <p:link outcome="tailEPSCommittee" value="Procesos Comisión EPS" rendered="#{p:ifAnyGranted(constantsRol.COMMITTEE_EPS())}"/>

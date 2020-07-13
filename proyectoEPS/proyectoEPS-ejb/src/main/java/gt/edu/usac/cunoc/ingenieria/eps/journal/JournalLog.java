@@ -36,7 +36,7 @@ public class JournalLog implements Serializable {
     private List<Image> images;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "journal_Log", orphanRemoval = true)
     private List<Link> links;
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "journalLog", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "journal_Log", orphanRemoval = true)
     private List<Commentary> commentaries;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -126,11 +126,11 @@ public class JournalLog implements Serializable {
     public void addCommentay() {
         Commentary newCommentary = new Commentary();
         commentaries.add(newCommentary);
-        newCommentary.setJournalLog(this);
+        newCommentary.setJournal_Log(this);
     }
 
     public void removeComentary(Integer commentaryIndex) {
-        commentaries.get(commentaryIndex).setJournalLog(null);
+        commentaries.get(commentaryIndex).setJournal_Log(null);
         commentaries.remove(commentaryIndex.intValue());
     }
 

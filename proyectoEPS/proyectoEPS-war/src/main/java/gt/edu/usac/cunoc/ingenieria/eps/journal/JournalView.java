@@ -10,18 +10,12 @@ import javax.ejb.EJB;
 import javax.inject.Named;
 import gt.edu.usac.cunoc.ingenieria.eps.journal.facade.JournalLogFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.utils.MessageUtils;
-import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.SessionScoped;
-import javax.faces.context.FacesContext;
-import javax.faces.event.PhaseId;
 import javax.faces.view.ViewScoped;
 import org.primefaces.PrimeFaces;
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.DefaultStreamedContent;
-import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
 
 @Named
@@ -153,23 +147,9 @@ public class JournalView implements Serializable {
         this.linkStringNewJournalLog = null;
     }
 
-    public StreamedContent getImage() {
-        FacesContext context = FacesContext.getCurrentInstance();
-        if (context.getCurrentPhaseId() == PhaseId.RENDER_RESPONSE) {
-            // So, we're rendering the HTML. Return a stub StreamedContent so that it will generate right URL.
-            return new DefaultStreamedContent();
-        } else {
-            // So, browser is requesting the image. Return a real StreamedContent with the image bytes.
-            String imageId = context.getExternalContext().getRequestParameterMap().get("imageId");
-            Image image = journalFacade.getImageById(Integer.valueOf(imageId));
-            return new DefaultStreamedContent(new ByteArrayInputStream(image.getImage()), "image/jpg", "imagen.jpg");
-        }
-    }
-
     public void addLinkNewJournal() {
         if (!linkStringNewJournalLog.isEmpty()) {
             Link newLink = new Link();
-            newLink.setJournalLog(getNewJournalLog());
             newLink.setLink(linkStringNewJournalLog.getBytes());
             getNewJournalLog().addLink(newLink);
             linkStringNewJournalLog = null;

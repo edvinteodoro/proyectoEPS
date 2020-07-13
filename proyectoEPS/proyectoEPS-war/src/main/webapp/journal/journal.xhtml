@@ -26,6 +26,7 @@
 
     <ui:define name="content">
         <h:outputScript library="js" name="calendar_es.js" />
+
         <p:accordionPanel id="journalTable" value="#{journalView.journals}" var="journalLog" activeIndex="-2">
             <p:tab id="JournalLog" title="Fecha - #{journalLog.dateTime.dayOfMonth} / #{journalLog.dateTime.monthValue} / #{journalLog.dateTime.year}" >
                 <div>
@@ -35,7 +36,7 @@
                     <h:outputLabel value="#{journalLog.activity}"/>
                 </div>
                 <div>
-                    <h4 class="text-primary">Descripcion:</h4>
+                    <h4 class="text-primary">Descripción:</h4>
                 </div>
                 <div>
                     <h:outputLabel value="#{journalLog.description}"/>
@@ -44,7 +45,7 @@
                     <h4 class="text-primary">Imagenes:</h4>
                 </div>
                 <div>
-                    <p:galleria value="#{journalLog.images}" var="image" >
+                    <p:galleria value="#{journalLog.images}" var="image" rendered="#{!journalLog.emptyImages}">
                         <o:graphicImage value="#{image.image}" dataURI="true" height="450" width="600"/>
                     </p:galleria>
                 </div>
@@ -52,25 +53,27 @@
                     <h4 class="text-primary">Links:</h4>
                 </div>
                 <div>
-                    <p:dataView value="#{journalLog.links}" var="link" >
+                    <p:dataView value="#{journalLog.links}" var="link" rendered="#{!journalLog.emptyLinks}">
                         <p:dataViewListItem>
                             <div>
-                                <a href="#{link.linkText}" target="_blank">#{link.linkText}</a>
+                                <a href="#{link.linkString}" target="_blank">#{link.linkString}</a>
                             </div>    
                         </p:dataViewListItem>
                     </p:dataView>
                 </div>
             </p:tab>
         </p:accordionPanel>
-        
-        <div class="btn-group pull-right">
+
+        <br/>
+            
+        <div class="btn-group pull-left">
             <p:commandLink styleClass="btn btn-success" 
                            oncomplete="PF('dlgNew').show();"
                            update=":#{p:component('dlgNew')}">
                 <f:setPropertyActionListener value="#{journalLog}" target="#{journalView.newJournalLog}"/>
                 <span class="glyphicon glyphicon-plus"></span> Nuevo Registro
             </p:commandLink>
-        </div>
+        </div>    
 
         <p:dialog header="Nuevo Registro" id="dlgNew" widgetVar="dlgNew" 
                   modal="true" closeOnEscape="true" position="center">
@@ -123,7 +126,7 @@
                                          value="#{journalView.linkStringNewJournalLog}"/>
                         </div>
                     </div>
-                    
+
                     <div class="row form-group">
                         <div class="col-md-4">
                         </div>
@@ -163,22 +166,6 @@
                     </p:commandLink>
                 </div>
             </h:form>
-        </p:dialog>
-
-        <p:dialog id="dlgImages" widgetVar="dlgImages" 
-                  modal="true" closeOnEscape="true" position="center">
-            <p:ajax event="close" listener="#{journalView.cleanSelectedJournalLog()}" update="@this" />
-            <div class="modal-body">
-                <p:galleria id="galleria" 
-                            value="#{journalView.selectedJournalLog.images}" var="image"
-                            autoPlay="false"
-                            showFilmstrip="true"
-                            showCaption="false">
-                    <p:graphicImage value="#{journalView.image}" stream="true">
-                        <f:param name="imageId" value="#{image.id}" />
-                    </p:graphicImage>
-                </p:galleria>
-            </div>
         </p:dialog>
 
     </ui:define>

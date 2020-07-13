@@ -34,7 +34,7 @@ public class JournalLog implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "journal_Log", orphanRemoval = true)
     private List<Image> images;
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "journalLog", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "journal_Log", orphanRemoval = true)
     private List<Link> links;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "journalLog", orphanRemoval = true)
     private List<Commentary> commentaries;
@@ -107,11 +107,11 @@ public class JournalLog implements Serializable {
 
     public void addLink(Link newLink) {
         links.add(newLink);
-        newLink.setJournalLog(this);
+        newLink.setJournal_Log(this);
     }
 
     public void removeLink(Integer linkIndex) {
-        links.get(linkIndex).setJournalLog(null);
+        links.get(linkIndex).setJournal_Log(null);
         links.remove(linkIndex.intValue());
     }
 
@@ -142,6 +142,14 @@ public class JournalLog implements Serializable {
         this.process = process;
     }
 
+    public boolean getEmptyImages(){
+        return this.images.isEmpty();
+    }
+    
+    public boolean getEmptyLinks(){
+        return this.links.isEmpty();
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

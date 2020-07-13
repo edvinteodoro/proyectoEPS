@@ -3,6 +3,7 @@ package gt.edu.usac.cunoc.ingenieria.eps.process.facade;
 import User.exception.UserException;
 import gt.edu.usac.cunoc.ingenieria.eps.configuration.mail.MailService;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.ValidationException;
+import gt.edu.usac.cunoc.ingenieria.eps.process.Appointment;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Requeriment;
 import gt.edu.usac.cunoc.ingenieria.eps.process.repository.ProcessRepository;
 import gt.edu.usac.cunoc.ingenieria.eps.process.repository.RequerimentRepository;
@@ -13,6 +14,8 @@ import static gt.edu.usac.cunoc.ingenieria.eps.process.StateProcess.ACTIVO;
 import static gt.edu.usac.cunoc.ingenieria.eps.process.StateProcess.RECHAZADO;
 import static gt.edu.usac.cunoc.ingenieria.eps.process.StateProcess.REVISION;
 import static gt.edu.usac.cunoc.ingenieria.eps.process.appointmentState.*;
+import gt.edu.usac.cunoc.ingenieria.eps.process.repository.AppointmentRepository;
+import gt.edu.usac.cunoc.ingenieria.eps.process.service.AppointmentService;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Correction;
 import gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection;
 import gt.edu.usac.cunoc.ingenieria.eps.project.facade.ProjectFacadeLocal;
@@ -55,6 +58,12 @@ public class ProcessFacade implements ProcessFacadeLocal {
     UserFacade userFacade;
 
     @EJB
+    private AppointmentRepository appointmentRepository;
+
+    @EJB
+    private AppointmentService appointmentService;
+
+    @EJB
     MailService mailService;
 
     @Override
@@ -70,6 +79,21 @@ public class ProcessFacade implements ProcessFacadeLocal {
     @Override
     public Requeriment updaterequeriment(Requeriment requeriment) {
         return requerimentService.updateRequeriment(requeriment);
+    }
+
+    @Override
+    public Appointment createAppointment(Appointment appointment) {
+        return appointmentService.createAppointment(appointment);
+    }
+
+    @Override
+    public Appointment updateAppointment(Appointment appointment) {
+        return appointmentService.updateAppointment(appointment);
+    }
+
+    @Override
+    public Optional<Appointment> findAppointmentById(Integer id) {
+        return appointmentRepository.findById(id);
     }
 
     @Override

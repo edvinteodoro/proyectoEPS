@@ -628,6 +628,7 @@ public class ProjectView implements Serializable {
         } else if (getProcess().getApprovedCareerCoordinator()) {
             tailCommitteeEPSFacade.createTailCommiteeEPS(getProcess());
         }
+        pdfFile = null;
         MessageUtils.addSuccessMessage("La solicitud de revision se ha realizado exitosamente.");
     }
 

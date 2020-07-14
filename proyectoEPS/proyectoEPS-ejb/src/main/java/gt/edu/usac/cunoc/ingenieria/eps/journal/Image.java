@@ -23,7 +23,7 @@ public class Image implements Serializable {
     @Column(name = "image")
     private byte[] image;
     @ManyToOne(fetch = FetchType.LAZY)
-    private JournalLog journalLog;
+    private JournalLog journal_Log;
 
     public Image() {
     }
@@ -54,11 +54,11 @@ public class Image implements Serializable {
     }
 
     public JournalLog getJournalLog() {
-        return journalLog;
+        return journal_Log;
     }
 
     public void setJournalLog(JournalLog journalLog) {
-        this.journalLog = journalLog;
+        this.journal_Log = journalLog;
     }
 
     @Override

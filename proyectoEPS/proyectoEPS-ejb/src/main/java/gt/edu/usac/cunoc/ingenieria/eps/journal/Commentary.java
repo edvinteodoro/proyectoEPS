@@ -26,7 +26,7 @@ public class Commentary implements Serializable {
     private LocalDate date;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private JournalLog journalLog;
+    private JournalLog journal_Log;
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
@@ -57,12 +57,12 @@ public class Commentary implements Serializable {
         this.date = date;
     }
 
-    public JournalLog getJournalLog() {
-        return journalLog;
+    public JournalLog getJournal_Log() {
+        return journal_Log;
     }
 
-    public void setJournalLog(JournalLog journalLog) {
-        this.journalLog = journalLog;
+    public void setJournal_Log(JournalLog journal_Log) {
+        this.journal_Log = journal_Log;
     }
 
     public User getUser() {
@@ -71,6 +71,10 @@ public class Commentary implements Serializable {
 
     public void setUser(User user) {
         this.user = user;
+    }
+    
+    public String getCommentaryString(){
+        return new String(text);
     }
 
     @Override

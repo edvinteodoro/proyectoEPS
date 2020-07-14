@@ -66,7 +66,8 @@
                     <span class="glyphicon glyphicon-log-in"></span>
                 </p:commandLink>
             </p:column>
-            <p:column headerText="Bitácora" styleClass="text-center">
+            <p:column headerText="Bitácora" styleClass="text-center"
+                      >
                 <p data-placement="top" data-toggle="tooltip" title="Bitácora">
                     <button jsf:outcome="#{processesView.redirectJournalTo()}" styleClass="btn btn-success btn-xs" >
                         <f:param name="idProcess" value="#{process.id}"/>

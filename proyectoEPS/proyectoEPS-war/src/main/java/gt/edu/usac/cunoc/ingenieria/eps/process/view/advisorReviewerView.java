@@ -5,6 +5,7 @@ import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.ESTUDIANT
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.SUPERVISOR_EPS;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.ASESOR;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.REVISOR;
+import gt.edu.usac.cunoc.ingenieria.eps.exception.ValidationException;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Appointment;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import static gt.edu.usac.cunoc.ingenieria.eps.process.appointmentState.*;
@@ -18,6 +19,9 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
@@ -44,7 +48,7 @@ public class advisorReviewerView implements Serializable {
 
     private List<Process> processAvailable;
     private List<User> elegible;
-    Optional<User> currentUser;
+    Optional<User> loggedUser;
 
     private Process processSelected;
     private User actualUser;
@@ -52,18 +56,19 @@ public class advisorReviewerView implements Serializable {
 
     private StreamedContent personalResumeStream;
     private UploadedFile personalResume;
+    private String namePersonalResume;
 
     @PostConstruct
     public void init() {
         try {
-            currentUser = Optional.ofNullable(userFacade.getAuthenticatedUser().get(0));
-            if (currentUser.isPresent()) {
-                switch (currentUser.get().getROLid().getName()) {
+            loggedUser = Optional.ofNullable(userFacade.getAuthenticatedUser().get(0));
+            if (loggedUser.isPresent()) {
+                switch (loggedUser.get().getROLid().getName()) {
                     case ESTUDIANTE:
-                        setProcessAvailable(findProcessAvailableStudent(processFacade.getProcessUser(currentUser.get())));
+                        setProcessAvailable(findProcessAvailableStudent(processFacade.getProcessUser(loggedUser.get())));
                         break;
                     case SUPERVISOR_EPS:
-                        setProcessAvailable(findProcessAvailableSupervisor(processFacade.getProcessBySupervisorEPS(currentUser.get())));
+                        setProcessAvailable(findProcessAvailableSupervisor(processFacade.getProcessBySupervisorEPS(loggedUser.get())));
                         break;
                     default:
                         MessageUtils.addErrorMessage("No cuenta con los permisos");
@@ -98,12 +103,15 @@ public class advisorReviewerView implements Serializable {
         for (Process proces : process) {
             if ((proces.getApprovedCareerCoordinator() != null && proces.getApprovedCareerCoordinator())
                     && (proces.getApprovalEPSCommission() != null && proces.getApprovalEPSCommission())
-                    && (proces.getAppointmentId() != null)) {
+                    && (proces.getAppointmentId() != null)
+                    && (proces.getAppointmentId().getAdviserState() == REVIEW || proces.getAppointmentId().getReviewerState() == REVIEW)) {
                 result.add(proces);
             }
         }
 
-        return result;
+        return result.stream().sorted(
+                (p1, p2) -> p1.getAppointmentId().getDateAction().compareTo(p2.getAppointmentId().getDateAction())
+        ).collect(Collectors.toList());
     }
 
     /**
@@ -157,10 +165,11 @@ public class advisorReviewerView implements Serializable {
 
         try {
             if (advisor && processSelected.getAppointmentId().getUserAdviser() == null) {
+
                 actualUser = new User();
-                Rol actualRol = userFacade.getRolUser(new Rol(null, ASESOR)).get(0);
-                actualUser.setrOLid(actualRol);
+                actualUser.setrOLid(userFacade.getRolUser(new Rol(null, ASESOR)).get(0));
             } else if (!advisor && processSelected.getAppointmentId().getUserReviewer() == null) {
+
                 actualUser = new User();
                 actualUser.setrOLid(userFacade.getRolUser(new Rol(null, REVISOR)).get(0));
             } else {
@@ -184,10 +193,10 @@ public class advisorReviewerView implements Serializable {
             } else {
                 if (isAdvisor) {
                     processSelected.getAppointmentId().setUserAdviser(actualUser);
-                    processSelected.getAppointmentId().setAdviserState(NEW);
+                    processSelected.getAppointmentId().setAdviserState(REVIEW);
                 } else {
                     processSelected.getAppointmentId().setUserReviewer(actualUser);
-                    processSelected.getAppointmentId().setReviewerState(NEW);
+                    processSelected.getAppointmentId().setReviewerState(REVIEW);
                 }
                 PrimeFaces.current().executeScript("PF('" + modalIdToClose + "').hide()");
                 MessageUtils.addSuccessMessage("Usuario agregado");
@@ -246,16 +255,19 @@ public class advisorReviewerView implements Serializable {
     }
 
     /**
-     * TODO all
+     * return the appointment to the Student
      *
+     * @param modalIdToClose
      * @param process
      */
-    public void returnAppointmentToStudent(Process process) {
+    public void returnAppointmentToStudent(final String modalIdToClose, Process process) {
         processSelected = process;
         try {
             processFacade.returnAppointmentToStudent(processSelected);
-            MessageUtils.addErrorMessage("Se ha notificado a los interesados de la desición");
-        } catch (UserException e) {
+            init();
+            PrimeFaces.current().executeScript("PF('" + modalIdToClose + "').hide()");
+            MessageUtils.addSuccessMessage("Se ha notificado a los interesados de la desición");
+        } catch (UserException | ValidationException e) {
             MessageUtils.addErrorMessage(e.getMessage());
         }
     }
@@ -263,16 +275,18 @@ public class advisorReviewerView implements Serializable {
     /**
      * Send User's Review and advisor appointment to the Supervisor
      *
+     * @param modalIdToClose
      * @param process
      */
-    public void sendAppointmentToSupervisor(Process process) {
+    public void sendAppointmentToSupervisor(final String modalIdToClose, Process process) {
 
         try {
             processFacade.sendAppointmentToSupervisor(process);
-            MessageUtils.addSuccessMessage("Se ha enviado a su supervisor");
             clean();
             init();
-        } catch (UserException e) {
+            PrimeFaces.current().executeScript("PF('" + modalIdToClose + "').hide()");
+            MessageUtils.addSuccessMessage("Se ha enviado a su supervisor");
+        } catch (UserException | ValidationException e) {
             MessageUtils.addErrorMessage(e.getMessage());
         }
 
@@ -417,21 +431,29 @@ public class advisorReviewerView implements Serializable {
     }
 
     public Boolean pendingReview() {
-        if (isAdvisor && processSelected != null && processSelected.getAppointmentId() != null && actualUser != null) {
-            return ((processSelected.getAppointmentId().getAdviserState() != null && actualUser.getrOLid().getName().equals(SUPERVISOR_EPS)
-                    && (processSelected.getAppointmentId().getAdviserState() == REVIEW || processSelected.getAppointmentId().getAdviserState() == NEW)));
-        } else if (!isAdvisor && processSelected != null) {
-            return ((processSelected.getAppointmentId().getReviewerState() != null && actualUser.getrOLid().getName().equals(SUPERVISOR_EPS)
-                    && (processSelected.getAppointmentId().getReviewerState() == REVIEW || processSelected.getAppointmentId().getReviewerState() == NEW)));
+        if (loggedUser.isPresent() && loggedUser.get().getROLid() != null && loggedUser.get().getROLid().getName().equals(SUPERVISOR_EPS)) {
+            if (processSelected != null && processSelected.getAppointmentId() != null) {
+                if (isAdvisor) {
+                    return (processSelected.getAppointmentId().getAdviserState() == REVIEW);
+                } else {
+                    return (processSelected.getAppointmentId().getReviewerState() == REVIEW);
+                }
+            }
         }
         return false;
 
     }
 
-    public Boolean appointmentApproved(Process process) {
+    /**
+     * Evaluate if the selected process
+     *
+     * @param process
+     * @return
+     */
+    public Boolean appointmentAvailableToReturn(Process process) {
         try {
             Optional<Process> result = processFacade.findProcessById(process.getId());
-            return (result.isPresent() && result.get().getAppointmentId().getAdviserState() == APPROVED && result.get().getAppointmentId().getReviewerState() == APPROVED);
+            return (result.isPresent() && processAvailable.get(0).getId().equals(result.get().getId()));
         } catch (UserException e) {
             MessageUtils.addErrorMessage(e.getMessage());
         }
@@ -447,6 +469,7 @@ public class advisorReviewerView implements Serializable {
 
     public void handlePersonalResume(FileUploadEvent event) {
         personalResume = event.getFile();
+        namePersonalResume = event.getFile().getFileName();
         actualUser.setPersonalResume(personalResume.getContents());
         personalResumeStream = new DefaultStreamedContent(new ByteArrayInputStream(actualUser.getPersonalResume()), "application/pdf", "Curriculum.pdf");
     }
@@ -505,6 +528,14 @@ public class advisorReviewerView implements Serializable {
         this.personalResumeStream = personalResumeStream;
     }
 
+    public String getNamePersonalResume() {
+        return namePersonalResume;
+    }
+
+    public void setNamePersonalResume(String namePersonalResume) {
+        this.namePersonalResume = namePersonalResume;
+    }
+
     public void selectUserIsAdvisor(boolean advisor) {
         isAdvisor = advisor;
         if (advisor) {
@@ -524,5 +555,8 @@ public class advisorReviewerView implements Serializable {
     public void clean() {
         elegible = null;
         actualUser = null;
+        personalResume = null;
+        personalResumeStream = null;
+        namePersonalResume = null;
     }
 }

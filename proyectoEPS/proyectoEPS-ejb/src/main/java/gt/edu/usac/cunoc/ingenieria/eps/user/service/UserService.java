@@ -2,12 +2,8 @@ package gt.edu.usac.cunoc.ingenieria.eps.user.service;
 
 import User.exception.UserException;
 import gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants;
-import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.ASESOR;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.JAVA_MAIL_SESSION;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.PERSISTENCE_UNIT_NAME;
-import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.REVISOR;
-import static gt.edu.usac.cunoc.ingenieria.eps.configuration.SecurityConstants.PBKDF_ITERATIONS;
-import static gt.edu.usac.cunoc.ingenieria.eps.configuration.SecurityConstants.PBKDF_SALT_SIZE;
 import gt.edu.usac.cunoc.ingenieria.eps.configuration.mail.MailService;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import gt.edu.usac.cunoc.ingenieria.eps.user.repository.UserRepository;
@@ -16,23 +12,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.Future;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.Resource;
-import javax.ejb.AsyncResult;
-import javax.ejb.Asynchronous;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.mail.Message;
-import javax.mail.MessagingException;
 import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.security.enterprise.identitystore.Pbkdf2PasswordHash;
@@ -78,7 +64,15 @@ public class UserService {
             } else {
                 user.setEpsCommittee(Boolean.FALSE);
             }
-            user.setStatus(Boolean.TRUE);
+
+            if (user.getROLid().getName().equals(Constants.ASESOR)
+                    || user.getROLid().getName().equals(Constants.REVISOR)) {
+                user.setStatus(Boolean.FALSE);
+                user.setRemovable(Boolean.TRUE);
+            } else {
+                user.setStatus(Boolean.TRUE);
+                user.setRemovable(Boolean.FALSE);
+            }
             entityManager.persist(user);
         } catch (ConstraintViolationException e) {
             // Aqui tira los errores de constraint
@@ -105,8 +99,6 @@ public class UserService {
         }
         user.setPassword(newPassword());
         user.setUserId(user.getrOLid().getName().concat(user.getDpi()));
-        user.setStatus(false);
-        user.setEpsCommittee(false);
         return createUser(user);
     }
 
@@ -122,10 +114,10 @@ public class UserService {
             throw new UserException("User is null");
         }
 
-        if (removeUser.removable()) {
+        if (removeUser.getRemovable()) {
             entityManager.remove(removeUser);
         } else {
-            throw new UserException("Solo se permite eliminar Asesores o Revisores Inactivos");
+            throw new UserException("Solo se permite eliminar Asesores o Revisores nuevos");
         }
     }
 
@@ -145,10 +137,11 @@ public class UserService {
             throw new UserException("User is null");
         }
 
-        if (newUser.removable()) {
+        if (newUser.getRemovable()) {
             String pass = newPassword();
             newUser.setPassword(encryptPass(pass));
-            newUser.setStatus(true);
+            newUser.setStatus(Boolean.TRUE);
+            newUser.setRemovable(Boolean.FALSE);
             entityManager.merge(newUser);
             mailService.emailApprovedAdvisorOrReviewer(pass, newUser, processName, studentName);
             return newUser;

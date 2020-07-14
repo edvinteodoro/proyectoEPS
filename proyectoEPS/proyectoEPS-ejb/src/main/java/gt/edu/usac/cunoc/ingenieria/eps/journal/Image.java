@@ -27,7 +27,7 @@ public class Image implements Serializable {
     private byte[] image;
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JoinColumn(name="JOURNAL_LOG_id",referencedColumnName = "id")
-    private JournalLog journalLog;
+    private JournalLog journal_Log;
 
     public Image() {
     }
@@ -58,11 +58,11 @@ public class Image implements Serializable {
     }
 
     public JournalLog getJournalLog() {
-        return journalLog;
+        return journal_Log;
     }
 
     public void setJournalLog(JournalLog journalLog) {
-        this.journalLog = journalLog;
+        this.journal_Log = journalLog;
     }
 
     @Override

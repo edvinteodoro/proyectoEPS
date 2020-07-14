@@ -12,10 +12,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 /**
  *
@@ -40,10 +38,10 @@ public class Appointment implements Serializable {
     @Column(name = "date_action")
     private LocalDateTime dateAction;
     @JoinColumn(name = "USER_adviser", referencedColumnName = "userId")
-    @ManyToOne
+    @OneToOne
     private User userAdviser;
     @JoinColumn(name = "USER_reviewer", referencedColumnName = "userId")
-    @ManyToOne
+    @OneToOne
     private User userReviewer;
 
     public Appointment() {

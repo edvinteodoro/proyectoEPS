@@ -33,15 +33,14 @@ public class JournalLog implements Serializable {
     private LocalDate dateTime;
     @Column(name = "description")
     private String description;
-    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    @JoinColumn(name="PROCESS_id",referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.LAZY)
     private Process process;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "journalLog", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "journal_Log", orphanRemoval = true)
     private List<Image> images;
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "journalLog", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "journal_Log", orphanRemoval = true)
     private List<Link> links;
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "journalLog", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "journal_Log", orphanRemoval = true)
     private List<Commentary> commentaries;
 
     public JournalLog() {
@@ -90,10 +89,8 @@ public class JournalLog implements Serializable {
         this.images = images;
     }
 
-    public void addImage() {
-        Image newImage = new Image();
+    public void addImage(Image newImage) {
         images.add(newImage);
-        newImage.setJournalLog(this);
     }
 
     public void removeImage(Integer imageIndex) {
@@ -109,14 +106,13 @@ public class JournalLog implements Serializable {
         this.links = links;
     }
 
-    public void addLink() {
-        Link newLink = new Link();
+    public void addLink(Link newLink) {
         links.add(newLink);
-        newLink.setJournalLog(this);
+        newLink.setJournal_Log(this);
     }
 
     public void removeLink(Integer linkIndex) {
-        links.get(linkIndex).setJournalLog(null);
+        links.get(linkIndex).setJournal_Log(null);
         links.remove(linkIndex.intValue());
     }
 
@@ -131,11 +127,11 @@ public class JournalLog implements Serializable {
     public void addCommentay() {
         Commentary newCommentary = new Commentary();
         commentaries.add(newCommentary);
-        newCommentary.setJournalLog(this);
+        newCommentary.setJournal_Log(this);
     }
 
     public void removeComentary(Integer commentaryIndex) {
-        commentaries.get(commentaryIndex).setJournalLog(null);
+        commentaries.get(commentaryIndex).setJournal_Log(null);
         commentaries.remove(commentaryIndex.intValue());
     }
 
@@ -145,6 +141,14 @@ public class JournalLog implements Serializable {
 
     public void setProcess(Process process) {
         this.process = process;
+    }
+
+    public boolean getEmptyImages(){
+        return this.images.isEmpty();
+    }
+    
+    public boolean getEmptyLinks(){
+        return this.links.isEmpty();
     }
     
     @Override

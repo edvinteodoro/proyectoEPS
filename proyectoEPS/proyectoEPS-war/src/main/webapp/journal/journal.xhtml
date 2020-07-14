@@ -26,35 +26,74 @@
 
     <ui:define name="content">
         <h:outputScript library="js" name="calendar_es.js" />
-        <p:dataTable id="journalTable" var="journalLog" reflow="true" emptyMessage="Registro Vacío" value="#{journalView.journals}">
-            <p:column headerText="Fecha">
-                <h:outputText value="#{journalLog.dateTime}"/>
-            </p:column>
-            <p:column headerText="Actividad">
-                <h:outputText value="#{journalLog.activity}"/>
-            </p:column>
-            <p:column headerText="Descripción">
-                <h:outputText value="#{journalLog.description}"/>
-            </p:column>
-            <p:column headerText="Enlaces">
 
-            </p:column>
-            <p:column headerText="Imágenes">
+        <p:accordionPanel id="journalTable" value="#{journalView.journals}" var="journalLog" activeIndex="-2">
+            <p:tab id="JournalLog" title="Fecha - #{journalLog.dateTime.dayOfMonth} / #{journalLog.dateTime.monthValue} / #{journalLog.dateTime.year}" >
+                <div>
+                    <h4 class="text-primary">Actividad:</h4>
+                </div>
+                <div>
+                    <h:outputLabel value="#{journalLog.activity}"/>
+                </div>
+                <div>
+                    <h4 class="text-primary">Descripción:</h4>
+                </div>
+                <div>
+                    <h:outputLabel value="#{journalLog.description}"/>
+                </div>
+                <div>
+                    <h4 class="text-primary">Imagenes:</h4>
+                </div>
+                <div>
+                    <p:galleria value="#{journalLog.images}" var="image" rendered="#{!journalLog.emptyImages}">
+                        <o:graphicImage value="#{image.image}" dataURI="true" height="450" width="600"/>
+                    </p:galleria>
+                </div>
+                <div>
+                    <h4 class="text-primary">Links:</h4>
+                </div>
+                <div>
+                    <p:dataView value="#{journalLog.links}" var="link" rendered="#{!journalLog.emptyLinks}">
+                        <p:dataViewListItem>
+                            <div>
+                                <a href="#{link.linkString}" target="_blank">#{link.linkString}</a>
+                            </div>    
+                        </p:dataViewListItem>
+                    </p:dataView>
+                </div>
+                <div>
+                    <h4 class="text-primary">Comentarios:</h4>
+                </div>
+                <div class="col-md-8">
+                    <p:dataTable var="commentary" value="#{journalLog.commentaries}">
+                        <p:column headerText="Fecha">
+                            <h:outputText value="#{commentary.date}" />
+                        </p:column>
+                        <p:column headerText="Comentario">
+                            <h:outputText value="#{commentary.commentaryString}" />
+                        </p:column>
+                        <p:column headerText="Por">
+                            <h:outputText value="#{commentary.user.firstName} #{commentary.user.lastName}"/>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </p:tab>
+        </p:accordionPanel>
 
-            </p:column>
-        </p:dataTable>
-        <div class="btn-group pull-right">
+        <br/>
+
+        <div class="btn-group pull-left">
             <p:commandLink styleClass="btn btn-success" 
                            oncomplete="PF('dlgNew').show();"
                            update=":#{p:component('dlgNew')}">
                 <f:setPropertyActionListener value="#{journalLog}" target="#{journalView.newJournalLog}"/>
                 <span class="glyphicon glyphicon-plus"></span> Nuevo Registro
             </p:commandLink>
-        </div>
+        </div>    
 
         <p:dialog header="Nuevo Registro" id="dlgNew" widgetVar="dlgNew" 
                   modal="true" closeOnEscape="true" position="center">
-            <p:ajax event="close" listener="#{journalView.cleanNewJournal()}" update="@this" />
+            <p:ajax event="close" listener="#{journalView.cleanNewJournalLog()}" update="@this" />
             <h:form>
                 <div class="modal-header">
                     <p:staticMessage severity="warn" summary="Advertencia! " detail="No se puede crear mas de un registro con la misma fecha" />
@@ -87,11 +126,50 @@
                         <div class="col-md-8">
                             <p:inputTextarea id="description" counter="display" maxlength="200" 
                                              counterTemplate="{0} Caracteres Restantes." autoResize="false"
+                                             placeholder="Descripción"
                                              required="true"
                                              style="width: 100%;"
                                              value="#{journalView.newJournalLog.description}"/>
                             <br />
                             <h:outputText id="display" />
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <p:outputLabel for="link" value="Enlaces" styleClass="col-md-4 control-label"/>
+                        <div class="col-md-8">
+                            <p:inputText id="link" styleClass="form-control" pt:placeholder="Enlace"
+                                         value="#{journalView.linkStringNewJournalLog}"/>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <div class="col-md-4">
+                        </div>
+                        <div class="col-md-8">
+                            <p:commandLink styleClass="btn btn-success btn-lg"
+                                           actionListener="#{journalView.addLinkNewJournal()}"
+                                           update=":#{p:component('link')},:#{p:component('growl')}"
+                                           process="@this link"
+                                           >
+                                <span class="glyphicon glyphicon-plus"></span> Agregar
+                            </p:commandLink>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <p:outputLabel value="Imagenes" styleClass="col-md-4 control-label"/>
+                        <div class="col-md-8">
+                            <p:fileUpload id="images" 
+                                          style="width: 100%;"
+                                          skinSimple="true" auto="true"
+                                          label="Agregar"
+                                          sizeLimit="15000000"
+                                          allowTypes="/(\.|\/)(jpe?g|png)$/"
+                                          invalidFileMessage="Solo se puede cargar archivos jpe, jpeg o png"
+                                          invalidSizeMessage="Imagen demasiado grande, limite de 15MB"
+                                          fileUploadListener="#{journalView.handleFileUpload}">                                       
+                            </p:fileUpload>
                         </div>
                     </div>
                 </div>

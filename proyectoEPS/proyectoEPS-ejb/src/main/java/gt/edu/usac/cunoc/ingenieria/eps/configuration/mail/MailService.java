@@ -1,6 +1,7 @@
 package gt.edu.usac.cunoc.ingenieria.eps.configuration.mail;
 
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.JAVA_MAIL_SESSION;
+import gt.edu.usac.cunoc.ingenieria.eps.process.Appointment;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import gt.edu.usac.cunoc.ingenieria.eps.process.appointmentState;
@@ -146,6 +147,26 @@ public class MailService {
         message += "<h3>Divisi&oacute;n de Ciencias de la Ingenier&iacute;a - Centro Universitario de Occidente.</h3>";
 
         sendEmail(student.getEmail(), "Revisión del Revisor y Asesor", message);
+    }
+
+    /**
+     * Notify the Supervisor when a Student submit Advisor and Reviewer form.
+     *
+     * @param supervisor
+     * @param appointment
+     * @param projectName
+     * @param student
+     */
+    public void emailNotifySupervisor(User supervisor, Appointment appointment, String projectName, User student) {
+
+        String message = "<h2>Nueva Solicitud para Asesor y Revisor</h2>"
+                + "<p>El estudiante <strong>" + student.getFirstName() + ", " + student.getLastName() + "</strong> con el Registro Academico <strong>" + student.getAcademicRegister() + "</strong> ha propuesto para su EPS titulado <strong>" + projectName + "</strong> a:</p>"
+                + "<p>Asesor: " + appointment.getUserAdviser().getFirstName() + ", " + appointment.getUserAdviser().getLastName() + " <strong>(" + appointment.getAdviserState().stateToText() + ").</strong></p>"
+                + "<p>Revisor: " + appointment.getUserReviewer().getFirstName() + ", " + appointment.getUserReviewer().getLastName() + " <strong>(" + appointment.getReviewerState().stateToText() + ").</strong></p>"
+                + "<p>Ingrese al portal para evaluar la propuesta del estudiante.</p>"
+                + "<h3><strong>Divisi&oacute;n de Ciencias de la Ingenier&iacute;a - Centro Universitario de Occidente</strong></h3>";
+
+        sendEmail(supervisor.getEmail(), "Asesor y Revisor", message);
     }
 
 }

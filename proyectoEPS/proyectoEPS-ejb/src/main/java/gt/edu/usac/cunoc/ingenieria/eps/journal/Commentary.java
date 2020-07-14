@@ -27,22 +27,21 @@ public class Commentary implements Serializable {
     private byte[] text;
     @Column(name = "date")
     private LocalDate date;
-    
-    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    @JoinColumn(name="JOURNAL_LOG",referencedColumnName = "id")
-    private JournalLog journalLog;
-    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    @JoinColumn(name="userId",referencedColumnName = "userId")
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "JOURNAL_LOG", referencedColumnName = "id")
+    private JournalLog journal_Log;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId", referencedColumnName = "userId")
     private User user;
 
     public Commentary() {
     }
-    
-    public Commentary(String text,LocalDate date,JournalLog journalLog,User user){
-        this.text=text.getBytes();
-        this.date=date;
-        this.journalLog=journalLog;
-        this.user=user;
+
+    public Commentary(String text, LocalDate date, JournalLog journalLog, User user) {
+        this.text = text.getBytes();
+        this.date = date;
+        this.journal_Log = journalLog;
+        this.user = user;
     }
 
     public Integer getId() {
@@ -73,12 +72,12 @@ public class Commentary implements Serializable {
         this.date = date;
     }
 
-    public JournalLog getJournalLog() {
-        return journalLog;
+    public JournalLog getJournal_Log() {
+        return journal_Log;
     }
 
-    public void setJournalLog(JournalLog journalLog) {
-        this.journalLog = journalLog;
+    public void setJournal_Log(JournalLog journal_Log) {
+        this.journal_Log = journal_Log;
     }
 
     public User getUser() {
@@ -87,6 +86,10 @@ public class Commentary implements Serializable {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getCommentaryString() {
+        return new String(text);
     }
 
     @Override

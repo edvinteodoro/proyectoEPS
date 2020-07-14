@@ -23,8 +23,8 @@ public class Link implements Serializable {
     @Column(name = "link")
     private byte[] link;
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    @JoinColumn(name="JOURNAL_LOG_id",referencedColumnName = "id")
-    private JournalLog journalLog;
+    @JoinColumn(name="JOURNAL_LOG_id",referencedColumnName = "id")   
+    private JournalLog journal_Log;
 
     public Link() {
     }
@@ -49,14 +49,18 @@ public class Link implements Serializable {
         this.link = link;
     }
 
-    public JournalLog getJournalLog() {
-        return journalLog;
+    public JournalLog getJournal_Log() {
+        return journal_Log;
     }
 
-    public void setJournalLog(JournalLog journalLog) {
-        this.journalLog = journalLog;
+    public void setJournal_Log(JournalLog journal_Log) {
+        this.journal_Log = journal_Log;
     }
 
+    public String getLinkString(){
+        return new String(link);
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

@@ -13,6 +13,7 @@ import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import gt.edu.usac.cunoc.ingenieria.eps.user.UserCareer;
 import gt.edu.usac.cunoc.ingenieria.eps.user.repository.UserRepository;
 import gt.edu.usac.cunoc.ingenieria.eps.user.service.UserService;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -25,25 +26,25 @@ import javax.persistence.PersistenceContext;
 @Stateless
 @LocalBean
 public class ProcessService {
-
+    
     @PersistenceContext(name = PERSISTENCE_UNIT_NAME)
     private EntityManager entityManager;
-
+    
     @EJB
     private ProcessRepository processRepository;
-
+    
     @EJB
     private UserRepository userRepository;
-
+    
     @EJB
     private UserService userService;
-
+    
     @EJB
     private AppointmentService appointmentService;
-
+    
     @EJB
     private MailService mailService;
-
+    
     public Process createProcess(Process process) {
         UserCareer userCareer = process.getUserCareer();
         userCareer.setProcess(process);
@@ -54,7 +55,7 @@ public class ProcessService {
         }
         return process;
     }
-
+    
     public Process updateProcess(Process process) {
         entityManager.merge(process);
         return process;
@@ -93,40 +94,40 @@ public class ProcessService {
         }
         updateProcess(process);
     }
-
+    
     public Process sendAppointmentToSupervisor(Process process) throws UserException, ValidationException {
         Optional<User> actualUser = Optional.ofNullable(userService.getAuthenticatedUser().get(0));
         Optional<Process> resultProcess;
         Appointment appointment;
-
+        
         if (process != null && actualUser.isPresent() && process.getAppointmentId() != null
                 && process.getUserCareer().getUSERuserId().getUserId().equals(actualUser.get().getUserId())) {
-
+            
             resultProcess = processRepository.findProcessById(process.getId());
-
+            
             if (resultProcess.isPresent()) {
                 if (resultProcess.get().getAppointmentId() == null) {
                     appointment = new Appointment();
                 } else {
                     appointment = resultProcess.get().getAppointmentId();
                 }
-
+                
                 if (appointment != null && process.getAppointmentId().getUserAdviser() != null
                         && process.getAppointmentId().getUserReviewer() != null) {
-
+                    
                     if (process.getAppointmentId().getAdviserState() != null && process.getAppointmentId().getAdviserState() == REVIEW) {
-
+                        
                         if (!existsUser(process.getAppointmentId().getUserAdviser())) {
                             appointment.setUserAdviser(userService.createTempUser(process.getAppointmentId().getUserAdviser()));
                         } else {
                             appointment.setUserAdviser(process.getAppointmentId().getUserAdviser());
                         }
                         appointment.setAdviserState(REVIEW);
-
+                        
                     }
-
+                    
                     if (process.getAppointmentId().getReviewerState() != null && process.getAppointmentId().getReviewerState() == REVIEW) {
-
+                        
                         if (!existsUser(process.getAppointmentId().getUserReviewer())) {
                             appointment.setUserReviewer(userService.createTempUser(process.getAppointmentId().getUserReviewer()));
                         } else {
@@ -134,16 +135,16 @@ public class ProcessService {
                         }
                         appointment.setReviewerState(REVIEW);
                     }
-
+                    
                     if (appointment.getReviewerState() != null && appointment.getAdviserState() != null
                             && appointment.getAdviserState() == REVIEW || appointment.getAdviserState() == APPROVED
                             || appointment.getAdviserState() == ELECTION
                             && appointment.getReviewerState() == REVIEW || appointment.getReviewerState() == APPROVED
                             || appointment.getReviewerState() == ELECTION
                             && appointment.getUserAdviser() != null && appointment.getUserReviewer() != null) {
-
+                        
                         appointment.setDateAction(LocalDateTime.now());
-
+                        
                         if (resultProcess.get().getAppointmentId() == null) {
                             appointment = appointmentService.createAppointment(appointment);
                             resultProcess.get().setAppointmentId(appointment);
@@ -175,23 +176,23 @@ public class ProcessService {
             throw new ValidationException("Debe elegir un proceso");
         }
     }
-
+    
     public Process returnAppointmentToStudente(Process process) throws ValidationException, UserException {
         Optional<User> actualUser = Optional.ofNullable(userService.getAuthenticatedUser().get(0));
         Optional<Process> resultProcess;
-
+        
         if (process != null && process.getAppointmentId() != null && actualUser.isPresent()
                 && process.getSupervisor_EPS() != null && process.getSupervisor_EPS().getUserId().equals(actualUser.get().getUserId())) {
-
+            
             resultProcess = processRepository.findProcessById(process.getId());
-
+            
             if (resultProcess.isPresent() && resultProcess.get().getAppointmentId() != null) {
 
                 //Advisor
                 if (resultProcess.get().getAppointmentId().getAdviserState() == REVIEW && process.getAppointmentId().getAdviserState() != REVIEW) {
                     if (process.getAppointmentId().getAdviserState() == APPROVED
                             && resultProcess.get().getAppointmentId().getUserAdviser().getUserId().equals(process.getAppointmentId().getUserAdviser().getUserId())) {
-
+                        
                         if (resultProcess.get().getAppointmentId().getUserAdviser().getRemovable()) {
                             resultProcess.get().getAppointmentId().setUserAdviser(
                                     userService.aproveUser(
@@ -202,17 +203,17 @@ public class ProcessService {
                             );
                         }
                         resultProcess.get().getAppointmentId().setAdviserState(APPROVED);
-
+                        
                     } else if (process.getAppointmentId().getAdviserState() == CHANGE
                             && resultProcess.get().getAppointmentId().getUserAdviser() != null
                             && process.getAppointmentId().getUserAdviser() == null) {
-
+                        
                         if (resultProcess.get().getAppointmentId().getUserAdviser().getRemovable()) {
                             userService.deleteUser(resultProcess.get().getAppointmentId().getUserAdviser());
                         }
                         resultProcess.get().getAppointmentId().setUserAdviser(null);
                         resultProcess.get().getAppointmentId().setAdviserState(CHANGE);
-
+                        
                     } else if (process.getAppointmentId().getAdviserState() == ELECTION
                             && !resultProcess.get().getAppointmentId().getUserAdviser().getUserId().equals(process.getAppointmentId().getUserAdviser().getUserId())) {
                         if (resultProcess.get().getAppointmentId().getUserAdviser().getRemovable()) {
@@ -220,21 +221,21 @@ public class ProcessService {
                         }
                         resultProcess.get().getAppointmentId().setUserAdviser(process.getAppointmentId().getUserAdviser());
                         resultProcess.get().getAppointmentId().setAdviserState(ELECTION);
-
+                        
                         mailService.emailNotifyAdvisorOrReviewer(
                                 resultProcess.get().getAppointmentId().getUserAdviser(),
                                 resultProcess.get().getProject().getTitle(),
                                 resultProcess.get().getUserCareer().getUSERuserId().getFirstName().concat(" ").concat(process.getUserCareer().getUSERuserId().getLastName())
                         );
                     }
-
+                    
                 }
 
                 //Reviewer
                 if (resultProcess.get().getAppointmentId().getReviewerState() == REVIEW && process.getAppointmentId().getReviewerState() != REVIEW) {
                     if (process.getAppointmentId().getReviewerState() == APPROVED
                             && resultProcess.get().getAppointmentId().getUserReviewer().getUserId().equals(process.getAppointmentId().getUserReviewer().getUserId())) {
-
+                        
                         if (resultProcess.get().getAppointmentId().getUserReviewer().getRemovable()) {
                             resultProcess.get().getAppointmentId().setUserReviewer(
                                     userService.aproveUser(
@@ -245,17 +246,17 @@ public class ProcessService {
                             );
                         }
                         resultProcess.get().getAppointmentId().setReviewerState(APPROVED);
-
+                        
                     } else if (process.getAppointmentId().getReviewerState() == CHANGE
                             && resultProcess.get().getAppointmentId().getUserReviewer() != null
                             && process.getAppointmentId().getUserReviewer() == null) {
-
+                        
                         if (resultProcess.get().getAppointmentId().getUserReviewer().getRemovable()) {
                             userService.deleteUser(resultProcess.get().getAppointmentId().getUserReviewer());
                         }
                         resultProcess.get().getAppointmentId().setUserReviewer(null);
                         resultProcess.get().getAppointmentId().setReviewerState(CHANGE);
-
+                        
                     } else if (process.getAppointmentId().getReviewerState() == ELECTION
                             && !resultProcess.get().getAppointmentId().getUserReviewer().getUserId().equals(process.getAppointmentId().getUserReviewer().getUserId())) {
                         if (resultProcess.get().getAppointmentId().getUserReviewer().getRemovable()) {
@@ -263,20 +264,26 @@ public class ProcessService {
                         }
                         resultProcess.get().getAppointmentId().setUserReviewer(process.getAppointmentId().getUserReviewer());
                         resultProcess.get().getAppointmentId().setReviewerState(ELECTION);
-
+                        
                         mailService.emailNotifyAdvisorOrReviewer(
                                 resultProcess.get().getAppointmentId().getUserReviewer(),
                                 resultProcess.get().getProject().getTitle(),
                                 resultProcess.get().getUserCareer().getUSERuserId().getFirstName().concat(" ").concat(process.getUserCareer().getUSERuserId().getLastName())
                         );
                     }
-
+                    
                 }
-
+                
                 if ((resultProcess.get().getAppointmentId().getAdviserState() == APPROVED || resultProcess.get().getAppointmentId().getAdviserState() == CHANGE
                         || resultProcess.get().getAppointmentId().getAdviserState() == ELECTION) && (resultProcess.get().getAppointmentId().getReviewerState() == APPROVED
                         || resultProcess.get().getAppointmentId().getReviewerState() == CHANGE || resultProcess.get().getAppointmentId().getReviewerState() == ELECTION)) {
-
+                    
+                    if ((resultProcess.get().getAppointmentId().getAdviserState() == APPROVED || resultProcess.get().getAppointmentId().getAdviserState() == ELECTION)
+                            && (resultProcess.get().getAppointmentId().getReviewerState() == APPROVED || resultProcess.get().getAppointmentId().getReviewerState() == ELECTION)) {
+                        resultProcess.get().setApprovedEPSDevelopment(Boolean.TRUE);
+                        resultProcess.get().setDateApproveddEpsDevelopment(LocalDate.now());
+                    }
+                    
                     resultProcess = Optional.ofNullable(updateProcess(resultProcess.get()));
                     mailService.emailNotifyStudent(
                             resultProcess.get().getAppointmentId().getUserAdviser(),
@@ -304,13 +311,13 @@ public class ProcessService {
             }
         }
     }
-
+    
     private boolean existsUser(User user) throws UserException {
         User search = new User();
         search.setrOLid(user.getROLid());
         search.setDpi(user.getDpi());
-
+        
         return (!userRepository.getUser(search).isEmpty());
     }
-
+    
 }

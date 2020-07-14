@@ -23,6 +23,8 @@ import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.faces.context.ExternalContext;
 import javax.faces.view.ViewScoped;
@@ -328,11 +330,15 @@ public class committeeEPSReviewView implements Serializable {
                 for (Correction temporalCorrection : temporalCorrections) {
                     projectFacade.createCorrection(temporalCorrection);
                 }
-                redirectToEPSCommittee();
+                if (getActualProcess().getApprovedCareerCoordinator() == null) {
+                    redirectToProcesses();
+                } else {
+                    redirectToEPSCommittee();
+                }
             } else {
                 MessageUtils.addErrorMessage("No existen correcciones para guardar");
             }
-        } catch (UserException e) {
+        } catch (UserException | IOException e) {
             MessageUtils.addErrorMessage(e.getMessage());
         }
     }
@@ -385,7 +391,7 @@ public class committeeEPSReviewView implements Serializable {
                 tailFacade.deleteTailCoordinatod(getActualProcess());
                 getActualProcess().setState(StateProcess.RECHAZADO);
                 getActualProcess().setApprovedCareerCoordinator(false);
-                processFacade.updateProcess(getActualProcess()); 
+                processFacade.updateProcess(getActualProcess());
                 redirectToProcesses();
             } else if (getActualProcess().getApprovedCareerCoordinator()) {
                 processFacade.EPSCommitteeRejectProyect(

@@ -29,7 +29,7 @@ public class UserRepository {
 
     public static final String GET_USER_CAREER_ROL = "SELECT u.uSERuserId FROM UserCareer u WHERE u.uSERuserId.status=TRUE AND u.cAREERcodigo.codigo=:codigo AND u.uSERuserId.rOLid.name=:rolName";
     public static final String GET_NUMBER_PROCESSES_SUPERVISOR_EPS = "SELECT COUNT(c.id) FROM Process c WHERE c.supervisor_EPS.userId=:userIdSupervisorEPS AND (c.state != :RECHAZADO OR c.state != :INACTIVO)";
-    
+
     @PersistenceContext(name = PERSISTENCE_UNIT_NAME)
     private EntityManager entityManager;
 
@@ -96,16 +96,16 @@ public class UserRepository {
         List<Predicate> predicates = new ArrayList<>();
 
         if (user.getUserId() != null && !user.getUserId().isEmpty()) {
-            predicates.add(criteriaBuilder.like(userR.get("userId"), "%" + user.getUserId() + "%"));
+            predicates.add(criteriaBuilder.equal(userR.get("userId"), user.getUserId()));
         }
         if (user.getDpi() != null && !user.getDpi().isEmpty()) {
-            predicates.add(criteriaBuilder.like(userR.get("dpi"), "%" + user.getDpi() + "%"));
+            predicates.add(criteriaBuilder.equal(userR.get("dpi"), user.getDpi()));
         }
         if (user.getCodePersonal() != null) {
-            predicates.add(criteriaBuilder.like(userR.get("codePersonal"), "%" + user.getCodePersonal() + "%"));
+            predicates.add(criteriaBuilder.equal(userR.get("codePersonal"), user.getCodePersonal()));
         }
         if (user.getAcademicRegister() != null && !user.getAcademicRegister().isEmpty()) {
-            predicates.add(criteriaBuilder.like(userR.get("academicRegister"), "%" + user.getAcademicRegister() + "%"));
+            predicates.add(criteriaBuilder.equal(userR.get("academicRegister"), user.getAcademicRegister()));
         }
         if (user.getFirstName() != null) {
             predicates.add(criteriaBuilder.like(userR.get("firstName"), "%" + user.getFirstName() + "%"));
@@ -138,9 +138,12 @@ public class UserRepository {
     }
 
     /**
-     * This method gets a List of USER with SUPERVISOR_EPS role that belong to a certain Career
+     * This method gets a List of USER with SUPERVISOR_EPS role that belong to a
+     * certain Career
+     *
      * @param careerToSearch career to which SUPERVISOR_EPS belong
-     * @return List of USER with SUPERVISOR_EPS role that belong to careerToSearch
+     * @return List of USER with SUPERVISOR_EPS role that belong to
+     * careerToSearch
      */
     public List<User> getSupervisorEPSbyCareer(Career careerToSearch) {
         Query query = entityManager.createQuery(GET_USER_CAREER_ROL);
@@ -148,13 +151,15 @@ public class UserRepository {
         query.setParameter("rolName", SUPERVISOR_EPS);
         return query.getResultList();
     }
-    
+
     /**
-     * This method gets the number of processes with status != RECHAZADO or INACTIVO that are assigned to a SUPERVISOR_EPS
+     * This method gets the number of processes with status != RECHAZADO or
+     * INACTIVO that are assigned to a SUPERVISOR_EPS
+     *
      * @param supervisorEPS
-     * @return 
+     * @return
      */
-    public Long getNumberProcessesBySupervisorEPS(User supervisorEPS){
+    public Long getNumberProcessesBySupervisorEPS(User supervisorEPS) {
         Query query = entityManager.createQuery(GET_NUMBER_PROCESSES_SUPERVISOR_EPS);
         query.setParameter("userIdSupervisorEPS", supervisorEPS.getUserId());
         query.setParameter("RECHAZADO", StateProcess.RECHAZADO);

@@ -1,7 +1,6 @@
 package gt.edu.usac.cunoc.ingenieria.eps.bitacora.view;
 
 import gt.edu.usac.cunoc.ingenieria.eps.journal.Commentary;
-import gt.edu.usac.cunoc.ingenieria.eps.journal.Image;
 import gt.edu.usac.cunoc.ingenieria.eps.journal.JournalLog;
 import java.io.Serializable;
 import javax.faces.view.ViewScoped;
@@ -10,12 +9,9 @@ import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import gt.edu.usac.cunoc.ingenieria.eps.process.facade.ProcessFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import gt.edu.usac.cunoc.ingenieria.eps.user.facade.UserFacadeLocal;
-import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
 import java.util.List;
 import javax.ejb.EJB;
-import org.primefaces.model.DefaultStreamedContent;
-import org.primefaces.model.StreamedContent;
 
 @Named
 @ViewScoped
@@ -29,7 +25,6 @@ public class BitacoraReview implements Serializable {
 
     private Integer processId;
     private Process process;
-    private StreamedContent image;
     private JournalLog journalSelected;
     private String commentText;
     private LocalDate dateNow;
@@ -44,11 +39,6 @@ public class BitacoraReview implements Serializable {
         } catch (Exception e) {
             System.out.println("--------"+e+"--------");
         }
-    }
-
-    public StreamedContent getImageContent(Image image) {
-        StreamedContent img = new DefaultStreamedContent(new ByteArrayInputStream(image.getImage()), "image/png", "imagen.png");
-        return img;
     }
 
     public Integer getProcessId() {

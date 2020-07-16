@@ -1,9 +1,11 @@
 package gt.edu.usac.cunoc.ingenieria.eps.process;
 
+import gt.edu.usac.cunoc.ingenieria.eps.journal.JournalLog;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import gt.edu.usac.cunoc.ingenieria.eps.user.UserCareer;
 import java.io.Serializable;
+import java.util.List;
 import java.time.LocalDate;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -20,6 +22,7 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -65,6 +68,8 @@ public class Process implements Serializable {
     private Requeriment requeriment;
     @OneToOne(mappedBy = "process", cascade = CascadeType.REFRESH)
     private UserCareer userCareer;
+    @OneToMany(mappedBy = "process", cascade = CascadeType.ALL)
+    private List<JournalLog> journalLog;
     @OneToOne(mappedBy = "pROCESSid", cascade = CascadeType.ALL)
     private Project project;
     @ManyToOne(fetch = FetchType.LAZY)
@@ -90,6 +95,14 @@ public class Process implements Serializable {
         this.approvedEPSDevelopment = approvedEPSDevelopment;
     }
 
+    public List<JournalLog> getJournalLog() {
+        return journalLog;
+    }
+
+    public void setJournalLog(List<JournalLog> journalLog) {
+        this.journalLog = journalLog;
+    }
+    
     public Integer getId() {
         return id;
     }

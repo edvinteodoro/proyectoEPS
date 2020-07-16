@@ -3,13 +3,16 @@ package gt.edu.usac.cunoc.ingenieria.eps.journal;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import java.io.Serializable;
 import java.time.LocalDate;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -24,13 +27,21 @@ public class Commentary implements Serializable {
     private byte[] text;
     @Column(name = "date")
     private LocalDate date;
-
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "JOURNAL_LOG", referencedColumnName = "id")
     private JournalLog journal_Log;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId", referencedColumnName = "userId")
     private User user;
 
     public Commentary() {
+    }
+
+    public Commentary(String text, LocalDate date, JournalLog journalLog, User user) {
+        this.text = text.getBytes();
+        this.date = date;
+        this.journal_Log = journalLog;
+        this.user = user;
     }
 
     public Integer getId() {
@@ -47,6 +58,10 @@ public class Commentary implements Serializable {
 
     public void setText(byte[] text) {
         this.text = text;
+    }
+
+    public String getTextValue() {
+        return new String(this.text);
     }
 
     public LocalDate getDate() {
@@ -72,8 +87,8 @@ public class Commentary implements Serializable {
     public void setUser(User user) {
         this.user = user;
     }
-    
-    public String getCommentaryString(){
+
+    public String getCommentaryString() {
         return new String(text);
     }
 

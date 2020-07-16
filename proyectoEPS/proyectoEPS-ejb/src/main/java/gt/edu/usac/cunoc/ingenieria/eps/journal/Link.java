@@ -1,12 +1,14 @@
 package gt.edu.usac.cunoc.ingenieria.eps.journal;
 
 import java.io.Serializable;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -20,7 +22,8 @@ public class Link implements Serializable {
     private Integer id;
     @Column(name = "link")
     private byte[] link;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @JoinColumn(name="JOURNAL_LOG_id",referencedColumnName = "id")   
     private JournalLog journal_Log;
 
     public Link() {
@@ -36,6 +39,10 @@ public class Link implements Serializable {
 
     public byte[] getLink() {
         return link;
+    }
+    
+    public String getLinkText(){
+        return new String(link);
     }
 
     public void setLink(byte[] link) {

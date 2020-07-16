@@ -3,6 +3,7 @@ package gt.edu.usac.cunoc.ingenieria.eps.journal;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import java.io.Serializable;
 import java.time.LocalDate;
+import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -12,6 +13,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -31,6 +33,8 @@ public class JournalLog implements Serializable {
     private LocalDate dateTime;
     @Column(name = "description")
     private String description;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Process process;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "journal_Log", orphanRemoval = true)
     private List<Image> images;
@@ -38,9 +42,6 @@ public class JournalLog implements Serializable {
     private List<Link> links;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "journal_Log", orphanRemoval = true)
     private List<Commentary> commentaries;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Process process;
 
     public JournalLog() {
         this.images = new ArrayList<>();

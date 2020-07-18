@@ -3,13 +3,16 @@ package gt.edu.usac.cunoc.ingenieria.eps.process.repository;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.PERSISTENCE_UNIT_NAME;
 import User.exception.UserException;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.JAVA_MAIL_SESSION;
+import gt.edu.usac.cunoc.ingenieria.eps.configuration.mail.MailService;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import gt.edu.usac.cunoc.ingenieria.eps.process.StateProcess;
 import gt.edu.usac.cunoc.ingenieria.eps.tail.TailCoordinator;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import gt.edu.usac.cunoc.ingenieria.eps.user.service.UserService;
 import static gt.edu.usac.cunoc.ingenieria.eps.user.service.UserService.CONTENT_TYPE;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Future;
@@ -38,8 +41,19 @@ import javax.persistence.criteria.Root;
 @Stateless
 @LocalBean
 public class ProcessRepository {
-    
+
+    private final int ANTICIPATED_TIME = 2;
+    private final int LIMIT_MONTH = 6;
+
     public static final String GET_PROCESSES_SUPERVISOR_EPS = "SELECT c FROM Process c WHERE c.supervisor_EPS.userId=:userIdSupervisorEPS AND (c.state != :RECHAZADO OR c.state != :INACTIVO)";
+
+    public static final String REVISION_REMAINER_NORMAL_TIME = "SELECT c FROM Process c WHERE c.dateApproveddEpsDevelopment IS NOT NULL AND DATEDIFF(adddate(c.dateApproveddEpsDevelopment, interval :daysBefore day),CURDATE())%30 = 0 AND DATEDIFF(adddate(c.dateApproveddEpsDevelopment, interval :dayBefore day),CURDATE())/30 < :limitMonths";
+    public static final String LAST_REVISION_REMAINER = "SELECT c FROM Process c WHERE c.dateApproveddEpsDevelopment IS NOT NULL AND DATEDIFF(adddate(c.dateApproveddEpsDevelopment, interval :daysBefore day),CURDATE())%30 = 0 AND DATEDIFF(adddate(c.dateApproveddEpsDevelopment, interval :dayBefore day),CURDATE())/30 = :limitMonths";
+    private final String DAYS_BEFORE = "daysBefore";
+    private final String DAY_BEFORE = "dayBefore";
+    private final String LIMIT_MONTHS = "limitMonths";
+
+    MailService mailService;
 
     @PersistenceContext(name = PERSISTENCE_UNIT_NAME)
     private EntityManager entityManager;
@@ -82,9 +96,58 @@ public class ProcessRepository {
         return query.getResultList();
     }
 
-    public boolean SendEmailStudent(TailCoordinator tailCoordinator,String title, String msg) {
+    private List<Process> revisionRemainer(boolean lastRevision) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Process> criteriaQuery = criteriaBuilder.createQuery(Process.class);
+        Root<Process> processR = criteriaQuery.from(Process.class);
+        List<Predicate> predicates = new ArrayList<>();
+
+        predicates.add(criteriaBuilder.isNotNull(processR.get("dateApproveddEpsDevelopment")));
+        predicates.add(
+                criteriaBuilder.equal(
+                        criteriaBuilder.mod(
+                                criteriaBuilder.function(
+                                        "DATEDIFF",
+                                        Integer.class,
+                                        processR.get("dateApproveddEpsDevelopment"),
+                                        criteriaBuilder.literal(LocalDate.now().plusDays(ANTICIPATED_TIME).toString())
+                                ), 30), 0));
+        if (lastRevision) {
+            predicates.add(
+                    criteriaBuilder.equal(
+                            criteriaBuilder.toInteger(
+                                    criteriaBuilder.quot(
+                                            criteriaBuilder.function(
+                                                    "DATEDIFF",
+                                                    Integer.class,
+                                                    processR.get("dateApproveddEpsDevelopment"),
+                                                    criteriaBuilder.literal(LocalDate.now().plusDays(ANTICIPATED_TIME).toString())
+                                            ), 30)
+                            ), LIMIT_MONTH)
+            );
+        } else {
+            predicates.add(
+                    criteriaBuilder.lessThan(
+                            criteriaBuilder.toInteger(
+                                    criteriaBuilder.quot(
+                                            criteriaBuilder.function(
+                                                    "DATEDIFF",
+                                                    Integer.class,
+                                                    processR.get("dateApproveddEpsDevelopment"),
+                                                    criteriaBuilder.literal(LocalDate.now().plusDays(ANTICIPATED_TIME).toString())
+                                            ), 30)
+                            ), LIMIT_MONTH)
+            );
+        }
+
+        criteriaQuery.where(predicates.stream().toArray(Predicate[]::new));
+        TypedQuery<Process> query = entityManager.createQuery(criteriaQuery);
+        return query.getResultList();
+    }
+
+    public boolean SendEmailStudent(TailCoordinator tailCoordinator, String title, String msg) {
         try {
-            sendEmail(tailCoordinator.getProcess().getUserCareer().getUSERuserId().getEmail(), title, emailBody(tailCoordinator,title, msg));
+            sendEmail(tailCoordinator.getProcess().getUserCareer().getUSERuserId().getEmail(), title, emailBody(tailCoordinator, title, msg));
             return true;
         } catch (Exception e) {
             return false;
@@ -105,19 +168,47 @@ public class ProcessRepository {
         return new AsyncResult<>(null);
     }
 
-    private String emailBody(TailCoordinator tailCoordinator,String title,String mensaje) {
-        return ("<h2><strong>"+title+"</strong></h2>"
-                + "<p>" + tailCoordinator.getUserCareer().getUSERuserId().getROLid().getName() + ": " +tailCoordinator.getUserCareer().getCAREERcodigo().getName()+ "</p>"
-                +"<p>"+ tailCoordinator.getUserCareer().getUSERuserId().getFirstName() + " " + tailCoordinator.getUserCareer().getUSERuserId().getLastName() + "</p>"
+    private String emailBody(TailCoordinator tailCoordinator, String title, String mensaje) {
+        return ("<h2><strong>" + title + "</strong></h2>"
+                + "<p>" + tailCoordinator.getUserCareer().getUSERuserId().getROLid().getName() + ": " + tailCoordinator.getUserCareer().getCAREERcodigo().getName() + "</p>"
+                + "<p>" + tailCoordinator.getUserCareer().getUSERuserId().getFirstName() + " " + tailCoordinator.getUserCareer().getUSERuserId().getLastName() + "</p>"
                 + "<p><span style=\"color: #000000;\">" + mensaje + "</span></p>"
                 + "<p>Divisi&oacute;n de Ciencias de la Ingenieria - Centro Universitario de Occidente</p>");
     }
-    
-    public List<Process> getProcessBySupervisorEPS(User supervisorEPS){
+
+    public List<Process> getProcessBySupervisorEPS(User supervisorEPS) {
         Query query = entityManager.createQuery(GET_PROCESSES_SUPERVISOR_EPS);
         query.setParameter("userIdSupervisorEPS", supervisorEPS.getUserId());
         query.setParameter("RECHAZADO", StateProcess.RECHAZADO);
         query.setParameter("INACTIVO", StateProcess.INACTIVO);
+        return query.getResultList();
+    }
+
+    public void revisionRemainer() {
+        for (Process normalTime : revisionRemainer(false)) {
+            mailService.emailRevisionRemainerStudent(normalTime, ANTICIPATED_TIME, false);
+            mailService.emailRevisionRemainerSupervisor(normalTime, ANTICIPATED_TIME, false);
+        }
+
+        for (Process normalTime : revisionRemainer(true)) {
+            mailService.emailRevisionRemainerStudent(normalTime, ANTICIPATED_TIME, true);
+            mailService.emailRevisionRemainerSupervisor(normalTime, ANTICIPATED_TIME, true);
+        }
+    }
+
+    private List<Process> revisionRemainerNormalTime() {
+        Query query = entityManager.createQuery(REVISION_REMAINER_NORMAL_TIME);
+        query.setParameter(DAYS_BEFORE, ANTICIPATED_TIME);
+        query.setParameter(DAY_BEFORE, ANTICIPATED_TIME);
+        query.setParameter(LIMIT_MONTHS, LIMIT_MONTH);
+        return query.getResultList();
+    }
+
+    private List<Process> lastRevisionRemainer() {
+        Query query = entityManager.createQuery(LAST_REVISION_REMAINER);
+        query.setParameter(DAYS_BEFORE, ANTICIPATED_TIME);
+        query.setParameter(DAY_BEFORE, ANTICIPATED_TIME);
+        query.setParameter(LIMIT_MONTHS, LIMIT_MONTH);
         return query.getResultList();
     }
 }

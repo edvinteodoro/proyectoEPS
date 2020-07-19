@@ -15,7 +15,7 @@ public class ScheduledTasks {
     @EJB
     ProcessRepository processRepository;
 
-    @Schedule(hour = "15",minute = "28")
+    @Schedule(hour = "12")
     public void revisionRemainer() {
         processRepository.revisionRemainer();
     }

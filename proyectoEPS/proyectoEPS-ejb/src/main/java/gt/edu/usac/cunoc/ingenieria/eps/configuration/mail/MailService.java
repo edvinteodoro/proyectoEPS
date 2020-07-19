@@ -188,7 +188,7 @@ public class MailService {
         message += "<p>El dia <strong>" + LocalDate.now().plusDays(businessDays).toString() + "</strong> es su cita propuesta para la revision con su Supervisor <strong>" + process.getSupervisor_EPS().getFirstName() + ", " + process.getSupervisor_EPS().getLastName() + "</strong>, debe ponerse en contacto con su Supervisor para concretar la cita.</p>"
                 + "<h3>Divisi&oacute;n de Ciencias de la Ingenier&iacute;a - Centro Universitario de Occidente</h3>";
 
-        sendEmail(message, "Revision: " + LocalDate.now().plusDays(businessDays).toString(), process.getUserCareer().getUSERuserId().getEmail());
+        sendEmail(process.getUserCareer().getUSERuserId().getEmail(), "Revision: " + LocalDate.now().plusDays(businessDays).toString(), message);
     }
 
     /**
@@ -208,7 +208,7 @@ public class MailService {
         message += "<p>El dia <strong>" + LocalDate.now().plusDays(businessDays).toString() + "</strong> es su cita propuesta para la revision del estudiante <strong>" + process.getUserCareer().getUSERuserId().getFirstName() + ", " + process.getUserCareer().getUSERuserId().getLastName() + "</strong>, el estudiante debe ponerse en contacto para concretar la cita.</p>"
                 + "<h3>Divisi&oacute;n de Ciencias de la Ingenier&iacute;a - Centro Universitario de Occidente</h3>";
 
-        sendEmail(message, "Revision: " + LocalDate.now().plusDays(businessDays).toString(), process.getSupervisor_EPS().getEmail());
+        sendEmail(process.getSupervisor_EPS().getEmail(), "Revision: " + LocalDate.now().plusDays(businessDays).toString(), message);
     }
 
 }

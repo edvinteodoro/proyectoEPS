@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 import javax.annotation.Resource;
 import javax.ejb.AsyncResult;
 import javax.ejb.Asynchronous;
+import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.mail.Message;
@@ -44,15 +45,11 @@ public class ProcessRepository {
 
     private final int ANTICIPATED_TIME = 2;
     private final int LIMIT_MONTH = 6;
+    private final int MONTH_DAYS = 30;
 
     public static final String GET_PROCESSES_SUPERVISOR_EPS = "SELECT c FROM Process c WHERE c.supervisor_EPS.userId=:userIdSupervisorEPS AND (c.state != :RECHAZADO OR c.state != :INACTIVO)";
 
-    public static final String REVISION_REMAINER_NORMAL_TIME = "SELECT c FROM Process c WHERE c.dateApproveddEpsDevelopment IS NOT NULL AND DATEDIFF(adddate(c.dateApproveddEpsDevelopment, interval :daysBefore day),CURDATE())%30 = 0 AND DATEDIFF(adddate(c.dateApproveddEpsDevelopment, interval :dayBefore day),CURDATE())/30 < :limitMonths";
-    public static final String LAST_REVISION_REMAINER = "SELECT c FROM Process c WHERE c.dateApproveddEpsDevelopment IS NOT NULL AND DATEDIFF(adddate(c.dateApproveddEpsDevelopment, interval :daysBefore day),CURDATE())%30 = 0 AND DATEDIFF(adddate(c.dateApproveddEpsDevelopment, interval :dayBefore day),CURDATE())/30 = :limitMonths";
-    private final String DAYS_BEFORE = "daysBefore";
-    private final String DAY_BEFORE = "dayBefore";
-    private final String LIMIT_MONTHS = "limitMonths";
-
+    @EJB
     MailService mailService;
 
     @PersistenceContext(name = PERSISTENCE_UNIT_NAME)
@@ -103,6 +100,7 @@ public class ProcessRepository {
         List<Predicate> predicates = new ArrayList<>();
 
         predicates.add(criteriaBuilder.isNotNull(processR.get("dateApproveddEpsDevelopment")));
+
         predicates.add(
                 criteriaBuilder.equal(
                         criteriaBuilder.mod(
@@ -110,8 +108,11 @@ public class ProcessRepository {
                                         "DATEDIFF",
                                         Integer.class,
                                         processR.get("dateApproveddEpsDevelopment"),
-                                        criteriaBuilder.literal(LocalDate.now().plusDays(ANTICIPATED_TIME).toString())
-                                ), 30), 0));
+                                        criteriaBuilder.literal(LocalDate.now().minusDays(ANTICIPATED_TIME))
+                                ), 
+                                MONTH_DAYS), 0)
+        );
+
         if (lastRevision) {
             predicates.add(
                     criteriaBuilder.equal(
@@ -121,8 +122,9 @@ public class ProcessRepository {
                                                     "DATEDIFF",
                                                     Integer.class,
                                                     processR.get("dateApproveddEpsDevelopment"),
-                                                    criteriaBuilder.literal(LocalDate.now().plusDays(ANTICIPATED_TIME).toString())
-                                            ), 30)
+                                                    criteriaBuilder.literal(LocalDate.now().minusDays(ANTICIPATED_TIME))
+                                            ), 
+                                            MONTH_DAYS)
                             ), LIMIT_MONTH)
             );
         } else {
@@ -134,8 +136,8 @@ public class ProcessRepository {
                                                     "DATEDIFF",
                                                     Integer.class,
                                                     processR.get("dateApproveddEpsDevelopment"),
-                                                    criteriaBuilder.literal(LocalDate.now().plusDays(ANTICIPATED_TIME).toString())
-                                            ), 30)
+                                                    criteriaBuilder.literal(LocalDate.now().minusDays(ANTICIPATED_TIME))
+                                            ), MONTH_DAYS)
                             ), LIMIT_MONTH)
             );
         }
@@ -194,21 +196,5 @@ public class ProcessRepository {
             mailService.emailRevisionRemainerStudent(normalTime, ANTICIPATED_TIME, true);
             mailService.emailRevisionRemainerSupervisor(normalTime, ANTICIPATED_TIME, true);
         }
-    }
-
-    private List<Process> revisionRemainerNormalTime() {
-        Query query = entityManager.createQuery(REVISION_REMAINER_NORMAL_TIME);
-        query.setParameter(DAYS_BEFORE, ANTICIPATED_TIME);
-        query.setParameter(DAY_BEFORE, ANTICIPATED_TIME);
-        query.setParameter(LIMIT_MONTHS, LIMIT_MONTH);
-        return query.getResultList();
-    }
-
-    private List<Process> lastRevisionRemainer() {
-        Query query = entityManager.createQuery(LAST_REVISION_REMAINER);
-        query.setParameter(DAYS_BEFORE, ANTICIPATED_TIME);
-        query.setParameter(DAY_BEFORE, ANTICIPATED_TIME);
-        query.setParameter(LIMIT_MONTHS, LIMIT_MONTH);
-        return query.getResultList();
     }
 }

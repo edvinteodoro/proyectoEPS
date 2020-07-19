@@ -50,9 +50,9 @@ public class ProjectFacade implements ProjectFacadeLocal {
     }
 
     @Override
-    public Project createProject(Project project, List<Objectives> generalObjective, List<Objectives> specificObjective, Process process) throws MandatoryException, LimitException {
-        verifyProject(project, generalObjective, specificObjective);
-        return projectService.create(project, process);
+    public Project createProject(List<Objectives> generalObjective, List<Objectives> specificObjective, Process process) throws MandatoryException, LimitException {
+        verifyProject(process.getProject(), generalObjective, specificObjective);
+        return projectService.create(process);
     }
 
     private void verifyProject(Project project, List<Objectives> generalObjective, List<Objectives> specificObjective) throws MandatoryException, LimitException {

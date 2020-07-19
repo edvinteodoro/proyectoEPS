@@ -283,4 +283,17 @@ public class ProcessFacade implements ProcessFacadeLocal {
         return processRepository.isAssignedAdvisorReviewer(process);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Process enableCompanySupervisor(Process process) throws ValidationException, UserException {
+        return processService.enableCompanySupervisor(process);
+    }
+
+    @Override
+    public Process sendCompanySupervisorToSupervisor(Process process) throws ValidationException, UserException {
+        return processService.sendCompanySupervisorToSupervisor(process);
+    }
+
 }

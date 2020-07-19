@@ -18,7 +18,7 @@
     </ui:define>
 
     <ui:define name="content">
-        <p:dataTable var="process" value="#{assignedProcessesView.processes}" reflow="true">
+        <p:dataTable id="processTable" var="process" value="#{assignedProcessesView.processes}" reflow="true">
             <p:column headerText="Registro Académico">
                 <h:outputText value="#{process.userCareer.USERuserId.academicRegister}"/> 
             </p:column>
@@ -65,6 +65,15 @@
                                action="adviserReviewer"
                                rendered="#{!assignedProcessesView.studentAppointmentApproved(process)}">
                     <span class="glyphicon glyphicon-log-in"></span>
+                </p:commandLink>
+            </p:column>
+            <p:column headerText="Supervisor Empresa" styleClass="text-center" rendered="#{p:ifGranted(constantsRol.SUPERVISOR_EPS())}">
+                <p:commandLink styleClass="btn btn-primary btn-xs"
+                               oncomplete="PF('infoAbout2').show();" 
+                               update=":#{p:component('infoAbout2')}"
+                               rendered="#{assignedProcessesView.companySupervisorExist(process)}">
+                    <f:setPropertyActionListener value="#{process}" target="#{assignedProcessesView.processSelected}"/>
+                    <span class="glyphicon glyphicon-eye-open"></span> Ver
                 </p:commandLink>
             </p:column>
             <p:column headerText="Bitacora" styleClass="text-center">
@@ -201,6 +210,79 @@
                         </p:tabView>
 
 
+                    </fieldset>
+                </div>
+            </h:form>
+        </p:dialog>
+
+        <p:dialog header="Supervisor de la Empresa" id="infoAbout2" widgetVar="infoAbout2"
+                  modal="true" closeOnEscape="true">
+            <p:ajax event="close" listener="#{assignedProcessesView.clean()}" update="@this" />
+            <h:form>
+                <div class="modal-body">
+                    <fieldset>
+                        <div class="row form-group">
+                            <p:outputLabel value="DPI:" styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <h:outputText value="#{assignedProcessesView.processSelected.appointmentId.companySupervisor.dpi}"/>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <p:outputLabel value="Nombre:" styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <h:outputText value="#{assignedProcessesView.processSelected.appointmentId.companySupervisor.firstName}, #{assignedProcessesView.processSelected.appointmentId.companySupervisor.lastName}"/>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <p:outputLabel value="Correo Electrónico:" styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <h:outputText value="#{assignedProcessesView.processSelected.appointmentId.companySupervisor.email}" />
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <p:outputLabel value="Telefono:" styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <h:outputText value="#{assignedProcessesView.processSelected.appointmentId.companySupervisor.phone1}" />
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <p:outputLabel value="Telefono Extra:" styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <h:outputText value="#{assignedProcessesView.processSelected.appointmentId.companySupervisor.phone2}" />
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <p:outputLabel value="Estado:" styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <p:selectBooleanCheckbox value="#{assignedProcessesView.processSelected.appointmentId.companySupervisor.status}"  disabled="true"/>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <p:outputLabel value="Nombre de la Empresa:" styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <h:outputText value="#{assignedProcessesView.processSelected.appointmentId.companySupervisor.nameCompanyWork}"/>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <p:outputLabel value="Telefono de la Empresa:" styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <h:outputText value="#{assignedProcessesView.processSelected.appointmentId.companySupervisor.phoneCompanyWork}" />
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <p:outputLabel value="Dirección de la Empresa:" styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <h:outputText value="#{assignedProcessesView.processSelected.appointmentId.companySupervisor.directionCompanyWork}" />
+                            </div>
+                        </div>
+                        <div class="row form-group" >
+                            <p:commandLink styleClass="btn btn-success"
+                                           rendered="#{assignedProcessesView.processSelected.appointmentId.companySupervisor.removable}"
+                                           update=":#{p:component('processTable')},:#{p:component('growl')}"
+                                           actionListener="#{assignedProcessesView.aproveCompanySupervisor('infoAbout2')}">
+                                <span class="glyphicon glyphicon-ok-sign"></span> Aceptar
+                            </p:commandLink>
+                        </div>
                     </fieldset>
                 </div>
             </h:form>

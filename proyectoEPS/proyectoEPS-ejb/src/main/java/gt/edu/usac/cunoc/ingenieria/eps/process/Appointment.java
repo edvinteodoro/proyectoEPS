@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 /**
  *
@@ -43,6 +44,9 @@ public class Appointment implements Serializable {
     @JoinColumn(name = "USER_reviewer", referencedColumnName = "userId")
     @OneToOne
     private User userReviewer;
+    @JoinColumn(name = "company_supervisor", referencedColumnName = "userId")
+    @OneToOne
+    private User companySupervisor;
 
     public Appointment() {
     }
@@ -93,6 +97,14 @@ public class Appointment implements Serializable {
 
     public void setDateAction(LocalDateTime dateAction) {
         this.dateAction = dateAction;
+    }
+
+    public User getCompanySupervisor() {
+        return companySupervisor;
+    }
+
+    public void setCompanySupervisor(User companySupervisor) {
+        this.companySupervisor = companySupervisor;
     }
 
     @Override

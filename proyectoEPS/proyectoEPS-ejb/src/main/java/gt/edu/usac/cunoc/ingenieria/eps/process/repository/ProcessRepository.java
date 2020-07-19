@@ -3,13 +3,18 @@ package gt.edu.usac.cunoc.ingenieria.eps.process.repository;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.PERSISTENCE_UNIT_NAME;
 import User.exception.UserException;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.JAVA_MAIL_SESSION;
+import gt.edu.usac.cunoc.ingenieria.eps.process.Appointment;
+import gt.edu.usac.cunoc.ingenieria.eps.configuration.mail.MailService;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import gt.edu.usac.cunoc.ingenieria.eps.process.StateProcess;
+import gt.edu.usac.cunoc.ingenieria.eps.process.appointmentState;
 import gt.edu.usac.cunoc.ingenieria.eps.tail.TailCoordinator;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import gt.edu.usac.cunoc.ingenieria.eps.user.service.UserService;
 import static gt.edu.usac.cunoc.ingenieria.eps.user.service.UserService.CONTENT_TYPE;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Future;
@@ -18,6 +23,7 @@ import java.util.logging.Logger;
 import javax.annotation.Resource;
 import javax.ejb.AsyncResult;
 import javax.ejb.Asynchronous;
+import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.mail.Message;
@@ -38,8 +44,17 @@ import javax.persistence.criteria.Root;
 @Stateless
 @LocalBean
 public class ProcessRepository {
-    
+
+    private final int ANTICIPATED_TIME = 2;
+    private final int LIMIT_MONTH = 6;
+    private final int MONTH_DAYS = 30;
+
     public static final String GET_PROCESSES_SUPERVISOR_EPS = "SELECT c FROM Process c WHERE c.supervisor_EPS.userId=:userIdSupervisorEPS AND (c.state != :RECHAZADO OR c.state != :INACTIVO)";
+    
+    public static final String GET_APPOINTMENT_BY_PROCESS = "SELECT a FROM Appointment a WHERE a.id=:appointmentId";
+
+    @EJB
+    MailService mailService;
 
     @PersistenceContext(name = PERSISTENCE_UNIT_NAME)
     private EntityManager entityManager;
@@ -82,9 +97,63 @@ public class ProcessRepository {
         return query.getResultList();
     }
 
-    public boolean SendEmailStudent(TailCoordinator tailCoordinator,String title, String msg) {
+    private List<Process> revisionRemainer(boolean lastRevision) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Process> criteriaQuery = criteriaBuilder.createQuery(Process.class);
+        Root<Process> processR = criteriaQuery.from(Process.class);
+        List<Predicate> predicates = new ArrayList<>();
+
+        predicates.add(criteriaBuilder.isNotNull(processR.get("dateApproveddEpsDevelopment")));
+
+        predicates.add(
+                criteriaBuilder.equal(
+                        criteriaBuilder.mod(
+                                criteriaBuilder.function(
+                                        "DATEDIFF",
+                                        Integer.class,
+                                        processR.get("dateApproveddEpsDevelopment"),
+                                        criteriaBuilder.literal(LocalDate.now().minusDays(ANTICIPATED_TIME))
+                                ), 
+                                MONTH_DAYS), 0)
+        );
+
+        if (lastRevision) {
+            predicates.add(
+                    criteriaBuilder.equal(
+                            criteriaBuilder.toInteger(
+                                    criteriaBuilder.quot(
+                                            criteriaBuilder.function(
+                                                    "DATEDIFF",
+                                                    Integer.class,
+                                                    processR.get("dateApproveddEpsDevelopment"),
+                                                    criteriaBuilder.literal(LocalDate.now().minusDays(ANTICIPATED_TIME))
+                                            ), 
+                                            MONTH_DAYS)
+                            ), LIMIT_MONTH)
+            );
+        } else {
+            predicates.add(
+                    criteriaBuilder.lessThan(
+                            criteriaBuilder.toInteger(
+                                    criteriaBuilder.quot(
+                                            criteriaBuilder.function(
+                                                    "DATEDIFF",
+                                                    Integer.class,
+                                                    processR.get("dateApproveddEpsDevelopment"),
+                                                    criteriaBuilder.literal(LocalDate.now().minusDays(ANTICIPATED_TIME))
+                                            ), MONTH_DAYS)
+                            ), LIMIT_MONTH)
+            );
+        }
+
+        criteriaQuery.where(predicates.stream().toArray(Predicate[]::new));
+        TypedQuery<Process> query = entityManager.createQuery(criteriaQuery);
+        return query.getResultList();
+    }
+
+    public boolean SendEmailStudent(TailCoordinator tailCoordinator, String title, String msg) {
         try {
-            sendEmail(tailCoordinator.getProcess().getUserCareer().getUSERuserId().getEmail(), title, emailBody(tailCoordinator,title, msg));
+            sendEmail(tailCoordinator.getProcess().getUserCareer().getUSERuserId().getEmail(), title, emailBody(tailCoordinator, title, msg));
             return true;
         } catch (Exception e) {
             return false;
@@ -105,19 +174,41 @@ public class ProcessRepository {
         return new AsyncResult<>(null);
     }
 
-    private String emailBody(TailCoordinator tailCoordinator,String title,String mensaje) {
-        return ("<h2><strong>"+title+"</strong></h2>"
-                + "<p>" + tailCoordinator.getUserCareer().getUSERuserId().getROLid().getName() + ": " +tailCoordinator.getUserCareer().getCAREERcodigo().getName()+ "</p>"
-                +"<p>"+ tailCoordinator.getUserCareer().getUSERuserId().getFirstName() + " " + tailCoordinator.getUserCareer().getUSERuserId().getLastName() + "</p>"
+    private String emailBody(TailCoordinator tailCoordinator, String title, String mensaje) {
+        return ("<h2><strong>" + title + "</strong></h2>"
+                + "<p>" + tailCoordinator.getUserCareer().getUSERuserId().getROLid().getName() + ": " + tailCoordinator.getUserCareer().getCAREERcodigo().getName() + "</p>"
+                + "<p>" + tailCoordinator.getUserCareer().getUSERuserId().getFirstName() + " " + tailCoordinator.getUserCareer().getUSERuserId().getLastName() + "</p>"
                 + "<p><span style=\"color: #000000;\">" + mensaje + "</span></p>"
                 + "<p>Divisi&oacute;n de Ciencias de la Ingenieria - Centro Universitario de Occidente</p>");
     }
-    
-    public List<Process> getProcessBySupervisorEPS(User supervisorEPS){
+
+    public List<Process> getProcessBySupervisorEPS(User supervisorEPS) {
         Query query = entityManager.createQuery(GET_PROCESSES_SUPERVISOR_EPS);
         query.setParameter("userIdSupervisorEPS", supervisorEPS.getUserId());
         query.setParameter("RECHAZADO", StateProcess.RECHAZADO);
         query.setParameter("INACTIVO", StateProcess.INACTIVO);
         return query.getResultList();
+    }
+    
+    public boolean isAssignedAdvisorReviewer(Process process){
+        if (process.getAppointmentId() != null) {
+            Query query = entityManager.createQuery(GET_APPOINTMENT_BY_PROCESS);
+            query.setParameter("appointmentId", process.getAppointmentId().getId());
+            Appointment temp = (Appointment) query.getSingleResult();
+            return (temp.getAdviserState() == appointmentState.APPROVED || temp.getAdviserState() == appointmentState.ELECTION && 
+                    temp.getReviewerState() == appointmentState.APPROVED || temp.getReviewerState() == appointmentState.ELECTION); 
+        }
+        return false;
+
+    public void revisionRemainer() {
+        for (Process normalTime : revisionRemainer(false)) {
+            mailService.emailRevisionRemainerStudent(normalTime, ANTICIPATED_TIME, false);
+            mailService.emailRevisionRemainerSupervisor(normalTime, ANTICIPATED_TIME, false);
+        }
+
+        for (Process normalTime : revisionRemainer(true)) {
+            mailService.emailRevisionRemainerStudent(normalTime, ANTICIPATED_TIME, true);
+            mailService.emailRevisionRemainerSupervisor(normalTime, ANTICIPATED_TIME, true);
+        }
     }
 }

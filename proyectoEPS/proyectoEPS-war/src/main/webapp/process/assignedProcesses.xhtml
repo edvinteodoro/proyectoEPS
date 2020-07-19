@@ -53,14 +53,6 @@
                     </button>
                 </p>
             </p:column>
-            <p:column headerText="Bitacora" styleClass="text-center">
-                <p data-placement="top" data-toggle="tooltip" title="Bitacora">
-                    <button jsf:outcome="bitacoraReview" styleClass="btn btn-success btn-xs" >
-                        <f:param name="idProcess" value="#{process.id}"/>
-                        <span class="glyphicon glyphicon-log-in"></span>
-                    </button>
-                </p>
-            </p:column>
             <p:column headerText="Asesor y Revisor" styleClass="text-center">
                 <p:commandLink styleClass="btn btn-primary btn-xs"
                                oncomplete="PF('infoAbout').show();" 
@@ -74,6 +66,16 @@
                                rendered="#{!assignedProcessesView.studentAppointmentApproved(process)}">
                     <span class="glyphicon glyphicon-log-in"></span>
                 </p:commandLink>
+            </p:column>
+            <p:column headerText="Bitacora" styleClass="text-center">
+                <p data-placement="top" data-toggle="tooltip" title="Bitacora">
+                    <button jsf:outcome="bitacoraReview" 
+                            styleClass="btn btn-success btn-xs" 
+                            rendered="#{assignedProcessesView.isAssignedAdviserReviewer(process)}">
+                        <f:param name="idProcess" value="#{process.id}"/>
+                        <span class="glyphicon glyphicon-log-in"></span>
+                    </button>
+                </p>
             </p:column>
         </p:dataTable>
 

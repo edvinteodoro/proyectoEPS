@@ -26,7 +26,7 @@
 
     <ui:define name="content">
         <h:outputScript library="js" name="calendar_es.js" />
-
+        <p:staticMessage severity="info" detail="Registro de Bitácora Vacio" rendered="#{journalView.journals.size() eq 0}"/>
         <p:accordionPanel id="journalTable" value="#{journalView.journals}" var="journalLog" activeIndex="-2">
             <p:tab id="JournalLog" title="Fecha - #{journalLog.dateTime.dayOfMonth} / #{journalLog.dateTime.monthValue} / #{journalLog.dateTime.year}" >
                 <div>

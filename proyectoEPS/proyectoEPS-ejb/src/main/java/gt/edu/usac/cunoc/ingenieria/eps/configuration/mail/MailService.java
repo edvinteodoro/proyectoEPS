@@ -6,6 +6,7 @@ import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import gt.edu.usac.cunoc.ingenieria.eps.process.appointmentState;
 import gt.edu.usac.cunoc.ingenieria.eps.user.service.UserService;
+import java.time.LocalDate;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -125,7 +126,7 @@ public class MailService {
                 message += "<p>Se ha aprovado al Asesor <strong>" + advisor.getFirstName() + ", " + advisor.getLastName() + ".</strong></p>";
                 break;
             case CHANGE:
-                message += "<p>Se ha <strong>ELIMINADO</strong> al Asesor, por lo que debe proponer una nuevo o elegir entre los asesores disponible en el portal.</p>";
+                message += "<p>Se ha <strong>ELIMINADO</strong> al Asesor, por lo que debe proponer una nuevo o elegir entre los asesores disponible en el Sistema.</p>";
                 break;
             case ELECTION:
                 message += "<p>El Supervisor no ha aprovado al Asesor, y ha elegido a <strong>" + advisor.getFirstName() + ", " + advisor.getLastName() + "</strong>para tomar el cargo.</p>";
@@ -137,7 +138,7 @@ public class MailService {
                 message += "<p>Se ha aprovado al Revisor <strong>" + reviewer.getFirstName() + ", " + reviewer.getLastName() + ".</strong></p>";
                 break;
             case CHANGE:
-                message += "<p>Se ha <strong>ELIMINADO</strong> al Revisor, por lo que debe proponer una nuevo o elegir entre los revisores disponible en el portal.</p>";
+                message += "<p>Se ha <strong>ELIMINADO</strong> al Revisor, por lo que debe proponer una nuevo o elegir entre los revisores disponible en el Sistema.</p>";
                 break;
             case ELECTION:
                 message += "<p>El Supervisor no ha aprovado al Revisor, y ha elegido a <strong>" + reviewer.getFirstName() + ", " + reviewer.getLastName() + "</strong>para tomar el cargo.</p>";
@@ -167,6 +168,47 @@ public class MailService {
                 + "<h3><strong>Divisi&oacute;n de Ciencias de la Ingenier&iacute;a - Centro Universitario de Occidente</strong></h3>";
 
         sendEmail(supervisor.getEmail(), "Asesor y Revisor", message);
+    }
+
+    /**
+     * Notify the student to remain revision visit
+     *
+     *
+     * @param process
+     * @param businessDays
+     * @param lastRevision
+     */
+    public void emailRevisionRemainerStudent(Process process, int businessDays, boolean lastRevision) {
+        String message = "<h2>EPS: " + process.getProject().getTitle() + "</h2>";
+
+        if (lastRevision) {
+            message += "<p><strong>Esta es la ultima revisión, tomar las consideraciones necesarias.</strong></p>";
+        }
+
+        message += "<p>El dia <strong>" + LocalDate.now().plusDays(businessDays).toString() + "</strong> es su cita propuesta para la revision con su Supervisor <strong>" + process.getSupervisor_EPS().getFirstName() + ", " + process.getSupervisor_EPS().getLastName() + "</strong>, debe ponerse en contacto con su Supervisor para concretar la cita.</p>"
+                + "<h3>Divisi&oacute;n de Ciencias de la Ingenier&iacute;a - Centro Universitario de Occidente</h3>";
+
+        sendEmail(process.getUserCareer().getUSERuserId().getEmail(), "Revision: " + LocalDate.now().plusDays(businessDays).toString(), message);
+    }
+
+    /**
+     * Notify the Supervisor to remain revision visit
+     *
+     * @param process
+     * @param businessDays
+     * @param lastRevision
+     */
+    public void emailRevisionRemainerSupervisor(Process process, int businessDays, boolean lastRevision) {
+        String message = "<h2>EPS: " + process.getProject().getTitle() + "</h2>";
+
+        if (lastRevision) {
+            message += "<p><strong>Esta es la ultima revisión, tomar las consideraciones necesarias.</strong></p>";
+        }
+
+        message += "<p>El dia <strong>" + LocalDate.now().plusDays(businessDays).toString() + "</strong> es su cita propuesta para la revision del estudiante <strong>" + process.getUserCareer().getUSERuserId().getFirstName() + ", " + process.getUserCareer().getUSERuserId().getLastName() + "</strong>, el estudiante debe ponerse en contacto para concretar la cita.</p>"
+                + "<h3>Divisi&oacute;n de Ciencias de la Ingenier&iacute;a - Centro Universitario de Occidente</h3>";
+
+        sendEmail(process.getSupervisor_EPS().getEmail(), "Revision: " + LocalDate.now().plusDays(businessDays).toString(), message);
     }
 
 }

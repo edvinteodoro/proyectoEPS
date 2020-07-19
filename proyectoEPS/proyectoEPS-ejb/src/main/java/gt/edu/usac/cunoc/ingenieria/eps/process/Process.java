@@ -70,7 +70,7 @@ public class Process implements Serializable {
     private UserCareer userCareer;
     @OneToMany(mappedBy = "process", cascade = CascadeType.ALL)
     private List<JournalLog> journalLog;
-    @OneToOne(mappedBy = "pROCESSid", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "pROCESSid",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private Project project;
     @ManyToOne(fetch = FetchType.LAZY)
     private User supervisor_EPS;

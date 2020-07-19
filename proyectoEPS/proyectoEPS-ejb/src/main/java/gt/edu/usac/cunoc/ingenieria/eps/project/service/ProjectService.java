@@ -74,15 +74,15 @@ public class ProjectService {
         return project;
     }
 
-    public Project create(Project project, Process process) throws MandatoryException, LimitException {
-        verifyProject(project);
-        project.setStatus(Project.ACTIVE);
-        project.setLimitReceptionDate(PropertyRepository.GENERAL_LIMIT_RECEPTION_DATE.getValueDate());
-        project.setpROCESSid(process);
-        process.setProject(project);
-        setPositionProjectComponents(project);
-        entityManager.merge(process);
-        return project;
+    public Project create(Process process) throws MandatoryException, LimitException {
+        verifyProject(process.getProject());
+        process.getProject().setStatus(Project.ACTIVE);
+        process.getProject().setLimitReceptionDate(PropertyRepository.GENERAL_LIMIT_RECEPTION_DATE.getValueDate());
+        process.getProject().setpROCESSid(process);
+        process.setProject(process.getProject());
+        setPositionProjectComponents(process.getProject());
+        entityManager.persist(process.getProject());
+        return process.getProject();
     }
 
     private void setPositionBibliograpies(java.util.List<Bibliography> bibliographies) {

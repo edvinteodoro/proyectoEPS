@@ -1,6 +1,5 @@
 package gt.edu.usac.cunoc.ingenieria.eps.project.view;
 
-import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.ESTUDIANTE;
 import gt.edu.usac.cunoc.ingenieria.eps.configuration.repository.PropertyRepository;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.LimitException;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.MandatoryException;
@@ -12,18 +11,7 @@ import gt.edu.usac.cunoc.ingenieria.eps.project.Objectives;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Section;
 import gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection;
-import static gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection.ANEXO;
-import static gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection.BIBLIOGRAPHY;
-import static gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection.CALENDAR;
-import static gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection.COORDINATE;
-import static gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection.OBJETIVES;
-import static gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection.OTHER;
-import static gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection.PLAN;
-import static gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection.REJECTED;
-import static gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection.SPECIFIC_OBJETIVES;
-import static gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection.TITLE;
 import gt.edu.usac.cunoc.ingenieria.eps.project.facade.ProjectFacadeLocal;
-import gt.edu.usac.cunoc.ingenieria.eps.tail.TailCoordinator;
 import gt.edu.usac.cunoc.ingenieria.eps.tail.facade.TailCommitteeEPSFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.tail.facade.TailFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
@@ -32,7 +20,6 @@ import gt.edu.usac.cunoc.ingenieria.eps.utils.MessageUtils;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -42,7 +29,6 @@ import javax.inject.Named;
 import javax.ejb.EJB;
 import javax.faces.context.ExternalContext;
 import javax.inject.Inject;
-import org.primefaces.PrimeFaces;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
@@ -71,7 +57,6 @@ public class ProjectView implements Serializable {
     private TailCommitteeEPSFacadeLocal tailCommitteeEPSFacade;
 
     private User user;
-    private User coordinator;
 
     private StreamedContent scheduleStream;
     private StreamedContent investmentPlanStream;
@@ -87,31 +72,16 @@ public class ProjectView implements Serializable {
     private String investmentPlanFileName = "";
     private String annexedFileName = "";
 
-    private Project project;
     private Process process;
-    private TailCoordinator tailCoordiantor;
     private List<Objectives> generalObjectves;
     private List<Objectives> specificObjectives;
     private List<Correction> corrections;
+    private List<Correction> currentCorrections;
     private Integer processId;
     private Boolean flagUpdate = false;
-    private Boolean isFirstProcess = false;
-    private Correction correctionSelected;
     private String comment;
-    private String textObser;
     private StateProcess revisionState;
-
-    //corrections
-    private Correction correctionTitle;
-    private Correction correctionPlan;
-    private Correction correctionAnexo;
-    private Correction correctionCalendar;
-    private Correction correctionCoordinates;
-    private Correction correctionObjetives;
-    private Correction correctionSpecificObjetives;
-    private Correction correctionSection;
-    private Correction correctionBibliography;
-    private Correction rejectProcess;
+    private TypeCorrection typeCorrectionCurrent;
 
     @PostConstruct
     public void init() {
@@ -120,36 +90,23 @@ public class ProjectView implements Serializable {
             specificObjectives = new ArrayList<>();
             revisionState = StateProcess.REVISION;
             user = userFacade.getAuthenticatedUser().get(0);
-            if (isStuden()) {
-                textObser = "Ver Observaciones";
-            } else {
-                textObser = "Realizar Observaciones";
-            }
         } catch (Exception e) {
         }
     }
 
-    public String getTextObser() {
-        return textObser;
+    public TypeCorrection getTypeCorrectionCurrent() {
+        return typeCorrectionCurrent;
     }
 
-    public void setTextObser(String textObser) {
-        this.textObser = textObser;
-    }
-
-    public Boolean getIsFirstProcess() {
-        return isFirstProcess;
-    }
-
-    public void setIsFirstProcess(Boolean isFirstProcess) {
-        this.isFirstProcess = isFirstProcess;
+    public void setTypeCorrectionCurrent(TypeCorrection typeCorrectionCurrent) {
+        this.typeCorrectionCurrent = typeCorrectionCurrent;
     }
 
     public Project getProject() {
-        if (this.project == null) {
-            this.project = new Project();
+        if (this.process.getProject() == null) {
+            this.process.setProject(new Project());
         }
-        return this.project;
+        return this.process.getProject();
     }
 
     public StateProcess getRevisionState() {
@@ -161,138 +118,7 @@ public class ProjectView implements Serializable {
     }
 
     public void setProject(Project project) {
-        this.project = project;
-    }
-
-    public Correction getCorrectionTitle() {
-        correctionTitle = getCorrection(TITLE);
-        if (correctionTitle == null && getCorrections() != null) {
-            getCorrections().add(new Correction(LocalDate.now(), user, TITLE, getProject()));
-            correctionTitle = getCorrections().get(getCorrections().size() - 1);
-        }
-        return correctionTitle;
-    }
-
-    public void setCorrectionTitle(Correction correctionTitle) {
-        this.correctionTitle = correctionTitle;
-    }
-
-    public Correction getCorrectionPlan() {
-        correctionPlan = getCorrection(PLAN);
-        if (getCorrection(PLAN) == null && getCorrections() != null) {
-            getCorrections().add(new Correction(LocalDate.now(), user, PLAN, getProject()));
-            correctionPlan = getCorrections().get(getCorrections().size() - 1);
-        }
-        return correctionPlan;
-    }
-
-    public void setCorrectionPlan(Correction correctionPlan) {
-        this.correctionPlan = correctionPlan;
-
-    }
-
-    public Correction getCorrectionAnexo() {
-        correctionAnexo = getCorrection(ANEXO);
-        if (correctionAnexo == null && getCorrections() != null) {
-            getCorrections().add(new Correction(LocalDate.now(), user, ANEXO, getProject()));
-            correctionAnexo = getCorrections().get(getCorrections().size() - 1);
-        }
-        return correctionAnexo;
-    }
-
-    public void setCorrectionAnexo(Correction correctionAnexo) {
-        this.correctionAnexo = correctionAnexo;
-    }
-
-    public Correction getCorrectionCalendar() {
-        correctionCalendar = getCorrection(CALENDAR);
-        if (correctionCalendar == null && getCorrections() != null) {
-            getCorrections().add(new Correction(LocalDate.now(), user, CALENDAR, getProject()));
-            correctionCalendar = getCorrections().get(getCorrections().size() - 1);
-        }
-        return correctionCalendar;
-    }
-
-    public void setCorrectionCalendar(Correction correctionCalendar) {
-        this.correctionCalendar = correctionCalendar;
-    }
-
-    public Correction getCorrectionCoordinates() {
-        correctionCoordinates = getCorrection(COORDINATE);
-        if (correctionCoordinates == null && getCorrections() != null) {
-            getCorrections().add(new Correction(LocalDate.now(), user, COORDINATE, getProject()));
-            correctionCoordinates = getCorrections().get(getCorrections().size() - 1);
-        }
-        return correctionCoordinates;
-    }
-
-    public void setCorrectionCoordinates(Correction correctionCoordinates) {
-        this.correctionCoordinates = correctionCoordinates;
-    }
-
-    public Correction getCorrectionObjetives() {
-        correctionObjetives = getCorrection(OBJETIVES);
-        if (correctionObjetives == null && getCorrections() != null) {
-            getCorrections().add(new Correction(LocalDate.now(), user, OBJETIVES, getProject()));
-            correctionObjetives = getCorrections().get(getCorrections().size() - 1);
-        }
-        return correctionObjetives;
-    }
-
-    public void setCorrectionObjetives(Correction correctionObjetives) {
-        this.correctionObjetives = correctionObjetives;
-    }
-
-    public Correction getCorrectionSpecificObjetives() {
-        correctionSpecificObjetives = getCorrection(SPECIFIC_OBJETIVES);
-        if (correctionSpecificObjetives == null && getCorrections() != null) {
-            getCorrections().add(new Correction(LocalDate.now(), user, SPECIFIC_OBJETIVES, getProject()));
-            correctionSpecificObjetives = getCorrections().get(getCorrections().size() - 1);
-        }
-        return correctionSpecificObjetives;
-    }
-
-    public void setCorrectionSpecificObjetives(Correction correctionSpecificObjetives) {
-        this.correctionSpecificObjetives = correctionSpecificObjetives;
-    }
-
-    public Correction getCorrectionBibliography() {
-        correctionBibliography = getCorrection(BIBLIOGRAPHY);
-        if (correctionBibliography == null && getCorrections() != null) {
-            getCorrections().add(new Correction(LocalDate.now(), user, BIBLIOGRAPHY, getProject()));
-            correctionBibliography = getCorrections().get(getCorrections().size() - 1);
-        }
-        return correctionBibliography;
-    }
-
-    public void setCorrectionBibliography(Correction correctionBibliography) {
-        this.correctionBibliography = correctionBibliography;
-    }
-
-    public Correction getRejectProject() {
-        rejectProcess = getCorrection(REJECTED);
-        if (rejectProcess == null && getCorrections() != null) {
-            getCorrections().add(new Correction(LocalDate.now(), user, REJECTED, getProject(), Boolean.TRUE));
-            rejectProcess = getCorrections().get(getCorrections().size() - 1);
-        }
-        return rejectProcess;
-    }
-
-    public void setRejectProject(Correction rejectProcess) {
-        this.rejectProcess = rejectProcess;
-    }
-
-    public Correction getCorrectionSection(Section section) {
-        correctionSection = getCorrectionSection1(section);
-        if (correctionSection == null && getCorrections() != null) {
-            getCorrections().add(new Correction(LocalDate.now(), user, OTHER, getProject(), section));
-            correctionSection = getCorrections().get(getCorrections().size() - 1);
-        }
-        return correctionSection;
-    }
-
-    public void setCorrectionSection(Correction correctionSection) {
-        this.correctionSection = correctionSection;
+        this.process.setProject(project);
     }
 
     public List<Correction> getCorrections() {
@@ -303,58 +129,136 @@ public class ProjectView implements Serializable {
         this.corrections = corrections;
     }
 
-    public Correction getCorrectionSection1(Section section) {
-        if (getCorrections() != null) {
-            for (int i = 0; i < getCorrections().size(); i++) {
-                if (getCorrections().get(i).getSection() != null) {
-                    if (getCorrections().get(i).getSection().equals(section)) {
-                        if (getCorrections().get(i).getStatus() == null) {
-                            return getCorrections().get(i);
-                        } else if (getCorrections().get(i).getStatus() == true) {
-                            return getCorrections().get(i);
-                        }
-                    }
-                }
-            }
-            return null;
-        } else {
-            return null;
-        }
+    public String arrayToString(byte[] text) {
+        String result = new String(text);
+        return result;
     }
 
-    public Correction getCorrection(TypeCorrection type) {
-        Correction value = null;
+    public List<Correction> getCurrentCorrections() {
+        return currentCorrections;
+    }
+
+    public void setCurrentCorrections(List<Correction> currentCorrections) {
+        this.currentCorrections = currentCorrections;
+    }
+
+    public Boolean renderTitleCorrections() {
+        return !getCurrentCorrections(TypeCorrection.TITLE).isEmpty();
+    }
+
+    public Boolean renderObjetivesCorrections() {
+        return !getCurrentCorrections(TypeCorrection.OBJETIVES).isEmpty();
+    }
+
+    public Boolean renderSpecificObjetivesCorrections() {
+        return !getCurrentCorrections(TypeCorrection.SPECIFIC_OBJETIVES).isEmpty();
+    }
+
+    public Boolean renderAnexoCorrections() {
+        return !getCurrentCorrections(TypeCorrection.ANEXO).isEmpty();
+    }
+
+    public Boolean renderBibligraphyCorrections() {
+        return !getCurrentCorrections(TypeCorrection.BIBLIOGRAPHY).isEmpty();
+    }
+
+    public Boolean renderCalendarCorrections() {
+        return !getCurrentCorrections(TypeCorrection.CALENDAR).isEmpty();
+    }
+
+    public Boolean renderCoordinateCorrections() {
+        return !getCurrentCorrections(TypeCorrection.COORDINATE).isEmpty();
+    }
+
+    public Boolean renderPlanCorrections() {
+        return !getCurrentCorrections(TypeCorrection.PLAN).isEmpty();
+    }
+
+    public Boolean renderedSection(Integer section) {
+        return !getSectionCorrection(section).isEmpty();
+    }
+
+    public List<Correction> getTitleCorrections() {
+        typeCorrectionCurrent = TypeCorrection.TITLE;
+        return getCurrentCorrections(typeCorrectionCurrent);
+    }
+
+    public List<Correction> getObjetivesCorrections() {
+        typeCorrectionCurrent = TypeCorrection.OBJETIVES;
+        return getCurrentCorrections(typeCorrectionCurrent);
+    }
+
+    public List<Correction> getSpecificObjetivesCorrections() {
+        typeCorrectionCurrent = TypeCorrection.SPECIFIC_OBJETIVES;
+        return getCurrentCorrections(typeCorrectionCurrent);
+    }
+
+    public List<Correction> getAnexoCorrections() {
+        typeCorrectionCurrent = TypeCorrection.ANEXO;
+        return getCurrentCorrections(typeCorrectionCurrent);
+    }
+
+    public List<Correction> getBibliographyCorrections() {
+        typeCorrectionCurrent = TypeCorrection.BIBLIOGRAPHY;
+        return getCurrentCorrections(typeCorrectionCurrent);
+    }
+
+    public List<Correction> getCalendarCorrections() {
+        typeCorrectionCurrent = TypeCorrection.CALENDAR;
+        return getCurrentCorrections(typeCorrectionCurrent);
+    }
+
+    public List<Correction> getCoordenteCorrections() {
+        typeCorrectionCurrent = TypeCorrection.COORDINATE;
+        return getCurrentCorrections(typeCorrectionCurrent);
+    }
+
+    public List<Correction> getPlanCorrections() {
+        typeCorrectionCurrent = TypeCorrection.PLAN;
+        return getCurrentCorrections(typeCorrectionCurrent);
+    }
+
+    public List<Correction> getSectionCorrection(Integer section) {
+        currentCorrections = new ArrayList<>();
+        for (int i = 0; i < corrections.size(); i++) {
+            if (corrections.get(i).getSection() != null) {
+                if (corrections.get(i).getSection().getId().equals(section)) {
+                    currentCorrections.add(corrections.get(i));
+                }
+            }
+        }
+        return currentCorrections;
+    }
+
+    public List<Correction> getCurrentCorrections(TypeCorrection type) {
+        this.currentCorrections = new ArrayList<>();
         if (getCorrections() != null) {
             for (int i = 0; i < getCorrections().size(); i++) {
                 if (getCorrections().get(i).getType().equals(type)) {
-                    if (getCorrections().get(i).getStatus() == null) {
-                        value = getCorrections().get(i);
-                    } else if (getCorrections().get(i).getStatus() == true) {
-                        value = getCorrections().get(i);
-                    }
+                    this.currentCorrections.add(getCorrections().get(i));
                 }
             }
         }
-        return value;
+        return this.currentCorrections;
     }
 
     public void handleSchedule(FileUploadEvent event) {
         this.schedule = event.getFile();
-        this.project.setSchedule(schedule.getContents());
+        getProject().setSchedule(schedule.getContents());
         this.scheduleFileName = event.getFile().getFileName();
         this.scheduleStream = new DefaultStreamedContent(new ByteArrayInputStream(schedule.getContents()), "application/pdf", "Calendario.pdf");
     }
 
     public void handleInvestmentPlan(FileUploadEvent event) {
         this.investmentPlan = event.getFile();
-        this.project.setInvestmentPlan(investmentPlan.getContents());
+        getProject().setInvestmentPlan(investmentPlan.getContents());
         this.investmentPlanFileName = event.getFile().getFileName();
         this.investmentPlanStream = new DefaultStreamedContent(new ByteArrayInputStream(investmentPlan.getContents()), "application/pdf", "Plan de Inversión.pdf");
     }
 
     public void handleAnnexed(FileUploadEvent event) {
         this.annexed = event.getFile();
-        this.project.setAnnexed(annexed.getContents());
+        getProject().setAnnexed(annexed.getContents());
         this.annexedFileName = event.getFile().getFileName();
         this.annexedStream = new DefaultStreamedContent(new ByteArrayInputStream(annexed.getContents()), "application/pdf", "Anexos.pdf");
     }
@@ -420,15 +324,15 @@ public class ProjectView implements Serializable {
     }
 
     public void reloadSchedule() {
-        this.scheduleStream = new DefaultStreamedContent(new ByteArrayInputStream(project.getSchedule()), "application/pdf", "Calendario.pdf");
+        this.scheduleStream = new DefaultStreamedContent(new ByteArrayInputStream(getProject().getSchedule()), "application/pdf", "Calendario.pdf");
     }
 
     public void reloadInvestmentPlan() {
-        this.investmentPlanStream = new DefaultStreamedContent(new ByteArrayInputStream(project.getInvestmentPlan()), "application/pdf", "Plan de Inversión.pdf");
+        this.investmentPlanStream = new DefaultStreamedContent(new ByteArrayInputStream(getProject().getInvestmentPlan()), "application/pdf", "Plan de Inversión.pdf");
     }
 
     public void reloadAnnexed() {
-        this.annexedStream = new DefaultStreamedContent(new ByteArrayInputStream(project.getAnnexed()), "application/pdf", "Anexos.pdf");
+        this.annexedStream = new DefaultStreamedContent(new ByteArrayInputStream(getProject().getAnnexed()), "application/pdf", "Anexos.pdf");
     }
 
     public void setGeneralObjectves(List<Objectives> generalObjectves) {
@@ -477,7 +381,6 @@ public class ProjectView implements Serializable {
 
     public void uploadCreate() {
         try {
-            clearCorrections();
             if (flagUpdate) {
                 if (schedule != null) {
                     getProject().setSchedule(schedule.getContents());
@@ -497,7 +400,7 @@ public class ProjectView implements Serializable {
                     if (annexed != null) {
                         getProject().setAnnexed(annexed.getContents());
                     }
-                    projectFacade.createProject(getProject(), getGeneralObjectves(), getSpecificObjectives(), process);
+                    projectFacade.createProject(getGeneralObjectves(), getSpecificObjectives(), getProcess());
                     flagUpdate = true;
                     MessageUtils.addSuccessMessage("Se ha Creado el Proyecto");
                 }
@@ -511,37 +414,25 @@ public class ProjectView implements Serializable {
         try {
             this.process = processFacade.getProcess(new Process(processId)).get(0);
             if (this.process.getUserCareer().getUSERuserId().equals(this.user)) {
-                if (!isStuden()) {
-                    Process firstProcess = tailFacade.getProcessByCoordinator(user).get(0);
-                    if (getProcess().equals(firstProcess)) {
-                        isFirstProcess = true;
-                    }
-                }
-                this.project = process.getProject();
-                if (project != null) {
-                    this.corrections = project.getCorrections();
-                }
-                flagUpdate = true;
-                if (this.project == null) {
-                    this.project = new Project();
-                    flagUpdate = false;
-                } else {
+                flagUpdate = false;
+                if (getProject().getId() != null) {
+                    this.corrections = getProject().getCorrections();
                     flagUpdate = true;
-                    scheduleStream = new DefaultStreamedContent(new ByteArrayInputStream(project.getSchedule()), "application/pdf", "Calendario.pdf");
+                    scheduleStream = new DefaultStreamedContent(new ByteArrayInputStream(getProject().getSchedule()), "application/pdf", "Calendario.pdf");
                     scheduleFileName = scheduleStream.getName();
-                    investmentPlanStream = new DefaultStreamedContent(new ByteArrayInputStream(project.getInvestmentPlan()), "application/pdf", "Plan de Inversión.pdf");
+                    investmentPlanStream = new DefaultStreamedContent(new ByteArrayInputStream(getProject().getInvestmentPlan()), "application/pdf", "Plan de Inversión.pdf");
                     investmentPlanFileName = investmentPlanStream.getName();
-                    if (project.getAnnexed() != null) {
-                        annexedStream = new DefaultStreamedContent(new ByteArrayInputStream(project.getAnnexed()), "application/pdf", "Anexos.pdf");
+                    if (getProject().getAnnexed() != null) {
+                        annexedStream = new DefaultStreamedContent(new ByteArrayInputStream(getProject().getAnnexed()), "application/pdf", "Anexos.pdf");
                         annexedFileName = annexedStream.getName();
                     }
+                    flagUpdate = true;
                 }
-
-                for (int i = 0; i < project.getObjectives().size(); i++) {
-                    if (Objects.equals(project.getObjectives().get(i).getType(), Objectives.GENERAL_OBJETICVE)) {
-                        generalObjectves.add(project.getObjectives().get(i));
+                for (int i = 0; i < getProject().getObjectives().size(); i++) {
+                    if (Objects.equals(getProject().getObjectives().get(i).getType(), Objectives.GENERAL_OBJETICVE)) {
+                        generalObjectves.add(getProject().getObjectives().get(i));
                     } else {
-                        specificObjectives.add(project.getObjectives().get(i));
+                        specificObjectives.add(getProject().getObjectives().get(i));
                     }
                 }
             } else {
@@ -568,34 +459,8 @@ public class ProjectView implements Serializable {
         return process;
     }
 
-    public String getCorrectionSelectedText() {
-        String value = "";
-        if (getCorrectionSelected() != null) {
-            if (getCorrectionSelected().getText() != null) {
-                if (getCorrectionSelected().getStatus() == null) {
-                    value = new String(getCorrectionSelected().getText());
-                } else if (getCorrectionSelected().getStatus() == true) {
-                    value = new String(getCorrectionSelected().getText());
-                }
-            }
-        }
-        return value;
-    }
-
-    public void setCorrectionSelectedText(String text) {
-        getCorrectionSelected().setText(text.getBytes());
-    }
-
-    public Correction getCorrectionSelected() {
-        return correctionSelected;
-    }
-
-    public void setCorrectionSelected(Correction correctionSelected) {
-        this.correctionSelected = correctionSelected;
-    }
-
     public void clearCorrectionSelected() {
-        this.correctionSelected = null;
+        this.currentCorrections = new ArrayList<>();
     }
 
     public void setProcess(Process process) {
@@ -604,10 +469,6 @@ public class ProjectView implements Serializable {
 
     public void setProcessId(Integer processId) {
         this.processId = processId;
-    }
-
-    public User getCareerCoordinator() {
-        return coordinator;
     }
 
     public String getComment() {
@@ -619,10 +480,9 @@ public class ProjectView implements Serializable {
     }
 
     public void reviewRequeried() {
-        clearCorrections();
         getProcess().setState(getRevisionState());
         changeStatusCorrection();
-        processFacade.updateProcess(getProcess());
+        uploadCreate();
         if (getProcess().getApprovedCareerCoordinator() == null) {
             tailFacade.createTailCoordinator(user, getProcess());
         } else if (getProcess().getApprovedCareerCoordinator()) {
@@ -640,91 +500,12 @@ public class ProjectView implements Serializable {
         return value;
     }
 
-    public void acceptChanges() {
-        try {
-            getProcess().setApprovedCareerCoordinator(true);
-            clearCorrections();
-            changeStatusCorrection();
-            processFacade.rejectProcess(tailFacade.getTailCoordianteor(getProcess()), "Proceso Eps Aceptado", "Su projecto ha sido aceptado por el coordinador de carrera.");
-            tailFacade.deleteTailCoordinatod(getProcess());
-            getProcess().setState(StateProcess.ACTIVO);
-            processFacade.updateProcess(getProcess());
-            getProcess().setState(StateProcess.REVISION);
-            processFacade.updateProcess(getProcess());
-            tailCommitteeEPSFacade.createTailCommiteeEPS(process);
-            redirectToProcesses();
-        } catch (Exception e) {
-
-        }
-    }
-
-    public void finishReview() {
-        try {
-            clearCorrections();
-            changeStatusCorrection();
-            processFacade.rejectProcess(tailFacade.getTailCoordianteor(getProcess()), "Revision Proceso Eps", "Su projecto ha sido revisado, ya es posible editar el documento y realizar los cambios solicitados.");
-            tailFacade.deleteTailCoordinatod(getProcess());
-            getProcess().setState(StateProcess.ACTIVO);
-            processFacade.updateProcess(getProcess());
-            redirectToProcesses();
-        } catch (Exception e) {
-            MessageUtils.addErrorMessage("No se pudo finalizar la revision");
-        }
-    }
-
-    public void rejectThisProject() {
-        try {
-            clearCorrections();
-            changeStatusCorrection();
-            processFacade.rejectProcess(tailFacade.getTailCoordianteor(getProcess()), "Proceso Eps Rechazado", new String(getCorrectionSelected().getText()));
-            tailFacade.deleteTailCoordinatod(getProcess());
-            getProcess().setState(StateProcess.RECHAZADO);
-            processFacade.updateProcess(getProcess());
-            redirectToProcesses();
-        } catch (Exception e) {
-            MessageUtils.addErrorMessage("No se pudo rechazar el proyecto");
-        }
-    }
-
     public void createPDF() {
         try {
-            this.pdfFile = new DefaultStreamedContent(projectFacade.createPDF(project, process.getUserCareer()), "application/pdf", getProject().getTitle());
+            this.pdfFile = new DefaultStreamedContent(projectFacade.createPDF(getProject(), process.getUserCareer()), "application/pdf", getProject().getTitle());
             MessageUtils.addSuccessMessage("Archivo PDF Generado");
         } catch (IOException ex) {
             MessageUtils.addErrorMessage(ex.getMessage());
-        }
-    }
-
-    public Boolean isStuden() {
-        return user.getROLid().getName().equals(ESTUDIANTE);
-    }
-
-    private void clearCorrections() {
-        if (getCorrections() != null) {
-            for (int i = 0; i < corrections.size(); i++) {
-                if (getCorrections().get(i).getText() == null) {
-                    getCorrections().remove(i);
-                    i--;
-                }
-            }
-        }
-    }
-
-    public void comment(final String modalIdToClose) {
-        try {
-            if (getCorrectionSelected().getText() != null) {
-                getCorrectionSelected().setStatus(null);
-                String text = new String(getCorrectionSelected().getText());
-                if (text.isEmpty()) {
-                    getCorrectionSelected().setText(null);
-                }
-            }
-            clearCorrections();
-            projectFacade.updateProject(getProject());
-            clearCorrectionSelected();
-            PrimeFaces.current().executeScript("PF('" + modalIdToClose + "').hide()");
-        } catch (Exception e) {
-            System.out.println(e);
         }
     }
 
@@ -744,21 +525,9 @@ public class ProjectView implements Serializable {
         }
     }
 
-    public String getListCorrection() {
-        String value = "";
-        if (getCorrectionSelected() != null) {
-            for (int i = 0; i < getCorrections().size(); i++) {
-                if (getCorrections().get(i).getType().equals(getCorrectionSelected().getType()) && !getCorrections().get(i).getTextHistory().isEmpty()) {
-                    value = getCorrections().get(i).getTextHistory();
-                }
-            }
-        }
-        return value;
-    }
-
     public Boolean stateRevision() {
         Boolean value = false;
-        if (isStuden() && getProcess().getState() == getRevisionState()) {
+        if (getProcess().getState() == getRevisionState()) {
             value = true;
         }
         return value;
@@ -782,7 +551,7 @@ public class ProjectView implements Serializable {
 
     public Boolean editOptions() {
         Boolean value = false;
-        if (isStuden() && stateActived()) {
+        if (stateActived()) {
             value = true;
         }
         return value;
@@ -790,25 +559,13 @@ public class ProjectView implements Serializable {
 
     public Boolean showButtonRevision(Correction correction) {
         Boolean value = false;
-        if (isStuden() && getProcess().getState() != getRevisionState() && correction != null) {
+        if (getProcess().getState() != getRevisionState() && correction != null) {
             if (correction.getStatus() != null) {
                 if (correction.getStatus() == true) {
                     value = true;
                 }
             }
-        } else if (!isStuden() && getIsFirstProcess()) {
-            value = true;
         }
         return value;
-    }
-
-    public void acceptChanges(final String modalIdToClose) {
-//        try {
-//            if(getProject().getCorrectionTitle()==getCorrectionSelected()){
-//                getProject().setCorrectionTitle(null);
-//            }
-//            PrimeFaces.current().executeScript("PF('" + modalIdToClose + "').hide()");
-//        } catch (Exception e) {
-//        }
     }
 }

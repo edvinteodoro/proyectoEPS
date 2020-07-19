@@ -50,7 +50,7 @@ public class ProcessRepository {
     private final int MONTH_DAYS = 30;
 
     public static final String GET_PROCESSES_SUPERVISOR_EPS = "SELECT c FROM Process c WHERE c.supervisor_EPS.userId=:userIdSupervisorEPS AND (c.state != :RECHAZADO OR c.state != :INACTIVO)";
-    
+
     public static final String GET_APPOINTMENT_BY_PROCESS = "SELECT a FROM Appointment a WHERE a.id=:appointmentId";
 
     @EJB
@@ -113,7 +113,7 @@ public class ProcessRepository {
                                         Integer.class,
                                         processR.get("dateApproveddEpsDevelopment"),
                                         criteriaBuilder.literal(LocalDate.now().minusDays(ANTICIPATED_TIME))
-                                ), 
+                                ),
                                 MONTH_DAYS), 0)
         );
 
@@ -127,7 +127,7 @@ public class ProcessRepository {
                                                     Integer.class,
                                                     processR.get("dateApproveddEpsDevelopment"),
                                                     criteriaBuilder.literal(LocalDate.now().minusDays(ANTICIPATED_TIME))
-                                            ), 
+                                            ),
                                             MONTH_DAYS)
                             ), LIMIT_MONTH)
             );
@@ -189,16 +189,17 @@ public class ProcessRepository {
         query.setParameter("INACTIVO", StateProcess.INACTIVO);
         return query.getResultList();
     }
-    
-    public boolean isAssignedAdvisorReviewer(Process process){
+
+    public boolean isAssignedAdvisorReviewer(Process process) {
         if (process.getAppointmentId() != null) {
             Query query = entityManager.createQuery(GET_APPOINTMENT_BY_PROCESS);
             query.setParameter("appointmentId", process.getAppointmentId().getId());
             Appointment temp = (Appointment) query.getSingleResult();
-            return (temp.getAdviserState() == appointmentState.APPROVED || temp.getAdviserState() == appointmentState.ELECTION && 
-                    temp.getReviewerState() == appointmentState.APPROVED || temp.getReviewerState() == appointmentState.ELECTION); 
+            return (temp.getAdviserState() == appointmentState.APPROVED || temp.getAdviserState() == appointmentState.ELECTION
+                    && temp.getReviewerState() == appointmentState.APPROVED || temp.getReviewerState() == appointmentState.ELECTION);
         }
         return false;
+    }
 
     public void revisionRemainer() {
         for (Process normalTime : revisionRemainer(false)) {

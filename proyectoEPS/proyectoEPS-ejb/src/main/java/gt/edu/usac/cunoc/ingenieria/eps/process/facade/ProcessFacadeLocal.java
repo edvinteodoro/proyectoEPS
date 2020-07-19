@@ -138,4 +138,6 @@ public interface ProcessFacadeLocal {
      * @throws ValidationException when data is missing
      */
     public Process returnAppointmentToStudent(Process process) throws UserException, ValidationException;
+    
+    public boolean isAssignedAdvisorReviewer(Process process);
 }

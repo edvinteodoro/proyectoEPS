@@ -99,4 +99,8 @@ public class AssignedProcessesView implements Serializable {
         reviewerResumeStream = null;
         appointment = null;
     }
+    
+    public boolean isAssignedAdviserReviewer(Process process){
+        return processFacade.isAssignedAdvisorReviewer(process);
+    }
 }

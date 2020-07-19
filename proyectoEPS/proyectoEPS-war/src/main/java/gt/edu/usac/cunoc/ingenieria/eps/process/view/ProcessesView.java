@@ -1,17 +1,17 @@
 package gt.edu.usac.cunoc.ingenieria.eps.process.view;
 
-import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.ASESOR;
-import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.COORDINADOR_CARRERA;
-import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.ESTUDIANTE;
-import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.REVISOR;
-import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.SUPERVISOR_EPS;
+import User.exception.UserException;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.*;
+import gt.edu.usac.cunoc.ingenieria.eps.exception.ValidationException;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Appointment;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import gt.edu.usac.cunoc.ingenieria.eps.process.appointmentState;
 import gt.edu.usac.cunoc.ingenieria.eps.process.facade.ProcessFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.tail.facade.TailFacadeLocal;
+import gt.edu.usac.cunoc.ingenieria.eps.user.Rol;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import gt.edu.usac.cunoc.ingenieria.eps.user.facade.UserFacadeLocal;
+import gt.edu.usac.cunoc.ingenieria.eps.utils.MessageUtils;
 import java.io.ByteArrayInputStream;
 import java.io.Serializable;
 import java.util.List;
@@ -21,6 +21,7 @@ import javax.faces.context.ExternalContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import org.primefaces.PrimeFaces;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
@@ -47,6 +48,9 @@ public class ProcessesView implements Serializable {
     private Appointment appointment;
     private StreamedContent adviserResumeStream;
     private StreamedContent reviewerResumeStream;
+
+    private Process processSelected;
+    private User companySupervisor;
 
     @PostConstruct
     public void init() {
@@ -130,12 +134,77 @@ public class ProcessesView implements Serializable {
                 || process.getAppointmentId().getReviewerState() == appointmentState.ELECTION));
     }
 
+    /**
+     * create a empty user with the role set, this is for the User
+     *
+     * @param process
+     */
+    public void createNewUser(Process process) {
+        processSelected = process;
+        if (processSelected.getAppointmentId() == null) {
+            processSelected.setAppointmentId(new Appointment());
+        }
+
+        try {
+            if (processSelected.getAppointmentId().getCompanySupervisor() == null) {
+
+                companySupervisor = new User();
+                companySupervisor.setrOLid(userFacade.getRolUser(new Rol(null, SUPERVISOR_EMPRESA)).get(0));
+            } else {
+                clean();
+                MessageUtils.addErrorMessage("El usuario ya existe");
+            }
+        } catch (UserException e) {
+            MessageUtils.addErrorMessage(e.getMessage());
+        }
+    }
+
+    /**
+     * Save in memory the user added by the Student
+     *
+     * @param modalIdToClose
+     */
+    public void saveNewUser(final String modalIdToClose) {
+        try {
+            if (existsUser(companySupervisor)) {
+                MessageUtils.addErrorMessage("El usuario ya existe con ese cargo");
+            } else {
+                processSelected.getAppointmentId().setCompanySupervisor(companySupervisor);
+                processSelected = processFacade.sendCompanySupervisorToSupervisor(processSelected);
+                PrimeFaces.current().executeScript("PF('" + modalIdToClose + "').hide()");
+                MessageUtils.addSuccessMessage("Usuario agregado");
+                clean();
+            }
+        } catch (UserException | ValidationException e) {
+            MessageUtils.addErrorMessage(e.getMessage());
+        }
+    }
+
+    public Boolean canAddCompanySupervisor(Process process) {
+        return (process.getApprovalEPSCommission() != null && process.getApprovedCareerCoordinator() != null
+                && process.getApprovalEPSCommission() && process.getApprovedCareerCoordinator());
+    }
+
+    public Boolean companySupervisorExist(Process process) {
+        return (process.getApprovalEPSCommission() != null && process.getApprovedCareerCoordinator() != null
+                && process.getApprovalEPSCommission() && process.getApprovedCareerCoordinator()
+                && process.getAppointmentId() != null && process.getAppointmentId().getCompanySupervisor() != null);
+    }
+
     public void reloadAdviserResume() {
         adviserResumeStream = new DefaultStreamedContent(new ByteArrayInputStream(appointment.getUserAdviser().getPersonalResume()), "application/pdf", "Curriculum.pdf");
     }
 
     public void reloadReviewerResume() {
         reviewerResumeStream = new DefaultStreamedContent(new ByteArrayInputStream(appointment.getUserReviewer().getPersonalResume()), "application/pdf", "Curriculum.pdf");
+    }
+
+    private boolean existsUser(User user) throws UserException {
+        User search = new User();
+        search.setrOLid(user.getROLid());
+        search.setDpi(user.getDpi());
+
+        return (!userFacade.getUser(search).isEmpty());
     }
 
     public Appointment getAppointment() {
@@ -161,10 +230,20 @@ public class ProcessesView implements Serializable {
     public void setReviewerResumeStream(StreamedContent reviewerResumeStream) {
         this.reviewerResumeStream = reviewerResumeStream;
     }
-    
-    public void clean(){
+
+    public User getCompanySupervisor() {
+        return companySupervisor;
+    }
+
+    public void setCompanySupervisor(User companySupervisor) {
+        this.companySupervisor = companySupervisor;
+    }
+
+    public void clean() {
         adviserResumeStream = null;
         reviewerResumeStream = null;
         appointment = null;
+        processSelected = null;
+        companySupervisor = null;
     }
 }

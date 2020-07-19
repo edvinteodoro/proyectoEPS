@@ -241,6 +241,7 @@ CREATE TABLE IF NOT EXISTS `EPS_SYSTEM`.`APPOINTMENT` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `USER_adviser` VARCHAR(45) NULL,
   `USER_reviewer` VARCHAR(45) NULL,
+  `company_supervisor` VARCHAR(45) NULL DEFAULT NULL,
   `adviser_state` ENUM('APPROVED', 'CHANGE', 'REVIEW','ELECTION') NULL,
   `reviewer_state` ENUM('APPROVED', 'CHANGE', 'REVIEW','ELECTION') NULL,
   `date_action` DATETIME NOT NULL,
@@ -254,12 +255,17 @@ CREATE TABLE IF NOT EXISTS `EPS_SYSTEM`.`APPOINTMENT` (
     FOREIGN KEY (`USER_reviewer`)
     REFERENCES `EPS_SYSTEM`.`USER` (`userId`)
     ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_APPOINTMENT_USER3`
+    FOREIGN KEY (`company_supervisor`)
+    REFERENCES `EPS_SYSTEM`.`USER` (`userId`)
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 CREATE INDEX `fk_APPOINTMENT_USER1_idx` ON `EPS_SYSTEM`.`APPOINTMENT` (`USER_adviser` ASC) ;
-
 CREATE INDEX `fk_APPOINTMENT_USER2_idx` ON `EPS_SYSTEM`.`APPOINTMENT` (`USER_reviewer` ASC) ;
+CREATE INDEX `fk_APPOINTMENT_USER3_idx` ON `EPS_SYSTEM`.`APPOINTMENT` (`company_supervisor` ASC) ;
 
 -- -----------------------------------------------------
 -- Table `EPS_SYSTEM`.`DELIVER__EPS_COMPLETION_DOCUMENT`
@@ -660,3 +666,4 @@ INSERT INTO ROL(name) values("Estudiante");
 INSERT INTO ROL(name) values("Revisor");
 INSERT INTO ROL(name) values("Asesor");
 INSERT INTO ROL(name) values("Supervisor_EPS");
+INSERT INTO ROL(name) values("Supervisor_ORG");

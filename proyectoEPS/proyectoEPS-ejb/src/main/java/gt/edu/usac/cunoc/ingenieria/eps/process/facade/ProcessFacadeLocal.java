@@ -113,6 +113,11 @@ public interface ProcessFacadeLocal {
      */
     public List<Process> getProcessBySupervisorEPS(User supervisorEPS);
 
+    public List<Process> getProcessesByAdviser(User adviser);
+    
+    public List<Process> getProcessesByReviewer(User reviewer);
+    
+    
     /**
      * Allow Student to send the Advisor and Reviewer, if set users are new,
      * their are going to be create as inactive users

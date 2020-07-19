@@ -1,6 +1,7 @@
 package gt.edu.usac.cunoc.ingenieria.eps.process.view;
 
 import User.exception.UserException;
+import gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Appointment;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
@@ -23,10 +24,10 @@ public class AssignedProcessesView implements Serializable {
 
     @EJB
     private UserFacadeLocal userFacade;
-    
+
     @EJB
     private ProcessFacadeLocal processFacade;
-    
+
     private List<Process> processes;
 
     private User user;
@@ -46,12 +47,22 @@ public class AssignedProcessesView implements Serializable {
     public void init() {
         try {
             user = userFacade.getAuthenticatedUser().get(0);
-            setProcesses(processFacade.getProcessBySupervisorEPS(user));
+            switch (user.getROLid().getName()) {
+                case Constants.SUPERVISOR_EPS:
+                    setProcesses(processFacade.getProcessBySupervisorEPS(user));
+                    break;
+                case Constants.ASESOR:
+                    setProcesses(processFacade.getProcessesByAdviser(user));
+                    break;
+                case Constants.REVISOR:
+                    setProcesses(processFacade.getProcessesByReviewer(user));
+                    break;
+            }
         } catch (UserException ex) {
             System.out.println("Error Autenticación");
         }
     }
-    
+
     public Boolean studentAppointmentApproved(Process process) {
         return (process != null && process.getAppointmentId() != null
                 && process.getAppointmentId().getAdviserState() != null
@@ -93,14 +104,14 @@ public class AssignedProcessesView implements Serializable {
     public void setReviewerResumeStream(StreamedContent reviewerResumeStream) {
         this.reviewerResumeStream = reviewerResumeStream;
     }
-    
-    public void clean(){
+
+    public void clean() {
         adviserResumeStream = null;
         reviewerResumeStream = null;
         appointment = null;
     }
-    
-    public boolean isAssignedAdviserReviewer(Process process){
+
+    public boolean isAssignedAdviserReviewer(Process process) {
         return processFacade.isAssignedAdvisorReviewer(process);
     }
 }

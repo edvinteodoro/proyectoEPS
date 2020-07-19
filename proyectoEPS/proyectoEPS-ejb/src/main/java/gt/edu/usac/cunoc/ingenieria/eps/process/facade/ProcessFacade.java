@@ -283,4 +283,14 @@ public class ProcessFacade implements ProcessFacadeLocal {
         return processRepository.isAssignedAdvisorReviewer(process);
     }
 
+    @Override
+    public List<Process> getProcessesByAdviser(User adviser) {
+        
+    }
+
+    @Override
+    public List<Process> getProcessesByReviewer(User reviewer) {
+        
+    }
+
 }

@@ -280,8 +280,6 @@ public class ProcessService {
                     
                     if ((resultProcess.get().getAppointmentId().getAdviserState() == APPROVED || resultProcess.get().getAppointmentId().getAdviserState() == ELECTION)
                             && (resultProcess.get().getAppointmentId().getReviewerState() == APPROVED || resultProcess.get().getAppointmentId().getReviewerState() == ELECTION)) {
-                        resultProcess.get().setApprovedEPSDevelopment(Boolean.TRUE);
-                        resultProcess.get().setDateApproveddEpsDevelopment(LocalDate.now());
                     }
                     
                     resultProcess = Optional.ofNullable(updateProcess(resultProcess.get()));

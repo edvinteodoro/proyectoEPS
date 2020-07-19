@@ -150,4 +150,6 @@ public interface ProcessFacadeLocal {
     public Process enableCompanySupervisor(Process process) throws ValidationException, UserException;
     
     public Process sendCompanySupervisorToSupervisor(Process process) throws ValidationException, UserException;
+    
+    public boolean isAssignedAdvisorReviewer(Process process);
 }

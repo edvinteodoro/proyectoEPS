@@ -134,4 +134,8 @@ public class AssignedProcessesView implements Serializable {
         appointment = null;
         processSelected = null;
     }
+    
+    public boolean isAssignedAdviserReviewer(Process process){
+        return processFacade.isAssignedAdvisorReviewer(process);
+    }
 }

@@ -79,7 +79,7 @@ public class MailService {
     public void emailApprovedAdvisorOrReviewer(String password, User user, String processName, String studentName) {
         String message = ("<h1><strong>Se le ha aprovado como " + user.getrOLid().getName() + "</strong></h1>"
                 + "<p>Se le ha habilitado un usuario y contrase&ntilde;a dentro del Sistema de EPS de la Divisi&oacute;n de Ciencias de la Ingenier&iacute;a</p>"
-                + "<p>Se le ha aprovado como Asesor del tema " + processName + ".</p>"
+                + "<p>Se le ha aprovado como " + user.getrOLid().getName() + " del EPS <strong>" + processName + "</strong>.</p>"
                 + "<p>Se le habilito con el Usuario <strong>" + user.getUserId() + "</strong> y contrase&ntilde;a <strong><span style=\"color: #ff0000;\">" + password + "</span></strong>.&nbsp;</p>"
                 + "<p>Se recomienda cambiar su contrase&ntilde;a inmediatamente luego de ingresar al portal, ingresando por el menu en <strong>Usuario -&gt; Mi Perfil</strong></p>"
                 + "<h3><strong>Divisi&oacute;n de Ciencias de la Ingenier&iacute;a - Centro Universitario de Occidente</strong></h3>");
@@ -163,6 +163,25 @@ public class MailService {
                 + "<p>El estudiante <strong>" + student.getFirstName() + ", " + student.getLastName() + "</strong> con el Registro Academico <strong>" + student.getAcademicRegister() + "</strong> ha propuesto para su EPS titulado <strong>" + projectName + "</strong> a:</p>"
                 + "<p>Asesor: " + appointment.getUserAdviser().getFirstName() + ", " + appointment.getUserAdviser().getLastName() + " <strong>(" + appointment.getAdviserState().stateToText() + ").</strong></p>"
                 + "<p>Revisor: " + appointment.getUserReviewer().getFirstName() + ", " + appointment.getUserReviewer().getLastName() + " <strong>(" + appointment.getReviewerState().stateToText() + ").</strong></p>"
+                + "<p>Ingrese al portal para evaluar la propuesta del estudiante.</p>"
+                + "<h3><strong>Divisi&oacute;n de Ciencias de la Ingenier&iacute;a - Centro Universitario de Occidente</strong></h3>";
+
+        sendEmail(supervisor.getEmail(), "Asesor y Revisor", message);
+    }
+
+    /**
+     * Notify the Supervisor when a Student submit Company Supervisor form.
+     *
+     * @param supervisor
+     * @param appointment
+     * @param projectName
+     * @param student
+     */
+    public void emailNotifyNewCompanySupervisor(User supervisor, Appointment appointment, String projectName, User student) {
+
+        String message = "<h2>Se ha ingresado al Supervisor del la Empresa</h2>"
+                + "<p>El estudiante <strong>" + student.getFirstName() + ", " + student.getLastName() + "</strong> con el Registro Academico <strong>" + student.getAcademicRegister() + "</strong> ha propuesto para su EPS titulado <strong>" + projectName + "</strong> a:</p>"
+                + "<p>Supervisor de la Empresa: " + appointment.getCompanySupervisor().getFirstName() + ", " + appointment.getCompanySupervisor().getLastName() + " <strong>(Empresa: " + appointment.getCompanySupervisor().getNameCompanyWork() + ").</strong></p>"
                 + "<p>Ingrese al portal para evaluar la propuesta del estudiante.</p>"
                 + "<h3><strong>Divisi&oacute;n de Ciencias de la Ingenier&iacute;a - Centro Universitario de Occidente</strong></h3>";
 

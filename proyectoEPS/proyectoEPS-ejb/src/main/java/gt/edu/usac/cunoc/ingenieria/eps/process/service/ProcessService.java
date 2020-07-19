@@ -312,6 +312,84 @@ public class ProcessService {
         }
     }
     
+    public Process sendCompanySupervisorToSupervisor(Process process) throws ValidationException, UserException {
+        Optional<User> actualUser = Optional.ofNullable(userService.getAuthenticatedUser().get(0));
+        Optional<Process> resultProcess;
+        Appointment appointment;
+        
+        if (process != null && actualUser.isPresent() && process.getAppointmentId() != null
+                && process.getUserCareer().getUSERuserId().getUserId().equals(actualUser.get().getUserId())) {
+            
+            resultProcess = processRepository.findProcessById(process.getId());
+            if (resultProcess.isPresent()) {
+                if (resultProcess.get().getAppointmentId() == null) {
+                    appointment = new Appointment();
+                } else {
+                    appointment = resultProcess.get().getAppointmentId();
+                }
+                
+                if (appointment != null && process.getAppointmentId().getCompanySupervisor() != null) {
+                    if (!existsUser(process.getAppointmentId().getCompanySupervisor())) {
+                        appointment.setCompanySupervisor(userService.createTempUser(process.getAppointmentId().getCompanySupervisor()));
+                    } else {
+                        appointment.setCompanySupervisor(process.getAppointmentId().getCompanySupervisor());
+                    }
+                    
+                    if (resultProcess.get().getAppointmentId() == null) {
+                        appointment.setDateAction(LocalDateTime.now());
+                        appointment = appointmentService.createAppointment(appointment);
+                        resultProcess.get().setAppointmentId(appointment);
+                        resultProcess = Optional.of(updateProcess(resultProcess.get()));
+                    } else {
+                        resultProcess = Optional.of(updateProcess(resultProcess.get()));
+                    }
+                    
+                    mailService.emailNotifyNewCompanySupervisor(
+                            resultProcess.get().getSupervisor_EPS(),
+                            resultProcess.get().getAppointmentId(),
+                            resultProcess.get().getProject().getTitle(),
+                            resultProcess.get().getUserCareer().getUSERuserId()
+                    );
+                    return resultProcess.get();
+                    
+                } else {
+                    throw new UserException("Debe indicar un usuario");
+                }
+            } else {
+                throw new ValidationException("No existe el proceso");
+            }
+        } else {
+            throw new UserException("Usuario invalido");
+        }
+    }
+    
+    public Process enableCompanySupervisor(Process process) throws ValidationException, UserException {
+        Optional<User> actualUser = Optional.ofNullable(userService.getAuthenticatedUser().get(0));
+        Optional<Process> resultProcess;
+        
+        if (process != null && process.getAppointmentId() != null && actualUser.isPresent()
+                && process.getSupervisor_EPS() != null && process.getSupervisor_EPS().getUserId().equals(actualUser.get().getUserId())) {
+            
+            resultProcess = processRepository.findProcessById(process.getId());
+            if (resultProcess.isPresent() && resultProcess.get().getAppointmentId() != null && resultProcess.get().getAppointmentId().getCompanySupervisor() != null) {
+                if (resultProcess.get().getAppointmentId().getCompanySupervisor().getRemovable()) {
+                    userService.aproveUser(
+                            resultProcess.get().getAppointmentId().getCompanySupervisor(),
+                            resultProcess.get().getProject().getTitle(),
+                            resultProcess.get().getUserCareer().getUSERuserId().getFirstName().concat(" ").concat(process.getUserCareer().getUSERuserId().getLastName())
+                    );
+                    return resultProcess.get();
+                } else {
+                    throw new ValidationException("Debe ingresarse el usuario");
+                }
+            } else {
+                throw new ValidationException("Debe ingresarse el usuario");
+            }
+        } else {
+            throw new ValidationException("Usuario Invalido");
+        }
+    }
+    
     private boolean existsUser(User user) throws UserException {
         User search = new User();
         search.setrOLid(user.getROLid());

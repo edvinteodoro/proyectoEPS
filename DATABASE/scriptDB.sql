@@ -244,7 +244,6 @@ CREATE TABLE IF NOT EXISTS `EPS_SYSTEM`.`APPOINTMENT` (
   `company_supervisor` VARCHAR(45) NULL DEFAULT NULL,
   `adviser_state` ENUM('APPROVED', 'CHANGE', 'REVIEW','ELECTION') NULL,
   `reviewer_state` ENUM('APPROVED', 'CHANGE', 'REVIEW','ELECTION') NULL,
-  `accepted_supervisor` TINYINT(1) NULL DEFAULT 0,
   `date_action` DATETIME NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_APPOINTMENT_USER1`
@@ -667,3 +666,4 @@ INSERT INTO ROL(name) values("Estudiante");
 INSERT INTO ROL(name) values("Revisor");
 INSERT INTO ROL(name) values("Asesor");
 INSERT INTO ROL(name) values("Supervisor_EPS");
+INSERT INTO ROL(name) values("Supervisor_ORG");

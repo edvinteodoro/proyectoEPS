@@ -138,4 +138,16 @@ public interface ProcessFacadeLocal {
      * @throws ValidationException when data is missing
      */
     public Process returnAppointmentToStudent(Process process) throws UserException, ValidationException;
+
+    /**
+     * This method is just for the Supervisor, after had read it's information
+     *
+     * @param process
+     * @return
+     * @throws ValidationException
+     * @throws UserException
+     */
+    public Process enableCompanySupervisor(Process process) throws ValidationException, UserException;
+    
+    public Process sendCompanySupervisorToSupervisor(Process process) throws ValidationException, UserException;
 }

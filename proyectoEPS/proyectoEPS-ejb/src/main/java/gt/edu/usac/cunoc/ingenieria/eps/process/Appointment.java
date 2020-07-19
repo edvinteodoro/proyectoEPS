@@ -36,10 +36,6 @@ public class Appointment implements Serializable {
     @Enumerated(EnumType.STRING)
     private appointmentState reviewerState;
     @Basic(optional = false)
-    @NotNull
-    @Column(name = "accepted_supervisor")
-    private Boolean acceptedSupervisor;
-    @Basic(optional = false)
     @Column(name = "date_action")
     private LocalDateTime dateAction;
     @JoinColumn(name = "USER_adviser", referencedColumnName = "userId")
@@ -101,14 +97,6 @@ public class Appointment implements Serializable {
 
     public void setDateAction(LocalDateTime dateAction) {
         this.dateAction = dateAction;
-    }
-
-    public Boolean getAcceptedSupervisor() {
-        return acceptedSupervisor;
-    }
-
-    public void setAcceptedSupervisor(Boolean acceptedSupervisor) {
-        this.acceptedSupervisor = acceptedSupervisor;
     }
 
     public User getCompanySupervisor() {

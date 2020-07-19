@@ -65,8 +65,9 @@ public class UserService {
                 user.setEpsCommittee(Boolean.FALSE);
             }
 
-            if (user.getROLid().getName().equals(Constants.ASESOR)
-                    || user.getROLid().getName().equals(Constants.REVISOR)) {
+            if (user.getROLid().getName().equals(Constants.SUPERVISOR_EMPRESA)
+                    || user.getROLid().getName().equals(Constants.REVISOR)
+                    || user.getROLid().getName().equals(Constants.ASESOR)) {
                 user.setStatus(Boolean.FALSE);
                 user.setRemovable(Boolean.TRUE);
             } else {

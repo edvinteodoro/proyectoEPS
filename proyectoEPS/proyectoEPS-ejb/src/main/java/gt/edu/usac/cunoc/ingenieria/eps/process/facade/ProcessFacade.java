@@ -275,4 +275,12 @@ public class ProcessFacade implements ProcessFacadeLocal {
         return processRepository.getProcessBySupervisorEPS(supervisorEPS);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isAssignedAdvisorReviewer(Process process) {
+        return processRepository.isAssignedAdvisorReviewer(process);
+    }
+
 }

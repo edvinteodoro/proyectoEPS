@@ -158,4 +158,8 @@ public class JournalView implements Serializable {
             MessageUtils.addErrorMessage("No existe enlace a cargar");
         }
     }
+    
+    public List<Commentary> getCommentariesJournal(Integer JournalId){
+        return journalFacade.getCommentariesJournal(JournalId);
+    }
 }

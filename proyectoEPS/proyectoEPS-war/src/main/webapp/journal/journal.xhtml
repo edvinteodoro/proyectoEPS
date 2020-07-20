@@ -68,12 +68,12 @@
                         <h4 class="text-primary">Comentarios:</h4>
                     </div>
                     <div class="col-md-8">
-                        <p:dataTable var="commentary" value="#{journalLog.commentaries}">
+                        <p:dataTable var="commentary" value="#{journalView.getCommentariesJournal(journalLog.id)}">
                             <p:column headerText="Fecha">
                                 <h:outputText value="#{commentary.date}" />
                             </p:column>
                             <p:column headerText="Comentario">
-                                <h:outputText value="#{commentary.commentaryString}" />
+                                <h:outputText value="#{commentary.textValue}" />
                             </p:column>
                             <p:column headerText="Por">
                                 <h:outputText value="#{commentary.user.firstName} #{commentary.user.lastName}"/>

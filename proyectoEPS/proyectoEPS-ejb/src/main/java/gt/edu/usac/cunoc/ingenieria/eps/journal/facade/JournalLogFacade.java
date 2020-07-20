@@ -3,6 +3,7 @@ package gt.edu.usac.cunoc.ingenieria.eps.journal.facade;
 
 import gt.edu.usac.cunoc.ingenieria.eps.exception.LimitException;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.MandatoryException;
+import gt.edu.usac.cunoc.ingenieria.eps.journal.Commentary;
 import gt.edu.usac.cunoc.ingenieria.eps.journal.JournalLog;
 import gt.edu.usac.cunoc.ingenieria.eps.journal.repository.JournalLogRepository;
 import gt.edu.usac.cunoc.ingenieria.eps.journal.service.JournalLogService;
@@ -29,6 +30,11 @@ public class JournalLogFacade implements JournalLogFacadeLocal {
     @Override
     public void createJounalLog(JournalLog newJournalLog) throws LimitException, MandatoryException{
         journalLogService.createJournalLog(newJournalLog);
+    }
+
+    @Override
+    public List<Commentary> getCommentariesJournal(Integer journalId) {
+        return journalLogRepository.getCommentariesJournal(journalId);
     }
     
 }

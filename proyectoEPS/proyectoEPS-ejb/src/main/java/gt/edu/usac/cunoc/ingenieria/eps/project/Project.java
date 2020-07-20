@@ -59,7 +59,7 @@ public class Project implements Serializable {
     @OneToOne
     @JoinColumn(name = "PROCESS_id", referencedColumnName = "id")
     private Process pROCESSid;
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "project", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "project", orphanRemoval = true)
     @OrderBy("id ASC")
     private List<Correction> corrections;
 

@@ -9,7 +9,6 @@ import gt.edu.usac.cunoc.ingenieria.eps.process.StateProcess;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Correction;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Objectives;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
-import gt.edu.usac.cunoc.ingenieria.eps.project.Section;
 import gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection;
 import gt.edu.usac.cunoc.ingenieria.eps.project.facade.ProjectFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.tail.facade.TailCommitteeEPSFacadeLocal;
@@ -176,10 +175,7 @@ public class ProjectView implements Serializable {
     }
 
     public Boolean renderedSection(Integer section) {
-        if (section == null){
-            return false;
-        } 
-        return !getSectionCorrection(section).isEmpty();
+        return (section == null && !getSectionCorrection(section).isEmpty());
     }
 
     public List<Correction> getTitleCorrections() {
@@ -223,26 +219,12 @@ public class ProjectView implements Serializable {
     }
 
     public List<Correction> getSectionCorrection(Integer section) {
-        currentCorrections = new ArrayList<>();
-        for (int i = 0; i < corrections.size(); i++) {
-            if (corrections.get(i).getSection() != null) {
-                if (corrections.get(i).getSection().getId().equals(section)) {
-                    currentCorrections.add(corrections.get(i));
-                }
-            }
-        }
-        return currentCorrections;
+        this.currentCorrections = projectFacade.getCorrections(TypeCorrection.OTHER, getProject().getId(), section);
+        return this.currentCorrections;
     }
 
     public List<Correction> getCurrentCorrections(TypeCorrection type) {
-        this.currentCorrections = new ArrayList<>();
-        if (getCorrections() != null) {
-            for (int i = 0; i < getCorrections().size(); i++) {
-                if (getCorrections().get(i).getType().equals(type)) {
-                    this.currentCorrections.add(getCorrections().get(i));
-                }
-            }
-        }
+        this.currentCorrections = projectFacade.getCorrections(type, getProject().getId(), null);;
         return this.currentCorrections;
     }
 
@@ -416,6 +398,7 @@ public class ProjectView implements Serializable {
 
     public void loadCurrentProject() throws IOException {
         try {
+            corrections = new ArrayList<>();
             this.process = processFacade.getProcess(new Process(processId)).get(0);
             if (this.process.getUserCareer().getUSERuserId().equals(this.user)) {
                 flagUpdate = false;

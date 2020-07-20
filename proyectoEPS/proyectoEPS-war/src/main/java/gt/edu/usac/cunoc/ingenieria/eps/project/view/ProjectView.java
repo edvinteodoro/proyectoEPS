@@ -87,6 +87,7 @@ public class ProjectView implements Serializable {
         try {
             generalObjectves = new ArrayList<>();
             specificObjectives = new ArrayList<>();
+            corrections = new ArrayList<>();
             revisionState = StateProcess.REVISION;
             user = userFacade.getAuthenticatedUser().get(0);
         } catch (Exception e) {
@@ -174,11 +175,7 @@ public class ProjectView implements Serializable {
     }
 
     public Boolean renderedSection(Integer section) {
-        if (section == null) {
-            return false;
-        } else {
-            return !getSectionCorrection(section).isEmpty();
-        }
+        return (section == null && !getSectionCorrection(section).isEmpty());
     }
 
     public List<Correction> getTitleCorrections() {

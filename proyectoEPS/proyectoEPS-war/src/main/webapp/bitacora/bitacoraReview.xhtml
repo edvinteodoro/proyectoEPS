@@ -22,59 +22,62 @@
         Bitacora
     </ui:define>
     <ui:define name="content">
-        <p:staticMessage severity="info" detail="Registro de Bitácora Vacio" rendered="#{bitacoraReview.journals.size() eq 0}"/>
-        <br/>
-        <p:commandLink styleClass="btn btn-warning" 
-                       actionListener="#{bitacoraReview.enableJournal()}"
-                       update=":growl"
-                       rendered="#{!bitacoraReview.process.approvedEPSDevelopment}">
-            <p:confirm header="Habilitar Bitácora" message="¿Desea habilitar la Bitácora?" icon="pi pi-exclamation-triangle" />
-            <span class="glyphicon glyphicon-ok-sign"></span> Habilitar Bitácora
-        </p:commandLink>
-        <p:accordionPanel value="#{bitacoraReview.journals}" var="journalLog" activeIndex="-2">
-            <p:tab id="JournalLog" title="Fecha - #{journalLog.dateTime.dayOfMonth} / #{journalLog.dateTime.monthValue} / #{journalLog.dateTime.year}" >
-                <div>
-                    <h4 class="text-primary">Actividad:</h4>
-                </div>
-                <div>
-                    <h:outputLabel value="#{journalLog.activity}"/>
-                </div>
-                <div>
-                    <h4 class="text-primary">Descripcion:</h4>
-                </div>
-                <div>
-                    <h:outputLabel value="#{journalLog.description}"/>
-                </div>
-                <div>
-                    <h4 class="text-primary">Imagenes:</h4>
-                </div>
-                <div>
-                    <p:galleria value="#{journalLog.images}" var="imagen" >
-                        <o:graphicImage value="#{imagen.image}" dataURI="true" height="450" width="600"/>
-                    </p:galleria>
-                </div>
-                <div>
-                    <h4 class="text-primary">Links:</h4>
-                </div>
-                <div>
-                    <p:dataView value="#{journalLog.links}" var="link" >
-                        <p:dataViewListItem>
-                            <div>
-                                <a href="#{link.linkText}" target="_blank">#{link.linkText}</a>
-                            </div>    
-                        </p:dataViewListItem>
-                    </p:dataView>
-                </div>
-                <div>
-                    <br></br><p:commandLink styleClass="btn btn-primary"
-                                            update=":#{p:component('comentar')}"
-                                            oncomplete="PF('comentar').show();">
-                        <f:setPropertyActionListener value="#{journalLog}" target="#{bitacoraReview.journalSelected}"/>
-                        <span class="glyphicon glyphicon-comment"></span> Comentar
-                    </p:commandLink>
-                </div>
-            </p:tab>
-        </p:accordionPanel>
+        <h:form>
+            <p:staticMessage severity="info" detail="Registro de Bitácora Vacio" rendered="#{bitacoraReview.journals.size() eq 0}"/>
+            <br/>
+            <p:commandLink styleClass="btn btn-warning" 
+                           actionListener="#{bitacoraReview.enableJournal()}"
+                           update="@form,:growl"
+                           rendered="#{!bitacoraReview.process.approvedEPSDevelopment}">
+                <p:confirm header="Habilitar Bitácora" message="¿Desea habilitar la Bitácora?" icon="pi pi-exclamation-triangle" />
+                <span class="glyphicon glyphicon-ok-sign"></span> Habilitar Bitácora
+            </p:commandLink>
+            <p:accordionPanel value="#{bitacoraReview.journals}" var="journalLog" activeIndex="-2">
+                <p:tab id="JournalLog" title="Fecha - #{journalLog.dateTime.dayOfMonth} / #{journalLog.dateTime.monthValue} / #{journalLog.dateTime.year}" >
+                    <div>
+                        <h4 class="text-primary">Actividad:</h4>
+                    </div>
+                    <div>
+                        <h:outputLabel value="#{journalLog.activity}"/>
+                    </div>
+                    <div>
+                        <h4 class="text-primary">Descripcion:</h4>
+                    </div>
+                    <div>
+                        <h:outputLabel value="#{journalLog.description}"/>
+                    </div>
+                    <div>
+                        <h4 class="text-primary">Imagenes:</h4>
+                    </div>
+                    <div>
+                        <p:galleria value="#{journalLog.images}" var="imagen" >
+                            <o:graphicImage value="#{imagen.image}" dataURI="true" height="450" width="600"/>
+                        </p:galleria>
+                    </div>
+                    <div>
+                        <h4 class="text-primary">Links:</h4>
+                    </div>
+                    <div>
+                        <p:dataView value="#{journalLog.links}" var="link" >
+                            <p:dataViewListItem>
+                                <div>
+                                    <a href="#{link.linkText}" target="_blank">#{link.linkText}</a>
+                                </div>    
+                            </p:dataViewListItem>
+                        </p:dataView>
+                    </div>
+                    <div>
+                        <br></br><p:commandLink styleClass="btn btn-primary"
+                                                update=":#{p:component('comentar')}"
+                                                oncomplete="PF('comentar').show();">
+                            <f:setPropertyActionListener value="#{journalLog}" target="#{bitacoraReview.journalSelected}"/>
+                            <span class="glyphicon glyphicon-comment"></span> Comentar
+                        </p:commandLink>
+                    </div>
+                </p:tab>
+            </p:accordionPanel>
+
+        </h:form>
         <p:dialog header="Comentarios" id="comentar" widgetVar="comentar" 
                   modal="true" closeOnEscape="true">
             <p:ajax event="close" listener="#{bitacoraReview.cleanJournalSelected()}" update="@this" />
@@ -110,14 +113,14 @@
                 </fieldset>
             </h:form>
         </p:dialog>
-        
+
         <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
             <div class="col text-center">
                 <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes"/>
                 <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no"/>
             </div>
         </p:confirmDialog> 
-        
+
     </ui:define>
 
 </ui:composition>

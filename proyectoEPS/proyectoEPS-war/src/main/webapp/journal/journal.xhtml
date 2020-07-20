@@ -26,71 +26,74 @@
 
     <ui:define name="content">
         <h:outputScript library="js" name="calendar_es.js" />
-        <p:staticMessage severity="info" detail="Registro de Bitácora Vacio" rendered="#{journalView.journals.size() eq 0}"/>
-        <p:accordionPanel id="journalTable" value="#{journalView.journals}" var="journalLog" activeIndex="-2">
-            <p:tab id="JournalLog" title="Fecha - #{journalLog.dateTime.dayOfMonth} / #{journalLog.dateTime.monthValue} / #{journalLog.dateTime.year}" >
-                <div>
-                    <h4 class="text-primary">Actividad:</h4>
-                </div>
-                <div>
-                    <h:outputLabel value="#{journalLog.activity}"/>
-                </div>
-                <div>
-                    <h4 class="text-primary">Descripción:</h4>
-                </div>
-                <div>
-                    <h:outputLabel value="#{journalLog.description}"/>
-                </div>
-                <div>
-                    <h4 class="text-primary">Imagenes:</h4>
-                </div>
-                <div>
-                    <p:galleria value="#{journalLog.images}" var="image" rendered="#{!journalLog.emptyImages}">
-                        <o:graphicImage value="#{image.image}" dataURI="true" height="450" width="600"/>
-                    </p:galleria>
-                </div>
-                <div>
-                    <h4 class="text-primary">Links:</h4>
-                </div>
-                <div>
-                    <p:dataView value="#{journalLog.links}" var="link" rendered="#{!journalLog.emptyLinks}">
-                        <p:dataViewListItem>
-                            <div>
-                                <a href="#{link.linkString}" target="_blank">#{link.linkString}</a>
-                            </div>    
-                        </p:dataViewListItem>
-                    </p:dataView>
-                </div>
-                <div>
-                    <h4 class="text-primary">Comentarios:</h4>
-                </div>
-                <div class="col-md-8">
-                    <p:dataTable var="commentary" value="#{journalLog.commentaries}">
-                        <p:column headerText="Fecha">
-                            <h:outputText value="#{commentary.date}" />
-                        </p:column>
-                        <p:column headerText="Comentario">
-                            <h:outputText value="#{commentary.commentaryString}" />
-                        </p:column>
-                        <p:column headerText="Por">
-                            <h:outputText value="#{commentary.user.firstName} #{commentary.user.lastName}"/>
-                        </p:column>
-                    </p:dataTable>
-                </div>
-            </p:tab>
-        </p:accordionPanel>
+        <h:form id="principal">
 
-        <br/>
 
-        <div class="btn-group pull-left">
-            <p:commandLink styleClass="btn btn-success" 
-                           oncomplete="PF('dlgNew').show();"
-                           update=":#{p:component('dlgNew')}">
-                <f:setPropertyActionListener value="#{journalLog}" target="#{journalView.newJournalLog}"/>
-                <span class="glyphicon glyphicon-plus"></span> Nuevo Registro
-            </p:commandLink>
-        </div>    
+            <p:staticMessage severity="info" detail="Registro de Bitácora Vacio" rendered="#{journalView.journals.size() eq 0}"/>
+            <p:accordionPanel id="journalTable" value="#{journalView.journals}" var="journalLog" activeIndex="-2">
+                <p:tab id="JournalLog" title="Fecha - #{journalLog.dateTime.dayOfMonth} / #{journalLog.dateTime.monthValue} / #{journalLog.dateTime.year}" >
+                    <div>
+                        <h4 class="text-primary">Actividad:</h4>
+                    </div>
+                    <div>
+                        <h:outputLabel value="#{journalLog.activity}"/>
+                    </div>
+                    <div>
+                        <h4 class="text-primary">Descripción:</h4>
+                    </div>
+                    <div>
+                        <h:outputLabel value="#{journalLog.description}"/>
+                    </div>
+                    <div>
+                        <h4 class="text-primary">Imagenes:</h4>
+                    </div>
+                    <div>
+                        <p:galleria value="#{journalLog.images}" var="image" rendered="#{!journalLog.emptyImages}">
+                            <o:graphicImage value="#{image.image}" dataURI="true" height="450" width="600"/>
+                        </p:galleria>
+                    </div>
+                    <div>
+                        <h4 class="text-primary">Links:</h4>
+                    </div>
+                    <div>
+                        <p:dataView value="#{journalLog.links}" var="link" rendered="#{!journalLog.emptyLinks}">
+                            <p:dataViewListItem>
+                                <div>
+                                    <a href="#{link.linkString}" target="_blank">#{link.linkString}</a>
+                                </div>    
+                            </p:dataViewListItem>
+                        </p:dataView>
+                    </div>
+                    <div>
+                        <h4 class="text-primary">Comentarios:</h4>
+                    </div>
+                    <div class="col-md-8">
+                        <p:dataTable var="commentary" value="#{journalLog.commentaries}">
+                            <p:column headerText="Fecha">
+                                <h:outputText value="#{commentary.date}" />
+                            </p:column>
+                            <p:column headerText="Comentario">
+                                <h:outputText value="#{commentary.commentaryString}" />
+                            </p:column>
+                            <p:column headerText="Por">
+                                <h:outputText value="#{commentary.user.firstName} #{commentary.user.lastName}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </p:tab>
+            </p:accordionPanel>
 
+            <br/>
+
+            <div class="btn-group pull-left">
+                <p:commandLink styleClass="btn btn-success" 
+                               oncomplete="PF('dlgNew').show();"
+                               update=":#{p:component('dlgNew')}">
+                    <f:setPropertyActionListener value="#{journalLog}" target="#{journalView.newJournalLog}"/>
+                    <span class="glyphicon glyphicon-plus"></span> Nuevo Registro
+                </p:commandLink>
+            </div>    
+        </h:form>
         <p:dialog header="Nuevo Registro" id="dlgNew" widgetVar="dlgNew" 
                   modal="true" closeOnEscape="true" position="center">
             <p:ajax event="close" listener="#{journalView.cleanNewJournalLog()}" update="@this" />
@@ -176,7 +179,7 @@
                 <div class="modal-footer">
                     <p:commandLink styleClass="btn btn-warning btn-lg" style="width: 100%;"
                                    actionListener="#{journalView.createJournalLog('dlgNew')}"
-                                   update="@form,:#{p:component('journalTable')},:#{p:component('growl')}"
+                                   update="@form,:#{p:component('journalTable')},:#{p:component('principal')},:#{p:component('growl')}"
                                    >
                         <span class="glyphicon glyphicon-ok-sign"></span> Guardar
                     </p:commandLink>

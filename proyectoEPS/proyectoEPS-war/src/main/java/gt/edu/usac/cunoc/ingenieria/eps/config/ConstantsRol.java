@@ -114,5 +114,9 @@ public class ConstantsRol implements Serializable {
     public String PROCESS_VIEWER(){
         return ESTUDIANTE + "," + COORDINADOR_CARRERA;
     }
+    
+    public String CREATE_USER_PROCESS(){
+        return DIRECTOR + "," + COORDINADOR_EPS + "," + SUPERVISOR_EPS + "," + SECRETARIA_EPS;
+    }
 
 }

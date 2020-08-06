@@ -68,7 +68,7 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <p:link  outcome="createUser" value="Registro Usuario" rendered="#{p:ifAnyGranted(constantsRol.SECRETARIAS())}"/>
+                                    <p:link  outcome="createUser" value="Registro Usuario" rendered="#{p:ifAnyGranted(constantsRol.CREATE_USER_PROCESS())}"/>
                                 </li>
                                 <li>
                                     <p:link  outcome="users" value="Consulta de Usuarios"/>

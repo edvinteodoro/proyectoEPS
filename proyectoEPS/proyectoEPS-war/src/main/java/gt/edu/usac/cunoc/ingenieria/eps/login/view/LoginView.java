@@ -3,6 +3,7 @@ package gt.edu.usac.cunoc.ingenieria.eps.login.view;
 import User.exception.UserException;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.COORDINADOR_CARRERA;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.COORDINADOR_EPS;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.DIRECTOR;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.ESTUDIANTE;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.SECRETARIA_EPS;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.SUPERVISOR_EPS;
@@ -95,6 +96,9 @@ public class LoginView implements Serializable {
     private void redirectToIndex() throws IOException, UserException {
         User currentUser = userFacade.getAuthenticatedUser().get(0);
         switch (currentUser.getROLid().getName()) {
+            case DIRECTOR:
+                externalContext.redirect(externalContext.getRequestContextPath() + "/user/createUser.xhtml");
+                break;
             case COORDINADOR_CARRERA:
                 externalContext.redirect(externalContext.getRequestContextPath() + "/process/processes.xhtml");
                 break;

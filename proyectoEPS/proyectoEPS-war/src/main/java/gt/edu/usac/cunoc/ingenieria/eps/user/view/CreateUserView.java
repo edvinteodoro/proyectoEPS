@@ -1,6 +1,16 @@
 package gt.edu.usac.cunoc.ingenieria.eps.user.view;
 
+import User.exception.UserException;
 import gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.ASESOR;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.COORDINADOR_CARRERA;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.COORDINADOR_EPS;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.DIRECTOR;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.REVISOR;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.SECRETARIA_COORDINACION;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.SECRETARIA_EPS;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.SUPERVISOR_EMPRESA;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.SUPERVISOR_EPS;
 import gt.edu.usac.cunoc.ingenieria.eps.user.Career;
 import gt.edu.usac.cunoc.ingenieria.eps.user.Rol;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
@@ -28,6 +38,7 @@ public class CreateUserView implements Serializable {
     private List<UserCareer> userCareers;
 
     private User user;
+    private User loginUser;
 
     private Boolean personalCodeFlag;
     private Boolean academicRegisterFlag;
@@ -35,9 +46,53 @@ public class CreateUserView implements Serializable {
 
     @PostConstruct
     public void init() {
-        rolUsers = userFacade.getAllRolUser();
-        careers = userFacade.getAllCareer();
-        verifyView();
+        try {
+            loginUser = userFacade.getAuthenticatedUser().get(0);
+            rolUsers = userFacade.getAllRolUser();
+            switch (loginUser.getROLid().getName()){
+                case COORDINADOR_EPS:
+                    eliminatedRolByName(DIRECTOR);
+                    eliminatedRolByName(COORDINADOR_EPS);
+                    break;
+                case SUPERVISOR_EPS:
+                    eliminatedRolByName(DIRECTOR);
+                    eliminatedRolByName(COORDINADOR_EPS);
+                    eliminatedRolByName(SECRETARIA_EPS);
+                    eliminatedRolByName(COORDINADOR_CARRERA);
+                    eliminatedRolByName(SECRETARIA_COORDINACION);
+                    eliminatedRolByName(SUPERVISOR_EPS);
+                    break;
+                case SECRETARIA_EPS:
+                    eliminatedRolByName(DIRECTOR);
+                    eliminatedRolByName(COORDINADOR_EPS);
+                    eliminatedRolByName(SECRETARIA_EPS);
+                    eliminatedRolByName(COORDINADOR_CARRERA);
+                    eliminatedRolByName(SECRETARIA_COORDINACION);
+                    eliminatedRolByName(REVISOR);
+                    eliminatedRolByName(ASESOR);
+                    eliminatedRolByName(SUPERVISOR_EPS);
+                    eliminatedRolByName(SUPERVISOR_EMPRESA);
+                    break;    
+            }
+            careers = userFacade.getAllCareer();
+            verifyView();
+        } catch (UserException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+    
+    private void eliminatedRolByName(String rolName){
+        boolean flagRemove = false;
+        int indexRolUser = 0;
+        for (int i = 0; i < rolUsers.size(); i++) {
+            if (rolUsers.get(i).getName().equalsIgnoreCase(rolName)){
+                indexRolUser = i;
+                flagRemove = true;
+            }
+        }
+        if (flagRemove){
+            rolUsers.remove(indexRolUser);
+        }
     }
 
     public UserFacadeLocal getUserFacade() {
@@ -152,6 +207,11 @@ public class CreateUserView implements Serializable {
                     personalCodeFlag = true;
                     academicRegisterFlag = false;
                     careerSelectionFlag = true;
+                    break;
+                case Constants.SUPERVISOR_EMPRESA:
+                    personalCodeFlag = false;
+                    academicRegisterFlag = false;
+                    careerSelectionFlag = false;
                     break;
                 default:
                     personalCodeFlag = true;

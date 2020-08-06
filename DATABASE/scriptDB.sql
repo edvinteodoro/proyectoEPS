@@ -655,13 +655,13 @@ INSERT INTO CAREER(codigo, name) VALUES (33, "Ingeniería Civil");
 INSERT INTO CAREER(codigo, name) VALUES (35, "Ingeniería Industrial");
 INSERT INTO CAREER(codigo, name) VALUES (36, "Ingeniería Mecánica-Industrial");
 
-INSERT INTO ROL(name) values("Dirección");
+INSERT INTO ROL(name) values("Director");
 INSERT INTO ROL(name) values("Coordinador_EPS");
 INSERT INTO ROL(name) values("Secretaria_EPS");
+INSERT INTO ROL(name) values("Supervisor_EPS");
 INSERT INTO ROL(name) values("Coordinador_Carrera");
 INSERT INTO ROL(name) values("Secretaria_Coordinación");
-INSERT INTO ROL(name) values("Estudiante");
-INSERT INTO ROL(name) values("Revisor");
-INSERT INTO ROL(name) values("Asesor");
-INSERT INTO ROL(name) values("Supervisor_EPS");
 INSERT INTO ROL(name) values("Supervisor_ORG");
+INSERT INTO ROL(name) values("Asesor");
+INSERT INTO ROL(name) values("Revisor");
+INSERT INTO ROL(name) values("Estudiante");

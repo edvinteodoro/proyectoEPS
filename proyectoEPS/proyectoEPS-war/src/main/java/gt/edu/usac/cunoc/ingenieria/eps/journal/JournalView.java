@@ -2,6 +2,7 @@ package gt.edu.usac.cunoc.ingenieria.eps.journal;
 
 import gt.edu.usac.cunoc.ingenieria.eps.exception.LimitException;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.MandatoryException;
+import gt.edu.usac.cunoc.ingenieria.eps.journal.facade.CommentaryFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.process.facade.ProcessFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import java.io.Serializable;
@@ -28,6 +29,9 @@ public class JournalView implements Serializable {
     @EJB
     private ProcessFacadeLocal processFacade;
 
+    @EJB
+    private CommentaryFacadeLocal commentaryFacade;
+    
     private Integer processId;
     private Process process;
 
@@ -160,6 +164,6 @@ public class JournalView implements Serializable {
     }
     
     public List<Commentary> getCommentariesJournal(Integer JournalId){
-        return journalFacade.getCommentariesJournal(JournalId);
+        return commentaryFacade.getCommentariesByJournalId(JournalId);
     }
 }

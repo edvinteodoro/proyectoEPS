@@ -16,7 +16,6 @@ public class JournalLogRepository {
 
     private final String GET_JOURNAL_LOG_BY_PROCESS = "SELECT j FROM JournalLog j WHERE j.process.id = :idProcess ORDER BY j.dateTime";
     private final String GET_JOURNAL_LOG_BY_DATE = "SELECT j FROM JournalLog j WHERE j.dateTime = :dateTime AND j.process.id = :idProcess";
-    private final String GET_COMMENTARIES_BY_JOURNAL_ID = "SELECT c FROM Commentary c WHERE c.journal_Log.id = :idJournal";
     private EntityManager entityManager;
 
     @PersistenceContext(name = PERSISTENCE_UNIT_NAME)
@@ -48,9 +47,4 @@ public class JournalLogRepository {
         return journals.isEmpty();
     }
     
-    public List<Commentary> getCommentariesJournal(Integer journalId){
-        Query query = entityManager.createQuery(GET_COMMENTARIES_BY_JOURNAL_ID, Commentary.class);
-        query.setParameter("idJournal", journalId);
-        return query.getResultList();
-    }
 }

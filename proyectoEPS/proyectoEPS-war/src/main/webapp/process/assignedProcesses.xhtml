@@ -78,7 +78,7 @@
             </p:column>
             <p:column headerText="Bitacora" styleClass="text-center">
                 <p data-placement="top" data-toggle="tooltip" title="Bitacora">
-                    <button jsf:outcome="bitacoraReview" 
+                    <button jsf:outcome="journalReview" 
                             styleClass="btn btn-success btn-xs" 
                             rendered="#{assignedProcessesView.isAssignedAdviserReviewer(process)}">
                         <f:param name="idProcess" value="#{process.id}"/>

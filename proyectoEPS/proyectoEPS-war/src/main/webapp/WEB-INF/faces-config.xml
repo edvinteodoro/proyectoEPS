@@ -80,8 +80,8 @@
             <redirect/>
         </navigation-case>
         <navigation-case>
-            <from-outcome>bitacoraReview</from-outcome>
-            <to-view-id>/bitacora/bitacoraReview.xhtml</to-view-id>
+            <from-outcome>journalReview</from-outcome>
+            <to-view-id>/journal/journalReview.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
         <navigation-case>

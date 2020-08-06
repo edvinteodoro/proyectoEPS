@@ -98,13 +98,25 @@
         <web-resource-collection>
             <web-resource-name>assignedProcesses</web-resource-name>
             <url-pattern>/process/assignedProcesses.xhtml</url-pattern>
-            <url-pattern>/bitacora/bitacoraReview.xhtml</url-pattern>
+            <url-pattern>/journal/journalReview.xhtml</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <description>Allowed users</description>
             <role-name>Supervisor_EPS</role-name>
         </auth-constraint>
     </security-constraint>
+    
+    <security-constraint>
+        <display-name>journal</display-name>
+        <web-resource-collection>
+            <web-resource-name>journal</web-resource-name>
+            <url-pattern>/journal/journal.xhtml</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <description>Allowed users</description>
+            <role-name>Estudiante</role-name>
+        </auth-constraint>
+    </security-constraint> 
 
     <security-constraint>
         <display-name>allCommon</display-name>
@@ -145,18 +157,6 @@
             <role-name>Secretaria_EPS</role-name>
         </auth-constraint>
     </security-constraint>
-     
-    <security-constraint>
-        <display-name>journal</display-name>
-        <web-resource-collection>
-            <web-resource-name>journal</web-resource-name>
-            <url-pattern>/journal/journal.xhtml</url-pattern>
-        </web-resource-collection>
-        <auth-constraint>
-            <description>Allowed users</description>
-            <role-name>Estudiante</role-name>
-        </auth-constraint>
-    </security-constraint> 
     
     <security-role>
         <role-name>Estudiante</role-name>

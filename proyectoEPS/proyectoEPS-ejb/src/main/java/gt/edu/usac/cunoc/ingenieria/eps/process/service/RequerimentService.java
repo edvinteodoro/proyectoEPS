@@ -39,7 +39,7 @@ public class RequerimentService {
         if(requeriment.getWrittenRequest()!=null){
             updateRequeriment.setWrittenRequest(requeriment.getWrittenRequest());
         }
-        
-        return requeriment;
+        entityManager.merge(updateRequeriment);
+        return updateRequeriment;
     }
 }

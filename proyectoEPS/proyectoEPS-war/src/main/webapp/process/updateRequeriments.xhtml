@@ -25,7 +25,6 @@
     <ui:define name="content">
         <h:form id="frmLogin">            
             <p:focus id="focuss" context="frmLogin" />
-            <p:messages  globalOnly="true"/>
             <fieldset class="center-block">
                 <legend>Actualizar Requisitos</legend> 
                 <div class="row">
@@ -140,12 +139,11 @@
                         </button>
                     </div>
                     <div class="form-group col-sm-2" jsf:rendered="#{updateProcessView.isStudent()}">
-                        <button styleClass="btn btn-primary"
-                                update="@form,:growl" 
-                                action="#{updateProcessView.save()}"
-                                jsf:outcome="processes">
+                        <p:commandLink styleClass="btn btn-primary"
+                                       update="@form,:growl" 
+                                       action="#{updateProcessView.save()}">
                             <span class="glyphicon glyphicon-floppy-saved"></span> Guardar Cambios
-                        </button>
+                        </p:commandLink>
                     </div>
                     <div class="row">
                         <div class="form-group col-sm-2" jsf:rendered="#{!updateProcessView.isStudent()}">

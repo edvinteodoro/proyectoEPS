@@ -2,7 +2,7 @@
 package gt.edu.usac.cunoc.ingenieria.eps.project.repository;
 
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.PERSISTENCE_UNIT_NAME;
-import gt.edu.usac.cunoc.ingenieria.eps.configuration.repository.PropertyRepository;
+import gt.edu.usac.cunoc.ingenieria.eps.property.repository.PropertyRepository;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.MandatoryException;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Objectives;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Project;

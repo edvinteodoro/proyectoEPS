@@ -1,0 +1,135 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="../templates/template-one.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:define name="head">
+        Configuración General
+    </ui:define>
+
+    <ui:define name="title">
+        Configuración General
+    </ui:define>
+
+    <ui:define name="content">
+        <h:outputScript library="js" name="calendar_es.js" />
+        <h:form id="principal">
+            <fieldset>
+                <legend>Configuración Proceso EPS</legend>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <div class="form-group col-sm-3">
+                            <p:outputLabel value="Fecha Limite para Recepción de Requisitos:"/>                            
+                            <p:calendar id="expirationDate" pt:placeholder="Fecha"
+                                        pattern="dd/MM/yyyy" 
+                                        locale="es"
+                                        value="#{configurationView.deadLineToSubmitDocument.valueDate}">
+                                <f:convertDateTime type="localDate" pattern="dd/MM/yyyy" />
+                            </p:calendar>
+                        </div>
+                        <div class="form-group col-sm-3"/>
+                        <div class="form-group col-sm-3">
+                            <p:outputLabel value="Porcentaje Minimo para Extensión: "/>
+                            <p:spinner id="validation"  min="0" max="100" value="#{configurationView.validationPercentageExtension.valueInt}"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <div class="form-group col-sm-3">
+                            <p:outputLabel value="Tiempo Minimo de Ejecución: (meses)"/>
+                            <p:spinner id="minimumExecution"  min="1" value="#{configurationView.minimumExecutionMonth.valueInt}"/>
+                        </div>
+                        <div class="form-group col-sm-3"/>
+                        <div class="form-group col-sm-3">
+                            <p:outputLabel value="Tiempo Maximo de Ejecución: (meses)"/>
+                            <p:spinner id="maximumExecution"  min="1" value="#{configurationView.maximumExecutionMonth.valueInt}"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <div class="form-group col-sm-3">
+                            <p:outputLabel value="Tiempo para finalizar Proceso sin Movimiento: (meses)"/>
+                            <p:spinner id="endProcessTime"  min="1" value="#{configurationView.timeProcessWithoutMovement.valueInt}"/>
+                        </div>
+                    </div>
+                </div>
+
+                <legend>Configuración Carga de Trabajo</legend>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <div class="form-group col-sm-3">
+                            <p:outputLabel value="Carga Maxima de Trabajo"/>
+                            <p:spinner id="workload"  min="1" value="#{configurationView.workload.valueInt}"/>
+                        </div>
+                        <div class="form-group col-sm-3"/>
+                        <div class="form-group col-sm-3">
+                            <p:outputLabel value="Tiempo para Recordatorio de Revisión: (días)"/>
+                            <p:spinner id="rememberTime"  min="1" value="#{configurationView.reviewTimeDays.valueInt}"/>
+                        </div>
+                    </div>
+                </div>
+
+                <legend>Configuración Anteproyecto</legend>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <div class="form-group col-sm-3">
+                            <p:outputLabel value="Cantidad Maxima de Caracteres para Titulo principal"/>
+                            <p:spinner id="characterTitle"  min="1" max="400" value="#{configurationView.characterLimitTitle.valueInt}"/>
+                        </div>
+                        <div class="form-group col-sm-3"/>
+                        <div class="form-group col-sm-3">
+                            <p:outputLabel value="Cantidad Maxima de Caracteres para Justificación"/>
+                            <p:spinner id="characterJustification"  min="1" max="65500" value="#{configurationView.characterLimitJustification.valueInt}"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <div class="form-group col-sm-3">
+                            <p:outputLabel value="Cantidad Maxima de Objetivos Generales"/>
+                            <p:spinner id="generalObjective"  min="1" value="#{configurationView.limitGeneralObjective.valueInt}"/>
+                        </div>
+                        <div class="form-group col-sm-3"/>
+                        <div class="form-group col-sm-3">
+                            <p:outputLabel value="Cantidad Maxima de Objetivos Especificos"/>
+                            <p:spinner id="specificObjective"  min="1" value="#{configurationView.limitSpecificObjective.valueInt}"/>
+                        </div>
+                    </div>
+                </div>
+                    <br/>
+                <div class="row">
+                    <div class="form-group col-sm-1">
+                        <p:commandLink styleClass="btn btn-primary"
+                                       update="@form,:growl" 
+                                       actionListener="#{configurationView.updateProperties()}"
+                                       >
+                            <p:confirm header="Modificar Configuración" message="¿Desea modificar la Configuración General?" icon="pi pi-exclamation-triangle" />
+                            <span class="glyphicon glyphicon-floppy-disk"></span> Guardar
+                        </p:commandLink>
+                    </div>
+                    <div class="form-group col-sm-1">
+                        <p:commandLink styleClass="btn btn-info"
+                                       update="@form,:growl"
+                                       actionListener="#{configurationView.reloadProperties()}">
+                            <span class="glyphicon glyphicon-refresh"></span> Restablecer
+                        </p:commandLink>
+                    </div>
+                </div>
+
+            </fieldset>
+        </h:form>
+        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" >
+            <div class="col text-center">
+                <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+            </div>
+        </p:confirmDialog>
+    </ui:define>
+
+</ui:composition>

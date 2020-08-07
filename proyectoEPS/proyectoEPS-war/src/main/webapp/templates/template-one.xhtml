@@ -88,11 +88,20 @@
                                 <h:commandLink styleClass="navbar-link"
                                                action="profile">
                                     <span class="glyphicon glyphicon-user"></span> #{p:remoteUser()}
-                                </h:commandLink></li>
+                                </h:commandLink>
+                            </li>
                             <li>
                                 <h:commandLink styleClass="navbar-link"
                                                action="#{logoutView.logout()}">
                                     <span class="glyphicon glyphicon-log-out"></span> Salir
+                                </h:commandLink>
+                            </li>
+                            <li>
+                                <h:commandLink styleClass="navbar-link"
+                                               action="configurationEPS"
+                                               rendered="#{p:ifGranted(constantsRol.COORDINADOR_EPS())}"
+                                               >
+                                    <span class="glyphicon glyphicon-cog"></span>
                                 </h:commandLink>
                             </li>
                         </ul>

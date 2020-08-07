@@ -1,5 +1,5 @@
 
-package gt.edu.usac.cunoc.ingenieria.eps.configuration;
+package gt.edu.usac.cunoc.ingenieria.eps.property;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -12,7 +12,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "PROPERTY")
-public class Property implements Serializable {
+public class Property implements Serializable, Cloneable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -87,6 +87,17 @@ public class Property implements Serializable {
             return false;
         }
         return true;
+    }
+    
+    @Override
+    public Object clone(){
+        Object obj = null;
+        try {
+            obj = super.clone();
+        } catch (CloneNotSupportedException ex) {
+            System.out.println("No se pudo duplicar");
+        }
+        return obj;
     }
     
 }

@@ -1,7 +1,7 @@
 package gt.edu.usac.cunoc.ingenieria.eps.project.facade;
 
 import User.exception.UserException;
-import gt.edu.usac.cunoc.ingenieria.eps.configuration.repository.PropertyRepository;
+import gt.edu.usac.cunoc.ingenieria.eps.property.repository.PropertyRepository;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.LimitException;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.MandatoryException;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Objectives;

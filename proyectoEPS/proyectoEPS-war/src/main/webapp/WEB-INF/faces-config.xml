@@ -89,6 +89,11 @@
             <to-view-id>/journal/journal.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
+        <navigation-case>
+            <from-outcome>configurationEPS</from-outcome>
+            <to-view-id>/configuration/configurationEPS.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
     </navigation-rule>
     <application>                           
         <locale-config>

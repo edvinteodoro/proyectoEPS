@@ -188,11 +188,9 @@ DROP TABLE IF EXISTS `EPS_SYSTEM`.`PROJECT` ;
 CREATE TABLE IF NOT EXISTS `EPS_SYSTEM`.`PROJECT` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `title` VARCHAR(400) NOT NULL,
-  `status` TINYINT NOT NULL,
-  `schedule` MEDIUMBLOB NOT NULL,
-  `investmentPlan` MEDIUMBLOB NOT NULL,
+  `schedule` MEDIUMBLOB NULL,
+  `investmentPlan` MEDIUMBLOB NULL,
   `annexed` MEDIUMBLOB NULL DEFAULT NULL,
-  `limitReceptionDate` DATE NOT NULL,
   `PROCESS_id` INT NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_PROJECT_PROCESS1`
@@ -200,9 +198,7 @@ CREATE TABLE IF NOT EXISTS `EPS_SYSTEM`.`PROJECT` (
     REFERENCES `EPS_SYSTEM`.`PROCESS` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB
-AUTO_INCREMENT = 2
-DEFAULT CHARACTER SET = latin1;
+ENGINE = InnoDB;
 
 CREATE INDEX `fk_PROJECT_PROCESS1_idx` ON `EPS_SYSTEM`.`PROJECT` (`PROCESS_id` ASC);
 
@@ -647,7 +643,6 @@ INSERT INTO PROPERTY(name, valueInt) VALUES ("CHARACTER_LIMIT_TITLE",300);
 INSERT INTO PROPERTY(name, valueInt) VALUES ("LIMIT_GENERAL_OBJECTIVE",2);
 INSERT INTO PROPERTY(name, valueInt) VALUES ("LIMIT_SPECIFIC_OBJECTIVE",8);
 INSERT INTO PROPERTY(name, valueInt) VALUES ("CHARACTER_LIMIT_JUSTIFICATION",3500);
-INSERT INTO PROPERTY(name, valueDate) VALUES ("GENERAL_LIMIT_RECEPTION_DATE",CURDATE());
 
 INSERT INTO CAREER(codigo, name) VALUES (58, "Ingeniería en Ciencias y Sistemas");
 INSERT INTO CAREER(codigo, name) VALUES (34, "Ingeniería Mecánica");
@@ -655,6 +650,7 @@ INSERT INTO CAREER(codigo, name) VALUES (33, "Ingeniería Civil");
 INSERT INTO CAREER(codigo, name) VALUES (35, "Ingeniería Industrial");
 INSERT INTO CAREER(codigo, name) VALUES (36, "Ingeniería Mecánica-Industrial");
 
+INSERT INTO ROL(name) values("Estudiante");
 INSERT INTO ROL(name) values("Director");
 INSERT INTO ROL(name) values("Coordinador_EPS");
 INSERT INTO ROL(name) values("Secretaria_EPS");
@@ -664,4 +660,3 @@ INSERT INTO ROL(name) values("Secretaria_Coordinación");
 INSERT INTO ROL(name) values("Supervisor_ORG");
 INSERT INTO ROL(name) values("Asesor");
 INSERT INTO ROL(name) values("Revisor");
-INSERT INTO ROL(name) values("Estudiante");

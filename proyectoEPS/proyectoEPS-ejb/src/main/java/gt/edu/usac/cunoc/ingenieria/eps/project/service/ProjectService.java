@@ -27,7 +27,6 @@ import gt.edu.usac.cunoc.ingenieria.eps.property.repository.PropertyRepository;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.LimitException;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.MandatoryException;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
-import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Bibliography;
 import gt.edu.usac.cunoc.ingenieria.eps.project.DecimalCoordinate;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Objectives;
@@ -65,24 +64,18 @@ public class ProjectService {
     public ProjectService() {
     }
 
-    public Project update(Project project) throws MandatoryException, LimitException {
+    public Project createProject(Project project) throws MandatoryException, LimitException {
         verifyProject(project);
-        project.setStatus(Project.ACTIVE);
-        project.setLimitReceptionDate(PropertyRepository.GENERAL_LIMIT_RECEPTION_DATE.getValueDate());
         setPositionProjectComponents(project);
-        entityManager.merge(project);
+        entityManager.persist(project);
         return project;
     }
 
-    public Project create(Process process) throws MandatoryException, LimitException {
-        verifyProject(process.getProject());
-        process.getProject().setStatus(Project.ACTIVE);
-        process.getProject().setLimitReceptionDate(PropertyRepository.GENERAL_LIMIT_RECEPTION_DATE.getValueDate());
-        process.getProject().setpROCESSid(process);
-        process.setProject(process.getProject());
-        setPositionProjectComponents(process.getProject());
-        entityManager.persist(process.getProject());
-        return process.getProject();
+    public Project update(Project project) throws MandatoryException, LimitException {
+        verifyProject(project);
+        setPositionProjectComponents(project);
+        entityManager.merge(project);
+        return project;
     }
 
     private void setPositionBibliograpies(java.util.List<Bibliography> bibliographies) {
@@ -132,17 +125,54 @@ public class ProjectService {
     }
 
     private void verifyProject(Project project) throws MandatoryException, LimitException {
-        if (project.getTitle() == null) {
+        validateTitle(project);
+        validateObjectives(project);
+        validateTextSections(project);
+    }
+
+    private void validateTitle(Project project) throws MandatoryException, LimitException {
+        if (project.getTitle() != null) {
+            if (project.getTitle().length() > PropertyRepository.CHARACTER_LIMIT_TITLE.getValueInt()) {
+                throw new LimitException("Titulo fuera de limites, Número de Caracteres Máximo " + PropertyRepository.CHARACTER_LIMIT_TITLE.getValueInt());
+            }
+        } else {
             throw new MandatoryException("Atributo Titulo Obligatorio");
         }
-        if (project.getTitle().length() > PropertyRepository.CHARACTER_LIMIT_TITLE.getValueInt()) {
-            throw new LimitException("Titulo fuera de limites, Número de Caracteres Maximo " + PropertyRepository.CHARACTER_LIMIT_TITLE.getValueInt());
+    }
+    
+    private void validateObjectives(Project project) throws LimitException{
+        if (!project.getObjectives().isEmpty()){
+            int quantityGeneralObjectives = 0;
+            int quantitySpecificObjectives = 0;
+            for (Objectives objective : project.getObjectives()) {
+                if (objective.getType().shortValue() == Objectives.GENERAL_OBJETICVE){
+                    quantityGeneralObjectives++;
+                } else {
+                    quantitySpecificObjectives++;
+                }
+            }
+            if (quantityGeneralObjectives > PropertyRepository.LIMIT_GENERAL_OBJECTIVE.getValueInt()){
+                throw new LimitException("Número Máximo de Objetivos Generales: " + PropertyRepository.LIMIT_GENERAL_OBJECTIVE.getValueInt());
+            }
+            if (quantitySpecificObjectives > PropertyRepository.LIMIT_SPECIFIC_OBJECTIVE.getValueInt()){
+                throw new LimitException("Número Máximo de Objetivos Específicos: " + PropertyRepository.LIMIT_GENERAL_OBJECTIVE.getValueInt());
+            }
         }
-        if (project.getSchedule() == null) {
-            throw new MandatoryException("Archivo Calendario Obligatorio");
-        }
-        if (project.getInvestmentPlan() == null) {
-            throw new MandatoryException("Archivo Plan de Inversiones Obligatorio");
+    }
+    
+    private void validateTextSections(Project project) throws LimitException{
+        for (Section section : project.getSections()) {
+            if (section.getTitle().getName().equals(Section.JUSTIFICATION_TEXT)){
+                if (section.getTitle().getTexto().getText().length() > PropertyRepository.CHARACTER_LIMIT_JUSTIFICATION.getValueInt()){
+                    throw new LimitException("Caracteres Máximos para la Justificación: " + PropertyRepository.CHARACTER_LIMIT_JUSTIFICATION.getValueInt());
+                }
+            } else {
+                if (section.getTitle().getTexto().getText().length() > PropertyRepository.CHARACTER_LIMIT_FOR_TEXT_OF_SECTION){
+                    throw new LimitException("Caracteres Mácimoss en la sección " 
+                            +  section.getTitle().getName() + ": "
+                            +  PropertyRepository.CHARACTER_LIMIT_FOR_TEXT_OF_SECTION);
+                }
+            }
         }
     }
 

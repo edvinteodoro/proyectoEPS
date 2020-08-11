@@ -219,9 +219,9 @@ public class CreateUserView implements Serializable {
                     careerSelectionFlag = false;
             }
         } else {
-            personalCodeFlag = true;
-            academicRegisterFlag = false;
-            careerSelectionFlag = false;
+            personalCodeFlag = false;
+            academicRegisterFlag = true;
+            careerSelectionFlag = true;
         }
     }
 

@@ -24,25 +24,18 @@ import javax.persistence.Table;
 @Table(name = "PROJECT")
 public class Project implements Serializable {
 
-    public static final Short ACTIVE = 1;
-    public static final Short INACTIVE = 0;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
     @Column(name = "title")
     private String title;
-    @Column(name = "status")
-    private Short status;
     @Column(name = "schedule")
     private byte[] schedule;
     @Column(name = "investmentPlan")
     private byte[] investmentPlan;
     @Column(name = "annexed")
     private byte[] annexed;
-    @Column(name = "limitReceptionDate")
-    private LocalDate limitReceptionDate;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "project", orphanRemoval = true)
     @OrderBy("position ASC")
@@ -56,6 +49,7 @@ public class Project implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "project", orphanRemoval = true)
     @OrderBy("position ASC")
     private List<Section> sections;
+    
     @OneToOne
     @JoinColumn(name = "PROCESS_id", referencedColumnName = "id")
     private Process pROCESSid;
@@ -68,6 +62,7 @@ public class Project implements Serializable {
         this.objectives = new ArrayList<>();
         this.bibliographies = new ArrayList<>();
         this.sections = new ArrayList<>();
+        this.corrections = new ArrayList<>();
         setInitialSections();
     }
 
@@ -85,14 +80,6 @@ public class Project implements Serializable {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public short getStatus() {
-        return status;
-    }
-
-    public void setStatus(Short status) {
-        this.status = status;
     }
 
     public byte[] getSchedule() {
@@ -117,14 +104,6 @@ public class Project implements Serializable {
 
     public void setAnnexed(byte[] annexed) {
         this.annexed = annexed;
-    }
-
-    public LocalDate getLimitReceptionDate() {
-        return limitReceptionDate;
-    }
-
-    public void setLimitReceptionDate(LocalDate limitReceptionDate) {
-        this.limitReceptionDate = limitReceptionDate;
     }
 
     public List<Bibliography> getBibliographies() {
@@ -191,16 +170,6 @@ public class Project implements Serializable {
         this.sections = sections;
     }
 
-    public List<Correction> getCorrections() {
-        return corrections;
-    }
-
-    public void setCorrections(List<Correction> corrections) {
-        this.corrections = corrections;
-    }
-    
-    
-
     public void addSection() {
         Section section = new Section();
         sections.add(section);
@@ -211,14 +180,22 @@ public class Project implements Serializable {
 
     public void removeSection(Integer sectionIndex) throws MandatoryException {
         Section sectionToEliminate = sections.get(sectionIndex);
-        if (sectionToEliminate.getType() == Section.INTRODUCTION) {
+        if (sectionToEliminate.getType().shortValue() == Section.INTRODUCTION) {
             throw new MandatoryException("Sección Introducción Obligatoria");
-        } else if (sectionToEliminate.getType() == Section.JUSTIFICATION){
+        } else if (sectionToEliminate.getType().shortValue() == Section.JUSTIFICATION){
             throw new MandatoryException("Sección Justificación Obligatoria");
         } else {
             sections.get(sectionIndex).setProject(null);
             sections.remove(sectionIndex.intValue());
         }
+    }
+
+    public List<Correction> getCorrections() {
+        return corrections;
+    }
+
+    public void setCorrections(List<Correction> corrections) {
+        this.corrections = corrections;
     }
 
     public Process getpROCESSid() {

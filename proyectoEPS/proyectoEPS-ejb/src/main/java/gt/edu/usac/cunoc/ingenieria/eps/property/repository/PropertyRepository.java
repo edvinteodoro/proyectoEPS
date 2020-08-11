@@ -23,7 +23,6 @@ public class PropertyRepository {
     public static Property LIMIT_GENERAL_OBJECTIVE;
     public static Property LIMIT_SPECIFIC_OBJECTIVE;
     public static Property CHARACTER_LIMIT_JUSTIFICATION;
-    public static Property GENERAL_LIMIT_RECEPTION_DATE;
     public final static Integer CHARACTER_LIMIT_FOR_TEXT_OF_SECTION = 65500;
 
     private EntityManager entityManager;
@@ -50,6 +49,5 @@ public class PropertyRepository {
         LIMIT_GENERAL_OBJECTIVE = entityManager.createQuery("SELECT p FROM Property p WHERE p.name = 'LIMIT_GENERAL_OBJECTIVE'", Property.class).getSingleResult();
         LIMIT_SPECIFIC_OBJECTIVE = entityManager.createQuery("SELECT p FROM Property p WHERE p.name = 'LIMIT_SPECIFIC_OBJECTIVE'", Property.class).getSingleResult();
         CHARACTER_LIMIT_JUSTIFICATION = entityManager.createQuery("SELECT p FROM Property p WHERE p.name = 'CHARACTER_LIMIT_JUSTIFICATION'", Property.class).getSingleResult();
-        GENERAL_LIMIT_RECEPTION_DATE = entityManager.createQuery("SELECT p FROM Property p WHERE p.name = 'GENERAL_LIMIT_RECEPTION_DATE'", Property.class).getSingleResult();
     }
 }

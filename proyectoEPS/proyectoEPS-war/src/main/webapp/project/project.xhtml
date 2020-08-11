@@ -287,7 +287,6 @@
                         <p:outputLabel for="schedule" value="Calendario"/>
                         <p:fileUpload id="schedule" fileUploadListener="#{projectView.handleSchedule}"
                                       rendered="#{projectView.editOptions()}"
-                                      required="true"
                                       skinSimple="true" auto="true"
                                       label="Seleccionar"
                                       update="labelSchedule"
@@ -316,7 +315,6 @@
                     <div class="form-group col-sm-8">
                         <p:outputLabel for="investmentPlan" value="Plan de Inversión"/>
                         <p:fileUpload id="investmentPlan" fileUploadListener="#{projectView.handleInvestmentPlan}"
-                                      required="true"
                                       rendered="#{projectView.editOptions()}"
                                       skinSimple="true" auto="true"
                                       label="Seleccionar"
@@ -437,7 +435,9 @@
                         <p:commandLink styleClass="btn btn-primary"
                                        update="@form,:growl" 
                                        rendered="#{projectView.editOptions()}"
-                                       action="#{projectView.uploadCreate()}">
+                                       onstart="PF('progressBar').show();"
+                                       oncomplete="PF('progressBar').close();"
+                                       action="#{projectView.uploadCreate('progressBar')}">
                             <span class="glyphicon glyphicon-floppy-disk"></span> Guardar Proyecto EPS
                         </p:commandLink>
                     </div>
@@ -513,5 +513,15 @@
                 <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times" />
             </div>
         </p:confirmDialog>
+        <p:dialog id="progressBar" widgetVar="progressBar" closable="false" width="20%" showHeader="false" resizable="false"
+                  modal="true" closeOnEscape="true">
+            <p:ajax event="close" update="@this" />
+            <div align="center">
+                <p:outputLabel>Realizando operación, espere un momento.</p:outputLabel>
+            </div>
+            <div class="form-group col-md-12" align="center">
+                <p:progressBar id="progressBarIndeterminate" style="height:6px" mode="indeterminate"/>
+            </div>
+        </p:dialog>
     </ui:define>
 </ui:composition>

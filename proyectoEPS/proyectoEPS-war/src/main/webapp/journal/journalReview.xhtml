@@ -12,27 +12,27 @@
 
     <f:metadata>
         <o:viewParam name="idProcess" required="true" 
-                     value="#{bitacoraReview.processId}"
+                     value="#{journalReview.processId}"
                      requiredMessage="Ningun valor">
             <o:viewParamValidationFailed sendError="404" message="Error parametro"/>
         </o:viewParam>
-        <o:viewAction action="#{bitacoraReview.loadCurrentProject()}" />
+        <o:viewAction action="#{journalReview.loadCurrentProject()}" />
     </f:metadata>
     <ui:define name="title">
         Bitacora
     </ui:define>
     <ui:define name="content">
         <h:form>
-            <p:staticMessage severity="info" detail="Registro de Bitácora Vacio" rendered="#{bitacoraReview.journals.size() eq 0}"/>
+            <p:staticMessage severity="info" detail="Registro de Bitácora Vacio" rendered="#{journalReview.journals.size() eq 0}"/>
             <br/>
             <p:commandLink styleClass="btn btn-warning" 
-                           actionListener="#{bitacoraReview.enableJournal()}"
+                           actionListener="#{journalReview.enableJournal()}"
                            update="@form,:growl"
-                           rendered="#{!bitacoraReview.process.approvedEPSDevelopment}">
+                           rendered="#{!journalReview.process.approvedEPSDevelopment}">
                 <p:confirm header="Habilitar Bitácora" message="¿Desea habilitar la Bitácora?" icon="pi pi-exclamation-triangle" />
                 <span class="glyphicon glyphicon-ok-sign"></span> Habilitar Bitácora
             </p:commandLink>
-            <p:accordionPanel value="#{bitacoraReview.journals}" var="journalLog" activeIndex="-2">
+            <p:accordionPanel value="#{journalReview.journals}" var="journalLog" activeIndex="-2">
                 <p:tab id="JournalLog" title="Fecha - #{journalLog.dateTime.dayOfMonth} / #{journalLog.dateTime.monthValue} / #{journalLog.dateTime.year}" >
                     <div>
                         <h4 class="text-primary">Actividad:</h4>
@@ -70,7 +70,7 @@
                         <br></br><p:commandLink styleClass="btn btn-primary"
                                                 update=":#{p:component('comentar')}"
                                                 oncomplete="PF('comentar').show();">
-                            <f:setPropertyActionListener value="#{journalLog}" target="#{bitacoraReview.journalSelected}"/>
+                            <f:setPropertyActionListener value="#{journalLog}" target="#{journalReview.journalSelected}"/>
                             <span class="glyphicon glyphicon-comment"></span> Comentar
                         </p:commandLink>
                     </div>
@@ -80,12 +80,12 @@
         </h:form>
         <p:dialog header="Comentarios" id="comentar" widgetVar="comentar" 
                   modal="true" closeOnEscape="true">
-            <p:ajax event="close" listener="#{bitacoraReview.cleanJournalSelected()}" update="@this" />
+            <p:ajax event="close" listener="#{journalReview.cleanJournalSelected()}" update="@this" />
             <h:form>
                 <fieldset>
                     <div class="col-md-12">
                         <div>
-                            <p:dataTable id="commenTable" var="commentary" value="#{bitacoraReview.journalSelected.commentaries}" reflow="true">
+                            <p:dataTable id="commenTable" var="commentary" value="#{journalReview.getCommentariesByJournal(journalReview.journalSelected.id)}" reflow="true">
                                 <p:column headerText="Fecha">
                                     <h:outputText value="#{commentary.date}"/>
                                 </p:column>
@@ -93,19 +93,19 @@
                                     <h:outputText value="#{commentary.user.firstName} #{commentary.user.lastName}"/>
                                 </p:column>
                                 <p:column headerText="Comentario">
-                                    <h:outputText value="#{commentary.textValue}"/>
+                                    <h:outputText value="#{commentary.text}"/>
                                 </p:column>
                             </p:dataTable>
                         </div>
                         <div>
                             <p:inputTextarea id="note" styleClass="form-control" required="true"
                                              rows="4" cols="50" maxlength="10000" placeholder="Indique los motivos"
-                                             autoResize="false" value="#{bitacoraReview.commentText}"/>
+                                             autoResize="false" value="#{journalReview.commentText}"/>
                         </div>
                         <div>
                             <br></br><p:commandLink styleClass="btn btn-primary btn-xs"
-                                                    update="@form"
-                                                    actionListener="#{bitacoraReview.comment()}">
+                                                    update="@form,:#{p:component('growl')}"
+                                                    actionListener="#{journalReview.comment()}">
                                 <span class="glyphicon glyphicon-trash"></span> Comentar
                             </p:commandLink>
                         </div>

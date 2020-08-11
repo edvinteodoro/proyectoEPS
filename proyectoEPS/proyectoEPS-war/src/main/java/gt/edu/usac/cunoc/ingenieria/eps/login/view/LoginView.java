@@ -1,11 +1,6 @@
 package gt.edu.usac.cunoc.ingenieria.eps.login.view;
 
 import User.exception.UserException;
-import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.COORDINADOR_CARRERA;
-import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.COORDINADOR_EPS;
-import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.ESTUDIANTE;
-import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.SECRETARIA_EPS;
-import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.SUPERVISOR_EPS;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import gt.edu.usac.cunoc.ingenieria.eps.user.facade.UserFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.utils.MessageUtils;
@@ -93,25 +88,7 @@ public class LoginView implements Serializable {
     }
 
     private void redirectToIndex() throws IOException, UserException {
-        User currentUser = userFacade.getAuthenticatedUser().get(0);
-        switch (currentUser.getROLid().getName()) {
-            case COORDINADOR_CARRERA:
-                externalContext.redirect(externalContext.getRequestContextPath() + "/process/processes.xhtml");
-                break;
-            case ESTUDIANTE:
-                externalContext.redirect(externalContext.getRequestContextPath() + "/process/processes.xhtml");
-                break;
-            case SECRETARIA_EPS:
-                externalContext.redirect(externalContext.getRequestContextPath() + "/user/createUser.xhtml");
-                break;
-            case COORDINADOR_EPS:
-                externalContext.redirect(externalContext.getRequestContextPath() + "/user/editEPSCommittee.xhtml");
-                break;
-            case SUPERVISOR_EPS:
-                externalContext.redirect(externalContext.getRequestContextPath() + "/committeeEPS/processesCommitteeEPS.xhtml");
-                break;
-            default:
-        }
+        externalContext.redirect(externalContext.getRequestContextPath() + "/user/userProfile.xhtml");
     }
 
     public void resetPassword(final String modalIdToClose) {

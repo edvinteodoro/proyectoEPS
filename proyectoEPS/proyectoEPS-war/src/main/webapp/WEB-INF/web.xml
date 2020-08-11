@@ -39,6 +39,20 @@
         <welcome-file>login.xhtml</welcome-file>
     </welcome-file-list>
     
+    <security-constraint>
+        <display-name>createUser</display-name>
+        <web-resource-collection>
+            <web-resource-name>createUser</web-resource-name>
+            <url-pattern>/user/createUser.xhtml</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <description>Allowed users</description>
+            <role-name>Director</role-name>
+            <role-name>Coordinador_EPS</role-name>
+            <role-name>Supervisor_EPS</role-name>
+            <role-name>Secretaria_EPS</role-name>
+        </auth-constraint>
+    </security-constraint>
     
     <security-constraint>
         <display-name>createProcess</display-name>
@@ -98,13 +112,25 @@
         <web-resource-collection>
             <web-resource-name>assignedProcesses</web-resource-name>
             <url-pattern>/process/assignedProcesses.xhtml</url-pattern>
-            <url-pattern>/bitacora/bitacoraReview.xhtml</url-pattern>
+            <url-pattern>/journal/journalReview.xhtml</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <description>Allowed users</description>
             <role-name>Supervisor_EPS</role-name>
         </auth-constraint>
     </security-constraint>
+    
+    <security-constraint>
+        <display-name>journal</display-name>
+        <web-resource-collection>
+            <web-resource-name>journal</web-resource-name>
+            <url-pattern>/journal/journal.xhtml</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <description>Allowed users</description>
+            <role-name>Estudiante</role-name>
+        </auth-constraint>
+    </security-constraint> 
 
     <security-constraint>
         <display-name>allCommon</display-name>
@@ -115,11 +141,24 @@
         </web-resource-collection>
         <auth-constraint>
             <description>Allowed users</description>
+            <role-name>Director</role-name>
             <role-name>Secretaria_EPS</role-name>
             <role-name>Estudiante</role-name>
             <role-name>Coordinador_Carrera</role-name>
             <role-name>Coordinador_EPS</role-name>
             <role-name>Supervisor_EPS</role-name>
+        </auth-constraint>
+    </security-constraint>
+    
+    <security-constraint>
+        <display-name>configurationEPS</display-name>
+        <web-resource-collection>
+            <web-resource-name>configurationEPS</web-resource-name>
+            <url-pattern>/configuration/ConfigurationEPS.xhtml</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <description>Allowed users</description>
+            <role-name>Coordinador_EPS</role-name>
         </auth-constraint>
     </security-constraint>
     
@@ -142,22 +181,16 @@
         </web-resource-collection>
         <auth-constraint>
             <description>Allowed users</description>
+            <role-name>Director</role-name>
+            <role-name>Coordinador_EPS</role-name>
+            <role-name>Supervisor_EPS</role-name>
             <role-name>Secretaria_EPS</role-name>
         </auth-constraint>
     </security-constraint>
-     
-    <security-constraint>
-        <display-name>journal</display-name>
-        <web-resource-collection>
-            <web-resource-name>journal</web-resource-name>
-            <url-pattern>/journal/journal.xhtml</url-pattern>
-        </web-resource-collection>
-        <auth-constraint>
-            <description>Allowed users</description>
-            <role-name>Estudiante</role-name>
-        </auth-constraint>
-    </security-constraint> 
     
+    <security-role>
+        <role-name>Director</role-name>
+    </security-role>
     <security-role>
         <role-name>Estudiante</role-name>
     </security-role>

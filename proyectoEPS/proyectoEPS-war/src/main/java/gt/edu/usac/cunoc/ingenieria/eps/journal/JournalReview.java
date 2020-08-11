@@ -1,7 +1,7 @@
-package gt.edu.usac.cunoc.ingenieria.eps.bitacora.view;
+package gt.edu.usac.cunoc.ingenieria.eps.journal;
 
-import gt.edu.usac.cunoc.ingenieria.eps.journal.Commentary;
-import gt.edu.usac.cunoc.ingenieria.eps.journal.JournalLog;
+import gt.edu.usac.cunoc.ingenieria.eps.exception.MandatoryException;
+import gt.edu.usac.cunoc.ingenieria.eps.journal.facade.CommentaryFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.journal.facade.JournalLogFacadeLocal;
 import java.io.Serializable;
 import javax.faces.view.ViewScoped;
@@ -17,7 +17,7 @@ import javax.ejb.EJB;
 
 @Named
 @ViewScoped
-public class BitacoraReview implements Serializable {
+public class JournalReview implements Serializable {
 
     @EJB
     private ProcessFacadeLocal processFacade;
@@ -27,6 +27,9 @@ public class BitacoraReview implements Serializable {
 
     @EJB
     private JournalLogFacadeLocal journalFacade;
+    
+    @EJB
+    private CommentaryFacadeLocal commentaryFacade;
 
     private Integer processId;
     private Process process;
@@ -90,8 +93,17 @@ public class BitacoraReview implements Serializable {
     }
 
     public void comment() {
-        getJournalSelected().getCommentaries().add(new Commentary(getCommentText(), dateNow, getJournalSelected(), autenticatedUser));
-        processFacade.updateProcess(process);
+        try {
+            Commentary newCommentary = new Commentary();
+            newCommentary.setDate(dateNow);
+            newCommentary.setJournal_Log(getJournalSelected());
+            newCommentary.setUser(autenticatedUser);
+            newCommentary.setText(commentText);
+            commentaryFacade.createCommentary(newCommentary);
+            MessageUtils.addSuccessMessage("Comentario Realizado");
+        } catch (MandatoryException ex) {
+            MessageUtils.addErrorMessage(ex.getMessage());
+        }
     }
 
     public void cleanJournalSelected() {
@@ -104,6 +116,10 @@ public class BitacoraReview implements Serializable {
         this.process.setDateApproveddEpsDevelopment(LocalDate.now());
         processFacade.updateProcess(process);
         MessageUtils.addSuccessMessage("Bitácora Habilitada");
+    }
+    
+    public List<Commentary> getCommentariesByJournal(Integer journalId){
+        return commentaryFacade.getCommentariesByJournalId(journalId);
     }
 
 }

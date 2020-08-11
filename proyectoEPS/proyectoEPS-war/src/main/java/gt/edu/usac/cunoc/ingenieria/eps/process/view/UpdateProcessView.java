@@ -1,11 +1,11 @@
 package gt.edu.usac.cunoc.ingenieria.eps.process.view;
 
-import User.exception.UserException;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.ESTUDIANTE;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Requeriment;
 import gt.edu.usac.cunoc.ingenieria.eps.process.facade.ProcessFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import gt.edu.usac.cunoc.ingenieria.eps.user.facade.UserFacadeLocal;
+import gt.edu.usac.cunoc.ingenieria.eps.utils.MessageUtils;
 import java.io.ByteArrayInputStream;
 import java.io.Serializable;
 import javax.annotation.PostConstruct;
@@ -19,52 +19,79 @@ import org.primefaces.model.UploadedFile;
 
 @Named
 @ViewScoped
-public class UpdateProcessView implements Serializable{
+public class UpdateProcessView implements Serializable {
+
     @EJB
     private ProcessFacadeLocal processFacade;
-    
+
     @EJB
-    private UserFacadeLocal userFacade;    
-    
+    private UserFacadeLocal userFacade;
+
     private StreamedContent writtenRequestStream;
     private StreamedContent inscriptionConstancyStream;
     private StreamedContent pensumeClosureStream;
     private StreamedContent propedeuticConstancyStream;
     private StreamedContent epsPreProjectStream;
     private StreamedContent aeioSettlementStream;
-    
+
     private UploadedFile writtenRequest;
     private UploadedFile inscriptionConstancy;
     private UploadedFile pensumeClosure;
     private UploadedFile propedeuticConstancy;
     private UploadedFile epsPreProject;
     private UploadedFile aeioSettlement;
-    
-    String nameWrittenRequest="";
-    String nameInscriptionConstancy="";
-    String namePensumeClosure="";
-    String namePropedeuticConstancy="";
-    String nameEpsPreProjec="";
-    String nameAeioSettlemen="";
-    
-    private String observation="";
+
+    String nameWrittenRequest = "";
+    String nameInscriptionConstancy = "";
+    String namePensumeClosure = "";
+    String namePropedeuticConstancy = "";
+    String nameEpsPreProjec = "";
+    String nameAeioSettlemen = "";
+
+    private String observation = "";
 
     private Requeriment requeriment;
     private Integer processId;
-    private Boolean showAeioSettlement= false;
-    
+    private Boolean showAeioSettlement = false;
+
     User user;
-    
+
     @PostConstruct
-    public void init(){
+    public void init() {
         try {
             user = userFacade.getAuthenticatedUser().get(0);
         } catch (Exception e) {
         }
     }
-    
-    public void save(){
-        processFacade.updaterequeriment(requeriment);
+
+    public Requeriment getRequeriment() {
+        if (requeriment == null) {
+            return new Requeriment(processId);
+        }
+        return requeriment;
+    }
+
+    public void save() {
+        if (writtenRequest != null) {
+            getRequeriment().setWrittenRequest(writtenRequest.getContents());
+        }
+        if (inscriptionConstancy != null) {
+            getRequeriment().setInscriptionConstancy(inscriptionConstancy.getContents());
+        }
+        if (pensumeClosure != null) {
+            getRequeriment().setPensumClosure(pensumeClosure.getContents());
+        }
+        if (propedeuticConstancy != null) {
+            getRequeriment().setPropedeuticConstancy(propedeuticConstancy.getContents());
+        }
+        if (epsPreProject != null) {
+            getRequeriment().setEPSpreproject(epsPreProject.getContents());
+        }
+        if (aeioSettlement != null) {
+            getRequeriment().setAEIOsettlement(aeioSettlement.getContents());
+        }
+        processFacade.updaterequeriment(getRequeriment());
+        MessageUtils.addSuccessMessage("Cambios Realizados");
     }
 
     public StreamedContent getWrittenRequestStream() {
@@ -122,18 +149,19 @@ public class UpdateProcessView implements Serializable{
     public void setProcessId(Integer processId) {
         this.processId = processId;
     }
-    
-    public void loadCurrentProcess(){
+
+    public void loadCurrentProcess() {
         requeriment = processFacade.getRequeriment(new Requeriment(processId)).get(0);
         writtenRequestStream = new DefaultStreamedContent(new ByteArrayInputStream(requeriment.getWrittenRequest()), "application/pdf", "Solicitud Escrita.pdf");
         inscriptionConstancyStream = new DefaultStreamedContent(new ByteArrayInputStream(requeriment.getInscriptionConstancy()), "application/pdf", "Constancia Inscripcion.pdf");
         pensumeClosureStream = new DefaultStreamedContent(new ByteArrayInputStream(requeriment.getPensumClosure()), "application/pdf", "Solicitud Escrita.pdf");
         propedeuticConstancyStream = new DefaultStreamedContent(new ByteArrayInputStream(requeriment.getPropedeuticConstancy()), "application/pdf", "Solicitud Escrita.pdf");
         epsPreProjectStream = new DefaultStreamedContent(new ByteArrayInputStream(requeriment.getEPSpreproject()), "application/pdf", "Solicitud Escrita.pdf");
-        if(requeriment.getAEIOsettlement()!=null){
-            showAeioSettlement=true;
-            aeioSettlementStream=new DefaultStreamedContent(new ByteArrayInputStream(requeriment.getaEIOsettlement()), "application/pdf", "Solicitud Escrita.pdf");
+        if (requeriment.getAEIOsettlement() != null) {
+            showAeioSettlement = true;
+            aeioSettlementStream = new DefaultStreamedContent(new ByteArrayInputStream(requeriment.getaEIOsettlement()), "application/pdf", "Solicitud Escrita.pdf");
         }
+
     }
 
     public Boolean getShowAeioSettlement() {
@@ -143,76 +171,81 @@ public class UpdateProcessView implements Serializable{
     public void setShowAeioSettlement(Boolean showAeioSettlement) {
         this.showAeioSettlement = showAeioSettlement;
     }
-    
-     public void handleWrittenRequest(FileUploadEvent event) {
+
+    public void handleWrittenRequest(FileUploadEvent event) {
         writtenRequest = event.getFile();
-        requeriment.setWrittenRequest(writtenRequest.getContents()); 
-        nameWrittenRequest= event.getFile().getFileName();
+        requeriment.setWrittenRequest(writtenRequest.getContents());
+        nameWrittenRequest = event.getFile().getFileName();
         writtenRequestStream = new DefaultStreamedContent(new ByteArrayInputStream(writtenRequest.getContents()), "application/pdf", "Solicitud Escrita.pdf");
     }
 
     public void handleInscriptionConstancy(FileUploadEvent event) {
         inscriptionConstancy = event.getFile();
         requeriment.setInscriptionConstancy(inscriptionConstancy.getContents());
-        nameInscriptionConstancy=event.getFile().getFileName();
-        inscriptionConstancyStream=new DefaultStreamedContent(new ByteArrayInputStream(inscriptionConstancy.getContents()), "application/pdf", "Solicitud Escrita.pdf");
+        nameInscriptionConstancy = event.getFile().getFileName();
+        inscriptionConstancyStream = new DefaultStreamedContent(new ByteArrayInputStream(inscriptionConstancy.getContents()), "application/pdf", "Solicitud Escrita.pdf");
     }
 
     public void handlePensumeClosure(FileUploadEvent event) {
         pensumeClosure = event.getFile();
         requeriment.setPensumClosure(pensumeClosure.getContents());
-        namePensumeClosure=event.getFile().getFileName();
-        pensumeClosureStream=new DefaultStreamedContent(new ByteArrayInputStream(pensumeClosure.getContents()), "application/pdf", "Solicitud Escrita.pdf");
+        namePensumeClosure = event.getFile().getFileName();
+        pensumeClosureStream = new DefaultStreamedContent(new ByteArrayInputStream(pensumeClosure.getContents()), "application/pdf", "Solicitud Escrita.pdf");
     }
 
     public void handlePropedeuticConstancy(FileUploadEvent event) {
         propedeuticConstancy = event.getFile();
         requeriment.setPropedeuticConstancy(propedeuticConstancy.getContents());
-        namePropedeuticConstancy=event.getFile().getFileName();
-        propedeuticConstancyStream=new DefaultStreamedContent(new ByteArrayInputStream(propedeuticConstancy.getContents()), "application/pdf", "Solicitud Escrita.pdf");
+        namePropedeuticConstancy = event.getFile().getFileName();
+        propedeuticConstancyStream = new DefaultStreamedContent(new ByteArrayInputStream(propedeuticConstancy.getContents()), "application/pdf", "Solicitud Escrita.pdf");
     }
 
     public void handleEpsPreProject(FileUploadEvent event) {
         epsPreProject = event.getFile();
-        requeriment.setEPSpreproject(epsPreProject.getContents()) ;
-        nameEpsPreProjec= event.getFile().getFileName();
-        epsPreProjectStream=new DefaultStreamedContent(new ByteArrayInputStream(epsPreProject.getContents()), "application/pdf", "Solicitud Escrita.pdf");
+        requeriment.setEPSpreproject(epsPreProject.getContents());
+        nameEpsPreProjec = event.getFile().getFileName();
+        epsPreProjectStream = new DefaultStreamedContent(new ByteArrayInputStream(epsPreProject.getContents()), "application/pdf", "Solicitud Escrita.pdf");
     }
 
     public void handleAeioSettlement(FileUploadEvent event) {
         aeioSettlement = event.getFile();
         requeriment.setAEIOsettlement(aeioSettlement.getContents());
-        nameAeioSettlemen= event.getFile().getFileName();
-        aeioSettlementStream=new DefaultStreamedContent(new ByteArrayInputStream(aeioSettlement.getContents()), "application/pdf", "Solicitud Escrita.pdf");        
+        nameAeioSettlemen = event.getFile().getFileName();
+        aeioSettlementStream = new DefaultStreamedContent(new ByteArrayInputStream(aeioSettlement.getContents()), "application/pdf", "Solicitud Escrita.pdf");
     }
-    
-    public void reloadWrittenRequest(){
+
+    public void reloadWrittenRequest() {
         writtenRequestStream = new DefaultStreamedContent(new ByteArrayInputStream(requeriment.getWrittenRequest()), "application/pdf", "Solicitud Escrita.pdf");
     }
-    public void reloadInscriptionConstancy(){
+
+    public void reloadInscriptionConstancy() {
         writtenRequestStream = new DefaultStreamedContent(new ByteArrayInputStream(requeriment.getInscriptionConstancy()), "application/pdf", "Constancia de Inscripcion.pdf");
     }
-    public void reloadPensumeClosure(){
+
+    public void reloadPensumeClosure() {
         writtenRequestStream = new DefaultStreamedContent(new ByteArrayInputStream(requeriment.getPensumClosure()), "application/pdf", "Cierre de Pensum.pdf");
     }
-    public void reloadPropedeuticConstancy(){
+
+    public void reloadPropedeuticConstancy() {
         writtenRequestStream = new DefaultStreamedContent(new ByteArrayInputStream(requeriment.getPropedeuticConstancy()), "application/pdf", "Constancia de Propedeutico.pdf");
     }
-    public void reloadEpsPreProjec(){
+
+    public void reloadEpsPreProjec() {
         writtenRequestStream = new DefaultStreamedContent(new ByteArrayInputStream(requeriment.getEPSpreproject()), "application/pdf", "Preproyecto EPS.pdf");
     }
-    public void reloadAeioSettlemen(){
+
+    public void reloadAeioSettlemen() {
         writtenRequestStream = new DefaultStreamedContent(new ByteArrayInputStream(requeriment.getAEIOsettlement()), "application/pdf", "Finiquito aeio.pdf");
     }
-    
-    public Boolean isStudent(){
-        if(user.getROLid().getName().equals(ESTUDIANTE)){
+
+    public Boolean isStudent() {
+        if (user.getROLid().getName().equals(ESTUDIANTE)) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
-    
+
     public String getObservation() {
         return observation;
     }

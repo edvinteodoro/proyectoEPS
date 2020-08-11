@@ -3,7 +3,6 @@ package gt.edu.usac.cunoc.ingenieria.eps.journal;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import java.io.Serializable;
 import java.time.LocalDate;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,7 +11,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -27,10 +25,11 @@ public class Commentary implements Serializable {
     private byte[] text;
     @Column(name = "date")
     private LocalDate date;
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "JOURNAL_LOG", referencedColumnName = "id")
     private JournalLog journal_Log;
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", referencedColumnName = "userId")
     private User user;
 
@@ -52,16 +51,19 @@ public class Commentary implements Serializable {
         this.id = id;
     }
 
-    public byte[] getText() {
-        return text;
+    public String getText() {
+        if (this.text != null){
+            String result = new String(this.text);
+            return result;
+        } else {
+            return new String();
+        }
     }
 
-    public void setText(byte[] text) {
-        this.text = text;
-    }
-
-    public String getTextValue() {
-        return new String(this.text);
+    public void setText(String text) {
+        if (text != null){
+            this.text = text.getBytes();
+        }
     }
 
     public LocalDate getDate() {
@@ -86,10 +88,6 @@ public class Commentary implements Serializable {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public String getCommentaryString() {
-        return new String(text);
     }
 
     @Override

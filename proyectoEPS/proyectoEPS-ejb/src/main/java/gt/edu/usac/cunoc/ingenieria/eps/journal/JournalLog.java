@@ -1,6 +1,5 @@
 package gt.edu.usac.cunoc.ingenieria.eps.journal;
 
-import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import java.io.Serializable;
 import java.time.LocalDate;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
@@ -13,7 +12,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;

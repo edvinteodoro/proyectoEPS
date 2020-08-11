@@ -8,7 +8,7 @@ public class Constants {
     public static final String JAVA_MAIL_SESSION = "mail/__EPSingenieria";
 
     //User rols
-    public static final String SECRETARIA_COORDINACION = "Secretaria_Coordinacion";
+    public static final String SECRETARIA_COORDINACION = "Secretaria_Coordinación";
     public static final String SECRETARIA_EPS = "Secretaria_EPS";
     public static final String DIRECTOR = "Director";
     public static final String COORDINADOR_CARRERA = "Coordinador_Carrera";

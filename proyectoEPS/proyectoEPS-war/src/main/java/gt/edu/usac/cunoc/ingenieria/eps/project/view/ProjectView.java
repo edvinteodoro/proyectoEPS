@@ -3,6 +3,7 @@ package gt.edu.usac.cunoc.ingenieria.eps.project.view;
 import gt.edu.usac.cunoc.ingenieria.eps.property.repository.PropertyRepository;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.LimitException;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.MandatoryException;
+import gt.edu.usac.cunoc.ingenieria.eps.exception.ValidationException;
 import gt.edu.usac.cunoc.ingenieria.eps.process.facade.ProcessFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import gt.edu.usac.cunoc.ingenieria.eps.process.StateProcess;
@@ -12,7 +13,6 @@ import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
 import gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection;
 import gt.edu.usac.cunoc.ingenieria.eps.project.facade.ProjectFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.tail.facade.TailCommitteeEPSFacadeLocal;
-import gt.edu.usac.cunoc.ingenieria.eps.tail.facade.TailFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import gt.edu.usac.cunoc.ingenieria.eps.user.facade.UserFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.utils.MessageUtils;
@@ -34,6 +34,9 @@ import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
+import gt.edu.usac.cunoc.ingenieria.eps.tail.facade.TailCoordinatorFacadeLocal;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Named
 @ViewScoped
@@ -52,7 +55,7 @@ public class ProjectView implements Serializable {
     private UserFacadeLocal userFacade;
 
     @EJB
-    private TailFacadeLocal tailFacade;
+    private TailCoordinatorFacadeLocal tailFacade;
 
     @EJB
     private TailCommitteeEPSFacadeLocal tailCommitteeEPSFacade;
@@ -85,7 +88,6 @@ public class ProjectView implements Serializable {
     private Boolean flagUpdate = false;
 
     private String comment;
-    private StateProcess revisionState;
     private TypeCorrection typeCorrectionCurrent;
 
     @PostConstruct
@@ -94,7 +96,6 @@ public class ProjectView implements Serializable {
             generalObjectves = new ArrayList<>();
             specificObjectives = new ArrayList<>();
             corrections = new ArrayList<>();
-            revisionState = StateProcess.REVISION;
             user = userFacade.getAuthenticatedUser().get(0);
         } catch (Exception e) {
         }
@@ -115,14 +116,6 @@ public class ProjectView implements Serializable {
             this.process.setProject(newProject);
         }
         return this.process.getProject();
-    }
-
-    public StateProcess getRevisionState() {
-        return revisionState;
-    }
-
-    public void setRevisionState(StateProcess revisionState) {
-        this.revisionState = revisionState;
     }
 
     public void setProject(Project project) {
@@ -338,6 +331,7 @@ public class ProjectView implements Serializable {
             Objectives newGeneralObjective = new Objectives();
             newGeneralObjective.setType(Objectives.GENERAL_OBJETICVE);
             newGeneralObjective.setLastModificationDate(LocalDate.now());
+            newGeneralObjective.setProject(getProject());
             getGeneralObjectves().add(newGeneralObjective);
         } else {
             MessageUtils.addErrorMessage("Número Maximo de Objetivos Generales: " + PropertyRepository.LIMIT_GENERAL_OBJECTIVE.getValueInt());
@@ -361,6 +355,7 @@ public class ProjectView implements Serializable {
             Objectives newSpecificObjective = new Objectives();
             newSpecificObjective.setType(Objectives.SPECIFIC_OBJECTIVE);
             newSpecificObjective.setLastModificationDate(LocalDate.now());
+            newSpecificObjective.setProject(getProject());
             getSpecificObjectives().add(newSpecificObjective);
         } else {
             MessageUtils.addErrorMessage("Número Maximo de Objetivos Especificos: " + PropertyRepository.LIMIT_SPECIFIC_OBJECTIVE.getValueInt());
@@ -371,22 +366,22 @@ public class ProjectView implements Serializable {
         getSpecificObjectives().remove(objectiveIndex.intValue());
     }
 
-    public void uploadCreate(final String modalIdToClose) {
+    public void uploadCreate() {
         try {
             loadDocuments();
             loadObjectives();
             if (flagUpdate) {
                 projectFacade.updateProject(getProject());
-                PrimeFaces.current().executeScript("PF('" + modalIdToClose + "').hide()");
                 MessageUtils.addSuccessMessage("Se han Guardado los Cambios");
             } else {
                 projectFacade.createProject(getProject());
                 processFacade.updateProcess(process);
                 flagUpdate = true;
-                PrimeFaces.current().executeScript("PF('" + modalIdToClose + "').hide()");
                 MessageUtils.addSuccessMessage("Se ha Creado el Proyecto");
             }
+     
         } catch (MandatoryException | LimitException ex) {
+            
             MessageUtils.addErrorMessage(ex.getMessage());
         }
     }
@@ -489,16 +484,20 @@ public class ProjectView implements Serializable {
     }
 
     public void reviewRequeried() {
-        getProcess().setState(getRevisionState());
-        changeStatusCorrection();
-        //uploadCreate();
-        if (getProcess().getApprovedCareerCoordinator() == null) {
-            tailFacade.createTailCoordinator(user, getProcess());
-        } else if (getProcess().getApprovedCareerCoordinator()) {
-            tailCommitteeEPSFacade.createTailCommiteeEPS(getProcess());
-        }
-        pdfFile = null;
-        MessageUtils.addSuccessMessage("La solicitud de revision se ha realizado exitosamente.");
+        try {
+            changeStatusCorrection();
+            if (getProcess().getApprovedCareerCoordinator() == null) {
+                tailFacade.createTailCoordinator(getProcess());
+            } else if (getProcess().getApprovedCareerCoordinator()) {
+                tailCommitteeEPSFacade.createTailCommiteeEPS(getProcess());
+            }
+            
+            pdfFile = null;
+            MessageUtils.addSuccessMessage("La solicitud de revision se ha realizado exitosamente.");
+        } catch (ValidationException | MandatoryException | LimitException ex) {
+            
+            MessageUtils.addErrorMessage(ex.getMessage());
+        } 
     }
 
     public String titlePage() {
@@ -513,13 +512,9 @@ public class ProjectView implements Serializable {
         try {
             this.pdfFile = new DefaultStreamedContent(projectFacade.createPDF(getProject(), process.getUserCareer()), "application/pdf", getProject().getTitle());
             MessageUtils.addSuccessMessage("Archivo PDF Generado");
-        } catch (IOException ex) {
+        } catch (IOException | ValidationException | MandatoryException | LimitException ex) {
             MessageUtils.addErrorMessage(ex.getMessage());
         }
-    }
-
-    private void redirectToProcesses() throws IOException {
-        externalContext.redirect(externalContext.getRequestContextPath() + "/process/processes.xhtml");
     }
 
     private void changeStatusCorrection() {
@@ -536,7 +531,7 @@ public class ProjectView implements Serializable {
 
     public Boolean stateRevision() {
         Boolean value = false;
-        if (getProcess().getState() == getRevisionState()) {
+        if (getProcess().getState() == StateProcess.REVISION) {
             value = true;
         }
         return value;
@@ -568,7 +563,7 @@ public class ProjectView implements Serializable {
 
     public Boolean showButtonRevision(Correction correction) {
         Boolean value = false;
-        if (getProcess().getState() != getRevisionState() && correction != null) {
+        if (getProcess().getState() != StateProcess.REVISION && correction != null) {
             if (correction.getStatus() != null) {
                 if (correction.getStatus() == true) {
                     value = true;

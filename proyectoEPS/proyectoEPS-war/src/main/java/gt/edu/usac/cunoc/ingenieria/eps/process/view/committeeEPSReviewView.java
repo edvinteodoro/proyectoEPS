@@ -12,7 +12,6 @@ import gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection;
 import static gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection.OTHER;
 import gt.edu.usac.cunoc.ingenieria.eps.project.facade.ProjectFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.tail.facade.TailCommitteeEPSFacadeLocal;
-import gt.edu.usac.cunoc.ingenieria.eps.tail.facade.TailFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import gt.edu.usac.cunoc.ingenieria.eps.user.facade.UserFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.utils.MessageUtils;
@@ -22,9 +21,6 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.faces.context.ExternalContext;
 import javax.faces.view.ViewScoped;
@@ -33,6 +29,7 @@ import javax.inject.Named;
 import org.primefaces.PrimeFaces;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
+import gt.edu.usac.cunoc.ingenieria.eps.tail.facade.TailCoordinatorFacadeLocal;
 
 /**
  *
@@ -55,7 +52,7 @@ public class committeeEPSReviewView implements Serializable {
     private ProjectFacadeLocal projectFacade;
 
     @EJB
-    private TailFacadeLocal tailFacade;
+    private TailCoordinatorFacadeLocal tailFacade;
 
     @EJB
     private TailCommitteeEPSFacadeLocal tailCommitteeEPSFacade;
@@ -346,7 +343,7 @@ public class committeeEPSReviewView implements Serializable {
     public void returnEPSCommitteeCorrections() {
         try {
             if (getActualProcess().getApprovedCareerCoordinator() == null) {
-                processFacade.rejectProcess(tailFacade.getTailCoordianteor(getActualProcess()), "Revision Proceso Eps", "Su projecto ha sido revisado, ya es posible editar el documento y realizar los cambios solicitados.");
+                processFacade.rejectProcess(tailFacade.getTailCoordinator(getActualProcess()), "Revision Proceso Eps", "Su projecto ha sido revisado, ya es posible editar el documento y realizar los cambios solicitados.");
                 tailFacade.deleteTailCoordinatod(getActualProcess());
                 getActualProcess().setState(StateProcess.ACTIVO);
                 processFacade.updateProcess(getActualProcess());
@@ -363,7 +360,7 @@ public class committeeEPSReviewView implements Serializable {
     public void aprovedProject() {
         try {
             if (getActualProcess().getApprovedCareerCoordinator() == null) {
-                processFacade.rejectProcess(tailFacade.getTailCoordianteor(getActualProcess()), "Proceso Eps Aceptado", "Su projecto ha sido aceptado por el coordinador de carrera.");
+                processFacade.rejectProcess(tailFacade.getTailCoordinator(getActualProcess()), "Proceso Eps Aceptado", "Su projecto ha sido aceptado por el coordinador de carrera.");
                 tailFacade.deleteTailCoordinatod(getActualProcess());
                 getActualProcess().setState(StateProcess.REVISION);
                 getActualProcess().setApprovedCareerCoordinator(true);
@@ -387,7 +384,7 @@ public class committeeEPSReviewView implements Serializable {
     public void rejectProcess() {
         try {
             if (getActualProcess().getApprovedCareerCoordinator() == null) {
-                processFacade.rejectProcess(tailFacade.getTailCoordianteor(getActualProcess()), "Proceso Eps Rechazado", correctionMessage);
+                processFacade.rejectProcess(tailFacade.getTailCoordinator(getActualProcess()), "Proceso Eps Rechazado", correctionMessage);
                 tailFacade.deleteTailCoordinatod(getActualProcess());
                 getActualProcess().setState(StateProcess.RECHAZADO);
                 getActualProcess().setApprovedCareerCoordinator(false);

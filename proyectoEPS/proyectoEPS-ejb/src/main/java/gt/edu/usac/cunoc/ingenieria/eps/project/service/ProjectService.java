@@ -23,15 +23,16 @@ import com.itextpdf.layout.element.Text;
 import com.itextpdf.layout.property.AreaBreakType;
 import com.itextpdf.layout.property.TextAlignment;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.PERSISTENCE_UNIT_NAME;
-import gt.edu.usac.cunoc.ingenieria.eps.property.repository.PropertyRepository;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.LimitException;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.MandatoryException;
+import gt.edu.usac.cunoc.ingenieria.eps.exception.ValidationException;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Bibliography;
 import gt.edu.usac.cunoc.ingenieria.eps.project.DecimalCoordinate;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Objectives;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Section;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Title;
+import gt.edu.usac.cunoc.ingenieria.eps.project.repository.ProjectRepository;
 import gt.edu.usac.cunoc.ingenieria.eps.user.UserCareer;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -40,6 +41,7 @@ import java.net.MalformedURLException;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Objects;
+import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -50,6 +52,9 @@ import javax.persistence.PersistenceContext;
 public class ProjectService {
 
     private EntityManager entityManager;
+    
+    @EJB
+    private ProjectRepository projectRepository;
 
     private Style titleStyle;
     private Style bodyStyle;
@@ -65,14 +70,14 @@ public class ProjectService {
     }
 
     public Project createProject(Project project) throws MandatoryException, LimitException {
-        verifyProject(project);
+        projectRepository.verifyProject(project);
         setPositionProjectComponents(project);
         entityManager.persist(project);
         return project;
     }
 
     public Project update(Project project) throws MandatoryException, LimitException {
-        verifyProject(project);
+        projectRepository.verifyProject(project);
         setPositionProjectComponents(project);
         entityManager.merge(project);
         return project;
@@ -124,59 +129,8 @@ public class ProjectService {
         setPositionSections(project.getSections());
     }
 
-    private void verifyProject(Project project) throws MandatoryException, LimitException {
-        validateTitle(project);
-        validateObjectives(project);
-        validateTextSections(project);
-    }
-
-    private void validateTitle(Project project) throws MandatoryException, LimitException {
-        if (project.getTitle() != null) {
-            if (project.getTitle().length() > PropertyRepository.CHARACTER_LIMIT_TITLE.getValueInt()) {
-                throw new LimitException("Titulo fuera de limites, Número de Caracteres Máximo " + PropertyRepository.CHARACTER_LIMIT_TITLE.getValueInt());
-            }
-        } else {
-            throw new MandatoryException("Atributo Titulo Obligatorio");
-        }
-    }
-    
-    private void validateObjectives(Project project) throws LimitException{
-        if (!project.getObjectives().isEmpty()){
-            int quantityGeneralObjectives = 0;
-            int quantitySpecificObjectives = 0;
-            for (Objectives objective : project.getObjectives()) {
-                if (objective.getType().shortValue() == Objectives.GENERAL_OBJETICVE){
-                    quantityGeneralObjectives++;
-                } else {
-                    quantitySpecificObjectives++;
-                }
-            }
-            if (quantityGeneralObjectives > PropertyRepository.LIMIT_GENERAL_OBJECTIVE.getValueInt()){
-                throw new LimitException("Número Máximo de Objetivos Generales: " + PropertyRepository.LIMIT_GENERAL_OBJECTIVE.getValueInt());
-            }
-            if (quantitySpecificObjectives > PropertyRepository.LIMIT_SPECIFIC_OBJECTIVE.getValueInt()){
-                throw new LimitException("Número Máximo de Objetivos Específicos: " + PropertyRepository.LIMIT_GENERAL_OBJECTIVE.getValueInt());
-            }
-        }
-    }
-    
-    private void validateTextSections(Project project) throws LimitException{
-        for (Section section : project.getSections()) {
-            if (section.getTitle().getName().equals(Section.JUSTIFICATION_TEXT)){
-                if (section.getTitle().getTexto().getText().length() > PropertyRepository.CHARACTER_LIMIT_JUSTIFICATION.getValueInt()){
-                    throw new LimitException("Caracteres Máximos para la Justificación: " + PropertyRepository.CHARACTER_LIMIT_JUSTIFICATION.getValueInt());
-                }
-            } else {
-                if (section.getTitle().getTexto().getText().length() > PropertyRepository.CHARACTER_LIMIT_FOR_TEXT_OF_SECTION){
-                    throw new LimitException("Caracteres Mácimoss en la sección " 
-                            +  section.getTitle().getName() + ": "
-                            +  PropertyRepository.CHARACTER_LIMIT_FOR_TEXT_OF_SECTION);
-                }
-            }
-        }
-    }
-
-    public InputStream createPDF(Project project, UserCareer userCareer) throws IOException {
+    public InputStream createPDF(Project project, UserCareer userCareer) throws IOException, ValidationException, MandatoryException, LimitException {
+        projectRepository.validateProjectoToReview(project);
         this.setFontDocument();
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         PdfDocument pdf = new PdfDocument(new PdfWriter(out));

@@ -49,7 +49,7 @@ public class CreateUserView implements Serializable {
         try {
             loginUser = userFacade.getAuthenticatedUser().get(0);
             rolUsers = userFacade.getAllRolUser();
-            switch (loginUser.getROLid().getName()){
+            switch (loginUser.getROLid().getName()) {
                 case COORDINADOR_EPS:
                     eliminatedRolByName(DIRECTOR);
                     eliminatedRolByName(COORDINADOR_EPS);
@@ -72,7 +72,7 @@ public class CreateUserView implements Serializable {
                     eliminatedRolByName(ASESOR);
                     eliminatedRolByName(SUPERVISOR_EPS);
                     eliminatedRolByName(SUPERVISOR_EMPRESA);
-                    break;    
+                    break;
             }
             careers = userFacade.getAllCareer();
             verifyView();
@@ -80,17 +80,17 @@ public class CreateUserView implements Serializable {
             System.out.println(ex.getMessage());
         }
     }
-    
-    private void eliminatedRolByName(String rolName){
+
+    private void eliminatedRolByName(String rolName) {
         boolean flagRemove = false;
         int indexRolUser = 0;
         for (int i = 0; i < rolUsers.size(); i++) {
-            if (rolUsers.get(i).getName().equalsIgnoreCase(rolName)){
+            if (rolUsers.get(i).getName().equalsIgnoreCase(rolName)) {
                 indexRolUser = i;
                 flagRemove = true;
             }
         }
-        if (flagRemove){
+        if (flagRemove) {
             rolUsers.remove(indexRolUser);
         }
     }
@@ -229,5 +229,8 @@ public class CreateUserView implements Serializable {
         user = null;
         getSelectedCareers().clear();
         getUserCareers().clear();
+        personalCodeFlag = false;
+        academicRegisterFlag = true;
+        careerSelectionFlag = true;
     }
 }

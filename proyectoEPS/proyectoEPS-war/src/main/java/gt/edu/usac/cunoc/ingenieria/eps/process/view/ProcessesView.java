@@ -7,7 +7,6 @@ import gt.edu.usac.cunoc.ingenieria.eps.process.Appointment;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import gt.edu.usac.cunoc.ingenieria.eps.process.appointmentState;
 import gt.edu.usac.cunoc.ingenieria.eps.process.facade.ProcessFacadeLocal;
-import gt.edu.usac.cunoc.ingenieria.eps.tail.facade.TailFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.user.Rol;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import gt.edu.usac.cunoc.ingenieria.eps.user.facade.UserFacadeLocal;
@@ -24,6 +23,7 @@ import javax.inject.Named;
 import org.primefaces.PrimeFaces;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
+import gt.edu.usac.cunoc.ingenieria.eps.tail.facade.TailCoordinatorFacadeLocal;
 
 @Named
 @ViewScoped
@@ -39,7 +39,7 @@ public class ProcessesView implements Serializable {
     private UserFacadeLocal userFacade;
 
     @EJB
-    private TailFacadeLocal tailFacade;
+    private TailCoordinatorFacadeLocal tailFacade;
 
     private List<Process> processes;
     private Boolean careerCoordinator;

@@ -1,8 +1,11 @@
 
 package gt.edu.usac.cunoc.ingenieria.eps.tail.facade;
 
+import gt.edu.usac.cunoc.ingenieria.eps.exception.LimitException;
+import gt.edu.usac.cunoc.ingenieria.eps.exception.MandatoryException;
+import gt.edu.usac.cunoc.ingenieria.eps.exception.ValidationException;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
-import gt.edu.usac.cunoc.ingenieria.eps.tail.TailCommitteeEPS;
+
 import gt.edu.usac.cunoc.ingenieria.eps.tail.repository.TailCommitteeEPSRepository;
 import gt.edu.usac.cunoc.ingenieria.eps.tail.service.TailCommitteeEPSService;
 import java.util.List;
@@ -21,7 +24,7 @@ public class TailCommitteeEPSFacade implements TailCommitteeEPSFacadeLocal{
     private TailCommitteeEPSRepository tailCommitteeEPSRepository;
         
     @Override    
-    public void createTailCommiteeEPS(Process process) {
+    public void createTailCommiteeEPS(Process process) throws ValidationException, MandatoryException, LimitException  {
         tailCommitteeEPSService.createTailCommitteeEPS(process);
     }
 

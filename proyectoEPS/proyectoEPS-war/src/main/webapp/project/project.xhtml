@@ -240,6 +240,8 @@
                                         <div class="form-group col-sm-4">
                                             <p:inputNumber placeholder="Latitud" 
                                                            readonly="#{!projectView.editOptions()}"
+                                                           minValue="-90.9999"
+                                                           maxValue="90.9999"
                                                            decimalPlaces="4" 
                                                            value="#{decimalCoordinate.latitude}"                                                      
                                                            >
@@ -248,6 +250,8 @@
                                         <div class="form-group col-sm-4">
                                             <p:inputNumber placeholder="Longitud" 
                                                            decimalPlaces="4"
+                                                           minValue="-180.9999"
+                                                           maxValue="180.9999"
                                                            readonly="#{!projectView.editOptions()}"
                                                            value="#{decimalCoordinate.longitude}"
                                                            >
@@ -435,9 +439,7 @@
                         <p:commandLink styleClass="btn btn-primary"
                                        update="@form,:growl" 
                                        rendered="#{projectView.editOptions()}"
-                                       onstart="PF('progressBar').show();"
-                                       oncomplete="PF('progressBar').close();"
-                                       action="#{projectView.uploadCreate('progressBar')}">
+                                       action="#{projectView.uploadCreate()}">
                             <span class="glyphicon glyphicon-floppy-disk"></span> Guardar Proyecto EPS
                         </p:commandLink>
                     </div>
@@ -446,7 +448,8 @@
                         <p:commandLink styleClass="btn btn-info"
                                        actionListener="#{projectView.createPDF()}"
                                        rendered="#{projectView.editOptions()}"
-                                       update="openFile, :growl">
+                                       update="openFile, :growl"
+                                       >
                             <span class="glyphicon glyphicon-file"></span> Generar Archivo PDF
                         </p:commandLink>
                     </div>
@@ -513,15 +516,6 @@
                 <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times" />
             </div>
         </p:confirmDialog>
-        <p:dialog id="progressBar" widgetVar="progressBar" closable="false" width="20%" showHeader="false" resizable="false"
-                  modal="true" closeOnEscape="true">
-            <p:ajax event="close" update="@this" />
-            <div align="center">
-                <p:outputLabel>Realizando operación, espere un momento.</p:outputLabel>
-            </div>
-            <div class="form-group col-md-12" align="center">
-                <p:progressBar id="progressBarIndeterminate" style="height:6px" mode="indeterminate"/>
-            </div>
-        </p:dialog>
+        
     </ui:define>
 </ui:composition>

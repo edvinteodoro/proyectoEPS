@@ -97,7 +97,7 @@ public class ProcessFacade implements ProcessFacadeLocal {
     }
 
     @Override
-    public Process createProcess(Process process) {
+    public Process createProcess(Process process)throws ValidationException {
         return processService.createProcess(process);
     }
 

@@ -38,7 +38,7 @@
                         <p:staticMessage severity="warn" summary="Advertencia! " detail="No se puede editar el proyecto debido a que ha sido rechazado por el coordinador." rendered="#{projectView.stateReject()}"/>
                         <p:staticMessage severity="warn" summary="Advertencia! " detail="No se puede editar el proyecto debido a que se encuentra en un proceso de revision."  rendered="#{projectView.stateRevision()}"/><br></br>
                         <p:outputLabel for="title" value="Titulo:"/>
-                        <p:inputText id="title" styleClass="form-control" pt:placeholder="Titulo del Proyecto"
+                        <p:inputText id="title" styleClass="form-control" pt:placeholder="Titulo del Anteproyecto"
                                      disabled="#{!projectView.editOptions()}"
                                      pt:required="true"
                                      value="#{projectView.project.title}"/><br></br>
@@ -294,10 +294,10 @@
                                       skinSimple="true" auto="true"
                                       label="Seleccionar"
                                       update="labelSchedule"
-                                      sizeLimit="15000000"
+                                      sizeLimit="16000000"
                                       allowTypes="/(\.|\/)(pdf)$/"
                                       invalidFileMessage="Solo se puede cargar archivos pdf"
-                                      invalidSizeMessage="Archivo demasiado grande, limite de 15MB"
+                                      invalidSizeMessage="Archivo demasiado grande, limite de 16MB"
                                       >                                       
                         </p:fileUpload>
                         <h:commandLink id="labelSchedule" value="#{projectView.sheduleFileName}" class="text-primary"
@@ -323,10 +323,10 @@
                                       skinSimple="true" auto="true"
                                       label="Seleccionar"
                                       update="labelInvestmentPlan"
-                                      sizeLimit="15000000"
+                                      sizeLimit="16000000"
                                       allowTypes="/(\.|\/)(pdf)$/"
                                       invalidFileMessage="Solo se puede cargar archivos pdf"
-                                      invalidSizeMessage="Archivo demasiado grande, limite de 14MB"
+                                      invalidSizeMessage="Archivo demasiado grande, limite de 16MB"
                                       >                                       
                         </p:fileUpload>
                         <h:commandLink id="labelInvestmentPlan" value="#{projectView.investmentPlanFileName}" class="text-primary"
@@ -356,6 +356,7 @@
                                         <div class="form-group col-sm-4">
                                             <p:calendar id="expirationDate" pt:placeholder="Fecha Publicación"
                                                         readonly="#{!projectView.editOptions()}"
+                                                        disabled="#{!projectView.editOptions()}"
                                                         pattern="dd/MM/yyyy" 
                                                         locale="es"
                                                         value="#{bibliography.publicactionYear}"
@@ -414,10 +415,10 @@
                                       rendered="#{projectView.editOptions()}"
                                       label="Seleccionar"
                                       update="labelAnnexed"
-                                      sizeLimit="15000000"
+                                      sizeLimit="16000000"
                                       allowTypes="/(\.|\/)(pdf)$/"
                                       invalidFileMessage="Solo se puede cargar archivos pdf"
-                                      invalidSizeMessage="Archivo demasiado grande, limite de 14MB"
+                                      invalidSizeMessage="Archivo demasiado grande, limite de 16MB"
                                       >                                       
                         </p:fileUpload>
                         <h:commandLink id="labelAnnexed" value="#{projectView.annexedFileName}" class="text-primary"
@@ -439,7 +440,9 @@
                         <p:commandLink styleClass="btn btn-primary"
                                        update="@form,:growl" 
                                        rendered="#{projectView.editOptions()}"
-                                       action="#{projectView.uploadCreate()}">
+                                       onstart="PF('progressBar').show();"
+                                       onsuccess="PF('progressBar').hide();"
+                                       actionListener="#{projectView.uploadCreate()}">
                             <span class="glyphicon glyphicon-floppy-disk"></span> Guardar Proyecto EPS
                         </p:commandLink>
                     </div>
@@ -449,6 +452,8 @@
                                        actionListener="#{projectView.createPDF()}"
                                        rendered="#{projectView.editOptions()}"
                                        update="openFile, :growl"
+                                       onstart="PF('progressBar').show();"
+                                       onsuccess="PF('progressBar').hide();"
                                        >
                             <span class="glyphicon glyphicon-file"></span> Generar Archivo PDF
                         </p:commandLink>
@@ -457,8 +462,11 @@
                         <p:commandLink styleClass="btn btn-success"
                                        update="@form,:growl"
                                        rendered="#{projectView.editOptions()}"
-                                       action="#{projectView.reviewRequeried()}">
-                            <p:confirm header="Solicitar Revision" message="Al solicitar la revision ya no se podra editar el proyecto. ¿quieres solicitar revision?" icon="pi pi-exclamation-triangle" />
+                                       actionListener="#{projectView.reviewRequeried()}"
+                                       onstart="PF('progressBar').show();"
+                                       onsuccess="PF('progressBar').hide();"
+                                       >
+                            <p:confirm header="Solicitar Revisión" message="Al solicitar revisión ya no se podrá editar el Anteproyecto. ¿Quieres solicitar revisión?" icon="pi pi-exclamation-triangle" />
                             <span class="glyphicon glyphicon-check"></span> Solicitar Revisión
                         </p:commandLink>
                     </div>
@@ -512,10 +520,19 @@
         </p:dialog>
         <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" >
             <div class="col text-center">
-                <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
-                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+                <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" />
             </div>
         </p:confirmDialog>
-        
+        <p:dialog id="progressBar" widgetVar="progressBar" closable="false" width="20%" showHeader="false" resizable="false"
+                  modal="true" closeOnEscape="true">
+            <p:ajax event="close" update="@this" />
+            <div align="center">
+                <p:outputLabel>Realizando operación, espere un momento.</p:outputLabel>
+            </div>
+            <div class="form-group col-md-12" align="center">
+                <p:progressBar id="progressBarIndeterminate" style="height:6px" mode="indeterminate"/>
+            </div>
+        </p:dialog>
     </ui:define>
 </ui:composition>

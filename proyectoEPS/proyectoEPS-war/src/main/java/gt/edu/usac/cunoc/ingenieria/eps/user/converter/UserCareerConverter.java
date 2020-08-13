@@ -1,6 +1,5 @@
 package gt.edu.usac.cunoc.ingenieria.eps.user.converter;
 
-import gt.edu.usac.cunoc.ingenieria.eps.user.Career;
 import gt.edu.usac.cunoc.ingenieria.eps.user.UserCareer;
 import gt.edu.usac.cunoc.ingenieria.eps.user.facade.UserFacadeLocal;
 import javax.ejb.EJB;
@@ -20,7 +19,7 @@ public class UserCareerConverter implements Converter {
         try {
             UserCareer userCareer= userFacade.getUserCareer(new UserCareer(Integer.parseInt(careerId))).get(0);
             return userCareer;              
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             return null; 
         }
 }

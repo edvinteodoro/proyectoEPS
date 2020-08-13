@@ -29,14 +29,11 @@ import javax.inject.Named;
 import javax.ejb.EJB;
 import javax.faces.context.ExternalContext;
 import javax.inject.Inject;
-import org.primefaces.PrimeFaces;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
 import gt.edu.usac.cunoc.ingenieria.eps.tail.facade.TailCoordinatorFacadeLocal;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @Named
 @ViewScoped
@@ -379,9 +376,7 @@ public class ProjectView implements Serializable {
                 flagUpdate = true;
                 MessageUtils.addSuccessMessage("Se ha Creado el Proyecto");
             }
-     
         } catch (MandatoryException | LimitException ex) {
-            
             MessageUtils.addErrorMessage(ex.getMessage());
         }
     }
@@ -486,12 +481,12 @@ public class ProjectView implements Serializable {
     public void reviewRequeried() {
         try {
             changeStatusCorrection();
+            uploadCreate();
             if (getProcess().getApprovedCareerCoordinator() == null) {
                 tailFacade.createTailCoordinator(getProcess());
             } else if (getProcess().getApprovedCareerCoordinator()) {
                 tailCommitteeEPSFacade.createTailCommiteeEPS(getProcess());
             }
-            
             pdfFile = null;
             MessageUtils.addSuccessMessage("La solicitud de revision se ha realizado exitosamente.");
         } catch (ValidationException | MandatoryException | LimitException ex) {

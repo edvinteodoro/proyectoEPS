@@ -83,7 +83,7 @@ public class ProjectRepository {
 
     private void validateTextSections(Project project) throws LimitException, MandatoryException {
         for (Section section : project.getSections()) {
-            if (section.getTitle().getName() != null) {
+            if (section.getTitle().getName() != null && !section.getTitle().getName().isBlank()) {
                 if (section.getTitle().getName().equals(Section.JUSTIFICATION_TEXT)) {
                     if (section.getTitle().getTexto().getText().length() > PropertyRepository.CHARACTER_LIMIT_JUSTIFICATION.getValueInt()) {
                         throw new LimitException("Caracteres Máximos para la Justificación: " + PropertyRepository.CHARACTER_LIMIT_JUSTIFICATION.getValueInt());

@@ -88,7 +88,7 @@ public interface ProcessFacadeLocal {
 
     public Optional<Appointment> findAppointmentById(Integer id);
 
-    public Process createProcess(Process process);
+    public Process createProcess(Process process)throws ValidationException;
 
     public List<Process> getProcessUser(User user);
 

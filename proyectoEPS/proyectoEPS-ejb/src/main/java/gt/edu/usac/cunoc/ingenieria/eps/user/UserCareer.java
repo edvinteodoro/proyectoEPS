@@ -90,8 +90,6 @@ public class UserCareer implements Serializable {
         this.process = process;
     }
     
-    
-
     @Override
     public int hashCode() {
         int hash = 0;

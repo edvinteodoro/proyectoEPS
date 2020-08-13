@@ -1,5 +1,6 @@
 package gt.edu.usac.cunoc.ingenieria.eps.project.view;
 
+import User.exception.UserException;
 import gt.edu.usac.cunoc.ingenieria.eps.property.repository.PropertyRepository;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.LimitException;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.MandatoryException;
@@ -34,6 +35,8 @@ import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
 import gt.edu.usac.cunoc.ingenieria.eps.tail.facade.TailCoordinatorFacadeLocal;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Named
 @ViewScoped
@@ -94,7 +97,7 @@ public class ProjectView implements Serializable {
             specificObjectives = new ArrayList<>();
             corrections = new ArrayList<>();
             user = userFacade.getAuthenticatedUser().get(0);
-        } catch (Exception e) {
+        } catch (UserException e) {
         }
     }
 
@@ -421,23 +424,30 @@ public class ProjectView implements Serializable {
     }
 
     public void loadCurrentProject() throws IOException {
-        corrections = new ArrayList<>();
-        this.process = processFacade.getProcess(new Process(processId)).get(0);
-        if (this.process.getUserCareer().getUSERuserId().equals(this.user)) {
-            flagUpdate = false;
-            if (getProject().getId() != null) {
-                this.corrections = getProject().getCorrections();
-                loadDocumentsView();
-                flagUpdate = true;
-                for (int i = 0; i < getProject().getObjectives().size(); i++) {
-                    if (Objects.equals(getProject().getObjectives().get(i).getType(), Objectives.GENERAL_OBJETICVE)) {
-                        generalObjectves.add(getProject().getObjectives().get(i));
-                    } else {
-                        specificObjectives.add(getProject().getObjectives().get(i));
+        try {
+            corrections = new ArrayList<>();
+            this.user = userFacade.getAuthenticatedUser().get(0);
+            this.process = processFacade.getProcess(new Process(processId)).get(0);
+            if (this.process.getUserCareer().getUSERuserId().equals(this.user)) {
+                flagUpdate = false;
+                if (getProject().getId() != null) {
+                    this.corrections = getProject().getCorrections();
+                    loadDocumentsView();
+                    flagUpdate = true;
+                    for (int i = 0; i < getProject().getObjectives().size(); i++) {
+                        if (Objects.equals(getProject().getObjectives().get(i).getType(), Objectives.GENERAL_OBJETICVE)) {
+                            generalObjectves.add(getProject().getObjectives().get(i));
+                        } else {
+                            specificObjectives.add(getProject().getObjectives().get(i));
+                        }
                     }
                 }
+            } else {
+                externalContext.redirect(externalContext.getRequestContextPath() + "/error/error-403.xhtml");
             }
-        } else {
+        } catch (UserException ex) {
+            externalContext.redirect(externalContext.getRequestContextPath() + "/error/error-403.xhtml");
+        } catch (ArrayIndexOutOfBoundsException ex){
             externalContext.redirect(externalContext.getRequestContextPath() + "/error/error-404.xhtml");
         }
     }

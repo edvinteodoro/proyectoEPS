@@ -1,6 +1,9 @@
 package gt.edu.usac.cunoc.ingenieria.eps.process.view;
 
 import User.exception.UserException;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.COORDINADOR_CARRERA;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.COORDINADOR_EPS;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.SUPERVISOR_EPS;
 import gt.edu.usac.cunoc.ingenieria.eps.process.facade.ProcessFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import gt.edu.usac.cunoc.ingenieria.eps.process.StateProcess;
@@ -31,10 +34,6 @@ import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import gt.edu.usac.cunoc.ingenieria.eps.tail.facade.TailCoordinatorFacadeLocal;
 
-/**
- *
- * @author angelrg
- */
 @Named
 @ViewScoped
 public class committeeEPSReviewView implements Serializable {
@@ -80,11 +79,12 @@ public class committeeEPSReviewView implements Serializable {
     private TypeCorrection actualCorrection;
     private Section actualSection;
 
-    public void loadCurrentProject() {
+    public void loadCurrentProject() throws IOException {
         try {
             isFirstProcess = false;
             user = userFacade.getAuthenticatedUser().get(0);
             actualProcess = processFacade.getProcess(new Process(processId)).get(0);
+            validateUser(actualProcess, user);
             if (actualProcess != null) {
                 scheduleStream = new DefaultStreamedContent(new ByteArrayInputStream(actualProcess.getProject().getSchedule()), "application/pdf", "Calendario.pdf");
                 scheduleFileName = scheduleStream.getName();
@@ -94,18 +94,47 @@ public class committeeEPSReviewView implements Serializable {
                     annexedStream = new DefaultStreamedContent(new ByteArrayInputStream(actualProcess.getProject().getAnnexed()), "application/pdf", "Anexos.pdf");
                     annexedFileName = annexedStream.getName();
                 }
-                Process firstProcess;
-                if (getActualProcess().getApprovedCareerCoordinator() == null) {
-                    firstProcess = tailFacade.getProcessByCoordinator(user).get(0);
-                } else {
-                    firstProcess = tailCommitteeEPSFacade.getTailCommitteeEPS().get(0);
-                }
-                if (getActualProcess().equals(firstProcess)) {
-                    isFirstProcess = true;
-                }
+                validateFirsProcess();
             }
-        } catch (Exception e) {
+        } catch (UserException e) {
             MessageUtils.addErrorMessage(e.getMessage());
+        } catch (IndexOutOfBoundsException ex) {
+            externalContext.redirect(externalContext.getRequestContextPath() + "/error/error-404.xhtml");
+        }
+    }
+
+    private void validateUser(Process currentProcess, User userlogged) throws IOException {
+        switch (userlogged.getROLid().getName()) {
+            case COORDINADOR_CARRERA:
+                List<Process> assignedProcess = tailFacade.getProcessByCoordinator(user);
+                boolean flagOk = false;
+                for (Process assignedProces : assignedProcess) {
+                    if (currentProcess.getId().compareTo(assignedProces.getId()) == 0) {
+                        flagOk = true;
+                    }
+                }
+                if (!flagOk) {
+                    externalContext.redirect(externalContext.getRequestContextPath() + "/error/error-403.xhtml");
+                }
+                break;
+            case COORDINADOR_EPS:
+                break;
+            case SUPERVISOR_EPS:
+                break;
+            default:
+                externalContext.redirect(externalContext.getRequestContextPath() + "/error/error-403.xhtml");
+        }
+    }
+
+    private void validateFirsProcess() {
+        Process firstProcess;
+        if (getActualProcess().getApprovedCareerCoordinator() == null) {
+            firstProcess = tailFacade.getProcessByCoordinator(user).get(0);
+        } else {
+            firstProcess = tailCommitteeEPSFacade.getTailCommitteeEPS().get(0);
+        }
+        if (getActualProcess().equals(firstProcess)) {
+            this.isFirstProcess = true;
         }
     }
 

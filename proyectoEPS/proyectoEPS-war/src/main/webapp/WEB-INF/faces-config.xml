@@ -61,7 +61,7 @@
         </navigation-case>
         <navigation-case>
             <from-outcome>projectReview</from-outcome>
-            <to-view-id>/process/projectReview.xhtml</to-view-id>
+            <to-view-id>/project/projectReview.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
         <navigation-case>

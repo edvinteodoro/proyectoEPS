@@ -94,7 +94,7 @@ public class UserService {
             throw new UserException("User is null");
         }
         user.setPassword(newPassword());
-        user.setUserId(user.getrOLid().getName().concat(user.getDpi()));
+        user.setUserId(user.getROLid().getName().concat(user.getDpi()));
         return createUser(user);
     }
 

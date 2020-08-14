@@ -149,7 +149,7 @@ public class ProcessesView implements Serializable {
             if (processSelected.getAppointmentId().getCompanySupervisor() == null) {
 
                 companySupervisor = new User();
-                companySupervisor.setrOLid(userFacade.getRolUser(new Rol(null, SUPERVISOR_EMPRESA)).get(0));
+                companySupervisor.setROLid(userFacade.getRolUser(new Rol(null, SUPERVISOR_EMPRESA)).get(0));
             } else {
                 clean();
                 MessageUtils.addErrorMessage("El usuario ya existe");
@@ -201,7 +201,7 @@ public class ProcessesView implements Serializable {
 
     private boolean existsUser(User user) throws UserException {
         User search = new User();
-        search.setrOLid(user.getROLid());
+        search.setROLid(user.getROLid());
         search.setDpi(user.getDpi());
 
         return (!userFacade.getUser(search).isEmpty());

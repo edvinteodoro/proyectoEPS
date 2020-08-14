@@ -165,11 +165,11 @@ public class advisorReviewerView implements Serializable {
             if (advisor && processSelected.getAppointmentId().getUserAdviser() == null) {
 
                 actualUser = new User();
-                actualUser.setrOLid(userFacade.getRolUser(new Rol(null, ASESOR)).get(0));
+                actualUser.setROLid(userFacade.getRolUser(new Rol(null, ASESOR)).get(0));
             } else if (!advisor && processSelected.getAppointmentId().getUserReviewer() == null) {
 
                 actualUser = new User();
-                actualUser.setrOLid(userFacade.getRolUser(new Rol(null, REVISOR)).get(0));
+                actualUser.setROLid(userFacade.getRolUser(new Rol(null, REVISOR)).get(0));
             } else {
                 clean();
                 MessageUtils.addErrorMessage("El usuario ya existe");
@@ -292,7 +292,7 @@ public class advisorReviewerView implements Serializable {
 
     private boolean existsUser(User user) throws UserException {
         User search = new User();
-        search.setrOLid(user.getROLid());
+        search.setROLid(user.getROLid());
         search.setDpi(user.getDpi());
 
         return (!userFacade.getUser(search).isEmpty());

@@ -1,16 +1,26 @@
 package gt.edu.usac.cunoc.ingenieria.eps.process.view;
 
+import User.exception.UserException;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.COORDINADOR_CARRERA;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.COORDINADOR_EPS;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.ESTUDIANTE;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.SUPERVISOR_EPS;
+import gt.edu.usac.cunoc.ingenieria.eps.user.User;
+import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Requeriment;
 import gt.edu.usac.cunoc.ingenieria.eps.process.facade.ProcessFacadeLocal;
-import gt.edu.usac.cunoc.ingenieria.eps.user.User;
+import gt.edu.usac.cunoc.ingenieria.eps.tail.facade.TailCoordinatorFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.user.facade.UserFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.utils.MessageUtils;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.Serializable;
+import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.context.ExternalContext;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
@@ -19,13 +29,25 @@ import org.primefaces.model.UploadedFile;
 
 @Named
 @ViewScoped
-public class UpdateProcessView implements Serializable {
+public class updateRequerimentsView implements Serializable {
+
+    @Inject
+    private ExternalContext externalContext;
+
+    @EJB
+    private UserFacadeLocal userFacade;
 
     @EJB
     private ProcessFacadeLocal processFacade;
 
     @EJB
-    private UserFacadeLocal userFacade;
+    private TailCoordinatorFacadeLocal tailFacade;
+
+    private Integer processId;
+    private Process process;
+    private Requeriment requeriment;
+
+    private User loggedUser;
 
     private StreamedContent writtenRequestStream;
     private StreamedContent inscriptionConstancyStream;
@@ -48,27 +70,75 @@ public class UpdateProcessView implements Serializable {
     String nameEpsPreProjec = "";
     String nameAeioSettlemen = "";
 
+    private boolean flagStudent;
+    private Boolean showAeioSettlement;
+
     private String observation = "";
-
-    private Requeriment requeriment;
-    private Integer processId;
-    private Boolean showAeioSettlement = false;
-
-    User user;
 
     @PostConstruct
     public void init() {
+        flagStudent = false;
+        showAeioSettlement = false;
+    }
+
+    public void loadCurrentProcess() throws IOException {
         try {
-            user = userFacade.getAuthenticatedUser().get(0);
-        } catch (Exception e) {
+            this.loggedUser = userFacade.getAuthenticatedUser().get(0);
+            this.process = processFacade.getProcess(new Process(processId)).get(0);
+            this.requeriment = process.getRequeriment();
+            validateUser(process, loggedUser);
+            loadDocuments();
+        } catch (UserException ex) {
+            externalContext.redirect(externalContext.getRequestContextPath() + "/error/error-403.xhtml");
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            externalContext.redirect(externalContext.getRequestContextPath() + "/error/error-404.xhtml");
         }
     }
 
-    public Requeriment getRequeriment() {
-        if (requeriment == null) {
-            return new Requeriment(processId);
+    private void validateUser(Process currentProcess, User userlogged) throws IOException {
+        switch (userlogged.getROLid().getName()) {
+            case ESTUDIANTE:
+                if (this.process.getUserCareer().getUSERuserId().equals(this.loggedUser)) {
+                    System.out.println(processId);
+                    System.out.println(process.getRequeriment().getId());
+                } else {
+                    externalContext.redirect(externalContext.getRequestContextPath() + "/error/error-403.xhtml");
+                }
+                flagStudent = true;
+                break;
+            case COORDINADOR_CARRERA:
+                List<Process> assignedProcess = tailFacade.getProcessByCoordinator(loggedUser);
+                boolean flagOk = false;
+                for (Process assignedProces : assignedProcess) {
+                    if (currentProcess.getId().compareTo(assignedProces.getId()) == 0) {
+                        flagOk = true;
+                    }
+                }
+                if (!flagOk) {
+                    externalContext.redirect(externalContext.getRequestContextPath() + "/error/error-403.xhtml");
+                }
+                flagStudent = false;
+                break;
+            case COORDINADOR_EPS:
+                break;
+            case SUPERVISOR_EPS:
+                break;
+            default:
+                externalContext.redirect(externalContext.getRequestContextPath() + "/error/error-403.xhtml");
         }
-        return requeriment;
+    }
+
+    public String getTitle() {
+        switch (loggedUser.getROLid().getName()) {
+            case ESTUDIANTE:
+                return "Actualizar Requerimientos";
+            case COORDINADOR_CARRERA:
+            case COORDINADOR_EPS:
+            case SUPERVISOR_EPS:
+                return "Revisión Requerimientos";
+            default:
+                return "Requerimientos";
+        }
     }
 
     public void save() {
@@ -92,6 +162,57 @@ public class UpdateProcessView implements Serializable {
         }
         processFacade.updaterequeriment(getRequeriment());
         MessageUtils.addSuccessMessage("Cambios Realizados");
+    }
+
+    private void loadDocuments() {
+        this.process = processFacade.getProcess(new Process(processId)).get(0);
+        this.requeriment = process.getRequeriment();
+        writtenRequestStream = new DefaultStreamedContent(new ByteArrayInputStream(requeriment.getWrittenRequest()), "application/pdf", "Solicitud Escrita.pdf");
+        inscriptionConstancyStream = new DefaultStreamedContent(new ByteArrayInputStream(requeriment.getInscriptionConstancy()), "application/pdf", "Constancia Inscripcion.pdf");
+        pensumeClosureStream = new DefaultStreamedContent(new ByteArrayInputStream(requeriment.getPensumClosure()), "application/pdf", "Solicitud Escrita.pdf");
+        propedeuticConstancyStream = new DefaultStreamedContent(new ByteArrayInputStream(requeriment.getPropedeuticConstancy()), "application/pdf", "Solicitud Escrita.pdf");
+        epsPreProjectStream = new DefaultStreamedContent(new ByteArrayInputStream(requeriment.getEPSpreproject()), "application/pdf", "Solicitud Escrita.pdf");
+        if (requeriment.getAEIOsettlement() != null) {
+            showAeioSettlement = true;
+            aeioSettlementStream = new DefaultStreamedContent(new ByteArrayInputStream(requeriment.getaEIOsettlement()), "application/pdf", "Solicitud Escrita.pdf");
+        }
+    }
+    
+    public void loadDocumentsMessage(){
+        loadDocuments();
+        MessageUtils.addSuccessMessage("Documentos Reestablecidos");
+    }
+
+    public Integer getProcessId() {
+        return processId;
+    }
+
+    public void setProcessId(Integer processId) {
+        this.processId = processId;
+    }
+
+    public Process getProcess() {
+        return process;
+    }
+
+    public void setProcess(Process process) {
+        this.process = process;
+    }
+
+    public Requeriment getRequeriment() {
+        return requeriment;
+    }
+
+    public void setRequeriment(Requeriment requeriment) {
+        this.requeriment = requeriment;
+    }
+
+    public User getLoggedUser() {
+        return loggedUser;
+    }
+
+    public void setLoggedUser(User loggedUser) {
+        this.loggedUser = loggedUser;
     }
 
     public StreamedContent getWrittenRequestStream() {
@@ -140,36 +261,6 @@ public class UpdateProcessView implements Serializable {
 
     public void setAeioSettlementStream(StreamedContent aeioSettlement) {
         this.aeioSettlementStream = aeioSettlement;
-    }
-
-    public Integer getProcessId() {
-        return processId;
-    }
-
-    public void setProcessId(Integer processId) {
-        this.processId = processId;
-    }
-
-    public void loadCurrentProcess() {
-        requeriment = processFacade.getRequeriment(new Requeriment(processId)).get(0);
-        writtenRequestStream = new DefaultStreamedContent(new ByteArrayInputStream(requeriment.getWrittenRequest()), "application/pdf", "Solicitud Escrita.pdf");
-        inscriptionConstancyStream = new DefaultStreamedContent(new ByteArrayInputStream(requeriment.getInscriptionConstancy()), "application/pdf", "Constancia Inscripcion.pdf");
-        pensumeClosureStream = new DefaultStreamedContent(new ByteArrayInputStream(requeriment.getPensumClosure()), "application/pdf", "Solicitud Escrita.pdf");
-        propedeuticConstancyStream = new DefaultStreamedContent(new ByteArrayInputStream(requeriment.getPropedeuticConstancy()), "application/pdf", "Solicitud Escrita.pdf");
-        epsPreProjectStream = new DefaultStreamedContent(new ByteArrayInputStream(requeriment.getEPSpreproject()), "application/pdf", "Solicitud Escrita.pdf");
-        if (requeriment.getAEIOsettlement() != null) {
-            showAeioSettlement = true;
-            aeioSettlementStream = new DefaultStreamedContent(new ByteArrayInputStream(requeriment.getaEIOsettlement()), "application/pdf", "Solicitud Escrita.pdf");
-        }
-
-    }
-
-    public Boolean getShowAeioSettlement() {
-        return showAeioSettlement;
-    }
-
-    public void setShowAeioSettlement(Boolean showAeioSettlement) {
-        this.showAeioSettlement = showAeioSettlement;
     }
 
     public void handleWrittenRequest(FileUploadEvent event) {
@@ -238,12 +329,20 @@ public class UpdateProcessView implements Serializable {
         writtenRequestStream = new DefaultStreamedContent(new ByteArrayInputStream(requeriment.getAEIOsettlement()), "application/pdf", "Finiquito aeio.pdf");
     }
 
-    public Boolean isStudent() {
-        if (user.getROLid().getName().equals(ESTUDIANTE)) {
-            return true;
-        } else {
-            return false;
-        }
+    public boolean isFlagStudent() {
+        return flagStudent;
+    }
+
+    public void setFlagStudent(boolean flagStudent) {
+        this.flagStudent = flagStudent;
+    }
+
+    public Boolean getShowAeioSettlement() {
+        return showAeioSettlement;
+    }
+
+    public void setShowAeioSettlement(Boolean showAeioSettlement) {
+        this.showAeioSettlement = showAeioSettlement;
     }
 
     public String getObservation() {
@@ -253,4 +352,5 @@ public class UpdateProcessView implements Serializable {
     public void setObservation(String observation) {
         this.observation = observation;
     }
+
 }

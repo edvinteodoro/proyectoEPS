@@ -15,16 +15,6 @@
             <redirect/>
         </navigation-case>
         <navigation-case>
-            <from-outcome>requerimentReview</from-outcome>
-            <to-view-id>/process/requerimentReview.xhtml</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>updateRequeriment</from-outcome>
-            <to-view-id>/process/updateRequeriments.xhtml</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
             <from-outcome>createProcess</from-outcome>
             <to-view-id>/process/createProcess.xhtml</to-view-id>
             <redirect/>
@@ -34,6 +24,12 @@
             <to-view-id>/process/processes.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
+        <navigation-case>
+            <from-outcome>updateRequeriments</from-outcome>
+            <to-view-id>/process/updateRequeriments.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+        
         <navigation-case>
             <from-outcome>project</from-outcome>
             <to-view-id>/project/project.xhtml</to-view-id>

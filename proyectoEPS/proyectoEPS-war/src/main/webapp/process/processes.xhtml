@@ -11,8 +11,7 @@
     <ui:define name="title">
         Procesos
     </ui:define>
-
-
+    
     <ui:define name="content">
         <p:dataTable id="processesTable" var="process" value="#{processesView.processes}" reflow="true" rowStyleClass="#{process.sudentStyleRow}">
             <p:column headerText="Nombres" rendered="#{processesView.isCareerCoordinator()}">
@@ -30,16 +29,16 @@
             <p:column headerText="Aprobacion EPS" rendered="#{!processesView.isCareerCoordinator()}">
                 <h:outputText value="#{process.approvedEPSMessage}" />
             </p:column>
-            <p:column headerText="Estado Proceso" rendered="#{!processesView.isCareerCoordinator()}">
+            <p:column headerText="Estado" rendered="#{!processesView.isCareerCoordinator()}">
                 <h:outputText value="#{process.state}" />
             </p:column>
             <p:column headerText="Progreso" rendered="#{!processesView.isCareerCoordinator()}">
                 <h:outputText value="#{process.progress}" />
             </p:column>
-            <p:column headerText="Requisitos" styleClass="text-center">
+            <p:column headerText="Requerimientos" styleClass="text-center">
                 <p data-placement="top" data-toggle="tooltip" title="Requisitos">
-                    <button jsf:outcome="updateRequeriment" styleClass="btn btn-success btn-xs">
-                        <f:param name="idRequeriment" value="#{process.requeriment.id}"/>
+                    <button jsf:outcome="updateRequeriments" styleClass="btn btn-success btn-xs">
+                        <f:param name="idProcess" value="#{process.id}"/>
                         <span class="glyphicon glyphicon-log-in"></span>
                     </button>
                 </p>

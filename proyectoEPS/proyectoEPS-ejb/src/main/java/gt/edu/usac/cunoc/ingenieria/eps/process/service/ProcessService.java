@@ -404,7 +404,7 @@ public class ProcessService {
 
     private boolean existsUser(User user) throws UserException {
         User search = new User();
-        search.setrOLid(user.getROLid());
+        search.setROLid(user.getROLid());
         search.setDpi(user.getDpi());
 
         return (!userRepository.getUser(search).isEmpty());

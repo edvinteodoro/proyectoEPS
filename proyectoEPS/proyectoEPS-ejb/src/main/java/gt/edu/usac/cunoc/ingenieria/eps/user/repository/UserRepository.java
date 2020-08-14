@@ -128,8 +128,8 @@ public class UserRepository {
         if (user.getEpsCommittee() != null) {
             predicates.add(criteriaBuilder.equal(userR.get("epsCommittee"), user.getEpsCommittee()));
         }
-        if (user.getrOLid() != null && user.getrOLid().getName() != null && !user.getrOLid().getName().replace(" ", "").isEmpty()) {
-            predicates.add(criteriaBuilder.equal(userR.get("rOLid").get("name"), user.getrOLid().getName()));
+        if (user.getROLid()!= null && user.getROLid().getName() != null && !user.getROLid().getName().replace(" ", "").isEmpty()) {
+            predicates.add(criteriaBuilder.equal(userR.get("rOLid").get("name"), user.getROLid().getName()));
         }
 
         criteriaQuery.where(predicates.stream().toArray(Predicate[]::new));

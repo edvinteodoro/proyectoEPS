@@ -52,149 +52,187 @@
                 </h:commandLink>
             </div>
             <div class="row">
-                    <div class="form-group col-sm-3">
-                        <p:outputLabel for="inscriptionConstancy" value="Constancia de Inscripción:"/>
-                    </div>
-                    <div class="form-group col-sm-3" jsf:rendered="#{updateRequerimentsView.flagStudent}">
-                        <p:fileUpload id="inscriptionConstancy" fileUploadListener="#{updateRequerimentsView.handleInscriptionConstancy}" 
-                                      required="true"   
-                                      styleClass="in-dialog"
-                                      skinSimple="true" auto="true" allowTypes="/(\.|\/)(pdf)$/"
-                                      update="@parent"
-                                      label="Seleccionar"
-                                      sizeLimit="16000000"
-                                      invalidSizeMessage="Archivo demasiado grande, limite de 16MB"
-                                      invalidFileMessage="Solo se puede cargar archivos pdf"/>  
-                    </div>
-                    <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{updateRequerimentsView.reloadInscriptionConstancy()}">
-                        <p:fileDownload value="#{updateRequerimentsView.inscriptionConstancyStream}" contentDisposition="inline"/>
-                    </h:commandLink>
+                <div class="form-group col-sm-3">
+                    <p:outputLabel for="inscriptionConstancy" value="Constancia de Inscripción:"/>
                 </div>
+                <div class="form-group col-sm-3" jsf:rendered="#{updateRequerimentsView.flagStudent}">
+                    <p:fileUpload id="inscriptionConstancy" fileUploadListener="#{updateRequerimentsView.handleInscriptionConstancy}" 
+                                  required="true"   
+                                  styleClass="in-dialog"
+                                  skinSimple="true" auto="true" allowTypes="/(\.|\/)(pdf)$/"
+                                  update="@parent"
+                                  label="Seleccionar"
+                                  sizeLimit="16000000"
+                                  invalidSizeMessage="Archivo demasiado grande, limite de 16MB"
+                                  invalidFileMessage="Solo se puede cargar archivos pdf"/>  
+                </div>
+                <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{updateRequerimentsView.reloadInscriptionConstancy()}">
+                    <p:fileDownload value="#{updateRequerimentsView.inscriptionConstancyStream}" contentDisposition="inline"/>
+                </h:commandLink>
+            </div>
 
-                <div class="row">
-                    <div class="form-group col-sm-3">
-                        <p:outputLabel for="pensumeClosure" value="Constancia de Cierre de Pensum:"/>
-                    </div>
-                    <div class="form-group col-sm-3" jsf:rendered="#{updateRequerimentsView.flagStudent}">
-                        <p:fileUpload id="pensumeClosure" fileUploadListener="#{updateRequerimentsView.handlePensumeClosure}"
-                                      required="true"   
-                                      styleClass="in-dialog"
-                                      skinSimple="true" auto="true" allowTypes="/(\.|\/)(pdf)$/"
-                                      update="@parent"
-                                      label="Seleccionar"
-                                      sizeLimit="16000000"
-                                      invalidSizeMessage="Archivo demasiado grande, limite de 16MB"
-                                      invalidFileMessage="Solo se puede cargar archivos pdf"/>  
-                    </div>
-                    <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{updateRequerimentsView.reloadPensumeClosure()}">
-                        <p:fileDownload value="#{updateRequerimentsView.pensumeClosureStream}" contentDisposition="inline"/>
-                    </h:commandLink>
+            <div class="row">
+                <div class="form-group col-sm-3">
+                    <p:outputLabel for="pensumeClosure" value="Constancia de Cierre de Pensum:"/>
                 </div>
-                <div class="row">
-                    <div class="form-group col-sm-3">
-                        <p:outputLabel for="propedeuticConstancy" value="Constancia de Propedeutico:"/>
-                    </div>
-                    <div class="form-group col-sm-3" jsf:rendered="#{updateRequerimentsView.flagStudent}">
-                        <p:fileUpload id="propedeuticConstancy" fileUploadListener="#{updateRequerimentsView.handlePropedeuticConstancy}"
-                                      required="true"   
-                                      styleClass="in-dialog"
-                                      skinSimple="true" auto="true" allowTypes="/(\.|\/)(pdf)$/"
-                                      update="@parent"
-                                      label="Seleccionar"
-                                      sizeLimit="16000000"
-                                      invalidSizeMessage="Archivo demasiado grande, limite de 16MB"
-                                      invalidFileMessage="Solo se puede cargar archivos pdf"/>    
-                    </div>
-                    <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{updateRequerimentsView.reloadPropedeuticConstancy()}">
-                        <p:fileDownload value="#{updateRequerimentsView.propedeuticConstancyStream}" contentDisposition="inline"/>
-                    </h:commandLink>
+                <div class="form-group col-sm-3" jsf:rendered="#{updateRequerimentsView.flagStudent}">
+                    <p:fileUpload id="pensumeClosure" fileUploadListener="#{updateRequerimentsView.handlePensumeClosure}"
+                                  required="true"   
+                                  styleClass="in-dialog"
+                                  skinSimple="true" auto="true" allowTypes="/(\.|\/)(pdf)$/"
+                                  update="@parent"
+                                  label="Seleccionar"
+                                  sizeLimit="16000000"
+                                  invalidSizeMessage="Archivo demasiado grande, limite de 16MB"
+                                  invalidFileMessage="Solo se puede cargar archivos pdf"/>  
                 </div>
-                <div class="row">
-                    <div class="form-group col-sm-3">
-                        <p:outputLabel for="epsPreProject"  value="Constancia de Pre Proyecto:"/>
-                    </div>
-                    <div class="form-group col-sm-3" jsf:rendered="#{updateRequerimentsView.flagStudent}">
-                        <p:fileUpload id="epsPreProject" fileUploadListener="#{updateRequerimentsView.handleEpsPreProject}"
-                                      required="true"  
-                                      styleClass="in-dialog"
-                                      skinSimple="true" auto="true" allowTypes="/(\.|\/)(pdf)$/"
-                                      update="@parent"
-                                      label="Seleccionar"
-                                      sizeLimit="16000000"
-                                      invalidSizeMessage="Archivo demasiado grande, limite de 16MB"
-                                      invalidFileMessage="Solo se puede cargar archivos pdf"/>
-                    </div>
-                    <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{updateRequerimentsView.reloadEpsPreProjec()}">
-                        <p:fileDownload value="#{updateRequerimentsView.epsPreProjectStream}" contentDisposition="inline"/>
-                    </h:commandLink>
+                <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{updateRequerimentsView.reloadPensumeClosure()}">
+                    <p:fileDownload value="#{updateRequerimentsView.pensumeClosureStream}" contentDisposition="inline"/>
+                </h:commandLink>
+            </div>
+            <div class="row">
+                <div class="form-group col-sm-3">
+                    <p:outputLabel for="propedeuticConstancy" value="Constancia de Propedeutico:"/>
                 </div>
-                <div class="row">
-                    <div class="form-group col-sm-3">
-                        <p:outputLabel for="aeio" value="Documento Finiquito de AEIO:"/>
-                    </div>
-                    <div class="form-group col-sm-3" jsf:rendered="#{updateRequerimentsView.flagStudent}">
-                        <p:fileUpload id="aeio" fileUploadListener="#{updateRequerimentsView.handleAeioSettlement}" 
-                                      styleClass="in-dialog"
-                                      skinSimple="true" auto="true" allowTypes="/(\.|\/)(pdf)$/"
-                                      update="@parent"
-                                      label="Seleccionar"
-                                      sizeLimit="16000000"
-                                      invalidSizeMessage="Archivo demasiado grande, limite de 16MB"
-                                      invalidFileMessage="Solo se puede cargar archivos pdf"/>
-                    </div>
-                    <h:commandLink value="Ver Documento"  target="_blank" rendered="#{updateRequerimentsView.showAeioSettlement}" actionListener="#{updateRequerimentsView.reloadAeioSettlemen()}">
-                        <p:fileDownload value="#{updateRequerimentsView.aeioSettlementStream}" contentDisposition="inline"/>
-                    </h:commandLink>
+                <div class="form-group col-sm-3" jsf:rendered="#{updateRequerimentsView.flagStudent}">
+                    <p:fileUpload id="propedeuticConstancy" fileUploadListener="#{updateRequerimentsView.handlePropedeuticConstancy}"
+                                  required="true"   
+                                  styleClass="in-dialog"
+                                  skinSimple="true" auto="true" allowTypes="/(\.|\/)(pdf)$/"
+                                  update="@parent"
+                                  label="Seleccionar"
+                                  sizeLimit="16000000"
+                                  invalidSizeMessage="Archivo demasiado grande, limite de 16MB"
+                                  invalidFileMessage="Solo se puede cargar archivos pdf"/>    
                 </div>
-                <br/>
-                <div class="btn-toolbar" jsf:rendered="#{updateRequerimentsView.flagStudent}">
-                    <div class="btn-group mr-2">
-                        <p:commandLink styleClass="btn btn-success"
-                                       update="@form,:growl" 
-                                       onstart="PF('progressBar').show();"
-                                       onsuccess="PF('progressBar').hide();"
-                                       actionListener="#{updateRequerimentsView.save()}">
-                            <p:confirm header="Actualizar Requerimientos" message="¿Desea actualizar los Requerimientos?" icon="pi pi-exclamation-triangle" />
-                            <span class="glyphicon glyphicon-floppy-saved"></span> Guardar Cambios
-                        </p:commandLink>
-                    </div>
-                    <div class="btn-group mr-2">
-                        <p:commandLink styleClass="btn btn-primary"
-                                       update="@form,:growl" 
-                                       onstart="PF('progressBar').show();"
-                                       onsuccess="PF('progressBar').hide();"
-                                       actionListener="#{updateRequerimentsView.loadDocumentsMessage()}"
-                                       >
-                            <span class="glyphicon glyphicon-refresh"></span> Restablecer
-                        </p:commandLink>
-                    </div>
+                <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{updateRequerimentsView.reloadPropedeuticConstancy()}">
+                    <p:fileDownload value="#{updateRequerimentsView.propedeuticConstancyStream}" contentDisposition="inline"/>
+                </h:commandLink>
+            </div>
+            <div class="row">
+                <div class="form-group col-sm-3">
+                    <p:outputLabel for="epsPreProject"  value="Constancia de Pre Proyecto:"/>
                 </div>
-                <div class="btn-toolbar" jsf:rendered="#{!updateRequerimentsView.flagStudent}">
-                    <div class="btn-group mr-2">
-                        <p:commandLink styleClass="btn btn-primary" oncomplete="PF('dlgEdit').show();"
-                                       update=":#{p:component('dlgEdit')}"
-                                       >
-                            <span class="glyphicon glyphicon-pencil"></span> Realizar Observaciones
-                        </p:commandLink>
-                    </div>
+                <div class="form-group col-sm-3" jsf:rendered="#{updateRequerimentsView.flagStudent}">
+                    <p:fileUpload id="epsPreProject" fileUploadListener="#{updateRequerimentsView.handleEpsPreProject}"
+                                  required="true"  
+                                  styleClass="in-dialog"
+                                  skinSimple="true" auto="true" allowTypes="/(\.|\/)(pdf)$/"
+                                  update="@parent"
+                                  label="Seleccionar"
+                                  sizeLimit="16000000"
+                                  invalidSizeMessage="Archivo demasiado grande, limite de 16MB"
+                                  invalidFileMessage="Solo se puede cargar archivos pdf"/>
                 </div>
+                <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{updateRequerimentsView.reloadEpsPreProjec()}">
+                    <p:fileDownload value="#{updateRequerimentsView.epsPreProjectStream}" contentDisposition="inline"/>
+                </h:commandLink>
+            </div>
+            <div class="row">
+                <div class="form-group col-sm-3">
+                    <p:outputLabel for="aeio" value="Documento Finiquito de AEIO:"/>
+                </div>
+                <div class="form-group col-sm-3" jsf:rendered="#{updateRequerimentsView.flagStudent}">
+                    <p:fileUpload id="aeio" fileUploadListener="#{updateRequerimentsView.handleAeioSettlement}" 
+                                  styleClass="in-dialog"
+                                  skinSimple="true" auto="true" allowTypes="/(\.|\/)(pdf)$/"
+                                  update="@parent"
+                                  label="Seleccionar"
+                                  sizeLimit="16000000"
+                                  invalidSizeMessage="Archivo demasiado grande, limite de 16MB"
+                                  invalidFileMessage="Solo se puede cargar archivos pdf"/>
+                </div>
+                <h:commandLink value="Ver Documento"  target="_blank" rendered="#{updateRequerimentsView.showAeioSettlement}" actionListener="#{updateRequerimentsView.reloadAeioSettlemen()}">
+                    <p:fileDownload value="#{updateRequerimentsView.aeioSettlementStream}" contentDisposition="inline"/>
+                </h:commandLink>
+            </div>
+            <br/>
+            <div class="btn-toolbar" jsf:rendered="#{updateRequerimentsView.flagStudent}">
+                <div class="btn-group mr-2">
+                    <p:commandLink styleClass="btn btn-success"
+                                   update="@form,:growl" 
+                                   onstart="PF('progressBar').show();"
+                                   onsuccess="PF('progressBar').hide();"
+                                   actionListener="#{updateRequerimentsView.save()}">
+                        <p:confirm header="Actualizar Requerimientos" message="¿Desea actualizar los Requerimientos?" icon="pi pi-exclamation-triangle" />
+                        <span class="glyphicon glyphicon-floppy-saved"></span> Guardar Cambios
+                    </p:commandLink>
+                </div>
+                <div class="btn-group mr-2">
+                    <p:commandLink styleClass="btn btn-primary"
+                                   update="@form,:growl" 
+                                   onstart="PF('progressBar').show();"
+                                   onsuccess="PF('progressBar').hide();"
+                                   actionListener="#{updateRequerimentsView.loadDocumentsMessage()}"
+                                   >
+                        <span class="glyphicon glyphicon-refresh"></span> Restablecer
+                    </p:commandLink>
+                </div>
+                <div class="btn-group mr-2">
+                    <p:commandLink styleClass="btn btn-primary" oncomplete="PF('dlgEdit').show();"
+                                   update=":#{p:component('dlgEdit')}"
+                                   >
+                        <span class="glyphicon glyphicon-eye-open"></span> Observaciones
+                    </p:commandLink>
+                </div>
+            </div>
+            <div class="btn-toolbar" jsf:rendered="#{!updateRequerimentsView.flagStudent}">
+                <div class="btn-group mr-2">
+                    <p:commandLink styleClass="btn btn-primary" oncomplete="PF('dlgEdit').show();"
+                                   update=":#{p:component('dlgEdit')}"
+                                   >
+                        <span class="glyphicon glyphicon-pencil"></span> Realizar Observaciones
+                    </p:commandLink>
+                </div>
+            </div>
 
         </h:form>
-        <p:dialog header="Observacion" id="dlgEdit" widgetVar="dlgEdit"
+        <p:dialog header="Observaciones" id="dlgEdit" widgetVar="dlgEdit"
                   fitViewport="true" modal="true" closeOnEscape="true">
             <h:form>
                 <div class="modal-body">
                     <fieldset>
-                        <div class="row form-group">
-                            <p:inputTextarea  value="#{updateRequerimentsView.observation}" rows="10" cols="50" counter="display" maxlength="500" counterTemplate="{0} characters remaining." autoResize="false" styleClass="form-control" pt:placeholder="Observaciones"/>
-                            <br />
+                        <div>
+                            <p:dataTable id="observationTable" 
+                                         var="observation" 
+                                         value="#{updateRequerimentsView.getRequerimentsObservations(updateRequerimentsView.requeriment.id)}" 
+                                         reflow="true"
+                                         emptyMessage="Registro Vacío"
+                                         >
+                                <p:column headerText="Fecha">
+                                    <h:outputText value="#{observation.date}"/>
+                                </p:column>
+                                <p:column headerText="Por">
+                                    <h:outputText value="#{observation.user.firstName} #{observation.user.lastName}"/>
+                                </p:column>
+                                <p:column headerText="Observación">
+                                    <h:outputText value="#{observation.text}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </div>
+                        <div class="row form-group" jsf:rendered="#{!updateRequerimentsView.flagStudent}">
+                            <p:inputTextarea  value="#{updateRequerimentsView.observation}" 
+                                              rows="10" 
+                                              cols="50" 
+                                              counter="display" 
+                                              maxlength="500" 
+                                              counterTemplate="{0} Caracteres Restantes" 
+                                              autoResize="false" 
+                                              styleClass="form-control" 
+                                              pt:placeholder="Observación"/>
+                            <br/>
                             <h:outputText id="display" />
                         </div>
                     </fieldset>
                 </div>
-                <div class="modal-footer ">
-                    <p:commandLink styleClass="btn btn-warning btn-lg" style="width: 100%;">
-                        <span class="glyphicon glyphicon-ok-sign"></span>Aceptar
+                <div class="modal-footer" jsf:rendered="#{!updateRequerimentsView.flagStudent}">
+                    <p:commandLink styleClass="btn btn-warning btn-lg" style="width: 100%;"
+                                   onstart="PF('progressBar').show();"
+                                   onsuccess="PF('progressBar').hide();"
+                                   update="@form,:#{p:component('growl')}"
+                                   actionListener="#{updateRequerimentsView.saveObservation()}"
+                                   >
+                        <span class="glyphicon glyphicon-plus"></span>Agregar Observación
                     </p:commandLink>
                 </div>
             </h:form>

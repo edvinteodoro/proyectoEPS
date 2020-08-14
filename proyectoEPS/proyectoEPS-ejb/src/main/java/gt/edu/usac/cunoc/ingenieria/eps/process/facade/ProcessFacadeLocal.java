@@ -1,8 +1,10 @@
 package gt.edu.usac.cunoc.ingenieria.eps.process.facade;
 
 import User.exception.UserException;
+import gt.edu.usac.cunoc.ingenieria.eps.exception.MandatoryException;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.ValidationException;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Appointment;
+import gt.edu.usac.cunoc.ingenieria.eps.process.Observation;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Requeriment;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import gt.edu.usac.cunoc.ingenieria.eps.tail.TailCoordinator;
@@ -152,4 +154,8 @@ public interface ProcessFacadeLocal {
     public Process sendCompanySupervisorToSupervisor(Process process) throws ValidationException, UserException;
     
     public boolean isAssignedAdvisorReviewer(Process process);
+    
+    public void createObservation(Observation newObservation) throws MandatoryException;
+    
+    public List<Observation> getRequerimentsObservations(Integer requerimentId);
 }

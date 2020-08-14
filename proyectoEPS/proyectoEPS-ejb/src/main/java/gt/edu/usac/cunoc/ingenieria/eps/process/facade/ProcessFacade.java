@@ -2,8 +2,10 @@ package gt.edu.usac.cunoc.ingenieria.eps.process.facade;
 
 import User.exception.UserException;
 import gt.edu.usac.cunoc.ingenieria.eps.configuration.mail.MailService;
+import gt.edu.usac.cunoc.ingenieria.eps.exception.MandatoryException;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.ValidationException;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Appointment;
+import gt.edu.usac.cunoc.ingenieria.eps.process.Observation;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Requeriment;
 import gt.edu.usac.cunoc.ingenieria.eps.process.repository.ProcessRepository;
 import gt.edu.usac.cunoc.ingenieria.eps.process.repository.RequerimentRepository;
@@ -13,9 +15,10 @@ import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import static gt.edu.usac.cunoc.ingenieria.eps.process.StateProcess.ACTIVO;
 import static gt.edu.usac.cunoc.ingenieria.eps.process.StateProcess.RECHAZADO;
 import static gt.edu.usac.cunoc.ingenieria.eps.process.StateProcess.REVISION;
-import static gt.edu.usac.cunoc.ingenieria.eps.process.appointmentState.*;
 import gt.edu.usac.cunoc.ingenieria.eps.process.repository.AppointmentRepository;
+import gt.edu.usac.cunoc.ingenieria.eps.process.repository.ObservationRepository;
 import gt.edu.usac.cunoc.ingenieria.eps.process.service.AppointmentService;
+import gt.edu.usac.cunoc.ingenieria.eps.process.service.ObservationService;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Correction;
 import gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection;
 import gt.edu.usac.cunoc.ingenieria.eps.project.facade.ProjectFacadeLocal;
@@ -25,7 +28,6 @@ import gt.edu.usac.cunoc.ingenieria.eps.user.Career;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import gt.edu.usac.cunoc.ingenieria.eps.user.facade.UserFacade;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import javax.ejb.EJB;
@@ -62,6 +64,12 @@ public class ProcessFacade implements ProcessFacadeLocal {
 
     @EJB
     private AppointmentService appointmentService;
+    
+    @EJB
+    private ObservationService observationService;
+    
+    @EJB
+    private ObservationRepository observationRepository;
 
     @EJB
     MailService mailService;
@@ -294,6 +302,16 @@ public class ProcessFacade implements ProcessFacadeLocal {
     @Override
     public Process sendCompanySupervisorToSupervisor(Process process) throws ValidationException, UserException {
         return processService.sendCompanySupervisorToSupervisor(process);
+    }
+
+    @Override
+    public void createObservation(Observation newObservation) throws MandatoryException {
+       observationService.createObservation(newObservation);
+    }
+
+    @Override
+    public List<Observation> getRequerimentsObservations(Integer requerimentId) {
+        return observationRepository.getRequerimentsObservations(requerimentId);
     }
 
 }

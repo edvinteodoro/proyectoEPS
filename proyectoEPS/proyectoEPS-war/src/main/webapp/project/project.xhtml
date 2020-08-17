@@ -33,16 +33,25 @@
         <h:form id="formProject" class="bg-modal">
             <fieldset>
                 <legend>#{projectView.titlePage()}</legend> 
+                <div class="row" jsf:rendered="#{projectView.stateReject()}">
+                    <div class="form-group col-md-8">
+                        <p:staticMessage severity="warn" summary="Advertencia! " detail="No se puede editar el proyecto debido a que ha sido rechazado por el coordinador."/>
+                    </div>
+                </div> 
+                <div class="row" jsf:rendered="#{projectView.stateRevision()}">
+                    <div class="form-group col-md-8">
+                        <p:staticMessage severity="warn" summary="Advertencia! " detail="No se puede editar el proyecto debido a que se encuentra en un proceso de revision."/>
+                    </div>
+                </div> 
+
                 <div class="row">
                     <div class="form-group col-md-8">
-                        <p:staticMessage severity="warn" summary="Advertencia! " detail="No se puede editar el proyecto debido a que ha sido rechazado por el coordinador." rendered="#{projectView.stateReject()}"/>
-                        <p:staticMessage severity="warn" summary="Advertencia! " detail="No se puede editar el proyecto debido a que se encuentra en un proceso de revision."  rendered="#{projectView.stateRevision()}"/><br></br>
                         <p:outputLabel for="title" value="Titulo:"/>
                         <p:inputText id="title" styleClass="form-control" pt:placeholder="Titulo del Anteproyecto"
                                      disabled="#{!projectView.editOptions()}"
                                      pt:required="true"
-                                     value="#{projectView.project.title}"/><br></br>
-
+                                     value="#{projectView.project.title}"/>
+                        <br/>
                         <p data-placement="top" data-toggle="tooltip" title="comentar">
                             <p:commandLink class="btn btn-primary btn-xs"
                                            oncomplete="PF('dlgCmt').show();"
@@ -80,6 +89,7 @@
                                     </div>    
                                 </p:dataViewListItem>
                             </p:dataView>
+                            <br/>
                             <p:commandLink styleClass="btn btn-success" actionListener="#{projectView.addGeneralObjectives()}" update="generalObjectives, growl"
                                            process="#{p:component('generalObjectives')}"
                                            rendered="#{projectView.editOptions()}"
@@ -122,6 +132,7 @@
                                     </div>    
                                 </p:dataViewListItem>
                             </p:dataView>
+                            <br/>
                             <p:commandLink styleClass="btn btn-success" actionListener="#{projectView.addSpecificObjectives()}" update="specificObjectives, growl"
                                            process="#{p:component('specificObjectives')}"
                                            rendered="#{projectView.editOptions()}"
@@ -220,6 +231,7 @@
                                             </div>
                                         </p:dataViewListItem>
                                     </p:dataView>
+                                    <br/>
                                     <p:commandLink styleClass="btn btn-success" actionListener="#{projectView.project.addSection()}" update="listSections"
                                                    process="#{p:component('listSections')}"
                                                    rendered="#{projectView.editOptions()}"
@@ -269,6 +281,7 @@
                                     </div> 
                                 </p:dataViewListItem>
                             </p:dataView>
+                            <br/>
                             <p:commandLink styleClass="btn btn-success" actionListener="#{projectView.project.addDecimalCoordinates()}" update="coordinatesDecimal"
                                            process="#{p:component('coordinatesDecimal')}"
                                            rendered="#{projectView.editOptions()}">
@@ -391,6 +404,7 @@
                                     </div>
                                 </p:dataViewListItem>
                             </p:dataView>
+                            <br/>
                             <p:commandLink styleClass="btn btn-success" actionListener="#{projectView.project.addBibliography}" update="biblioghraphies"
                                            process="#{p:component('biblioghraphies')}"
                                            rendered="#{projectView.editOptions()}">
@@ -435,8 +449,8 @@
                         </p:commandLink><br></br><br></br>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="form-group col-sm-2">
+                <div class="btn-toolbar">
+                    <div class="btn-group mr-2">
                         <p:commandLink styleClass="btn btn-primary"
                                        update="@form,:growl" 
                                        rendered="#{projectView.editOptions()}"
@@ -447,18 +461,7 @@
                         </p:commandLink>
                     </div>
 
-                    <div class="form-group col-sm-2">
-                        <p:commandLink styleClass="btn btn-info"
-                                       actionListener="#{projectView.createPDF()}"
-                                       rendered="#{projectView.editOptions()}"
-                                       update="openFile, :growl"
-                                       onstart="PF('progressBar').show();"
-                                       onsuccess="PF('progressBar').hide();"
-                                       >
-                            <span class="glyphicon glyphicon-file"></span> Generar Archivo PDF
-                        </p:commandLink>
-                    </div>
-                    <div class="form-group col-sm-2">
+                    <div class="btn-group mr-2">
                         <p:commandLink styleClass="btn btn-success"
                                        update="@form,:growl"
                                        rendered="#{projectView.editOptions()}"
@@ -470,9 +473,22 @@
                             <span class="glyphicon glyphicon-check"></span> Solicitar Revisión
                         </p:commandLink>
                     </div>
-                    <div jsf:id="openFile" class="form-group col-sm-2">
+
+                    <div class="btn-group mr-2">
+                        <p:commandLink styleClass="btn btn-info"
+                                       actionListener="#{projectView.createPDF()}"
+                                       rendered="#{projectView.editOptions()}"
+                                       update="openFile, :growl"
+                                       onstart="PF('progressBar').show();"
+                                       onsuccess="PF('progressBar').hide();"
+                                       >
+                            <span class="glyphicon glyphicon-file"></span> Generar Archivo PDF
+                        </p:commandLink>
+                    </div>
+
+                    <div jsf:id="openFile" class="btn-group mr-2">
                         <h:commandLink id="openPDF" 
-                                       styleClass="btn btn-success"
+                                       styleClass="btn btn-info"
                                        target="_blank"
                                        rendered="#{projectView.pdfFile!=null}"
                                        >
@@ -481,6 +497,7 @@
                         </h:commandLink>
                     </div>
                 </div>
+                <br/>
             </fieldset>
         </h:form>
         <p:dialog  header="Comentarios" id="dlgCmt" widgetVar="dlgCmt"

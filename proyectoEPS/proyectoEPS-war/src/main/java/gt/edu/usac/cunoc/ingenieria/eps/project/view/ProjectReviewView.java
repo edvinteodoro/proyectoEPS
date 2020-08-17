@@ -1,4 +1,4 @@
-package gt.edu.usac.cunoc.ingenieria.eps.process.view;
+package gt.edu.usac.cunoc.ingenieria.eps.project.view;
 
 import User.exception.UserException;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.COORDINADOR_CARRERA;
@@ -36,7 +36,7 @@ import gt.edu.usac.cunoc.ingenieria.eps.tail.facade.TailCoordinatorFacadeLocal;
 
 @Named
 @ViewScoped
-public class committeeEPSReviewView implements Serializable {
+public class ProjectReviewView implements Serializable {
 
     @Inject
     private ExternalContext externalContext;

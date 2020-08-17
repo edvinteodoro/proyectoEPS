@@ -8,97 +8,104 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:o="http://omnifaces.org/ui"
                 xmlns:cmp="http://xmlns.jcp.org/jsf/composite/components"
-                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core" 
+                xmlns:jsf="http://xmlns.jcp.org/jsf">
     <f:metadata>
         <o:viewParam name="idProcess" required="true" 
-                     value="#{committeeEPSReviewView.processId}"
+                     value="#{projectReviewView.processId}"
                      requiredMessage="Ningun valor">
             <o:viewParamValidationFailed sendError="404" message="Error parametro"/>
         </o:viewParam>
-        <o:viewAction action="#{committeeEPSReviewView.loadCurrentProject()}" />
+        <o:viewAction action="#{projectReviewView.loadCurrentProject()}" />
     </f:metadata>
 
     <ui:define name="head">
-        Comisión EPS
+        Revisión #{projectReviewView.titlePage()}
+    </ui:define>
+
+    <ui:define name="title">
+        Revisión #{projectReviewView.titlePage()}
     </ui:define>
 
     <ui:define name="content">
         <h:outputScript library="js" name="calendar_es.js" />
         <h:form id="proyect" class="bg-modal">
             <fieldset>
-                <legend>#{committeeEPSReviewView.titlePage()}</legend>
-                <div class="row">
+                <legend>Revisión #{projectReviewView.titlePage()}</legend>
+                <div class="row" jsf:rendered="#{projectReviewView.renderWarningCoordinator()}">
                     <div class="form-group col-md-8">
-                        <p:staticMessage severity="warn" summary="Advertencia! " detail="No se puede revisar este proyecto debido a que no es el primero en la cola de revision."  rendered="#{committeeEPSReviewView.renderWarningCoordinator()}"/><br></br>
+                        <p:staticMessage severity="warn" 
+                                         summary="Advertencia! " 
+                                         detail="No se puede revisar este proyecto debido a que no es el primero en la cola de revisión."  
+                                         />
                     </div>
                 </div>
-                <p:panel id="titlePr" header="Titulo" class="form-group col-sm-8">
-                    <div class="row">
-                        <div class="form-group col-md-8">
-                            <h:outputText value="#{committeeEPSReviewView.actualProcess.project.title}"/>
-                        </div>
-
-                    </div>
-                    <div class="row">
-                        <p:commandLink class="btn btn-primary btn-xs"
-                                       title="Realizar Comentario"
-                                       oncomplete="PF('observ').show();"
-                                       update=":#{p:component('observ')}"
-                                       actionListener="#{committeeEPSReviewView.titleComments()}" >
-                            <span class="glyphicon glyphicon-eye-open"></span> Correcciones
-                        </p:commandLink>
-                    </div>
-                </p:panel>
 
                 <div class="row">
                     <div class="form-group col-md-8">
-                        <p:panel header="Objetivos Generales" id="generalObjectives" >
-                            <p:dataView value="#{committeeEPSReviewView.actualProcess.project.objectives}" var="generalObjective" >
-                                <p:dataViewListItem>
-                                    <div class="row">
-                                        <div class="form-group col-sm-10">
-                                            <h:outputText value="#{generalObjective.text}" 
-                                                          rendered="#{committeeEPSReviewView.isGeneralObjective(generalObjective)}"/>
-                                        </div>
-                                    </div>    
-                                </p:dataViewListItem>
-                            </p:dataView>
-
+                        <p:panel id="titlePr" header="Título">
                             <div class="row">
-                                <p:commandLink class="btn btn-primary btn-xs"
-                                               title="Realizar Comentario"
-                                               oncomplete="PF('observ').show();"
-                                               update=":#{p:component('observ')}"
-                                               actionListener="#{committeeEPSReviewView.generalObjComments()}" >
-                                    <span class="glyphicon glyphicon-eye-open"></span> Correcciones
-                                </p:commandLink>
+                                <div class="form-group col-md-8">
+                                    <h:outputText value="#{projectReviewView.actualProcess.project.title}"/>
+                                </div>
                             </div>
+                            <p:commandLink class="btn btn-primary btn-xs"
+                                           title="Realizar Comentario"
+                                           oncomplete="PF('observ').show();"
+                                           update=":#{p:component('observ')}"
+                                           actionListener="#{projectReviewView.titleComments()}" >
+                                <span class="glyphicon glyphicon-eye-open"></span> Correcciones
+                            </p:commandLink>
                         </p:panel>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="form-group col-md-8">
-                        <p:panel header="Objetivos Especificos" id="especificObjectives" >
-                            <p:dataView value="#{committeeEPSReviewView.actualProcess.project.objectives}" var="especificOb" >
+                        <p:panel header="Objetivos Generales" id="generalObjectives" >
+                            <p:dataView value="#{projectReviewView.actualProcess.project.objectives}" var="generalObjective" >
                                 <p:dataViewListItem>
                                     <div class="row">
-                                        <div class="form-group col-sm-10">
-                                            <h:outputText value="#{especificOb.text}" 
-                                                          rendered="#{!committeeEPSReviewView.isGeneralObjective(especificOb)}"/>
+                                        <div class="form-group col-sm-10" jsf:rendered="#{projectReviewView.isGeneralObjective(generalObjective)}">
+                                            <h:outputText value="#{generalObjective.text}" 
+                                                          />
                                         </div>
                                     </div>    
                                 </p:dataViewListItem>
                             </p:dataView>
-                            <div class="row">
-                                <p:commandLink class="btn btn-primary btn-xs"
-                                               title="Realizar Comentario"
-                                               oncomplete="PF('observ').show();"
-                                               update=":#{p:component('observ')}"
-                                               actionListener="#{committeeEPSReviewView.specificObjComments()}" >
-                                    <span class="glyphicon glyphicon-eye-open"></span> Correcciones
-                                </p:commandLink>
-                            </div>
+                            <br/>
+                            <p:commandLink class="btn btn-primary btn-xs"
+                                           title="Realizar Comentario"
+                                           oncomplete="PF('observ').show();"
+                                           update=":#{p:component('observ')}"
+                                           actionListener="#{projectReviewView.generalObjComments()}" >
+                                <span class="glyphicon glyphicon-eye-open"></span> Correcciones
+                            </p:commandLink>
+                        </p:panel>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-md-8">
+                        <p:panel header="Objetivos Específicos" id="especificObjectives" >
+                            <p:dataView value="#{projectReviewView.actualProcess.project.objectives}" var="especificOb" >
+                                <p:dataViewListItem>
+                                    <div class="row">
+                                        <div class="form-group col-sm-10" jsf:rendered="#{!projectReviewView.isGeneralObjective(especificOb)}">
+                                            <h:outputText value="#{especificOb.text}" 
+                                                          />
+                                        </div>
+                                    </div>    
+                                </p:dataViewListItem>
+                            </p:dataView>
+                            <br/>
+                            <p:commandLink class="btn btn-primary btn-xs"
+                                           title="Realizar Comentario"
+                                           oncomplete="PF('observ').show();"
+                                           update=":#{p:component('observ')}"
+                                           actionListener="#{projectReviewView.specificObjComments()}" >
+                                <span class="glyphicon glyphicon-eye-open"></span> Correcciones
+                            </p:commandLink>
                         </p:panel>
                     </div>
                 </div>
@@ -108,14 +115,15 @@
                         <p:panel id="listSections" header="Secciones">
                             <div class="row">
                                 <div class="form-group col-md-12">
-                                    <p:dataView value="#{committeeEPSReviewView.actualProcess.project.sections}" var="section">
+                                    <p:dataView value="#{projectReviewView.actualProcess.project.sections}" var="section">
                                         <p:dataViewListItem>
                                             <div class="row">
                                                 <div class="form-group col-md-12">
                                                     <p:panel id="Section">
                                                         <div class="row">
                                                             <div class="form-group col-md-12">
-                                                                <p:outputLabel value="Titulo: "/>
+                                                                <p:outputLabel value="Titulo:"/>
+                                                                &nbsp;
                                                                 <h:outputText value="#{section.title.name}"/>
                                                             </div>
                                                         </div>
@@ -124,15 +132,14 @@
                                                                 <h:outputText value="#{section.title.texto.text}" escape="false"/>                                                       
                                                             </div>                                                        
                                                         </div>
-                                                        <div class="row">
-                                                            <p:commandLink class="btn btn-primary btn-xs"
-                                                                           title="Realizar Comentario"
-                                                                           oncomplete="PF('observ').show();"
-                                                                           update=":#{p:component('observ')}"
-                                                                           actionListener="#{committeeEPSReviewView.sectionComments(section)}" >
-                                                                <span class="glyphicon glyphicon-eye-open"></span> Correcciones
-                                                            </p:commandLink>
-                                                        </div>
+                                                        <p:commandLink class="btn btn-primary btn-xs"
+                                                                       title="Realizar Comentario"
+                                                                       oncomplete="PF('observ').show();"
+                                                                       update=":#{p:component('observ')}"
+                                                                       actionListener="#{projectReviewView.sectionComments(section)}" >
+                                                            <span class="glyphicon glyphicon-eye-open"></span> Correcciones
+                                                        </p:commandLink>
+                                                        <br/>
                                                     </p:panel>
                                                 </div>
                                             </div>
@@ -148,7 +155,7 @@
                     <div class="form-group col-md-8" >
                         <p:panel id="coordinatesDecimal" header="Coordenadas Decimales">
                             <p:dataTable id="coordinates" var="coordinate" 
-                                         value="#{committeeEPSReviewView.actualProcess.project.decimalCoordinates}">
+                                         value="#{projectReviewView.actualProcess.project.decimalCoordinates}">
                                 <p:column headerText="Latitud">
                                     <h:outputText value="#{coordinate.latitude}"/>
                                 </p:column>
@@ -156,15 +163,13 @@
                                     <h:outputText value="#{coordinate.longitude}"/>
                                 </p:column>
                             </p:dataTable>
-                            <div class="row">
-                                <p:commandLink class="btn btn-primary btn-xs"
-                                               title="Realizar Comentario"
-                                               oncomplete="PF('observ').show();"
-                                               update=":#{p:component('observ')}"
-                                               actionListener="#{committeeEPSReviewView.coordinatesComments()}" >
-                                    <span class="glyphicon glyphicon-eye-open"></span> Correcciones
-                                </p:commandLink>
-                            </div>
+                            <p:commandLink class="btn btn-primary btn-xs"
+                                           title="Realizar Comentario"
+                                           oncomplete="PF('observ').show();"
+                                           update=":#{p:component('observ')}"
+                                           actionListener="#{projectReviewView.coordinatesComments()}" >
+                                <span class="glyphicon glyphicon-eye-open"></span> Correcciones
+                            </p:commandLink>
                         </p:panel>
                     </div>
                 </div>
@@ -172,15 +177,16 @@
                 <div class="row">
                     <div class="form-group col-sm-8">
                         <p:outputLabel for="labelSchedule" value="Calendario: "/>
-                        <h:commandLink id="labelSchedule" value="#{committeeEPSReviewView.scheduleFileName}" class="text-primary"
-                                       target="_blank" actionListener="#{committeeEPSReviewView.reloadSchedule()}">
-                            <p:fileDownload value="#{committeeEPSReviewView.scheduleStream}" contentDisposition="inline"/>
+                        <h:commandLink id="labelSchedule" value="#{projectReviewView.scheduleFileName}" class="text-primary"
+                                       target="_blank" actionListener="#{projectReviewView.reloadSchedule()}">
+                            <p:fileDownload value="#{projectReviewView.scheduleStream}" contentDisposition="inline"/>
                         </h:commandLink>
-                        <br></br><p:commandLink class="btn btn-primary btn-xs"
-                                                title="Realizar Comentario"
-                                                oncomplete="PF('observ').show();"
-                                                update=":#{p:component('observ')}"
-                                                actionListener="#{committeeEPSReviewView.calendarComments()}" >
+                        <br/>
+                        <p:commandLink class="btn btn-primary btn-xs"
+                                       title="Realizar Comentario"
+                                       oncomplete="PF('observ').show();"
+                                       update=":#{p:component('observ')}"
+                                       actionListener="#{projectReviewView.calendarComments()}" >
                             <span class="glyphicon glyphicon-eye-open"></span> Correcciones
                         </p:commandLink>
                     </div>
@@ -189,15 +195,16 @@
                 <div class="row">
                     <div class="form-group col-sm-8">
                         <p:outputLabel for="labelInvestmentPlan" value="Plan de Inversión: "/>
-                        <h:commandLink id="labelInvestmentPlan" value="#{committeeEPSReviewView.investmentPlanFileName}" class="text-primary"
-                                       target="_blank" actionListener="#{committeeEPSReviewView.reloadInvestmentPlan()}">
-                            <p:fileDownload value="#{committeeEPSReviewView.investmentPlanStream}" contentDisposition="inline"/>
+                        <h:commandLink id="labelInvestmentPlan" value="#{projectReviewView.investmentPlanFileName}" class="text-primary"
+                                       target="_blank" actionListener="#{projectReviewView.reloadInvestmentPlan()}">
+                            <p:fileDownload value="#{projectReviewView.investmentPlanStream}" contentDisposition="inline"/>
                         </h:commandLink>
-                        <br></br><p:commandLink class="btn btn-primary btn-xs"
-                                                title="Realizar Comentario"
-                                                oncomplete="PF('observ').show();"
-                                                update=":#{p:component('observ')}"
-                                                actionListener="#{committeeEPSReviewView.inversionComments()}" >
+                        <br/>
+                        <p:commandLink class="btn btn-primary btn-xs"
+                                       title="Realizar Comentario"
+                                       oncomplete="PF('observ').show();"
+                                       update=":#{p:component('observ')}"
+                                       actionListener="#{projectReviewView.inversionComments()}" >
                             <span class="glyphicon glyphicon-eye-open"></span> Correcciones
                         </p:commandLink>
                     </div>                    
@@ -207,7 +214,7 @@
                     <div class="form-group col-md-8" >
                         <p:panel id="bibliografia" header="Bibliografía">
                             <p:dataTable var="biblio" 
-                                         value="#{committeeEPSReviewView.actualProcess.project.bibliographies}">
+                                         value="#{projectReviewView.actualProcess.project.bibliographies}">
                                 <p:column headerText="Título">
                                     <h:outputText value="#{biblio.title}"/>
                                 </p:column>
@@ -227,15 +234,13 @@
                                     <h:outputText value="#{biblio.editorial}"/>
                                 </p:column>
                             </p:dataTable>
-                            <div class="row">
-                                <p:commandLink class="btn btn-primary btn-xs"
-                                               title="Realizar Comentario"
-                                               oncomplete="PF('observ').show();"
-                                               update=":#{p:component('observ')}"
-                                               actionListener="#{committeeEPSReviewView.bibliographyComments()}" >
-                                    <span class="glyphicon glyphicon-eye-open"></span> Correcciones
-                                </p:commandLink>
-                            </div>
+                            <p:commandLink class="btn btn-primary btn-xs"
+                                           title="Realizar Comentario"
+                                           oncomplete="PF('observ').show();"
+                                           update=":#{p:component('observ')}"
+                                           actionListener="#{projectReviewView.bibliographyComments()}" >
+                                <span class="glyphicon glyphicon-eye-open"></span> Correcciones
+                            </p:commandLink>
                         </p:panel>
                     </div>
                 </div>
@@ -243,69 +248,72 @@
                 <div class="row">
                     <div class="form-group col-sm-8">
                         <p:outputLabel for="labelAnnexed" value="Anexos"/>
-                        <h:commandLink id="labelAnnexed" value="#{committeeEPSReviewView.annexedFileName}" class="text-primary"
-                                       target="_blank" actionListener="#{committeeEPSReviewView.reloadAnnexed()}">
-                            <p:fileDownload value="#{committeeEPSReviewView.annexedStream}" contentDisposition="inline"/>
+                        <h:commandLink id="labelAnnexed" value="#{projectReviewView.annexedFileName}" class="text-primary"
+                                       target="_blank" actionListener="#{projectReviewView.reloadAnnexed()}">
+                            <p:fileDownload value="#{projectReviewView.annexedStream}" contentDisposition="inline"/>
                         </h:commandLink>
-                        <br></br><p:commandLink class="btn btn-primary btn-xs"
+                        <br/>
+                        <p:commandLink class="btn btn-primary btn-xs"
                                                 title="Realizar Comentario"
                                                 oncomplete="PF('observ').show();"
                                                 update=":#{p:component('observ')}"
-                                                actionListener="#{committeeEPSReviewView.anexosComments()}" >
+                                                actionListener="#{projectReviewView.anexosComments()}" >
                             <span class="glyphicon glyphicon-eye-open"></span> Correcciones
-                        </p:commandLink><br></br>
+                        </p:commandLink>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="form-group col-sm-2">
+                <br/>
+                <div class="btn-toolbar">
+                    <div class="btn-group mr-2">
                         <p:commandLink styleClass="btn btn-success"
                                        update="@form,:growl"
-                                       rendered="#{!committeeEPSReviewView.listTemporalCorrection()and!committeeEPSReviewView.renderWarningCoordinator()}"
-                                       action="#{committeeEPSReviewView.saveCorrections()}">
+                                       rendered="#{!projectReviewView.listTemporalCorrection()and!projectReviewView.renderWarningCoordinator()}"
+                                       action="#{projectReviewView.saveCorrections()}">
                             <p:confirm header="Guardar Correcciones" message="¿Desea guardar las correcciones? Puede continuar calificando luego" icon="pi pi-exclamation-triangle" />
                             <span class="glyphicon glyphicon-info-sign"></span> Guardar Correcciones
                         </p:commandLink>
                     </div>
-                    <div class="form-group col-sm-2">
+                    <div class="btn-group mr-2">
                         <p:commandLink styleClass="btn btn-success"
                                        update="@form,:growl"
                                        onclick="PF('progressBar').show();"
-                                       rendered="#{!committeeEPSReviewView.renderWarningCoordinator()}"
-                                       action="#{committeeEPSReviewView.aprovedProject()}">
+                                       rendered="#{!projectReviewView.renderWarningCoordinator()}"
+                                       action="#{projectReviewView.aprovedProject()}">
                             <p:confirm header="Aceptar Proyecto" message="¿Esta seguro de ACEPTAR el proyecto?" icon="pi pi-exclamation-triangle" />
                             <span class="glyphicon glyphicon-check"></span> Aceptar Proyecto
                         </p:commandLink>
                     </div>
-                    <div class="form-group col-sm-2">
+                    <div class="btn-group mr-2">
                         <p:commandLink styleClass="btn btn-danger"
                                        update="@form,:growl"
                                        oncomplete="PF('rechazar').show();"
-                                       rendered="#{!committeeEPSReviewView.renderWarningCoordinator()}">
+                                       rendered="#{!projectReviewView.renderWarningCoordinator()}">
                             <span class="glyphicon glyphicon-remove"></span> Rechazar Proyecto
                         </p:commandLink>
                     </div>
-                    <div class="form-group col-sm-2">
+                    <div class="btn-group mr-2">
                         <p:commandLink styleClass="btn btn-warning"
                                        update="@form,:growl"
                                        onclick="PF('progressBar').show();"
-                                       rendered="#{!committeeEPSReviewView.renderWarningCoordinator()}"
-                                       action="#{committeeEPSReviewView.returnEPSCommitteeCorrections()}">
+                                       rendered="#{!projectReviewView.renderWarningCoordinator()}"
+                                       action="#{projectReviewView.returnEPSCommitteeCorrections()}">
                             <p:confirm header="Correcciones" message="¿Desea enviar las correciones?" icon="pi pi-exclamation-triangle" />
                             <span class="glyphicon glyphicon-comment"></span> Enviar Correcciones
                         </p:commandLink>
                     </div>
                 </div>
+                <br/>
             </fieldset>
         </h:form>
-        <p:dialog  header="Correcciones - #{committeeEPSReviewView.correctionTitle()}" id="observ" widgetVar="observ" appendTo="@(body)" position="center"
+        <p:dialog  header="Correcciones - #{projectReviewView.correctionTitle()}" id="observ" widgetVar="observ" appendTo="@(body)" position="center"
                    modal="true" closeOnEscape="true" draggable="false">
-            <p:ajax event="close" listener="#{committeeEPSReviewView.cleanCorrectionList()}" update="@this" />
+            <p:ajax event="close" listener="#{projectReviewView.cleanCorrectionList()}" update="@this" />
             <h:form>
                 <div class="modal-body">
                     <fieldset>
                         <div class="row form-group">
                             <p:dataTable id="coorrections" var="correction" 
-                                         value="#{committeeEPSReviewView.actualCorrections}">
+                                         value="#{projectReviewView.actualCorrections}">
                                 <p:column headerText="Fecha">
                                     <h:outputText value="#{correction.date}"/>
                                 </p:column>
@@ -313,7 +321,7 @@
                                     <h:outputText value="#{correction.user.firstName}"/>
                                 </p:column>
                                 <p:column headerText="Correccion">
-                                    <h:outputText value="#{committeeEPSReviewView.arrayToString(correction.text)}"/>
+                                    <h:outputText value="#{projectReviewView.arrayToString(correction.text)}"/>
                                 </p:column>
                             </p:dataTable>
                         </div>
@@ -322,7 +330,7 @@
                             <div class="col-md-8">
                                 <p:inputTextarea id="note" styleClass="form-control"
                                                  rows="4" cols="50" maxlength="10000" placeholder="Agregue su correccion"
-                                                 autoResize="false" value="#{committeeEPSReviewView.correctionMessage}"/>
+                                                 autoResize="false" value="#{projectReviewView.correctionMessage}"/>
                             </div>
                         </div>
                     </fieldset>
@@ -330,16 +338,16 @@
                 <div class="modal-footer ">
                     <p:commandLink styleClass="btn btn-primary btn-xs"
                                    update="@form,:#{p:component('proyect')}"
-                                   actionListener="#{committeeEPSReviewView.comment('observ')}">
+                                   actionListener="#{projectReviewView.comment('observ')}">
                         <span class="glyphicon glyphicon-ok-sign"></span> Guardar
                     </p:commandLink>
                 </div>
             </h:form>
         </p:dialog>
 
-        <p:dialog header="#{committeeEPSReviewView.correctionTitle()}" id="rechazar" widgetVar="rechazar" 
+        <p:dialog header="#{projectReviewView.correctionTitle()}" id="rechazar" widgetVar="rechazar" 
                   modal="true" closeOnEscape="true">
-            <p:ajax event="close" listener="#{committeeEPSReviewView.cleanCorrectionList()}" update="@this" />
+            <p:ajax event="close" listener="#{projectReviewView.cleanCorrectionList()}" update="@this" />
             <h:form>
                 <div class="modal-body">
                     <fieldset>
@@ -348,7 +356,7 @@
                             <div class="col-md-8">
                                 <p:inputTextarea id="note" styleClass="form-control" required="true"
                                                  rows="4" cols="50" maxlength="10000" placeholder="Indique los motivos"
-                                                 autoResize="false" value="#{committeeEPSReviewView.correctionMessage}"/>
+                                                 autoResize="false" value="#{projectReviewView.correctionMessage}"/>
                             </div>
                         </div>
                     </fieldset>
@@ -357,7 +365,7 @@
                     <p:commandLink styleClass="btn btn-primary btn-xs"
                                    update="@form,:#{p:component('proyect')}"
                                    onclick="PF('progressBar').show();"
-                                   actionListener="#{committeeEPSReviewView.rejectProcess()}">
+                                   actionListener="#{projectReviewView.rejectProcess()}">
                         <p:confirm header="Aceptar Proyecto" message="¿Esta seguro de RECHAZAR el proyecto?" icon="pi pi-exclamation-triangle" />
                         <span class="glyphicon glyphicon-trash"></span> Rechazar Proyecto
                     </p:commandLink>

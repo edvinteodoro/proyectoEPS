@@ -57,11 +57,23 @@ public class ProjectFacade implements ProjectFacadeLocal {
     }
 
     @Override
-    public Correction createCorrection(Correction correction) throws UserException {
+    public Correction createCorrection(Correction correction) throws UserException, MandatoryException {
         return correctionService.createCorrection(correction);
     }
 
-    public List<Correction> getCorrections(TypeCorrection typeCorrection, Integer projectID, Integer section) {
-        return correctionRepository.getCorrections(typeCorrection, projectID, section);
+    @Override
+    public List<Correction> getCorrections(TypeCorrection typeCorrection, Integer projectID, Integer section,Boolean status) {
+        return correctionRepository.getCorrections(typeCorrection, projectID, section, status);
     }
+
+    @Override
+    public void returnCorrections(Project project) throws MandatoryException {
+       correctionService.returnCorrections(project);
+    }
+
+    @Override
+    public void searchUnnotifiedCorrections(Project project) throws ValidationException{
+        correctionRepository.searchUnnotifiedCorrection(project);
+    }
+    
 }

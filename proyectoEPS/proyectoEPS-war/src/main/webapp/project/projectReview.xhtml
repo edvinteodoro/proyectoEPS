@@ -254,10 +254,10 @@
                         </h:commandLink>
                         <br/>
                         <p:commandLink class="btn btn-primary btn-xs"
-                                                title="Realizar Comentario"
-                                                oncomplete="PF('observ').show();"
-                                                update=":#{p:component('observ')}"
-                                                actionListener="#{projectReviewView.anexosComments()}" >
+                                       title="Realizar Comentario"
+                                       oncomplete="PF('observ').show();"
+                                       update=":#{p:component('observ')}"
+                                       actionListener="#{projectReviewView.anexosComments()}" >
                             <span class="glyphicon glyphicon-eye-open"></span> Correcciones
                         </p:commandLink>
                     </div>
@@ -267,20 +267,12 @@
                     <div class="btn-group mr-2">
                         <p:commandLink styleClass="btn btn-success"
                                        update="@form,:growl"
-                                       rendered="#{!projectReviewView.listTemporalCorrection()and!projectReviewView.renderWarningCoordinator()}"
-                                       action="#{projectReviewView.saveCorrections()}">
-                            <p:confirm header="Guardar Correcciones" message="¿Desea guardar las correcciones? Puede continuar calificando luego" icon="pi pi-exclamation-triangle" />
-                            <span class="glyphicon glyphicon-info-sign"></span> Guardar Correcciones
-                        </p:commandLink>
-                    </div>
-                    <div class="btn-group mr-2">
-                        <p:commandLink styleClass="btn btn-success"
-                                       update="@form,:growl"
-                                       onclick="PF('progressBar').show();"
+                                       onstart="PF('progressBar').show();"
+                                       onsuccess="PF('progressBar').hide();"
                                        rendered="#{!projectReviewView.renderWarningCoordinator()}"
-                                       action="#{projectReviewView.aprovedProject()}">
+                                       action="#{projectReviewView.aprovedProject()}">                                       
                             <p:confirm header="Aceptar Proyecto" message="¿Esta seguro de ACEPTAR el proyecto?" icon="pi pi-exclamation-triangle" />
-                            <span class="glyphicon glyphicon-check"></span> Aceptar Proyecto
+                            <span class="glyphicon glyphicon-check"></span> Aceptar Anteproyecto
                         </p:commandLink>
                     </div>
                     <div class="btn-group mr-2">
@@ -288,15 +280,17 @@
                                        update="@form,:growl"
                                        oncomplete="PF('rechazar').show();"
                                        rendered="#{!projectReviewView.renderWarningCoordinator()}">
-                            <span class="glyphicon glyphicon-remove"></span> Rechazar Proyecto
+                            <span class="glyphicon glyphicon-remove"></span> Rechazar Anteproyecto
                         </p:commandLink>
                     </div>
                     <div class="btn-group mr-2">
                         <p:commandLink styleClass="btn btn-warning"
                                        update="@form,:growl"
-                                       onclick="PF('progressBar').show();"
+                                       onstart="PF('progressBar').show();"
+                                       onsuccess="PF('progressBar').hide();"
                                        rendered="#{!projectReviewView.renderWarningCoordinator()}"
-                                       action="#{projectReviewView.returnEPSCommitteeCorrections()}">
+                                       actionListener="#{projectReviewView.returnCorrections()}"
+                                       >
                             <p:confirm header="Correcciones" message="¿Desea enviar las correciones?" icon="pi pi-exclamation-triangle" />
                             <span class="glyphicon glyphicon-comment"></span> Enviar Correcciones
                         </p:commandLink>
@@ -321,25 +315,30 @@
                                     <h:outputText value="#{correction.user.firstName}"/>
                                 </p:column>
                                 <p:column headerText="Correccion">
-                                    <h:outputText value="#{projectReviewView.arrayToString(correction.text)}"/>
+                                    <h:outputText value="#{correction.text}"/>
+                                </p:column>
+                                <p:column headerText="Estado">
+                                    <h:outputText value="#{correction.statusString}"/>
                                 </p:column>
                             </p:dataTable>
                         </div>
                         <div class="row form-group">
-                            <p:outputLabel value="Nueva Correccion:" for="note" styleClass="col-md-4 control-label"/>
+                            <p:outputLabel value="Nueva Corrección:" for="note" styleClass="col-md-4 control-label"/>
                             <div class="col-md-8">
                                 <p:inputTextarea id="note" styleClass="form-control"
-                                                 rows="4" cols="50" maxlength="10000" placeholder="Agregue su correccion"
-                                                 autoResize="false" value="#{projectReviewView.correctionMessage}"/>
+                                                 rows="4" cols="50" maxlength="10000" placeholder="Agregue su corrección"
+                                                 autoResize="false" value="#{projectReviewView.newCorrection.text}"/>
                             </div>
                         </div>
                     </fieldset>
                 </div>
                 <div class="modal-footer ">
                     <p:commandLink styleClass="btn btn-primary btn-xs"
-                                   update="@form,:#{p:component('proyect')}"
+                                   update="@form,:#{p:component('growl')}"
+                                   onstart="PF('progressBar').show();"
+                                   onsuccess="PF('progressBar').hide();"
                                    actionListener="#{projectReviewView.comment('observ')}">
-                        <span class="glyphicon glyphicon-ok-sign"></span> Guardar
+                        <span class="glyphicon glyphicon-ok-sign"></span> Comentar
                     </p:commandLink>
                 </div>
             </h:form>
@@ -356,16 +355,17 @@
                             <div class="col-md-8">
                                 <p:inputTextarea id="note" styleClass="form-control" required="true"
                                                  rows="4" cols="50" maxlength="10000" placeholder="Indique los motivos"
-                                                 autoResize="false" value="#{projectReviewView.correctionMessage}"/>
+                                                 autoResize="false" value="#{projectReviewView.newCorrection.text}"/>
                             </div>
                         </div>
                     </fieldset>
                 </div>
                 <div class="modal-footer ">
                     <p:commandLink styleClass="btn btn-primary btn-xs"
-                                   update="@form,:#{p:component('proyect')}"
-                                   onclick="PF('progressBar').show();"
-                                   actionListener="#{projectReviewView.rejectProcess()}">
+                                   update="@form,:#{p:component('growl')}"
+                                   onstart="PF('progressBar').show();"
+                                   onsuccess="PF('progressBar').hide();"
+                                   actionListener="#{projectReviewView.rejectProcess()}">                                   
                         <p:confirm header="Aceptar Proyecto" message="¿Esta seguro de RECHAZAR el proyecto?" icon="pi pi-exclamation-triangle" />
                         <span class="glyphicon glyphicon-trash"></span> Rechazar Proyecto
                     </p:commandLink>

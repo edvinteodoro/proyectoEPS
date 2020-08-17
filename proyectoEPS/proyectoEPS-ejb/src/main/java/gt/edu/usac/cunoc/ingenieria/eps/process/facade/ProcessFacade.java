@@ -217,7 +217,7 @@ public class ProcessFacade implements ProcessFacadeLocal {
      * {@inheritDoc}
      */
     @Override
-    public Optional<Process> EPSCommitteeRejectProyect(Integer id, User user, String message) throws UserException {
+    public Optional<Process> EPSCommitteeRejectProyect(Integer id, User user, String message) throws UserException, MandatoryException {
         List<Process> processes = tailCommitteeEPSFacadeLocal.getTailCommitteeEPS();
         Optional<Process> result = ProcessAvailableToEPSCommittee(id);
 

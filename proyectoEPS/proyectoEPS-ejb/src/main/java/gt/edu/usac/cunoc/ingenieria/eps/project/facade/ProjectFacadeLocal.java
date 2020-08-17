@@ -23,9 +23,13 @@ public interface ProjectFacadeLocal {
 
     public Project getProject(Process process);
 
-    public Correction createCorrection(Correction correction) throws UserException;
+    public Correction createCorrection(Correction correction) throws UserException, MandatoryException;
 
-    public List<Correction> getCorrections(TypeCorrection typeCorrection, Integer projectID, Integer section);
+    public List<Correction> getCorrections(TypeCorrection typeCorrection, Integer projectID, Integer section, Boolean status);
+    
+    public void returnCorrections(Project project)throws MandatoryException;
 
     public InputStream createPDF(Project project, UserCareer userCareer) throws IOException, ValidationException, MandatoryException, LimitException;
+
+    public void searchUnnotifiedCorrections(Project project) throws ValidationException;
 }

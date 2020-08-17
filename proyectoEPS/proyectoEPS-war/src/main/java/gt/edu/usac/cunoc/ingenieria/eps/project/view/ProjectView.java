@@ -142,39 +142,39 @@ public class ProjectView implements Serializable {
     }
 
     public Boolean renderTitleCorrections() {
-        return !getCurrentCorrections(TypeCorrection.TITLE).isEmpty();
+        return !getCurrentCorrections(TypeCorrection.TITLE).isEmpty() && stateActived();
     }
 
     public Boolean renderObjetivesCorrections() {
-        return !getCurrentCorrections(TypeCorrection.OBJETIVES).isEmpty();
+        return !getCurrentCorrections(TypeCorrection.GENERAL_OBJETIVES).isEmpty() && stateActived();
     }
 
     public Boolean renderSpecificObjetivesCorrections() {
-        return !getCurrentCorrections(TypeCorrection.SPECIFIC_OBJETIVES).isEmpty();
+        return !getCurrentCorrections(TypeCorrection.SPECIFIC_OBJETIVES).isEmpty() && stateActived();
     }
 
     public Boolean renderAnexoCorrections() {
-        return !getCurrentCorrections(TypeCorrection.ANEXO).isEmpty();
+        return !getCurrentCorrections(TypeCorrection.ANNEXED).isEmpty() && stateActived();
     }
 
     public Boolean renderBibligraphyCorrections() {
-        return !getCurrentCorrections(TypeCorrection.BIBLIOGRAPHY).isEmpty();
+        return !getCurrentCorrections(TypeCorrection.BIBLIOGRAPHY).isEmpty() && stateActived();
     }
 
     public Boolean renderCalendarCorrections() {
-        return !getCurrentCorrections(TypeCorrection.CALENDAR).isEmpty();
+        return !getCurrentCorrections(TypeCorrection.SCHEDULE).isEmpty() && stateActived();
     }
 
     public Boolean renderCoordinateCorrections() {
-        return !getCurrentCorrections(TypeCorrection.COORDINATE).isEmpty();
+        return !getCurrentCorrections(TypeCorrection.COORDINATE).isEmpty() && stateActived();
     }
 
     public Boolean renderPlanCorrections() {
-        return !getCurrentCorrections(TypeCorrection.PLAN).isEmpty();
+        return !getCurrentCorrections(TypeCorrection.INVESTMENT_PLAN).isEmpty() && stateActived();
     }
 
     public Boolean renderedSection(Integer section) {
-        return (section == null && !getSectionCorrection(section).isEmpty());
+        return (!getSectionCorrection(section).isEmpty()) && stateActived();
     }
 
     public List<Correction> getTitleCorrections() {
@@ -183,7 +183,7 @@ public class ProjectView implements Serializable {
     }
 
     public List<Correction> getObjetivesCorrections() {
-        typeCorrectionCurrent = TypeCorrection.OBJETIVES;
+        typeCorrectionCurrent = TypeCorrection.GENERAL_OBJETIVES;
         return getCurrentCorrections(typeCorrectionCurrent);
     }
 
@@ -193,7 +193,7 @@ public class ProjectView implements Serializable {
     }
 
     public List<Correction> getAnexoCorrections() {
-        typeCorrectionCurrent = TypeCorrection.ANEXO;
+        typeCorrectionCurrent = TypeCorrection.ANNEXED;
         return getCurrentCorrections(typeCorrectionCurrent);
     }
 
@@ -203,7 +203,7 @@ public class ProjectView implements Serializable {
     }
 
     public List<Correction> getCalendarCorrections() {
-        typeCorrectionCurrent = TypeCorrection.CALENDAR;
+        typeCorrectionCurrent = TypeCorrection.SCHEDULE;
         return getCurrentCorrections(typeCorrectionCurrent);
     }
 
@@ -213,17 +213,17 @@ public class ProjectView implements Serializable {
     }
 
     public List<Correction> getPlanCorrections() {
-        typeCorrectionCurrent = TypeCorrection.PLAN;
+        typeCorrectionCurrent = TypeCorrection.INVESTMENT_PLAN;
         return getCurrentCorrections(typeCorrectionCurrent);
     }
 
     public List<Correction> getSectionCorrection(Integer section) {
-        this.currentCorrections = projectFacade.getCorrections(TypeCorrection.OTHER, getProject().getId(), section);
+        this.currentCorrections = projectFacade.getCorrections(TypeCorrection.SECTION, getProject().getId(), section,true);
         return this.currentCorrections;
     }
 
     public List<Correction> getCurrentCorrections(TypeCorrection type) {
-        this.currentCorrections = projectFacade.getCorrections(type, getProject().getId(), null);;
+        this.currentCorrections = projectFacade.getCorrections(type, getProject().getId(), null, true);; 
         return this.currentCorrections;
     }
 
@@ -488,7 +488,6 @@ public class ProjectView implements Serializable {
 
     public void reviewRequeried() {
         try {
-            changeStatusCorrection();
             uploadCreate();
             if (getProcess().getApprovedCareerCoordinator() == null) {
                 tailFacade.createTailCoordinator(getProcess());
@@ -517,18 +516,6 @@ public class ProjectView implements Serializable {
             MessageUtils.addSuccessMessage("Archivo PDF Generado");
         } catch (IOException | ValidationException | MandatoryException | LimitException ex) {
             MessageUtils.addErrorMessage(ex.getMessage());
-        }
-    }
-
-    private void changeStatusCorrection() {
-        if (getCorrections() != null) {
-            for (int i = 0; i < getCorrections().size(); i++) {
-                if (getCorrections().get(i).getStatus() == null) {
-                    getCorrections().get(i).setStatus(true);
-                } else if (getCorrections().get(i).getStatus().equals(true)) {
-                    getCorrections().get(i).setStatus(false);
-                }
-            }
         }
     }
 

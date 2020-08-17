@@ -52,13 +52,13 @@
                                      pt:required="true"
                                      value="#{projectView.project.title}"/>
                         <br/>
-                        <p data-placement="top" data-toggle="tooltip" title="comentar">
+                        <p data-placement="top" data-toggle="tooltip" title="comentar" jsf:rendered="#{projectView.renderTitleCorrections()}">
                             <p:commandLink class="btn btn-primary btn-xs"
                                            oncomplete="PF('dlgCmt').show();"
                                            update=":#{p:component('dlgCmt')}"
                                            actionListener="#{projectView.getTitleCorrections()}"
-                                           rendered="#{projectView.renderTitleCorrections()}">
-                                <span class="glyphicon glyphicon-eye-open"></span> Observaciones
+                                           >
+                                <span class="glyphicon glyphicon-eye-open"></span> Correcciones
                             </p:commandLink>
                         </p>
                     </div>
@@ -96,14 +96,16 @@
                                            >
                                 <span class="glyphicon glyphicon-plus"></span> Agregar
                             </p:commandLink>
+                            <br/>
+                            <br/>
+                            <p:commandLink class="btn btn-primary btn-xs" 
+                                           oncomplete="PF('dlgCmt').show();"
+                                           update=":#{p:component('dlgCmt')}"
+                                           actionListener="#{projectView.getObjetivesCorrections()}"
+                                           rendered="#{projectView.renderObjetivesCorrections()}">
+                                <span class="glyphicon glyphicon-eye-open"></span> Correcciones
+                            </p:commandLink>
                         </p:panel>
-                        <br></br><p:commandLink class="btn btn-primary btn-xs" 
-                                                oncomplete="PF('dlgCmt').show();"
-                                                update=":#{p:component('dlgCmt')}"
-                                                actionListener="#{projectView.getObjetivesCorrections()}"
-                                                rendered="#{projectView.renderObjetivesCorrections()}">
-                            <span class="glyphicon glyphicon-eye-open"></span> Observaciones
-                        </p:commandLink>
                     </div>
                 </div>
                 <div class="row">
@@ -139,15 +141,17 @@
                                            >
                                 <span class="glyphicon glyphicon-plus"></span> Agregar
                             </p:commandLink>
+                            <br/>
+                            <br/>
+                            <p:commandLink class="btn btn-primary btn-xs"
+                                           title="Realizar Comentario"
+                                           oncomplete="PF('dlgCmt').show();"
+                                           update=":#{p:component('dlgCmt')}"
+                                           actionListener="#{projectView.getSpecificObjetivesCorrections()}"
+                                           rendered="#{projectView.renderSpecificObjetivesCorrections()}">
+                                <span class="glyphicon glyphicon-eye-open"></span> Correcciones
+                            </p:commandLink>
                         </p:panel>
-                        <br></br><p:commandLink class="btn btn-primary btn-xs"
-                                                title="Realizar Comentario"
-                                                oncomplete="PF('dlgCmt').show();"
-                                                update=":#{p:component('dlgCmt')}"
-                                                actionListener="#{projectView.getSpecificObjetivesCorrections()}"
-                                                rendered="#{projectView.renderSpecificObjetivesCorrections()}">
-                            <span class="glyphicon glyphicon-eye-open"></span> Observaciones
-                        </p:commandLink>
                     </div>
                 </div>
                 <div class="row">
@@ -202,11 +206,6 @@
                                                             </div>                                                        
                                                         </div>
                                                         <div class="row">
-                                                            <div class="form-group col-md-12">
-                                                                <cmp:titleChildren parentTitle="#{section.title}"/>
-                                                            </div>                                                        
-                                                        </div>
-                                                        <div class="row">
                                                             <div class="form-group col-sm-3">
                                                                 <p:commandLink  styleClass="btn btn-danger" actionListener="#{projectView.removeSection(sectionStatus)}" 
                                                                                 update="#{p:component('listSections')}, :growl"
@@ -214,14 +213,15 @@
                                                                                 rendered="#{projectView.editOptions()}">
                                                                     <span class="glyphicon glyphicon-minus"></span> Eliminar Sección
                                                                 </p:commandLink>
-                                                                <br></br><br></br>
+                                                                <br/>
+                                                                <br/>
                                                                 <p data-placement="top" data-toggle="tooltip" title="comentar">
                                                                     <p:commandLink class="btn btn-primary btn-xs"
                                                                                    oncomplete="PF('dlgCmt').show();"
                                                                                    update=":#{p:component('dlgCmt')}"
                                                                                    actionListener="#{projectView.getSectionCorrection(section.id)}"
                                                                                    rendered="#{projectView.renderedSection(section.id)}">
-                                                                        <span class="glyphicon glyphicon-eye-open"></span> Observaciones
+                                                                        <span class="glyphicon glyphicon-eye-open"></span> Correcciones
                                                                     </p:commandLink>
                                                                 </p>
                                                             </div>
@@ -287,15 +287,17 @@
                                            rendered="#{projectView.editOptions()}">
                                 <span class="glyphicon glyphicon-plus"></span> Agregar
                             </p:commandLink>
-                        </p:panel>
-                        <br></br><p:commandLink class="btn btn-primary btn-xs"                                               
+                            <br/>
+                            <br/>
+                            <p:commandLink class="btn btn-primary btn-xs"                                               
                                                 title="Realizar Comentario"
                                                 oncomplete="PF('dlgCmt').show();"
                                                 update=":#{p:component('dlgCmt')}"
                                                 actionListener="#{projectView.getCoordenteCorrections()}"
                                                 rendered="#{projectView.renderCoordinateCorrections()}">
-                            <span class="glyphicon glyphicon-eye-open"></span> Observaciones
+                            <span class="glyphicon glyphicon-eye-open"></span> Correcciones
                         </p:commandLink>
+                        </p:panel>
                     </div>
                 </div>
 
@@ -323,7 +325,7 @@
                                                          update=":#{p:component('dlgCmt')}"
                                                          actionListener="#{projectView.getCalendarCorrections()}"
                                                          rendered="#{projectView.renderCalendarCorrections()}">
-                            <span class="glyphicon glyphicon-eye-open"></span> Observaciones
+                            <span class="glyphicon glyphicon-eye-open"></span> Correcciones
                         </p:commandLink>
                     </div>
                 </div>
@@ -352,7 +354,7 @@
                                                          update=":#{p:component('dlgCmt')}"
                                                          actionListener="#{projectView.getPlanCorrections()}"
                                                          rendered="#{projectView.renderPlanCorrections()}">
-                            <span class="glyphicon glyphicon-eye-open"></span> Observaciones
+                            <span class="glyphicon glyphicon-eye-open"></span> Correcciones
                         </p:commandLink>
                     </div>                    
                 </div>
@@ -410,15 +412,18 @@
                                            rendered="#{projectView.editOptions()}">
                                 <span class="glyphicon glyphicon-plus"></span> Agregar
                             </p:commandLink>
-                        </p:panel>
-                        <br></br><p:commandLink class="btn btn-primary btn-xs"
+                            <br/>
+                            <br/>
+                            <p:commandLink class="btn btn-primary btn-xs"
                                                 title="Realizar Comentario"
                                                 oncomplete="PF('dlgCmt').show();"
                                                 update=":#{p:component('dlgCmt')}"
                                                 actionListener="#{projectView.getBibliographyCorrections()}"
                                                 rendered="#{projectView.renderBibligraphyCorrections()}">
-                            <span class="glyphicon glyphicon-eye-open"></span> Observaciones
+                            <span class="glyphicon glyphicon-eye-open"></span> Correcciones
                         </p:commandLink><br></br><br></br>
+                        </p:panel>
+                        
                     </div>
                 </div>
                 <div class="row">
@@ -445,7 +450,7 @@
                                                 update=":#{p:component('dlgCmt')}"
                                                 actionListener="#{projectView.getAnexoCorrections()}"
                                                 rendered="#{projectView.renderAnexoCorrections()}">
-                            <span class="glyphicon glyphicon-eye-open"></span> Observaciones
+                            <span class="glyphicon glyphicon-eye-open"></span> Correcciones
                         </p:commandLink><br></br><br></br>
                     </div>
                 </div>
@@ -500,7 +505,8 @@
                 <br/>
             </fieldset>
         </h:form>
-        <p:dialog  header="Comentarios" id="dlgCmt" widgetVar="dlgCmt"
+
+        <p:dialog  header="Correciones" id="dlgCmt" widgetVar="dlgCmt"
                    fitViewport="true" modal="true" closeOnEscape="true" position="center">
             <p:ajax event="close" update="@this" listener="#{projectView.clearCorrectionSelected()}"/>
             <h:form>
@@ -523,7 +529,7 @@
                                                     <h:outputText value="#{correction.user.firstName}"/>
                                                 </p:column>
                                                 <p:column headerText="Correccion">
-                                                    <h:outputText value="#{projectView.arrayToString(correction.text)}"/>
+                                                    <h:outputText value="#{correction.text}"/>
                                                 </p:column>
                                             </p:dataTable>
                                         </div>
@@ -535,12 +541,14 @@
                 </div>
             </h:form>
         </p:dialog>
+
         <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" >
             <div class="col text-center">
                 <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" />
                 <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" />
             </div>
         </p:confirmDialog>
+
         <p:dialog id="progressBar" widgetVar="progressBar" closable="false" width="20%" showHeader="false" resizable="false"
                   modal="true" closeOnEscape="true">
             <p:ajax event="close" update="@this" />
@@ -551,5 +559,6 @@
                 <p:progressBar id="progressBarIndeterminate" style="height:6px" mode="indeterminate"/>
             </div>
         </p:dialog>
+
     </ui:define>
 </ui:composition>

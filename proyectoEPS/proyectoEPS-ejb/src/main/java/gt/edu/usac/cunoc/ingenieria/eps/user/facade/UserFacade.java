@@ -1,10 +1,13 @@
 package gt.edu.usac.cunoc.ingenieria.eps.user.facade;
 
 import User.exception.UserException;
+import gt.edu.usac.cunoc.ingenieria.eps.exception.HttpClientException;
 import gt.edu.usac.cunoc.ingenieria.eps.user.Career;
 import gt.edu.usac.cunoc.ingenieria.eps.user.Rol;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
+import gt.edu.usac.cunoc.ingenieria.eps.thirdparty.studentdata.StudentData;
+import gt.edu.usac.cunoc.ingenieria.eps.thirdparty.studentdata.service.StudentInfoHttpClient;
 import gt.edu.usac.cunoc.ingenieria.eps.user.UserCareer;
 import gt.edu.usac.cunoc.ingenieria.eps.user.repository.CareerRepository;
 import gt.edu.usac.cunoc.ingenieria.eps.user.repository.RolRepository;
@@ -44,6 +47,8 @@ public class UserFacade implements UserFacadeLocal {
     private RolService rolUserService;
     @EJB
     private RolRepository rolUserRepository;
+    @EJB
+    private StudentInfoHttpClient studentInfoHttpClient;
 
     @EJB
     public void setUserService(UserService userService) {
@@ -260,4 +265,8 @@ public class UserFacade implements UserFacadeLocal {
         return userService.updatePassword(user);
     }
 
+    @Override
+    public Optional<StudentData> getStudentData(String carnet) throws HttpClientException {
+        return studentInfoHttpClient.getStudentData(carnet);
+    }
 }

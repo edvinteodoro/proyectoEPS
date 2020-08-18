@@ -1,7 +1,9 @@
 package gt.edu.usac.cunoc.ingenieria.eps.user.facade;
 
 import User.exception.UserException;
+import gt.edu.usac.cunoc.ingenieria.eps.exception.HttpClientException;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
+import gt.edu.usac.cunoc.ingenieria.eps.thirdparty.studentdata.StudentData;
 import gt.edu.usac.cunoc.ingenieria.eps.user.Career;
 import gt.edu.usac.cunoc.ingenieria.eps.user.Rol;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
@@ -142,5 +144,13 @@ public interface UserFacadeLocal {
      * @throws UserException
      */
     public void deleteUser(User user) throws UserException;
-
+    
+    /**
+     * Get the student data based on the carne
+     *
+     * @param carnet
+     * @return
+     * @throws HttpClientException
+     */
+    public Optional<StudentData> getStudentData(String carnet) throws HttpClientException;
 }

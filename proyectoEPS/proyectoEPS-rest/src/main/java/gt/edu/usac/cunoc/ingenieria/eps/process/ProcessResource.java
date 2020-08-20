@@ -9,6 +9,7 @@ import gt.edu.usac.cunoc.ingenieria.eps.config.Constans;
 import gt.edu.usac.cunoc.ingenieria.eps.process.facade.ProcessFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.processDto.ProcessDto;
 import gt.edu.usac.cunoc.ingenieria.eps.tail.TailCoordinator;
+import gt.edu.usac.cunoc.ingenieria.eps.tail.facade.TailCommitteeEPSFacade;
 import gt.edu.usac.cunoc.ingenieria.eps.tail.facade.TailFacade;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import gt.edu.usac.cunoc.ingenieria.eps.user.facade.UserFacadeLocal;
@@ -25,50 +26,72 @@ import javax.ws.rs.Produces;
  *
  * @author teodoro
  */
-
 @Path("/process")
 @Stateless
 @Produces("application/json")
 public class ProcessResource {
+
     @EJB
     private ProcessFacadeLocal processFacade;
     @EJB
     private UserFacadeLocal userFacade;
     @EJB
-    private TailFacade tailCoordinatorFacade; 
+    private TailFacade tailCoordinatorFacade;
+    @EJB 
+    private TailCommitteeEPSFacade tailCommitteEpsFacade;
     
-    
+
     @GET
     @Path("student/list/{userId}")
-    public List<ProcessDto> getStudentProjects(@PathParam("userId") String userId) {
+    public List<ProcessDto> getStudentProcess(@PathParam("userId") String userId) {
         try {
             User user = userFacade.getUser(new User(userId)).get(0);
-            List<ProcessDto> processes=processFacade.getProcessUser(user).stream().map(process -> new ProcessDto(process)).collect(Collectors.toList());
+            List<ProcessDto> processes = processFacade.getProcessUser(user).stream().map(process -> new ProcessDto(process)).collect(Collectors.toList());
             return processes;
         } catch (Exception e) {
             return null;
         }
     }
-    
+
     @GET
     @Path("coordinator/list/{coordinatorId}")
     public List<ProcessDto> getCoordinatorProjects(@PathParam("coordinatorId") String coordinatorId) {
         try {
             User user = userFacade.getUser(new User(coordinatorId)).get(0);
-            List<ProcessDto> processes=tailCoordinatorFacade.getProcessByCoordinator(user).stream().map(process -> new ProcessDto(process)).collect(Collectors.toList());
+            List<ProcessDto> processes = tailCoordinatorFacade.getProcessByCoordinator(user).stream().map(process -> new ProcessDto(process)).collect(Collectors.toList());
             return processes;
         } catch (Exception e) {
             return null;
         }
     }
-    
+
     @GET
     @Path("reject/{idCoordinator}/{idProcess}")
-    public Boolean rejectProcess(@PathParam("idCoordinator") Integer idCoordinator,@PathParam("idCoordinator") Integer idProcess) {
+    public Boolean rejectProcessByCoordinator(@PathParam("idCoordinator") String idCoordinator, @PathParam("idCoordinator") Integer idProcess) {
         try {
-            Process process=processFacade.getProcess(new Process(idProcess)).get(0);
-            TailCoordinator tailCoordinator=tailCoordinatorFacade.getTailCoordianteor(process);
+            User user = userFacade.getUser(new User(idCoordinator)).get(0);
+            Process process = processFacade.getProcess(new Process(idProcess)).get(0);
+            TailCoordinator tailCoordinator = tailCoordinatorFacade.getTailCoordianteor(process);
             processFacade.rejectProcess(tailCoordinator, Constans.TL_REJECT_PROCESS_BY_COORDINATOR, Constans.MSG_REJECT_PROCESS_BY_COORDINATOR);
+            return Boolean.FALSE;
+        } catch (Exception e) {
+            return Boolean.FALSE;
+        }
+    }
+
+    @GET
+    @Path("reject/{idCoordinator}/{idProcess}")
+    public Boolean acceptProcessByCoordinator(@PathParam("idCoordinator") String idCoordinator, @PathParam("idCoordinator") Integer idProcess) {
+        try {
+            User user = userFacade.getUser(new User(idCoordinator)).get(0);
+            Process process = processFacade.getProcess(new Process(idProcess)).get(0);
+            processFacade.rejectProcess(tailCoordinatorFacade.getTailCoordianteor(process), Constans.TL_ACCEPT_PROCESS_BY_COORDINATOR, Constans.MSG_ACCEPT_PROCESS_BY_COORDINATOR);
+            tailCoordinatorFacade.deleteTailCoordinatod(process);
+            process.setState(StateProcess.REVISION);
+            process.setApprovedCareerCoordinator(true);
+            processFacade.assignEPSSUpervisorToProcess(process.getUserCareer().getCAREERcodigo(), process);
+            processFacade.updateProcess(process);
+            tailCommitteEpsFacade.createTailCommiteeEPS(process);
             return Boolean.FALSE;
         } catch (Exception e) {
             return Boolean.FALSE;

@@ -5,17 +5,10 @@
  */
 package gt.edu.usac.cunoc.ingenieria.eps.project;
 
-import gt.edu.usac.cunoc.ingenieria.eps.process.facade.ProcessFacadeLocal;
-import gt.edu.usac.cunoc.ingenieria.eps.processDto.ProcessDto;
 import gt.edu.usac.cunoc.ingenieria.eps.projectDto.ProjectDto;
 import gt.edu.usac.cunoc.ingenieria.eps.project.facade.ProjectFacadeLocal;
-import gt.edu.usac.cunoc.ingenieria.eps.user.User;
-import gt.edu.usac.cunoc.ingenieria.eps.user.facade.UserFacadeLocal;
-import java.util.List;
-import java.util.stream.Collectors;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;

@@ -11,6 +11,8 @@ import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.SECRETARI
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.SECRETARIA_EPS;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.SUPERVISOR_EMPRESA;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.SUPERVISOR_EPS;
+import gt.edu.usac.cunoc.ingenieria.eps.exception.HttpClientException;
+import gt.edu.usac.cunoc.ingenieria.eps.thirdparty.studentdata.StudentData;
 import gt.edu.usac.cunoc.ingenieria.eps.user.Career;
 import gt.edu.usac.cunoc.ingenieria.eps.user.Rol;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
@@ -20,6 +22,7 @@ import gt.edu.usac.cunoc.ingenieria.eps.utils.MessageUtils;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
@@ -43,6 +46,8 @@ public class CreateUserView implements Serializable {
     private Boolean personalCodeFlag;
     private Boolean academicRegisterFlag;
     private Boolean careerSelectionFlag;
+    
+    private Boolean createStudent;
 
     @PostConstruct
     public void init() {
@@ -178,6 +183,14 @@ public class CreateUserView implements Serializable {
         this.careerSelectionFlag = careerSelectionFlag;
     }
 
+    public Boolean getCreateStudent() {
+        return createStudent;
+    }
+
+    public void setCreateStudent(Boolean createStudent) {
+        this.createStudent = createStudent;
+    }
+
     public void createUser() {
         try {
             for (int i = 0; i < getSelectedCareers().size(); i++) {
@@ -187,7 +200,7 @@ public class CreateUserView implements Serializable {
             userFacade.createUser(getUser());
             MessageUtils.addSuccessMessage("Se ha registrado el usuario correctamente");
             cleanUser();
-        } catch (Exception ex) {
+        } catch (UserException ex) {
             MessageUtils.addErrorMessage(ex.getMessage());
         }
     }
@@ -199,6 +212,7 @@ public class CreateUserView implements Serializable {
                     personalCodeFlag = false;
                     academicRegisterFlag = true;
                     careerSelectionFlag = true;
+                    createStudent = true;
                     break;
                 case Constants.COORDINADOR_CARRERA:
                 case Constants.REVISOR:
@@ -207,30 +221,44 @@ public class CreateUserView implements Serializable {
                     personalCodeFlag = true;
                     academicRegisterFlag = false;
                     careerSelectionFlag = true;
+                    createStudent = false;
                     break;
                 case Constants.SUPERVISOR_EMPRESA:
                     personalCodeFlag = false;
                     academicRegisterFlag = false;
                     careerSelectionFlag = false;
+                    createStudent = false;
                     break;
                 default:
                     personalCodeFlag = true;
                     academicRegisterFlag = false;
                     careerSelectionFlag = false;
+                    createStudent = false;
             }
         } else {
             personalCodeFlag = false;
             academicRegisterFlag = true;
             careerSelectionFlag = true;
+            createStudent = true;
         }
     }
 
+    public void fillStudent(){
+        try {
+            Optional<StudentData> data = userFacade.getStudentData(user.getAcademicRegister());
+            if (data.isPresent()) {
+                user.setDpi(data.get().getCui());
+                user.setFirstName(data.get().getNombres());
+                user.setLastName(data.get().getApellidos());
+            }
+        } catch (HttpClientException ex) {
+            MessageUtils.addErrorMessage("Error al Verificar Estudiante, Ingrese los datos Manualmente");
+        }
+    }
+    
     private void cleanUser() {
         user = null;
         getSelectedCareers().clear();
         getUserCareers().clear();
-        personalCodeFlag = false;
-        academicRegisterFlag = true;
-        careerSelectionFlag = true;
     }
 }

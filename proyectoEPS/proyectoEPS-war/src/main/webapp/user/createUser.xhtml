@@ -16,7 +16,7 @@
         <h:form>            
             <fieldset id="userForm" class="center-block">
                 <legend>Registrar Usuario</legend>
-                
+
                 <div class="row">
                     <div class="form-group col-sm-2">
                         <p:outputLabel for="rolUser" value="Tipo de Usuario:" />
@@ -30,18 +30,19 @@
                         </p:selectOneMenu>
                     </div>
                 </div>
-                
+
                 <div class="row" >
                     <div class="form-group col-sm-2">
                         <p:outputLabel for="dpi" value="Dpi:"/>
                     </div>
                     <div class="form-group col-sm-4">
                         <p:inputText id="dpi" styleClass="form-control" pt:placeholder="Dpi" required="true"
-                                     pt:required="true" value="#{createUserView.user.dpi}"/>
+                                     pt:required="true" value="#{createUserView.user.dpi}"
+                                     readonly="#{createUserView.createStudent}"/>
                     </div>
                 </div>
-                
-                
+
+
                 <div class="row" jsf:rendered="#{createUserView.personalCodeFlag}" >
                     <div class="form-group col-sm-2">
                         <p:outputLabel for="personalCode" value="Código de Personal:"/>
@@ -52,7 +53,7 @@
                                      />
                     </div>
                 </div>
-                
+
                 <div class="row" jsf:rendered="#{createUserView.academicRegisterFlag}">
                     <div class="form-group col-sm-2">
                         <p:outputLabel for="academicRegister" value="Registro Académico:"/>
@@ -61,6 +62,14 @@
                         <p:inputText id="academicRegister" styleClass="form-control" pt:placeholder="Registro Académico" required="true"
                                      pt:required="true" value="#{createUserView.user.academicRegister}"
                                      />
+                        <p:commandLink styleClass="btn btn-primary"
+                                       process="academicRegister,@this"
+                                       update="dpi,fname,lname,:growl" 
+                                       onstart="PF('progressBar').show();"
+                                       onsuccess="PF('progressBar').hide();"
+                                       actionListener="#{createUserView.fillStudent()}">
+                            <span class="glyphicon glyphicon-log-in"></span> Verificar estudiante
+                        </p:commandLink>
                     </div>
                 </div>
 
@@ -70,7 +79,8 @@
                     </div>
                     <div class="form-group col-sm-4">
                         <p:inputText id="fname" styleClass="form-control" pt:placeholder="Nombres" required="true"
-                                     pt:required="true" value="#{createUserView.user.firstName}"/>
+                                     pt:required="true" value="#{createUserView.user.firstName}"
+                                     readonly="#{createUserView.createStudent}"/>
                     </div>
                 </div>
 
@@ -80,7 +90,8 @@
                     </div>
                     <div class="form-group col-sm-4">
                         <p:inputText id="lname" styleClass="form-control" pt:placeholder="Apellidos" required="true"
-                                     pt:required="true" value="#{createUserView.user.lastName}"/>
+                                     pt:required="true" value="#{createUserView.user.lastName}"
+                                     readonly="#{createUserView.createStudent}"/>
                     </div>
                 </div>
 
@@ -103,7 +114,7 @@
                                      pt:required="true" value="#{createUserView.user.phone1}"/>
                     </div>
                 </div>
-                
+
                 <div class="row">
                     <div class="form-group col-sm-2">
                         <p:outputLabel for="phone2" value="Número de teléfono:" />
@@ -123,7 +134,7 @@
                                      value="#{createUserView.user.direction}"/>
                     </div>
                 </div>
-                
+
                 <div class="row" jsf:rendered="#{createUserView.careerSelectionFlag}">
                     <div class="form-group col-sm-2">
                         <p:outputLabel for="career" value="Selección Carrera:"/>
@@ -157,11 +168,12 @@
                     </div>
                 </div>
 
-
                 <div class="row">
                     <div class="form-group col-sm-4">
                         <p:commandLink styleClass="btn btn-primary"
                                        update="@form,:growl" 
+                                       onstart="PF('progressBar').show();"
+                                       onsuccess="PF('progressBar').hide();"
                                        action="#{createUserView.createUser()}">
                             <span class="glyphicon glyphicon-log-in"></span> Registrar Usuario
                         </p:commandLink>
@@ -170,6 +182,18 @@
 
             </fieldset>
         </h:form>
+
+        <p:dialog id="progressBar" widgetVar="progressBar" closable="false" width="20%" showHeader="false" resizable="false"
+                  modal="true" closeOnEscape="true">
+            <p:ajax event="close" update="@this" />
+            <div align="center">
+                <p:outputLabel>Realizando operación, espere un momento.</p:outputLabel>
+            </div>
+            <div class="form-group col-md-12" align="center">
+                <p:progressBar id="progressBarIndeterminate" style="height:6px" mode="indeterminate"/>
+            </div>
+        </p:dialog>
+        
     </ui:define>
 
 </ui:composition>

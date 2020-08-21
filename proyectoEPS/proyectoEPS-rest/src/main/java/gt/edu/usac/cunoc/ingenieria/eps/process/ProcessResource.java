@@ -80,7 +80,7 @@ public class ProcessResource {
     }
 
     @GET
-    @Path("reject/{idCoordinator}/{idProcess}")
+    @Path("accept/{idCoordinator}/{idProcess}")
     public Boolean acceptProcessByCoordinator(@PathParam("idCoordinator") String idCoordinator, @PathParam("idCoordinator") Integer idProcess) {
         try {
             User user = userFacade.getUser(new User(idCoordinator)).get(0);

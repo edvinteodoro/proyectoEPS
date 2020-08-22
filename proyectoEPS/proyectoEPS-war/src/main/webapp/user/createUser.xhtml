@@ -13,8 +13,8 @@
     </ui:define>
 
     <ui:define name="content"> 
-        <h:form>            
-            <fieldset id="userForm" class="center-block">
+        <h:form>     
+            <fieldset class="center-block">
                 <legend>Registrar Usuario</legend>
 
                 <div class="row">
@@ -26,7 +26,7 @@
                             <f:selectItems value="#{createUserView.rolUsers}" var="rolUser"
                                            itemValue="#{rolUser}"
                                            itemLabel="#{rolUser.name}"/>
-                            <p:ajax listener="#{createUserView.verifyView()}" update="@form"/>
+                            <p:ajax event="change" listener="#{createUserView.verifyView()}" update="@form"/>
                         </p:selectOneMenu>
                     </div>
                 </div>
@@ -38,7 +38,7 @@
                     <div class="form-group col-sm-4">
                         <p:inputText id="dpi" styleClass="form-control" pt:placeholder="Dpi" required="true"
                                      pt:required="true" value="#{createUserView.user.dpi}"
-                                     readonly="#{createUserView.createStudent}"/>
+                                     readonly="#{createUserView.searchStudent}"/>
                     </div>
                 </div>
 
@@ -80,7 +80,7 @@
                     <div class="form-group col-sm-4">
                         <p:inputText id="fname" styleClass="form-control" pt:placeholder="Nombres" required="true"
                                      pt:required="true" value="#{createUserView.user.firstName}"
-                                     readonly="#{createUserView.createStudent}"/>
+                                     readonly="#{createUserView.searchStudent}"/>
                     </div>
                 </div>
 
@@ -91,7 +91,7 @@
                     <div class="form-group col-sm-4">
                         <p:inputText id="lname" styleClass="form-control" pt:placeholder="Apellidos" required="true"
                                      pt:required="true" value="#{createUserView.user.lastName}"
-                                     readonly="#{createUserView.createStudent}"/>
+                                     readonly="#{createUserView.searchStudent}"/>
                     </div>
                 </div>
 
@@ -147,6 +147,59 @@
                         </p:selectManyCheckbox>
                     </div>
                 </div>
+
+                <div class="row" jsf:rendered="#{createUserView.createCompanySupervisorFlag}">
+                    <div class="form-group col-sm-2">
+                        <p:outputLabel for="companyName" value="Nombre Empresa:" />
+                    </div>
+                    <div class="form-group col-sm-4">
+                        <p:inputText id="companyName" styleClass="form-control" pt:placeholder="Nombre Empresa" required="true"
+                                     pt:required="true" value="#{createUserView.user.nameCompanyWork}"/>
+                    </div>
+                </div>
+
+                <div class="row" jsf:rendered="#{createUserView.createCompanySupervisorFlag}">
+                    <div class="form-group col-sm-2">
+                        <p:outputLabel for="companyPhone" value="Teléfono Empresa:" />
+                    </div>
+                    <div class="form-group col-sm-4">
+                        <p:inputText id="companyPhone" styleClass="form-control" pt:placeholder="Teléfono Empresa" required="true"
+                                     pt:required="true" value="#{createUserView.user.phoneCompanyWork}"/>
+                    </div>
+                </div>
+
+                <div class="row" jsf:rendered="#{createUserView.createCompanySupervisorFlag}"> 
+                    <div class="form-group col-sm-2">
+                        <p:outputLabel for="companyDirection" value="Dirección Empresa:" />
+                    </div>
+                    <div class="form-group col-sm-4">
+                        <p:inputText id="companyDirection" styleClass="form-control" pt:placeholder="Dirección Empresa" required="true"
+                                     pt:required="true" value="#{createUserView.user.directionCompanyWork}"/>
+                    </div>
+                </div>
+
+                <div class="row" jsf:rendered="#{createUserView.personalResumeFlag}">
+                    <div class="form-group col-sm-2">
+                        <p:outputLabel for="personalResume" value="Curriculum" />
+                    </div>
+                    <div class="form-group col-sm-4">
+                        <p:fileUpload id="personalResume" fileUploadListener="#{createUserView.handlePersonalResume}"
+                                      required="true" 
+                                      styleClass="in-dialog"
+                                      skinSimple="true" auto="true" allowTypes="/(\.|\/)(pdf)$/"
+                                      update="labelPersonalResume"
+                                      label="Seleccionar"
+                                      sizeLimit="16000000"
+                                      invalidSizeMessage="Archivo demasiado grande, limite de 16MB"
+                                      invalidFileMessage="Solo se puede cargar archivos pdf"/>
+                        <h:commandLink id="labelPersonalResume" value="#{createUserView.personalResumeFileName}" 
+                                       target="_blank"
+                                       action="#{createUserView.reloadPersonalResume()}">
+                            <p:fileDownload value="#{createUserView.personalResumeStream}" contentDisposition="inline"/>
+                        </h:commandLink>
+                    </div>     
+                </div>
+
                 <div class="row">
                     <div class="form-group col-sm-2">
                         <p:outputLabel for="userId" value="Nombre Usuario:" />
@@ -159,10 +212,10 @@
 
                 <div class="row">
                     <div class="form-group col-sm-2">
-                        <p:outputLabel for="pass" value="Contrasena:" />
+                        <p:outputLabel for="pass" value="Contraseña:" />
                     </div>
                     <div class="form-group col-sm-4">
-                        <p:password id="pass" styleClass="form-control" pt:placeholder="Contrasena" required="true"
+                        <p:password id="pass" styleClass="form-control" pt:placeholder="Contraseña" required="true"
                                     pt:required="true" value="#{createUserView.user.password}" pt:type="password"
                                     />
                     </div>
@@ -193,7 +246,7 @@
                 <p:progressBar id="progressBarIndeterminate" style="height:6px" mode="indeterminate"/>
             </div>
         </p:dialog>
-        
+
     </ui:define>
 
 </ui:composition>

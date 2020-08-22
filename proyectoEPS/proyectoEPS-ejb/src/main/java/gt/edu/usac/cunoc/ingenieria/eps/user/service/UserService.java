@@ -59,6 +59,10 @@ public class UserService {
             } else {
                 user.setEpsCommittee(Boolean.FALSE);
             }
+            
+            if (!userRepository.getUser(new User(user.getUserId())).isEmpty()){
+                throw new UserException("Ya existe ese Nombre de Usuario");
+            }
 
             if (user.getROLid().getName().equals(Constants.SUPERVISOR_EMPRESA)
                     || user.getROLid().getName().equals(Constants.REVISOR)

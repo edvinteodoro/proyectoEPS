@@ -19,6 +19,7 @@ import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import gt.edu.usac.cunoc.ingenieria.eps.user.UserCareer;
 import gt.edu.usac.cunoc.ingenieria.eps.user.facade.UserFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.utils.MessageUtils;
+import java.io.ByteArrayInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,10 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
+import org.primefaces.model.UploadedFile;
 
 @Named
 @ViewScoped
@@ -46,8 +51,14 @@ public class CreateUserView implements Serializable {
     private Boolean personalCodeFlag;
     private Boolean academicRegisterFlag;
     private Boolean careerSelectionFlag;
-    
-    private Boolean createStudent;
+    private Boolean personalResumeFlag;
+    private Boolean createCompanySupervisorFlag;
+
+    private Boolean searchStudent;
+
+    private StreamedContent personalResumeStream;
+    private UploadedFile personalResume;
+    private String personalResumeFileName = "";
 
     @PostConstruct
     public void init() {
@@ -183,12 +194,28 @@ public class CreateUserView implements Serializable {
         this.careerSelectionFlag = careerSelectionFlag;
     }
 
-    public Boolean getCreateStudent() {
-        return createStudent;
+    public Boolean getPersonalResumeFlag() {
+        return personalResumeFlag;
     }
 
-    public void setCreateStudent(Boolean createStudent) {
-        this.createStudent = createStudent;
+    public void setPersonalResumeFlag(Boolean personalResumeFlag) {
+        this.personalResumeFlag = personalResumeFlag;
+    }
+
+    public Boolean getCreateCompanySupervisorFlag() {
+        return createCompanySupervisorFlag;
+    }
+
+    public void setCreateCompanySupervisorFlag(Boolean createCompanySupervisorFlag) {
+        this.createCompanySupervisorFlag = createCompanySupervisorFlag;
+    }
+
+    public Boolean getSearchStudent() {
+        return searchStudent;
+    }
+
+    public void setSearchStudent(Boolean searchStudent) {
+        this.searchStudent = searchStudent;
     }
 
     public void createUser() {
@@ -197,9 +224,12 @@ public class CreateUserView implements Serializable {
                 getUserCareers().add(new UserCareer(getSelectedCareers().get(i), getUser()));
             }
             getUser().setUserCareers(getUserCareers());
+            if (personalResume != null){
+                getUser().setPersonalResume(personalResume.getContents());
+            }
             userFacade.createUser(getUser());
             MessageUtils.addSuccessMessage("Se ha registrado el usuario correctamente");
-            cleanUser();
+            cleanNewUser();
         } catch (UserException ex) {
             MessageUtils.addErrorMessage(ex.getMessage());
         }
@@ -212,52 +242,123 @@ public class CreateUserView implements Serializable {
                     personalCodeFlag = false;
                     academicRegisterFlag = true;
                     careerSelectionFlag = true;
-                    createStudent = true;
+                    searchStudent = true;
+                    createCompanySupervisorFlag = false;
+                    personalResumeFlag = false;
                     break;
                 case Constants.COORDINADOR_CARRERA:
-                case Constants.REVISOR:
-                case Constants.ASESOR:
                 case Constants.SUPERVISOR_EPS:
                     personalCodeFlag = true;
                     academicRegisterFlag = false;
                     careerSelectionFlag = true;
-                    createStudent = false;
+                    searchStudent = false;
+                    createCompanySupervisorFlag = false;
+                    personalResumeFlag = false;
+                    break;
+                case Constants.REVISOR:
+                case Constants.ASESOR:
+                    personalCodeFlag = true;
+                    academicRegisterFlag = false;
+                    careerSelectionFlag = true;
+                    searchStudent = false;
+                    createCompanySupervisorFlag = false;
+                    personalResumeFlag = true;
                     break;
                 case Constants.SUPERVISOR_EMPRESA:
                     personalCodeFlag = false;
                     academicRegisterFlag = false;
                     careerSelectionFlag = false;
-                    createStudent = false;
+                    searchStudent = false;
+                    createCompanySupervisorFlag = true;
+                    personalResumeFlag = false;
                     break;
                 default:
                     personalCodeFlag = true;
                     academicRegisterFlag = false;
                     careerSelectionFlag = false;
-                    createStudent = false;
+                    searchStudent = false;
+                    createCompanySupervisorFlag = false;
+                    personalResumeFlag = false;
             }
+            cleanUser();
         } else {
             personalCodeFlag = false;
             academicRegisterFlag = true;
             careerSelectionFlag = true;
-            createStudent = true;
+            searchStudent = true;
         }
     }
 
-    public void fillStudent(){
+    public void fillStudent() {
         try {
             Optional<StudentData> data = userFacade.getStudentData(user.getAcademicRegister());
             if (data.isPresent()) {
                 user.setDpi(data.get().getCui());
                 user.setFirstName(data.get().getNombres());
                 user.setLastName(data.get().getApellidos());
+                MessageUtils.addSuccessMessage("Estudiante encontrado");
+            } else {
+                cleanUser();
+                MessageUtils.addErrorMessage("No se encontró el Estudiante");
             }
         } catch (HttpClientException ex) {
-            MessageUtils.addErrorMessage("Error al Verificar Estudiante, Ingrese los datos Manualmente");
+            MessageUtils.addErrorMessage(ex.getMessage() + "\nIngrese los datos Manualmente");
+            searchStudent = false;
         }
     }
-    
-    private void cleanUser() {
+
+    public void handlePersonalResume(FileUploadEvent event) {
+        this.personalResume = event.getFile();
+        this.personalResumeFileName = event.getFile().getFileName();
+        this.personalResumeStream = new DefaultStreamedContent(new ByteArrayInputStream(personalResume.getContents()), "application/pdf", "Curriculum.pdf");
+    }
+
+    public String getPersonalResumeFileName() {
+        return personalResumeFileName;
+    }
+
+    public void setPersonalResumeFileName(String personalResumeFileName) {
+        this.personalResumeFileName = personalResumeFileName;
+    }
+
+    public StreamedContent getPersonalResumeStream() {
+        return personalResumeStream;
+    }
+
+    public void setPersonalResumeStream(StreamedContent personalResumeStream) {
+        this.personalResumeStream = personalResumeStream;
+    }
+
+    public void reloadPersonalResume() {
+        this.personalResumeStream = new DefaultStreamedContent(new ByteArrayInputStream(personalResume.getContents()), "application/pdf", "Curriculum.pdf");
+    }
+
+    private void cleanNewUser() {
         user = null;
+        personalResume = null;
+        personalResumeFileName = "";
+        getSelectedCareers().clear();
+        getUserCareers().clear();
+    }
+
+    private void cleanUser() {
+        getUser().setUserId("");
+        getUser().setDpi("");
+        getUser().setAcademicRegister("");
+        getUser().setCodePersonal("");
+        getUser().setFirstName("");
+        getUser().setLastName("");
+        getUser().setEmail("");
+        getUser().setPhone1("");
+        getUser().setPhone2("");
+        getUser().setPassword("");
+        getUser().setDirection("");
+        getUser().setNameCompanyWork("");
+        getUser().setDirectionCompanyWork("");
+        getUser().setPhoneCompanyWork("");
+        getUser().setPersonalResume(new byte[0]);
+        personalResume = null;
+        personalResumeFileName = "";
         getSelectedCareers().clear();
         getUserCareers().clear();
     }

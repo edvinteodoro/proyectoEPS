@@ -220,6 +220,7 @@ public class CreateUserView implements Serializable {
 
     public void createUser() {
         try {
+            getUserCareers().clear();
             for (int i = 0; i < getSelectedCareers().size(); i++) {
                 getUserCareers().add(new UserCareer(getSelectedCareers().get(i), getUser()));
             }

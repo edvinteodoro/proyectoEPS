@@ -102,6 +102,13 @@ public class User implements Serializable {
         this.userId = userId;
     }
 
+    public User(String userId, String dpi, String firstName, String lastName) {
+        this.userId = userId;
+        this.dpi = dpi;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+    
     public User(Rol rOLid, Boolean epsCommittee) {
         this.rOLid = rOLid;
         this.epsCommittee = epsCommittee;

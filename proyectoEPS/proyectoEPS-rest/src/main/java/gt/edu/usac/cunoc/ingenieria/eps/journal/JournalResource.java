@@ -1,4 +1,4 @@
-package gt.edu.usac.cunoc.ingenieria.eps.process;
+package gt.edu.usac.cunoc.ingenieria.eps.journal;
 
 import User.exception.UserException;
 import gt.edu.usac.cunoc.ingenieria.eps.journal.Commentary;
@@ -23,7 +23,7 @@ import javax.ws.rs.Produces;
  *
  * @author teodoro
  */
-@Path("/journal")
+@Path("/journals")
 @Stateless
 @Produces("application/json")
 public class JournalResource {
@@ -55,5 +55,7 @@ public class JournalResource {
         journalFacade.updateJournal(journal);
         return Boolean.TRUE;
     }
+    
+    
 
 }

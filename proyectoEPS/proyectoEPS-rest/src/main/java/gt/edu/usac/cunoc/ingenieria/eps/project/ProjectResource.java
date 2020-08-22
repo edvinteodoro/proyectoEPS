@@ -18,7 +18,7 @@ import javax.ws.rs.Produces;
  *
  * @author teodoro
  */
-@Path("/project")
+@Path("/projects")
 @Stateless
 @Produces("application/json")
 public class ProjectResource {

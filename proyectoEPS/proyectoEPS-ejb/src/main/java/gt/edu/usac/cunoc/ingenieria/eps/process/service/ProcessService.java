@@ -84,25 +84,20 @@ public class ProcessService {
      */
     public void assignEPSSUpervisorToProcess(Career career, Process process) throws ValidationException {
         List<User> supervisorEPS = userRepository.getSupervisorEPSbyCareer(career);
-        User supervisorEPSToAssign;
         if (supervisorEPS.size() > 1) {
-            User currentUser;
+            User supervisorEPSToAssign = supervisorEPS.get(0);
             User nextUser;
-            for (int i = 0; i < supervisorEPS.size() - 1; i++) {
-                currentUser = supervisorEPS.get(i);
-                nextUser = supervisorEPS.get(i + 1);
-                long countProcessesCurrentUser = userRepository.getNumberProcessesBySupervisorEPS(currentUser);
+            for (int i = 1; i < supervisorEPS.size(); i++) {
+                nextUser = supervisorEPS.get(i);
+                long countProcessesCurrentUser = userRepository.getNumberProcessesBySupervisorEPS(supervisorEPSToAssign);
                 long countProcessesNextUser = userRepository.getNumberProcessesBySupervisorEPS(nextUser);
                 if (countProcessesCurrentUser > countProcessesNextUser) {
                     supervisorEPSToAssign = nextUser;
-                } else {
-                    supervisorEPSToAssign = currentUser;
-                }
-                process.setSupervisor_EPS(supervisorEPSToAssign);
+                } 
             }
-        } else if (supervisorEPS.size() == 1) {
-            supervisorEPSToAssign = supervisorEPS.get(0);
             process.setSupervisor_EPS(supervisorEPSToAssign);
+        } else if (supervisorEPS.size() == 1) {
+            process.setSupervisor_EPS(supervisorEPS.get(0));
         } else {
             throw new ValidationException("No existe Supervisor de EPS para su Carrera");
         }

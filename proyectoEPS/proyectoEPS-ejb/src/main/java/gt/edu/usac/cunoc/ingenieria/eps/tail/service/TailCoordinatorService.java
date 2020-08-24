@@ -57,7 +57,6 @@ public class TailCoordinatorService {
     
     public TailCoordinator createTailCoordinator(Process process) throws ValidationException, MandatoryException, LimitException{
         projectRepository.validateProjectoToReview(process.getProject());
-        projectService.update(process.getProject());
         List<User> coordinators = userRepository.getCareerCoordinator(process);
         if (coordinators.size() > 1) {
             User coordinator = coordinators.get(0);
@@ -73,12 +72,14 @@ public class TailCoordinatorService {
             processService.updateProcess(process);
             TailCoordinator newElementTailCoordination = new TailCoordinator(LocalDate.now(), userCareerRepository.getUserCareer(coordinator, process.getUserCareer().getCAREERcodigo().getName()).get(0), process);
             entityManager.persist(newElementTailCoordination);
+            projectService.update(process.getProject());
             return newElementTailCoordination;
         } else if (coordinators.size() == 1) {
             process.setState(StateProcess.REVISION);
             processService.updateProcess(process);
             TailCoordinator newElementTailCoordination = new TailCoordinator(LocalDate.now(), userCareerRepository.getUserCareer(coordinators.get(0), process.getUserCareer().getCAREERcodigo().getName()).get(0), process);
             entityManager.persist(newElementTailCoordination);
+            projectService.update(process.getProject());
             return newElementTailCoordination;
         } else {
             throw new ValidationException("No existe Coordinador para Su Carrera");

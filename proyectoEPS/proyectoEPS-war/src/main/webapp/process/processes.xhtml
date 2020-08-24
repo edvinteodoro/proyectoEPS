@@ -11,7 +11,7 @@
     <ui:define name="title">
         Procesos
     </ui:define>
-    
+
     <ui:define name="content">
         <p:dataTable id="processesTable" var="process" value="#{processesView.processes}" reflow="true" rowStyleClass="#{process.sudentStyleRow}">
             <p:column headerText="Nombres" rendered="#{processesView.isCareerCoordinator()}">
@@ -50,6 +50,14 @@
                         <span class="glyphicon glyphicon-log-in"></span>
                     </button>
                 </p>
+            </p:column>
+            <p:column headerText="Supervisor EPS" styleClass="text-center">
+                <p:commandLink styleClass="btn btn-primary btn-xs"
+                               oncomplete="PF('infoSupervisorEPS').show();" 
+                               update=":#{p:component('infoSupervisorEPS')}">
+                    <f:setPropertyActionListener value="#{process.supervisor_EPS}" target="#{processesView.supervisorEPS}"/>
+                    <span class="glyphicon glyphicon-eye-open"></span>  Ver
+                </p:commandLink>
             </p:column>
             <p:column headerText="Asesor y Revisor" styleClass="text-center">
                 <p:commandLink styleClass="btn btn-primary btn-xs"
@@ -92,6 +100,44 @@
                 </p>
             </p:column>
         </p:dataTable>
+
+        <p:dialog header="Supervisor EPS" id="infoSupervisorEPS" widgetVar="infoSupervisorEPS"
+                  modal="true" closeOnEscape="true">
+            <p:ajax event="close" listener="#{processesView.clean()}" update="@this" />
+            <h:form>
+                <div class="modal-header" jsf:rendered="#{processesView.supervisorEPS == null}">
+                    <p:staticMessage severity="warn" summary="Advertencia! " detail="No se ha asignado al Supervisor EPS" />
+                </div>
+                <div class="modal-body" jsf:rendered="#{processesView.supervisorEPS != null}">
+                    <fieldset>
+                        <div class="row form-group">
+                            <p:outputLabel value="Nombre:" styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <h:outputText value="#{processesView.supervisorEPS.firstName}, #{processesView.supervisorEPS.lastName}"/>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <p:outputLabel value="Correo Electrónico:" styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <h:outputText value="#{processesView.supervisorEPS.email}" />
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <p:outputLabel value="Telefono:" styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <h:outputText value="#{processesView.supervisorEPS.phone1}" />
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <p:outputLabel value="Telefono:" styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <h:outputText value="#{processesView.supervisorEPS.phone2}" />
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </h:form>
+        </p:dialog>
 
         <p:dialog header="Asesor y Revisor" id="infoAbout" widgetVar="infoAbout"
                   modal="true" closeOnEscape="true">

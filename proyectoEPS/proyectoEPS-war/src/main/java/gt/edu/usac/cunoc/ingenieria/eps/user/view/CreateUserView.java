@@ -231,6 +231,7 @@ public class CreateUserView implements Serializable {
             userFacade.createUser(getUser());
             MessageUtils.addSuccessMessage("Se ha registrado el usuario correctamente");
             cleanNewUser();
+            verifyView();
         } catch (UserException ex) {
             MessageUtils.addErrorMessage(ex.getMessage());
         }

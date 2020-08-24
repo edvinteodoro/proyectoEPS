@@ -51,6 +51,7 @@ public class ProcessesView implements Serializable {
 
     private Process processSelected;
     private User companySupervisor;
+    private User supervisorEPS;
 
     @PostConstruct
     public void init() {
@@ -239,11 +240,20 @@ public class ProcessesView implements Serializable {
         this.companySupervisor = companySupervisor;
     }
 
+    public User getSupervisorEPS() {
+        return supervisorEPS;
+    }
+
+    public void setSupervisorEPS(User supervisorEPS) {
+        this.supervisorEPS = supervisorEPS;
+    }
+
     public void clean() {
         adviserResumeStream = null;
         reviewerResumeStream = null;
         appointment = null;
         processSelected = null;
         companySupervisor = null;
+        supervisorEPS = null;
     }
 }

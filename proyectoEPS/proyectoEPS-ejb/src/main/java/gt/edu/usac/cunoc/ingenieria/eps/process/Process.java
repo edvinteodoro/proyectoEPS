@@ -186,9 +186,9 @@ public class Process implements Serializable {
     public String getApprovedCareerCoordinatorMessage() {
         if (approvedCareerCoordinator != null) {
             if (approvedCareerCoordinator == false) {
-                return "No";
+                return "Rechazado";
             } else {
-                return "Si";
+                return "Aprobado";
             }
         } else {
             return "Pendiente";
@@ -198,9 +198,9 @@ public class Process implements Serializable {
     public String getApprovedEPSMessage() {
         if (approvalEPSCommission != null) {
             if (approvalEPSCommission == false) {
-                return "No";
+                return "Aprobado";
             } else {
-                return "Si";
+                return "Rechazado";
             }
         } else {
             return "Pendiente";

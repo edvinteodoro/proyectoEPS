@@ -122,6 +122,11 @@ public class UserFacade implements UserFacadeLocal {
     }
 
     @Override
+    public Optional<User> getUserByUserId(String userId){
+        return userRepository.getUserByUserId(userId);
+    }
+    
+    @Override
     public Career createCareer(Career career) throws UserException {
         return careerService.createCareer(career);
     }

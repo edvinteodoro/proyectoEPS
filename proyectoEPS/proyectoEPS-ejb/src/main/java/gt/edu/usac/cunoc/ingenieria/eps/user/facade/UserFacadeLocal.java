@@ -32,6 +32,8 @@ public interface UserFacadeLocal {
     public User updateUser(User user) throws UserException;
 
     public List<User> getUser(User user) throws UserException;
+    
+    public Optional<User> getUserByUserId(String userId);
 
     public Career createCareer(Career career) throws UserException;
 

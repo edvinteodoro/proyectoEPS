@@ -11,19 +11,19 @@ import java.io.Serializable;
  *
  * @author crystian
  */
-public class NewUserDto extends CompleteUserDto implements Serializable{
-    
-    private String password;
+public class UserPasswordDto implements Serializable {
 
-    public NewUserDto() {
+    private String passWordUser;
+
+    public UserPasswordDto() {
     }
 
-    public String getPassword() {
-        return password;
+    public String getPassWordUser() {
+        return passWordUser;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setPassWordUser(String passWordUser) {
+        this.passWordUser = passWordUser;
     }
-    
+
 }

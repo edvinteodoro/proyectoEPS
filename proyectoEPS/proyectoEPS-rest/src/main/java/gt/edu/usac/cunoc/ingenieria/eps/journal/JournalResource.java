@@ -13,18 +13,18 @@ import java.time.LocalDate;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Response;
 
 /**
  *
  * @author teodoro
  */
-@Path("/journals")
-@Stateless
 @Produces("application/json")
 public class JournalResource {
 
@@ -36,26 +36,27 @@ public class JournalResource {
 
     @EJB
     private JournalLogFacadeLocal journalFacade;
-
-    private LocalDate date = LocalDate.now();
+    
+    @Inject
+    private CommentaryResource commentaryResource;
 
     @GET
-    @Path("list/{processId}")
-    public List<JournalLog> getJournals(@PathParam("processId") Integer processId) {
-        return journalFacade.getJournal(processId);
-    }
-
-    @POST
-    @Path("addComment/{userId}/{journalId}")
-    public Boolean commentJournal(@PathParam("processId") Integer journalId, @PathParam("userId") String userId, CommentaryDto comentary) throws UserException {
-        JournalLog journal = journalFacade.getJournalById(journalId);
-        User user = userFacade.getUser(new User(userId)).get(0);
-        Commentary commentary = new Commentary(comentary.getText(), this.date, journal, user);
-        journal.addCommentary(commentary);
-        journalFacade.updateJournal(journal);
-        return Boolean.TRUE;
+    public Response getJournals(@PathParam("processId") Integer processId) {
+        try {
+            List<JournalLog> journalLogs = journalFacade.getJournal(processId);
+            return Response
+                    .status(Response.Status.OK)
+                    .entity(journalLogs)
+                    .build();
+        } catch (Exception e) {
+            return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .build();
+        }
     }
     
-    
-
+    @Path("/{journalId}/comments")
+    public CommentaryResource getCommentaryResource(){
+        return commentaryResource;
+    }
 }

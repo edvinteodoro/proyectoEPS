@@ -6,6 +6,8 @@
 package gt.edu.usac.cunoc.ingenieria.eps.user;
 
 import User.exception.UserException;
+import gt.edu.usac.cunoc.ingenieria.eps.process.ProcessResource;
+import gt.edu.usac.cunoc.ingenieria.eps.process.facade.ProcessFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.user.facade.UserFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.userDto.NewUserDto;
 import gt.edu.usac.cunoc.ingenieria.eps.userDto.UserCareerDto;
@@ -14,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.ejb.EJB;
-import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -28,13 +30,18 @@ import javax.ws.rs.core.MediaType;
  * @author crystian
  */
 @Path("/users")
-@Stateless
 @Produces("application/json")
 public class UserResource {
 
     @EJB
     private UserFacadeLocal userFacade;
-
+    
+    @EJB
+    private ProcessFacadeLocal processFacade;
+    
+    @Inject 
+    ProcessResource processResource;
+    
     @GET
     @Path("/searchUsers")
     public List<UserDto> findUsers(@QueryParam("userId") String userId,
@@ -72,6 +79,11 @@ public class UserResource {
         newUser.setDirection(newUserDto.getDirection());
         newUser.setROLid(rolUser);
         userFacade.createUser(newUser);
+    }
+    
+    @Path("/{userId}/processes")
+    public ProcessResource getProcessResounrce(){
+        return processResource;
     }
 
 }

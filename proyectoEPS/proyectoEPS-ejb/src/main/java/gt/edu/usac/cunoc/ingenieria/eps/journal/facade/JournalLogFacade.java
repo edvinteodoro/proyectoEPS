@@ -1,4 +1,3 @@
-
 package gt.edu.usac.cunoc.ingenieria.eps.journal.facade;
 
 import gt.edu.usac.cunoc.ingenieria.eps.exception.LimitException;
@@ -18,17 +17,17 @@ public class JournalLogFacade implements JournalLogFacadeLocal {
 
     @EJB
     private JournalLogRepository journalLogRepository;
-    
+
     @EJB
     private JournalLogService journalLogService;
-    
+
     @Override
     public List<JournalLog> getJournal(Integer processId) {
         return journalLogRepository.getJournal(processId);
     }
 
     @Override
-    public void createJounalLog(JournalLog newJournalLog) throws LimitException, MandatoryException{
+    public void createJounalLog(JournalLog newJournalLog) throws LimitException, MandatoryException {
         journalLogService.createJournalLog(newJournalLog);
     }
 
@@ -37,4 +36,16 @@ public class JournalLogFacade implements JournalLogFacadeLocal {
         return journalLogRepository.getCommentariesJournal(journalId);
     }
     
+    /*other function for rest services*/
+
+    @Override
+    public JournalLog getJournalById(Integer id) {
+        return journalLogRepository.getJournalById(id);
+    }
+
+    @Override
+    public JournalLog updateJournal(JournalLog jouranl) {
+        return journalLogService.updateJournal(jouranl);
+    }
+
 }

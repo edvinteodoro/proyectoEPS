@@ -15,4 +15,10 @@ public interface JournalLogFacadeLocal {
     public void createJounalLog(JournalLog newJournalLog) throws LimitException, MandatoryException;
     
     public List<Commentary> getCommentariesJournal(Integer journalId);
+    
+    /*other functions for rest services*/
+    
+    public JournalLog getJournalById(Integer id);
+    
+    public JournalLog updateJournal(JournalLog jouranl);
 }

@@ -15,6 +15,7 @@ import javax.persistence.Query;
 public class JournalLogRepository {
 
     private final String GET_JOURNAL_LOG_BY_PROCESS = "SELECT j FROM JournalLog j WHERE j.process.id = :idProcess ORDER BY j.dateTime";
+    private final String GET_JOURNAL_LOG_BY_ID = "SELECT j FROM JournalLog j WHERE j.id = :idJournal";
     private final String GET_JOURNAL_LOG_BY_DATE = "SELECT j FROM JournalLog j WHERE j.dateTime = :dateTime AND j.process.id = :idProcess";
     private final String GET_COMMENTARIES_BY_JOURNAL_ID = "SELECT c FROM Commentary c WHERE c.journal_Log.id = :idJournal";
     private EntityManager entityManager;
@@ -52,5 +53,13 @@ public class JournalLogRepository {
         Query query = entityManager.createQuery(GET_COMMENTARIES_BY_JOURNAL_ID, Commentary.class);
         query.setParameter("idJournal", journalId);
         return query.getResultList();
+    }
+    
+    /*Other function for rest services*/
+    
+    public JournalLog getJournalById(Integer id) {
+        Query query = entityManager.createQuery(GET_JOURNAL_LOG_BY_ID, JournalLog.class);
+        query.setParameter("idJournal", id);
+        return (JournalLog) query.getSingleResult();
     }
 }

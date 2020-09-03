@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package gt.edu.usac.cunoc.ingenieria.eps.user;
+package gt.edu.usac.cunoc.ingenieria.eps.process;
 
-import gt.edu.usac.cunoc.ingenieria.eps.process.ProcessReviewResource;
+import gt.edu.usac.cunoc.ingenieria.eps.project.ProjectReview;
 import javax.inject.Inject;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -14,16 +14,16 @@ import javax.ws.rs.Produces;
  *
  * @author crystian
  */
-@Path("/users")
+@Path("/")
 @Produces("application/json")
-public class UserResource {
+public class ProcessReviewResource {
     
     @Inject
-    ProcessReviewResource processReviewResource;
+    ProjectReview projectReview;
     
-    @Path("/{userId}/processes")
-    public ProcessReviewResource getProcess(){
-        return processReviewResource;
+    @Path("/{processId}/project")
+    public ProjectReview getProject(){
+        return projectReview;
     }
-    
+
 }

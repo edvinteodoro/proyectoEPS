@@ -45,4 +45,11 @@ public class JournalLogService {
             throw new LimitException("Ya existe un registro con esta fecha");
         }
     }
+    
+    /*Other funcitions for rest services*/
+    
+    public JournalLog updateJournal(JournalLog journal){
+        entityManager.merge(journal);
+        return journal;
+    }
 }

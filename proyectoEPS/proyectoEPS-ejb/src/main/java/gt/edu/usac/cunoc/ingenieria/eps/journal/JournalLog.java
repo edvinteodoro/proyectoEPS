@@ -117,6 +117,9 @@ public class JournalLog implements Serializable {
     }
 
     public List<Commentary> getCommentaries() {
+        if (commentaries == null) {
+            commentaries = new ArrayList<>();
+        }
         return commentaries;
     }
 
@@ -128,6 +131,10 @@ public class JournalLog implements Serializable {
         Commentary newCommentary = new Commentary();
         commentaries.add(newCommentary);
         newCommentary.setJournal_Log(this);
+    }
+
+    public void addCommentary(Commentary commentary) {
+        getCommentaries().add(commentary);
     }
 
     public void removeComentary(Integer commentaryIndex) {
@@ -143,14 +150,14 @@ public class JournalLog implements Serializable {
         this.process = process;
     }
 
-    public boolean getEmptyImages(){
+    public boolean getEmptyImages() {
         return this.images.isEmpty();
     }
-    
-    public boolean getEmptyLinks(){
+
+    public boolean getEmptyLinks() {
         return this.links.isEmpty();
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;

@@ -248,6 +248,17 @@ public class ProcessesView implements Serializable {
         this.supervisorEPS = supervisorEPS;
     }
 
+    public String getTitle() {
+        switch (user.getROLid().getName()) {
+            case ESTUDIANTE:
+                return "Mis Procesos";
+            case COORDINADOR_CARRERA:
+                return "Procesos para Revisión";
+            default:
+                return "Procesos";
+        }
+    }
+
     public void clean() {
         adviserResumeStream = null;
         reviewerResumeStream = null;
@@ -256,4 +267,5 @@ public class ProcessesView implements Serializable {
         companySupervisor = null;
         supervisorEPS = null;
     }
+    
 }

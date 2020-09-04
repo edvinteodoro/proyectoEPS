@@ -27,9 +27,8 @@
     <ui:define name="content">
         <h:outputScript library="js" name="calendar_es.js" />
         <h:form id="principal">
-
-
-            <p:staticMessage severity="info" detail="Registro de Bitácora Vacio" rendered="#{journalView.journals.size() eq 0}"/>
+            <p:staticMessage severity="warn" detail="Bitácora inhabilitada" rendered="#{!journalView.process.approvedEPSDevelopment}"/>
+            <p:staticMessage severity="info" detail="Registro de Bitácora Vacio" rendered="#{(journalView.journals.size() eq 0) and journalView.process.approvedEPSDevelopment}"/>
             <p:accordionPanel id="journalTable" value="#{journalView.journals}" var="journalLog" activeIndex="-2">
                 <p:tab id="JournalLog" title="Fecha - #{journalLog.dateTime.dayOfMonth} / #{journalLog.dateTime.monthValue} / #{journalLog.dateTime.year}" >
                     <div>
@@ -88,7 +87,8 @@
             <div class="btn-group pull-left">
                 <p:commandLink styleClass="btn btn-success" 
                                oncomplete="PF('dlgNew').show();"
-                               update=":#{p:component('dlgNew')}">
+                               update=":#{p:component('dlgNew')}"
+                               rendered="#{journalView.process.approvedEPSDevelopment}">
                     <f:setPropertyActionListener value="#{journalLog}" target="#{journalView.newJournalLog}"/>
                     <span class="glyphicon glyphicon-plus"></span> Nuevo Registro
                 </p:commandLink>

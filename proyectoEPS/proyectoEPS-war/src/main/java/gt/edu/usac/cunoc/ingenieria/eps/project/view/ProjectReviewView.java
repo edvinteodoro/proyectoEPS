@@ -184,12 +184,11 @@ public class ProjectReviewView implements Serializable {
                 getActualProcess().setApprovedCareerCoordinator(true);
                 processFacade.assignEPSSUpervisorToProcess(getActualProcess().getUserCareer().getCAREERcodigo(), getActualProcess());
                 processFacade.updateProcess(getActualProcess());
-                tailCommitteeEPSFacade.createTailCommiteeEPS(getActualProcess());
-                redirectToProcesses();
+                tailCommitteeEPSFacade.createTailCommiteeEPS(getActualProcess());                
             } else if (getActualProcess().getApprovedCareerCoordinator()) {
-                processFacade.aproveedByEPSCommittee(actualProcess.getId());
-                redirectToEPSCommittee();
+                processFacade.aproveedByEPSCommittee(actualProcess.getId());                
             }
+            redirectToProcesses();
         } catch (UserException | LimitException | MandatoryException | ValidationException | IOException e) {
             MessageUtils.addErrorMessage(e.getMessage());
         }
@@ -203,8 +202,7 @@ public class ProjectReviewView implements Serializable {
                 tailFacade.deleteTailCoordinatod(getActualProcess());
                 getActualProcess().setState(StateProcess.RECHAZADO);
                 getActualProcess().setApprovedCareerCoordinator(false);
-                processFacade.updateProcess(getActualProcess());
-                redirectToProcesses();
+                processFacade.updateProcess(getActualProcess());                
             } else if (getActualProcess().getApprovedCareerCoordinator()) {
                 processFacade.EPSCommitteeRejectProyect(
                         actualProcess.getId(),
@@ -212,13 +210,13 @@ public class ProjectReviewView implements Serializable {
                         newCorrection.getText()
                 );
             }
+            redirectToProcesses();
             newCorrection.setType(TypeCorrection.REJECTED);
             newCorrection.setDate(LocalDate.now());
             newCorrection.setProject(actualProcess.getProject());
             newCorrection.setStatus(true);
             newCorrection.setUser(user);
             projectFacade.createCorrection(newCorrection);
-            redirectToEPSCommittee();
         } catch (UserException | MandatoryException | IOException | ValidationException e) {
             MessageUtils.addErrorMessage(e.getMessage());
         } 
@@ -231,27 +229,18 @@ public class ProjectReviewView implements Serializable {
                 tailFacade.deleteTailCoordinatod(getActualProcess());
                 getActualProcess().setState(StateProcess.ACTIVO);
                 processFacade.updateProcess(getActualProcess());
-                projectFacade.returnCorrections(getActualProcess().getProject());
-                redirectToProcesses();
+                projectFacade.returnCorrections(getActualProcess().getProject());                
             } else if (getActualProcess().getApprovedCareerCoordinator()) {
-                processFacade.returnEPSCommitteeRevisionToStudent(actualProcess.getId());
-                redirectToEPSCommittee();
+                processFacade.returnEPSCommitteeRevisionToStudent(actualProcess.getId());                
             }
+            redirectToProcesses();
         } catch (UserException | IOException | MandatoryException e) {
             MessageUtils.addErrorMessage(e.getMessage());
         }
     }
 
     private void redirectToProcesses() throws IOException {
-        externalContext.redirect(externalContext.getRequestContextPath() + "/process/processes.xhtml");
-    }
-
-    private void redirectToEPSCommittee() {
-        try {
-            externalContext.redirect(externalContext.getRequestContextPath() + "/committeeEPS/processesCommitteeEPS.xhtml");
-        } catch (IOException e) {
-            MessageUtils.addErrorMessage("Error to redirect");
-        }
+        externalContext.redirect(externalContext.getRequestContextPath() + "/process/processesReview.xhtml");
     }
 
     public String titlePage() {

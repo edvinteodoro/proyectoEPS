@@ -198,9 +198,9 @@ public class Process implements Serializable {
     public String getApprovedEPSMessage() {
         if (approvalEPSCommission != null) {
             if (approvalEPSCommission == false) {
-                return "Aprobado";
-            } else {
                 return "Rechazado";
+            } else {
+                return "Aprobado";
             }
         } else {
             return "Pendiente";

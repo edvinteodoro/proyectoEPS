@@ -10,30 +10,23 @@
                 xmlns:o="http://omnifaces.org/ui">
 
     <ui:define name="head">
-        #{processesView.getTitle()}        
+        Mis Procesos
     </ui:define>
 
     <ui:define name="title">
-        #{processesView.getTitle()}
+        Mis Procesos
     </ui:define>
 
     <ui:define name="content">
         <fieldset>
-            <legend>#{processesView.getTitle()}</legend> 
+            <legend>Mis Procesos</legend> 
         </fieldset>
         <p:dataTable id="processesTable" var="process" value="#{processesView.processes}" 
-                     reflow="true" rowStyleClass="#{process.sudentStyleRow}"
-                     emptyMessage="Registro Vacío">
-            <p:column headerText="Nombres" rendered="#{processesView.isCareerCoordinator()}">
-                <h:outputText value="#{process.userCareer.USERuserId.firstName}"/>
-            </p:column>
-            <p:column headerText="Apellidos" rendered="#{processesView.isCareerCoordinator()}">
-                <h:outputText value="#{process.userCareer.USERuserId.lastName}" />
-            </p:column>
+                     reflow="true" emptyMessage="Registro Vacío">
             <p:column headerText="Carrera">
                 <h:outputText value="#{process.userCareer.CAREERcodigo.name}" />
             </p:column>
-            <p:column headerText="Aprobación coordinador" rendered="#{!processesView.isCareerCoordinator()}">
+            <p:column headerText="Aprobación Coordinador de Carrera" rendered="#{!processesView.isCareerCoordinator()}">
                 <h:outputText value="#{process.approvedCareerCoordinatorMessage}" />
             </p:column>
             <p:column headerText="Aprobación Comité EPS" rendered="#{!processesView.isCareerCoordinator()}">
@@ -53,9 +46,9 @@
                     </button>
                 </p>
             </p:column>
-            <p:column headerText="Anteproyecto" styleClass="text-center">
+            <p:column headerText="Anteproyecto/Proyecto" styleClass="text-center">
                 <p data-placement="top" data-toggle="tooltip" title="Anteproyecto">
-                    <button jsf:outcome="#{processesView.redirectProcessTo()}" styleClass="btn btn-success btn-xs" >
+                    <button jsf:outcome="project" styleClass="btn btn-success btn-xs" >
                         <f:param name="idProcess" value="#{process.id}"/>
                         <span class="glyphicon glyphicon-log-in"></span>
                     </button>
@@ -101,7 +94,7 @@
             </p:column>
             <p:column headerText="Bitácora" styleClass="text-center">
                 <p data-placement="top" data-toggle="tooltip" title="Bitácora">
-                    <button jsf:outcome="#{processesView.redirectJournalTo()}" 
+                    <button jsf:outcome="journal" 
                             styleClass="btn btn-success btn-xs" 
                             >
                         <f:param name="idProcess" value="#{process.id}"/>

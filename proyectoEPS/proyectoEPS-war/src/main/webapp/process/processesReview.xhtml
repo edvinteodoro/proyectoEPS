@@ -1,0 +1,101 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="../templates/template-one.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:jsf="http://xmlns.jcp.org/jsf"
+                xmlns:o="http://omnifaces.org/ui">
+
+    <ui:define name="head">
+        #{processesReviewView.getTitle()}        
+    </ui:define>
+
+    <ui:define name="title">
+        #{processesReviewView.getTitle()}
+    </ui:define>
+
+    <ui:define name="content">
+        <fieldset>
+            <legend>#{processesReviewView.getTitle()}</legend> 
+        </fieldset>
+        <p:dataTable id="processesTable" var="process" value="#{processesView.processes}" 
+                     reflow="true" emptyMessage="Registro Vacío">
+            <p:column headerText="Nombres">
+                <h:outputText value="#{process.userCareer.USERuserId.firstName}"/>
+            </p:column>
+            <p:column headerText="Apellidos">
+                <h:outputText value="#{process.userCareer.USERuserId.lastName}" />
+            </p:column>
+            <p:column headerText="Carrera">
+                <h:outputText value="#{process.userCareer.CAREERcodigo.name}" />
+            </p:column>
+            <p:column headerText="Requerimientos" styleClass="text-center">
+                <p data-placement="top" data-toggle="tooltip" title="Requisitos">
+                    <button jsf:outcome="updateRequeriments" styleClass="btn btn-success btn-xs">
+                        <f:param name="idProcess" value="#{process.id}"/>
+                        <span class="glyphicon glyphicon-log-in"></span>
+                    </button>
+                </p>
+            </p:column>
+            <p:column headerText="Anteproyecto" styleClass="text-center">
+                <p data-placement="top" data-toggle="tooltip" title="Anteproyecto">
+                    <button jsf:outcome="projectReview" styleClass="btn btn-success btn-xs" >
+                        <f:param name="idProcess" value="#{process.id}"/>
+                        <span class="glyphicon glyphicon-log-in"></span>
+                    </button>
+                </p>
+            </p:column>
+            <p:column headerText="Supervisor EPS" styleClass="text-center" rendered="#{processesReviewView.committeeEPS}">
+                <p:commandLink styleClass="btn btn-primary btn-xs"
+                               oncomplete="PF('infoSupervisorEPS').show();" 
+                               update=":#{p:component('infoSupervisorEPS')}">
+                    <f:setPropertyActionListener value="#{process.supervisor_EPS}" target="#{processesReviewView.supervisorEPS}"/>
+                    <span class="glyphicon glyphicon-eye-open"></span>
+                </p:commandLink>
+            </p:column>
+        </p:dataTable>
+
+        <p:dialog header="Supervisor EPS" id="infoSupervisorEPS" widgetVar="infoSupervisorEPS"
+                  modal="true" closeOnEscape="true">
+            <p:ajax event="close" listener="#{processesReviewView.clean()}" update="@this" />
+            <h:form>
+                <div class="modal-header" jsf:rendered="#{processesReviewView.supervisorEPS == null}">
+                    <p:staticMessage severity="warn" summary="Advertencia! " detail="No se ha asignado al Supervisor EPS" />
+                </div>
+                <div class="modal-body" jsf:rendered="#{processesReviewView.supervisorEPS != null}">
+                    <fieldset>
+                        <div class="row form-group">
+                            <p:outputLabel value="Nombre:" styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <h:outputText value="#{processesReviewView.supervisorEPS.firstName}, #{processesReviewView.supervisorEPS.lastName}"/>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <p:outputLabel value="Correo Electrónico:" styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <h:outputText value="#{processesReviewView.supervisorEPS.email}" />
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <p:outputLabel value="Telefono:" styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <h:outputText value="#{processesReviewView.supervisorEPS.phone1}" />
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <p:outputLabel value="Telefono:" styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <h:outputText value="#{processesReviewView.supervisorEPS.phone2}" />
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </h:form>
+        </p:dialog>
+    </ui:define>
+</ui:composition>
+
+

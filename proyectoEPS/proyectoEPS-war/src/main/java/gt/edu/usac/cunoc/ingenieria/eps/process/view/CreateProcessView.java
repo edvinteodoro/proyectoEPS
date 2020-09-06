@@ -248,7 +248,7 @@ public class CreateProcessView implements Serializable {
     }
 
     private void redirectToProcesses() throws IOException {
-        externalContext.redirect(externalContext.getRequestContextPath() + "/process/processes.xhtml");
+        externalContext.redirect(externalContext.getRequestContextPath() + "/process/myProcesses.xhtml");
     }
 
     public StreamedContent getWrittenRequestStream() {

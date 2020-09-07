@@ -5,6 +5,7 @@
  */
 package gt.edu.usac.cunoc.ingenieria.eps.process;
 
+import User.exception.UserException;
 import gt.edu.usac.cunoc.ingenieria.eps.config.Constans;
 import gt.edu.usac.cunoc.ingenieria.eps.journal.JournalResource;
 import gt.edu.usac.cunoc.ingenieria.eps.process.facade.ProcessFacadeLocal;
@@ -22,6 +23,7 @@ import javax.ejb.EJB;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.PATCH;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -40,7 +42,7 @@ public class ProcessResource {
 
     @Inject
     private JournalResource journalResource;
-    
+
     @Inject
     private RequerimentResource requerimentResource;
 
@@ -141,6 +143,30 @@ public class ProcessResource {
         }
     }
 
+    @PUT
+    @Path("/{processId}/requestReview")
+    public Response requestReview(@PathParam("userId") String userId, @PathParam("processId") Integer processId) {
+        try {
+            User user = userFacade.getUser(new User(userId)).get(0);
+            Process process = processFacade.getProcess(new Process(processId)).get(0);
+            process.setState(StateProcess.REVISION);
+            processFacade.updateProcess(process);
+            if (process.getApprovedCareerCoordinator() == null) {
+                tailCoordinatorFacade.createTailCoordinator(user, process);
+            } else if (process.getApprovedCareerCoordinator()) {
+                tailCommitteEpsFacade.createTailCommiteeEPS(process);
+            }
+            return Response
+                    .status(Response.Status.OK)
+                    .build();                    
+        } catch (UserException ex) {
+            return Response
+                    .status(Response.Status.NOT_FOUND)
+                    .entity(Response.Status.NOT_FOUND + ": User not found" + ex.getMessage())
+                    .build();
+        }
+    }
+
     @Path("/{processId}/projects")
     public ProjectResource getProjectResource() {
         return projectResource;
@@ -150,9 +176,9 @@ public class ProcessResource {
     public JournalResource getJournalResource() {
         return journalResource;
     }
-    
+
     @Path("/{projectId}/requeriments")
-    public RequerimentResource getRequerimentResoruce(){
+    public RequerimentResource getRequerimentResoruce() {
         return requerimentResource;
-    } 
+    }
 }

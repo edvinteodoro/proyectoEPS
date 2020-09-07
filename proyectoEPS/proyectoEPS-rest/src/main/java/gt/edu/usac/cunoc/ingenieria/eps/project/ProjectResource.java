@@ -34,6 +34,22 @@ public class ProjectResource {
     private CorrectionResource correctionResource;
 
     @GET
+    public Response getProject(@PathParam("processId") Integer processId) {
+        try {
+            Process process = processFacade.getProcess(new Process(processId)).get(0);
+            ProjectDto project = new ProjectDto(process.getProject());
+            return Response
+                    .status(Response.Status.OK)
+                    .entity(project)
+                    .build();
+        } catch (Exception e) {
+            return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .build();
+        }
+    }
+    
+    @GET
     @Path("/{projectId}/download")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public Response downloadProject(@PathParam("projectId") Integer projectId,

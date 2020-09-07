@@ -92,7 +92,7 @@ public class ProcessRepository {
     }
 
     public List<Process> getProcessUser(User user) {
-        Query query = entityManager.createQuery(GET_PROCESS_USER);
+        TypedQuery<Process> query = entityManager.createQuery(GET_PROCESS_USER, Process.class);
         query.setParameter(ID_PARAMETER_NAME, user.getUserId());
         return query.getResultList();
     }

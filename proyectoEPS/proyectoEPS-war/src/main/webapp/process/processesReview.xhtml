@@ -21,7 +21,7 @@
         <fieldset>
             <legend>#{processesReviewView.getTitle()}</legend> 
         </fieldset>
-        <p:dataTable id="processesTable" var="process" value="#{processesView.processes}" 
+        <p:dataTable id="processesTable" var="process" value="#{processesReviewView.processes}" 
                      reflow="true" emptyMessage="Registro Vacío">
             <p:column headerText="Nombres">
                 <h:outputText value="#{process.userCareer.USERuserId.firstName}"/>

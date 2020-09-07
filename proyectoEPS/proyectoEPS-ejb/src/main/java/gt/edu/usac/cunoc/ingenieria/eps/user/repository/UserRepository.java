@@ -38,10 +38,13 @@ public class UserRepository {
     }
 
     public Optional<User> getUserByUserId(String userId) {
-        TypedQuery<User> typeQuerry = entityManager.createQuery("SELECT u FROM USER u WHERE u.userId = :userId", User.class);
-        typeQuerry.setParameter("userId", userId);
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
+        Root<User> userR = criteriaQuery.from(User.class);
+        criteriaQuery.where(criteriaBuilder.equal(userR.get("userId"), userId));
+        TypedQuery<User> query = entityManager.createQuery(criteriaQuery);
         try {
-            return Optional.of(typeQuerry.getSingleResult());
+            return Optional.of(query.getSingleResult());
         } catch (Exception e) {
             return Optional.empty();
         }

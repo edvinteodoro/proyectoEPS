@@ -11,7 +11,7 @@ import java.io.Serializable;
  *
  * @author crystian
  */
-public class NewUserDto extends UserDto implements Serializable{
+public class NewUserDto extends CompleteUserDto implements Serializable{
     
     private String password;
 

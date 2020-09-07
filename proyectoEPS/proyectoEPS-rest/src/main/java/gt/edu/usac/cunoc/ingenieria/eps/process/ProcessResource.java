@@ -5,6 +5,7 @@
  */
 package gt.edu.usac.cunoc.ingenieria.eps.process;
 
+import User.exception.UserException;
 import gt.edu.usac.cunoc.ingenieria.eps.config.Constans;
 import gt.edu.usac.cunoc.ingenieria.eps.journal.JournalResource;
 import gt.edu.usac.cunoc.ingenieria.eps.process.facade.ProcessFacadeLocal;
@@ -14,16 +15,15 @@ import gt.edu.usac.cunoc.ingenieria.eps.requeriment.RequerimentResource;
 import gt.edu.usac.cunoc.ingenieria.eps.tail.TailCoordinator;
 import gt.edu.usac.cunoc.ingenieria.eps.tail.facade.TailCommitteeEPSFacade;
 import gt.edu.usac.cunoc.ingenieria.eps.tail.facade.TailFacade;
-import gt.edu.usac.cunoc.ingenieria.eps.tail.facade.TailFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import gt.edu.usac.cunoc.ingenieria.eps.user.facade.UserFacadeLocal;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.ejb.EJB;
-import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.PATCH;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -33,8 +33,18 @@ import javax.ws.rs.core.Response;
  *
  * @author teodoro
  */
+@Path("/")
 @Produces("application/json")
 public class ProcessResource {
+
+    @Inject
+    private ProjectResource projectResource;
+
+    @Inject
+    private JournalResource journalResource;
+
+    @Inject
+    private RequerimentResource requerimentResource;
 
     @EJB
     private UserFacadeLocal userFacade;
@@ -42,38 +52,11 @@ public class ProcessResource {
     @EJB
     private ProcessFacadeLocal processFacade;
 
-    @Inject
-    ProjectResource projectResource;
-
-    @Inject
-    JournalResource journalResource;
-    
-    @Inject
-    RequerimentResource requerimentResource;
-
     @EJB
     private TailFacade tailCoordinatorFacade;
 
     @EJB
     private TailCommitteeEPSFacade tailCommitteEpsFacade;
-
-    @GET
-    public Response getProcesses(@PathParam("userId") String userId) {
-        try {
-            User user = userFacade.getUser(new User(userId)).get(0);
-            List<ProcessDto> processes = processFacade.getProcessUser(user).stream()
-                    .map(process -> new ProcessDto(process))
-                    .collect(Collectors.toList());
-            return Response
-                    .status(Response.Status.OK)
-                    .entity(processes)
-                    .build();
-        } catch (Exception e) {
-            return Response
-                    .status(Response.Status.BAD_REQUEST)
-                    .build();
-        }
-    }
 
     @GET
     @Path("/{processId}")
@@ -160,6 +143,30 @@ public class ProcessResource {
         }
     }
 
+    @PUT
+    @Path("/{processId}/requestReview")
+    public Response requestReview(@PathParam("userId") String userId, @PathParam("processId") Integer processId) {
+        try {
+            User user = userFacade.getUser(new User(userId)).get(0);
+            Process process = processFacade.getProcess(new Process(processId)).get(0);
+            process.setState(StateProcess.REVISION);
+            processFacade.updateProcess(process);
+            if (process.getApprovedCareerCoordinator() == null) {
+                tailCoordinatorFacade.createTailCoordinator(user, process);
+            } else if (process.getApprovedCareerCoordinator()) {
+                tailCommitteEpsFacade.createTailCommiteeEPS(process);
+            }
+            return Response
+                    .status(Response.Status.OK)
+                    .build();                    
+        } catch (UserException ex) {
+            return Response
+                    .status(Response.Status.NOT_FOUND)
+                    .entity(Response.Status.NOT_FOUND + ": User not found" + ex.getMessage())
+                    .build();
+        }
+    }
+
     @Path("/{processId}/projects")
     public ProjectResource getProjectResource() {
         return projectResource;
@@ -169,9 +176,9 @@ public class ProcessResource {
     public JournalResource getJournalResource() {
         return journalResource;
     }
-    
+
     @Path("/{projectId}/requeriments")
-    public RequerimentResource getRequerimentResoruce(){
+    public RequerimentResource getRequerimentResoruce() {
         return requerimentResource;
-    } 
+    }
 }

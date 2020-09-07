@@ -45,8 +45,8 @@ public class ProjectFacade implements ProjectFacadeLocal {
     }
 
     @Override
-    public Project getProject(Integer projectId) {
-        return projectRepository.getProjects(projectId.intValue(), null, null).get(0);
+    public Project getProject(Integer projectId){
+        return projectRepository.getProjects(projectId, null, null).get(0);
     }
 
     @Override

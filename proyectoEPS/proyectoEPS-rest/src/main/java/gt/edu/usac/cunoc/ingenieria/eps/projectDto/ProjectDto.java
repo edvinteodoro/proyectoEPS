@@ -1,11 +1,11 @@
 package gt.edu.usac.cunoc.ingenieria.eps.projectDto;
 
 import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
-import gt.edu.usac.cunoc.ingenieria.eps.project.Title;
 import java.io.Serializable;
 
 
 public class ProjectDto implements Serializable{
+    
     private Integer id;
     private String title;
     private Short status;
@@ -31,6 +31,13 @@ public class ProjectDto implements Serializable{
     public void setTitle(String title) {
         this.title = title;
     }
-    
+
+    public Short getStatus() {
+        return status;
+    }
+
+    public void setStatus(Short status) {
+        this.status = status;
+    }
     
 }

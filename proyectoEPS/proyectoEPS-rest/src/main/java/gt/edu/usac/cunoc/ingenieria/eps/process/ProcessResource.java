@@ -14,13 +14,11 @@ import gt.edu.usac.cunoc.ingenieria.eps.requeriment.RequerimentResource;
 import gt.edu.usac.cunoc.ingenieria.eps.tail.TailCoordinator;
 import gt.edu.usac.cunoc.ingenieria.eps.tail.facade.TailCommitteeEPSFacade;
 import gt.edu.usac.cunoc.ingenieria.eps.tail.facade.TailFacade;
-import gt.edu.usac.cunoc.ingenieria.eps.tail.facade.TailFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import gt.edu.usac.cunoc.ingenieria.eps.user.facade.UserFacadeLocal;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.ejb.EJB;
-import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.PATCH;
@@ -33,8 +31,18 @@ import javax.ws.rs.core.Response;
  *
  * @author teodoro
  */
+@Path("/")
 @Produces("application/json")
 public class ProcessResource {
+
+    @Inject
+    private ProjectResource projectResource;
+
+    @Inject
+    private JournalResource journalResource;
+    
+    @Inject
+    private RequerimentResource requerimentResource;
 
     @EJB
     private UserFacadeLocal userFacade;
@@ -42,38 +50,11 @@ public class ProcessResource {
     @EJB
     private ProcessFacadeLocal processFacade;
 
-    @Inject
-    ProjectResource projectResource;
-
-    @Inject
-    JournalResource journalResource;
-    
-    @Inject
-    RequerimentResource requerimentResource;
-
     @EJB
     private TailFacade tailCoordinatorFacade;
 
     @EJB
     private TailCommitteeEPSFacade tailCommitteEpsFacade;
-
-    @GET
-    public Response getProcesses(@PathParam("userId") String userId) {
-        try {
-            User user = userFacade.getUser(new User(userId)).get(0);
-            List<ProcessDto> processes = processFacade.getProcessUser(user).stream()
-                    .map(process -> new ProcessDto(process))
-                    .collect(Collectors.toList());
-            return Response
-                    .status(Response.Status.OK)
-                    .entity(processes)
-                    .build();
-        } catch (Exception e) {
-            return Response
-                    .status(Response.Status.BAD_REQUEST)
-                    .build();
-        }
-    }
 
     @GET
     @Path("/{processId}")

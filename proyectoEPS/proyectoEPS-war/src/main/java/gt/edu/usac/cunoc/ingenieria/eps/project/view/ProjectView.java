@@ -375,7 +375,7 @@ public class ProjectView implements Serializable {
                 projectFacade.createProject(getProject());
                 processFacade.updateProcess(process);
                 flagUpdate = true;
-                MessageUtils.addSuccessMessage("Se ha Creado el Proyecto");
+                MessageUtils.addSuccessMessage("Se ha creado el Anteproyecto");
             }
         } catch (MandatoryException | LimitException ex) {
             MessageUtils.addErrorMessage(ex.getMessage());

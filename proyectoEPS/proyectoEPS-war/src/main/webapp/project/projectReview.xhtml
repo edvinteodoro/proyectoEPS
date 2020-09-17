@@ -271,7 +271,7 @@
                                        onsuccess="PF('progressBar').hide();"
                                        rendered="#{!projectReviewView.renderWarningCoordinator()}"
                                        action="#{projectReviewView.aprovedProject()}">                                       
-                            <p:confirm header="Aceptar Proyecto" message="¿Esta seguro de ACEPTAR el proyecto?" icon="pi pi-exclamation-triangle" />
+                            <p:confirm header="Aceptar Proyecto" message="¿Esta seguro de ACEPTAR el Anteproyecto?" icon="pi pi-exclamation-triangle" />
                             <span class="glyphicon glyphicon-check"></span> Aceptar Anteproyecto
                         </p:commandLink>
                     </div>
@@ -366,7 +366,7 @@
                                    onstart="PF('progressBar').show();"
                                    onsuccess="PF('progressBar').hide();"
                                    actionListener="#{projectReviewView.rejectProcess()}">                                   
-                        <p:confirm header="Aceptar Proyecto" message="¿Esta seguro de RECHAZAR el proyecto?" icon="pi pi-exclamation-triangle" />
+                        <p:confirm header="Aceptar Proyecto" message="¿Esta seguro de RECHAZAR el Anteproyecto?" icon="pi pi-exclamation-triangle" />
                         <span class="glyphicon glyphicon-trash"></span> Rechazar Proyecto
                     </p:commandLink>
                 </div>

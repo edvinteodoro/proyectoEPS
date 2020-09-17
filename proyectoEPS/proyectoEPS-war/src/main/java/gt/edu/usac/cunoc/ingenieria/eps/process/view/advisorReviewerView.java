@@ -546,7 +546,7 @@ public class advisorReviewerView implements Serializable {
     public boolean isIsAdvisor() {
         return isAdvisor;
     }
-
+    
     /**
      * Clean the advisors and reviewers list, setting them at null
      */

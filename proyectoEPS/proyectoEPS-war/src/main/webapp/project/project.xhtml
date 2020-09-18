@@ -43,14 +43,13 @@
                         <p:staticMessage severity="warn" summary="Advertencia! " detail="No se puede editar el proyecto debido a que se encuentra en un proceso de revision."/>
                     </div>
                 </div> 
-
+                <p:outputLabel for="title" value="Titulo:"/>
                 <div class="row">
                     <div class="form-group col-md-8">
-                        <p:outputLabel for="title" value="Titulo:"/>
                         <p:inputText id="title" styleClass="form-control" pt:placeholder="Titulo del Anteproyecto"
                                      disabled="#{!projectView.editOptions()}"
                                      pt:required="true"
-                                     value="#{projectView.project.title}"/>
+                                     value="#{projectView.project.title}"/>                        
                         <br/>
                         <p data-placement="top" data-toggle="tooltip" title="comentar" jsf:rendered="#{projectView.renderTitleCorrections()}">
                             <p:commandLink class="btn btn-primary btn-xs"
@@ -61,6 +60,12 @@
                                 <span class="glyphicon glyphicon-eye-open"></span> Correcciones
                             </p:commandLink>
                         </p>
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <p:outputLabel id="titleHelp" styleClass="btn btn-primary">
+                            <span class="glyphicon glyphicon-info-sign"></span>
+                        </p:outputLabel>
+                        <p:tooltip for="titleHelp" value="Ayuda Titulo" position="top"/>                        
                     </div>
                 </div>
                 <div class="row">
@@ -107,6 +112,12 @@
                             </p:commandLink>
                         </p:panel>
                     </div>
+                    <div class="form-group col-sm-3">
+                        <p:outputLabel id="generalObjectiveHelp" styleClass="btn btn-primary">
+                            <span class="glyphicon glyphicon-info-sign"></span>
+                        </p:outputLabel>
+                        <p:tooltip for="generalObjectiveHelp" value="Ayuda Objetivos Generales" position="top"/>                        
+                    </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-md-8">
@@ -152,6 +163,12 @@
                                 <span class="glyphicon glyphicon-eye-open"></span> Correcciones
                             </p:commandLink>
                         </p:panel>
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <p:outputLabel id="specificObjectiveHelp" styleClass="btn btn-primary">
+                            <span class="glyphicon glyphicon-info-sign"></span>
+                        </p:outputLabel>
+                        <p:tooltip for="specificObjectiveHelp" value="Ayuda Objetivos Especificos" position="top"/>                        
                     </div>
                 </div>
                 <div class="row">
@@ -242,6 +259,12 @@
                             </div>
                         </p:panel>
                     </div>
+                    <div class="form-group col-sm-3">
+                        <p:outputLabel id="sectionHelp" styleClass="btn btn-primary">
+                            <span class="glyphicon glyphicon-info-sign"></span>
+                        </p:outputLabel>
+                        <p:tooltip for="sectionHelp" value="Ayuda Secciones" position="top"/>                        
+                    </div>
                 </div>
                 <div class="row" >
                     <div class="form-group col-md-8" >
@@ -299,11 +322,17 @@
                             </p:commandLink>
                         </p:panel>
                     </div>
+                    <div class="form-group col-sm-3">
+                        <p:outputLabel id="decimalCoordinateHelp" styleClass="btn btn-primary">
+                            <span class="glyphicon glyphicon-info-sign"></span>
+                        </p:outputLabel>
+                        <p:tooltip for="decimalCoordinateHelp" value="Ayuda Coordenadas Decimales" position="top"/>                        
+                    </div>
                 </div>
 
+                <p:outputLabel for="schedule" value="Calendario"/>
                 <div class="row">
-                    <div class="form-group col-sm-8">
-                        <p:outputLabel for="schedule" value="Calendario"/>
+                    <div class="form-group col-sm-8">                        
                         <p:fileUpload id="schedule" fileUploadListener="#{projectView.handleSchedule}"
                                       rendered="#{projectView.editOptions()}"
                                       skinSimple="true" auto="true"
@@ -328,11 +357,17 @@
                             <span class="glyphicon glyphicon-eye-open"></span> Correcciones
                         </p:commandLink>
                     </div>
+                    <div class="form-group col-sm-3">
+                        <p:outputLabel id="scheduleHelp" styleClass="btn btn-primary">
+                            <span class="glyphicon glyphicon-info-sign"></span>
+                        </p:outputLabel>
+                        <p:tooltip for="scheduleHelp" value="Ayuda Calendario" position="top"/>                        
+                    </div>
                 </div>
 
+                <p:outputLabel for="investmentPlan" value="Plan de Inversión"/>
                 <div class="row">
-                    <div class="form-group col-sm-8">
-                        <p:outputLabel for="investmentPlan" value="Plan de Inversión"/>
+                    <div class="form-group col-sm-8">                        
                         <p:fileUpload id="investmentPlan" fileUploadListener="#{projectView.handleInvestmentPlan}"
                                       rendered="#{projectView.editOptions()}"
                                       skinSimple="true" auto="true"
@@ -356,7 +391,13 @@
                                                          rendered="#{projectView.renderPlanCorrections()}">
                             <span class="glyphicon glyphicon-eye-open"></span> Correcciones
                         </p:commandLink>
-                    </div>                    
+                    </div>        
+                    <div class="form-group col-sm-3">
+                        <p:outputLabel id="investmentPlanHelp" styleClass="btn btn-primary">
+                            <span class="glyphicon glyphicon-info-sign"></span>
+                        </p:outputLabel>
+                        <p:tooltip for="investmentPlanHelp" value="Ayuda plan de Inversión" position="top"/>                        
+                    </div>
                 </div>
 
                 <div class="row">
@@ -423,7 +464,12 @@
                                 <span class="glyphicon glyphicon-eye-open"></span> Correcciones
                             </p:commandLink><br></br><br></br>
                         </p:panel>
-
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <p:outputLabel id="bibliographyHelp" styleClass="btn btn-primary">
+                            <span class="glyphicon glyphicon-info-sign"></span>
+                        </p:outputLabel>
+                        <p:tooltip for="bibliographyHelp" value="Ayuda Bibliografica" position="top"/>                        
                     </div>
                 </div>
                 <p:outputLabel for="annexed" value="Anexos"/>
@@ -455,8 +501,14 @@
                         <br></br><br></br>
                     </div>
                     <div class="form-group col-sm-3">
+                        <p:outputLabel id="annexedHelp" styleClass="btn btn-primary">
+                            <span class="glyphicon glyphicon-info-sign"></span>
+                        </p:outputLabel>
+                        <p:tooltip for="annexedHelp" value="Ayuda Anexos" position="top"/>                        
+                    </div>
+                    <div class="form-group col-sm-3">
                         <p:commandLink id="deleteAEIO" styleClass="btn btn-danger"
-                                       update="@parent"
+                                       update="labelAnnexed"
                                        rendered="#{projectView.editOptions()}"
                                        actionListener="#{projectView.deleteAnnexed()}">
                             <span class="glyphicon glyphicon-trash"></span>

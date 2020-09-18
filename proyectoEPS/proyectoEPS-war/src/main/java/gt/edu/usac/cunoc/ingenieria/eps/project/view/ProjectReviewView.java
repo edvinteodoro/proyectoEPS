@@ -184,16 +184,16 @@ public class ProjectReviewView implements Serializable {
                 getActualProcess().setApprovedCareerCoordinator(true);
                 processFacade.assignEPSSUpervisorToProcess(getActualProcess().getUserCareer().getCAREERcodigo(), getActualProcess());
                 processFacade.updateProcess(getActualProcess());
-                tailCommitteeEPSFacade.createTailCommiteeEPS(getActualProcess());                
+                tailCommitteeEPSFacade.createTailCommiteeEPS(getActualProcess());
             } else if (getActualProcess().getApprovedCareerCoordinator()) {
-                processFacade.aproveedByEPSCommittee(actualProcess.getId());                
+                processFacade.aproveedByEPSCommittee(actualProcess.getId());
             }
             redirectToProcesses();
         } catch (UserException | LimitException | MandatoryException | ValidationException | IOException e) {
             MessageUtils.addErrorMessage(e.getMessage());
         }
     }
-    
+
     public void rejectProcess() {
         try {
             projectFacade.searchUnnotifiedCorrections(actualProcess.getProject());
@@ -202,7 +202,7 @@ public class ProjectReviewView implements Serializable {
                 tailFacade.deleteTailCoordinatod(getActualProcess());
                 getActualProcess().setState(StateProcess.RECHAZADO);
                 getActualProcess().setApprovedCareerCoordinator(false);
-                processFacade.updateProcess(getActualProcess());                
+                processFacade.updateProcess(getActualProcess());
             } else if (getActualProcess().getApprovedCareerCoordinator()) {
                 processFacade.EPSCommitteeRejectProyect(
                         actualProcess.getId(),
@@ -219,9 +219,9 @@ public class ProjectReviewView implements Serializable {
             projectFacade.createCorrection(newCorrection);
         } catch (UserException | MandatoryException | IOException | ValidationException e) {
             MessageUtils.addErrorMessage(e.getMessage());
-        } 
+        }
     }
-    
+
     public void returnCorrections() {
         try {
             if (getActualProcess().getApprovedCareerCoordinator() == null) {
@@ -229,9 +229,10 @@ public class ProjectReviewView implements Serializable {
                 tailFacade.deleteTailCoordinatod(getActualProcess());
                 getActualProcess().setState(StateProcess.ACTIVO);
                 processFacade.updateProcess(getActualProcess());
-                projectFacade.returnCorrections(getActualProcess().getProject());                
+                projectFacade.returnCorrections(getActualProcess().getProject());
             } else if (getActualProcess().getApprovedCareerCoordinator()) {
-                processFacade.returnEPSCommitteeRevisionToStudent(actualProcess.getId());                
+                processFacade.returnEPSCommitteeRevisionToStudent(actualProcess.getId());
+                projectFacade.returnCorrections(getActualProcess().getProject());
             }
             redirectToProcesses();
         } catch (UserException | IOException | MandatoryException e) {

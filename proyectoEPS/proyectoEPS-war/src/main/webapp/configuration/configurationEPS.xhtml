@@ -60,14 +60,9 @@
                     </div>
                 </div>
 
-                <legend>Configuración Carga de Trabajo</legend>
+                <legend>Configuración Revisión de Trabajo</legend>
                 <div class="row">
                     <div class="form-group col-md-12">
-                        <div class="form-group col-sm-3">
-                            <p:outputLabel value="Carga Maxima de Trabajo"/>
-                            <p:spinner id="workload"  min="1" value="#{configurationView.workload.valueInt}"/>
-                        </div>
-                        <div class="form-group col-sm-3"/>
                         <div class="form-group col-sm-3">
                             <p:outputLabel value="Tiempo para Recordatorio de Revisión: (días)"/>
                             <p:spinner id="rememberTime"  min="1" value="#{configurationView.reviewTimeDays.valueInt}"/>
@@ -126,8 +121,8 @@
         </h:form>
         <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" >
             <div class="col text-center">
-                <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
-                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+                <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" />
             </div>
         </p:confirmDialog>
     </ui:define>

@@ -62,14 +62,7 @@ public class PropertyService {
                 }
                 PropertyRepository.TIME_OF_PROCESS_WITHOUT_MOVEMENT.setValueInt(property.getValueInt());
                 entityManager.merge(PropertyRepository.TIME_OF_PROCESS_WITHOUT_MOVEMENT);
-            }
-            if (property.getId() == PropertyRepository.MAXIMUM_SUPERVISOR_WORKLOAD.getId().intValue()) {
-                if (property.getValueInt() < 0) {
-                    throw new ValidationException("Carga máxima de trabajo debe ser mayor a 0");
-                }
-                PropertyRepository.MAXIMUM_SUPERVISOR_WORKLOAD.setValueInt(property.getValueInt());
-                entityManager.merge(PropertyRepository.MAXIMUM_SUPERVISOR_WORKLOAD);
-            }
+            }            
             if (property.getId() == PropertyRepository.REVIEW_TIME_DAYS.getId().intValue()) {
                 if (property.getValueInt() < 0) {
                     throw new ValidationException("Tiempo para Pecordatorio de Revisión debe ser mayor a 0");

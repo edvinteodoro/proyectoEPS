@@ -1,35 +1,32 @@
 package gt.edu.usac.cunoc.ingenieria.eps.project;
 
 public enum TypeCorrection {
-    BIBLIOGRAPHY, OBJETIVES, SPECIFIC_OBJETIVES, CALENDAR, PLAN, ANEXO, TITLE, COORDINATE, OTHER, REJECTED, ACCEPTED;
+    TITLE, GENERAL_OBJETIVES, SPECIFIC_OBJETIVES, SECTION, COORDINATE,SCHEDULE, INVESTMENT_PLAN, BIBLIOGRAPHY , ANNEXED, REJECTED;
 
     public String toText() {
         switch (this) {
-            case BIBLIOGRAPHY:
-                return "Bibliografia";
-            case OBJETIVES:
+            case TITLE:
+                return "Título";
+            case GENERAL_OBJETIVES:
                 return "Objetivos Generales";
             case SPECIFIC_OBJETIVES:
                 return "Objetivos Especificos";
-            case CALENDAR:
-                return "Calendarización";
-            case PLAN:
-                return "Plan de Inversion";
-            case ANEXO:
-                return "Anexos";
-            case TITLE:
-                return "Titulo";
+            case SECTION:
+                return "Sección";
             case COORDINATE:
-                return "Coordenadas";
-            case OTHER:
-                return "Otros";
-            case ACCEPTED:
-                return "Aceptado";
+                return "Coordenada Decimal";
+            case SCHEDULE:
+                return "Calendario";
+            case INVESTMENT_PLAN:
+                return "Plan de Inversión";
+            case BIBLIOGRAPHY:
+                return "Bibliografáa";
+            case ANNEXED:
+                return "Anexo";
             case REJECTED:
                 return "Rechazado";
             default:
                 return null;
-
         }
     }
 }

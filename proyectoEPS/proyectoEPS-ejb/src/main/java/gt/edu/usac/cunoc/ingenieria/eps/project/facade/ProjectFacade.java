@@ -4,6 +4,7 @@ import User.exception.UserException;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.LimitException;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.MandatoryException;
+import gt.edu.usac.cunoc.ingenieria.eps.exception.ValidationException;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Correction;
 import gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection;
@@ -51,16 +52,28 @@ public class ProjectFacade implements ProjectFacadeLocal {
     }
 
     @Override
-    public InputStream createPDF(Project project, UserCareer userCareer) throws IOException {
+    public InputStream createPDF(Project project, UserCareer userCareer) throws IOException, ValidationException, MandatoryException, LimitException{
         return projectService.createPDF(project, userCareer);
     }
 
     @Override
-    public Correction createCorrection(Correction correction) throws UserException {
+    public Correction createCorrection(Correction correction) throws UserException, MandatoryException {
         return correctionService.createCorrection(correction);
     }
 
-    public List<Correction> getCorrections(TypeCorrection typeCorrection, Integer projectID, Integer section) {
-        return correctionRepository.getCorrections(typeCorrection, projectID, section);
+    @Override
+    public List<Correction> getCorrections(TypeCorrection typeCorrection, Integer projectID, Integer section,Boolean status) {
+        return correctionRepository.getCorrections(typeCorrection, projectID, section, status);
     }
+
+    @Override
+    public void returnCorrections(Project project) throws MandatoryException {
+       correctionService.returnCorrections(project);
+    }
+
+    @Override
+    public void searchUnnotifiedCorrections(Project project) throws ValidationException{
+        correctionRepository.searchUnnotifiedCorrection(project);
+    }
+    
 }

@@ -2,181 +2,277 @@
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 template="../templates/template-one.xhtml"
-                xmlns:p="http://primefaces.org/ui"
-                xmlns:h="http://xmlns.jcp.org/jsf/html"
-                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
-                xmlns:jsf="http://xmlns.jcp.org/jsf"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
-                xmlns:o="http://omnifaces.org/ui">
+                xmlns:o="http://omnifaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:jsf="http://xmlns.jcp.org/jsf"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                >
 
     <f:metadata>
-        <o:viewParam name="idRequeriment" required="true" value="#{updateProcessView.processId}"
+        <o:viewParam name="idProcess" required="true" 
+                     value="#{updateRequerimentsView.processId}"
                      requiredMessage="Ningun valor">
             <o:viewParamValidationFailed sendError="404" message="Error parametro"/>
         </o:viewParam>
-        <o:viewAction action="#{updateProcessView.loadCurrentProcess()}" />
+        <o:viewAction action="#{updateRequerimentsView.loadCurrentProcess()}" />
     </f:metadata>
 
+    <ui:define name="head">
+        #{updateRequerimentsView.getTitle()}
+    </ui:define>
 
     <ui:define name="title">
-        Revision Requisitos
+        #{updateRequerimentsView.getTitle()}
     </ui:define>
 
     <ui:define name="content">
-        <h:form id="frmLogin">            
-            <p:focus id="focuss" context="frmLogin" />
-            <fieldset class="center-block">
-                <legend>Actualizar Requisitos</legend> 
-                <div class="row">
-                    <div class="form-group col-sm-3">
-                        <p:outputLabel for="writtenRequest" value="Carta de Solicitud EPS Escritas:" />
-                    </div>
-                    <div class="form-group col-sm-5" jsf:rendered="#{updateProcessView.isStudent()}">
-                        <p:fileUpload id="writtenRequest" fileUploadListener="#{updateProcessView.handleWrittenRequest}"
-                                      
-                                      required="true" 
-                                      styleClass="in-dialog"
-                                      skinSimple="true" auto="true" allowTypes="/(\.|\/)(pdf)$/"
-                                      update="@parent"
-                                      label="Seleccionar"
-                                      invalidFileMessage="Solo se puede cargar archivos pdf"/>  
-                    </div>
-                    <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{updateProcessView.reloadWrittenRequest()}">
-                        <p:fileDownload value="#{updateProcessView.writtenRequestStream}" contentDisposition="inline"/>
-                    </h:commandLink>
-                </div>
-                <div class="row">
-                    <div class="form-group col-sm-3">
-                        <p:outputLabel for="inscriptionConstancy" value="Constancia de Inscripcion:"/>
-                    </div>
-                    <div class="form-group col-sm-5" jsf:rendered="#{updateProcessView.isStudent()}">
-                        <p:fileUpload id="inscriptionConstancy" fileUploadListener="#{updateProcessView.handleInscriptionConstancy}" 
-                                      required="true"   
-                                      styleClass="in-dialog"
-                                      skinSimple="true" auto="true" allowTypes="/(\.|\/)(pdf)$/"
-                                      update="@parent"
-                                      label="Seleccionar"
-                                      invalidFileMessage="Solo se puede cargar archivos pdf"/>  
-                    </div>
-                    <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{updateProcessView.reloadInscriptionConstancy()}">
-                        <p:fileDownload value="#{updateProcessView.inscriptionConstancyStream}" contentDisposition="inline"/>
-                    </h:commandLink>
-                </div>
-                <div class="row">
-                    <div class="form-group col-sm-3">
-                        <p:outputLabel for="pensumeClosure" value="Constancia de Cierre de Pensum:"/>
-                    </div>
-                    <div class="form-group col-sm-5" jsf:rendered="#{updateProcessView.isStudent()}">
-                        <p:fileUpload id="pensumeClosure" fileUploadListener="#{updateProcessView.handlePensumeClosure}"
-                                      required="true"   
-                                      styleClass="in-dialog"
-                                      skinSimple="true" auto="true" allowTypes="/(\.|\/)(pdf)$/"
-                                      update="@parent"
-                                      label="Seleccionar"
-                                      invalidFileMessage="Solo se puede cargar archivos pdf"/>  
-                    </div>
-                    <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{updateProcessView.reloadPensumeClosure()}">
-                        <p:fileDownload value="#{updateProcessView.pensumeClosureStream}" contentDisposition="inline"/>
-                    </h:commandLink>
-                </div>
-                <div class="row">
-                    <div class="form-group col-sm-3">
-                        <p:outputLabel for="propedeuticConstancy" value="Constancia de Propedeutico:"/>
-                    </div>
-                    <div class="form-group col-sm-5" jsf:rendered="#{updateProcessView.isStudent()}">
-                        <p:fileUpload id="propedeuticConstancy" fileUploadListener="#{updateProcessView.handlePropedeuticConstancy}"
-                                      required="true"   
-                                      styleClass="in-dialog"
-                                      skinSimple="true" auto="true" allowTypes="/(\.|\/)(pdf)$/"
-                                      update="@parent"
-                                      label="Seleccionar"
-                                      invalidFileMessage="Solo se puede cargar archivos pdf"/>    
-                    </div>
-                    <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{updateProcessView.reloadPropedeuticConstancy()}">
-                        <p:fileDownload value="#{updateProcessView.propedeuticConstancyStream}" contentDisposition="inline"/>
-                    </h:commandLink>
-                </div>
-                <div class="row">
-                    <div class="form-group col-sm-3">
-                        <p:outputLabel for="epsPreProject"  value="Constancia de Pre Proyecto:"/>
-                    </div>
-                    <div class="form-group col-sm-5" jsf:rendered="#{updateProcessView.isStudent()}">
-                        <p:fileUpload id="epsPreProject" fileUploadListener="#{updateProcessView.handleEpsPreProject}"
-                                      required="true"  
-                                      styleClass="in-dialog"
-                                      skinSimple="true" auto="true" allowTypes="/(\.|\/)(pdf)$/"
-                                      update="@parent"
-                                      label="Seleccionar"
-                                      invalidFileMessage="Solo se puede cargar archivos pdf"/>
-                    </div>
-                    <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{updateProcessView.reloadEpsPreProjec()}">
-                        <p:fileDownload value="#{updateProcessView.epsPreProjectStream}" contentDisposition="inline"/>
-                    </h:commandLink>
-                </div>
-                <div class="row">
-                    <div class="form-group col-sm-3">
-                        <p:outputLabel for="aeio" value="Documento Finiquito de AEIO:"/>
-                    </div>
-                    <div class="form-group col-sm-5" jsf:rendered="#{updateProcessView.isStudent()}">
-                        <p:fileUpload id="aeio" fileUploadListener="#{updateProcessView.handleAeioSettlement}" 
-                                      styleClass="in-dialog"
-                                      skinSimple="true" auto="true" allowTypes="/(\.|\/)(pdf)$/"
-                                      update="@parent"
-                                      label="Seleccionar"
-                                      invalidFileMessage="Solo se puede cargar archivos pdf"/>
-                    </div>
-                    <h:commandLink value="Ver Documento"  target="_blank" rendered="#{updateProcessView.showAeioSettlement}" actionListener="#{updateProcessView.reloadAeioSettlemen()}">
-                        <p:fileDownload value="#{updateProcessView.aeioSettlementStream}" contentDisposition="inline"/>
-                    </h:commandLink>
-                </div>
-                <br></br>
-                <div class="row">
-                    <div class="form-group col-sm-2" jsf:rendered="#{updateProcessView.isStudent()}">
-                        <button styleClass="btn btn-primary"
-                                update="@form,:growl" 
-                                jsf:outcome="processes">
-                            <span class="glyphicon glyphicon-floppy-remove"></span> Cancelar
-                        </button>
-                    </div>
-                    <div class="form-group col-sm-2" jsf:rendered="#{updateProcessView.isStudent()}">
-                        <p:commandLink styleClass="btn btn-primary"
-                                       update="@form,:growl" 
-                                       action="#{updateProcessView.save()}">
-                            <span class="glyphicon glyphicon-floppy-saved"></span> Guardar Cambios
-                        </p:commandLink>
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-sm-2" jsf:rendered="#{!updateProcessView.isStudent()}">
-                            <p:commandLink styleClass="btn btn-primary" oncomplete="PF('dlgEdit').show();"
-                                           update=":#{p:component('dlgEdit')}">
-                                <span class="glyphicon glyphicon-pencil"></span> Realizar Observaciones
-                            </p:commandLink>
-                        </div>
-                    </div>
-                </div>
-                <p:dialog header="Observacion" id="dlgEdit" widgetVar="dlgEdit"
-                          fitViewport="true" modal="true" closeOnEscape="true">
-                    <h:form>
-                        <div class="modal-body">
-                            <fieldset>
-                                <div class="row form-group">
-                                    <p:inputTextarea  value="#{updateProcessView.observation}" rows="10" cols="50" counter="display" maxlength="500" counterTemplate="{0} characters remaining." autoResize="false" styleClass="form-control" pt:placeholder="Observaciones"/>
-                                    <br />
-                                    <h:outputText id="display" />
-                                </div>
-                            </fieldset>
-                        </div>
-                        <div class="modal-footer ">
-                            <p:commandLink styleClass="btn btn-warning btn-lg" style="width: 100%;">
-                                <span class="glyphicon glyphicon-ok-sign"></span>Aceptar
-                            </p:commandLink>
-                        </div>
-                    </h:form>
-                </p:dialog>
+        <h:form id="formProject" class="bg-modal">
+            <fieldset>
+                <legend>#{updateRequerimentsView.getTitle()}</legend>
             </fieldset>
+            <div class="row">
+                <div class="form-group col-sm-3">
+                    <p:outputLabel for="writtenRequest" value="Carta de Solicitud EPS Escritas:" />
+                </div>
+                <div class="form-group col-sm-3" jsf:rendered="#{updateRequerimentsView.flagStudent}">
+                    <p:fileUpload id="writtenRequest" fileUploadListener="#{updateRequerimentsView.handleWrittenRequest}"
+                                  required="true" 
+                                  styleClass="in-dialog"
+                                  skinSimple="true" auto="true" allowTypes="/(\.|\/)(pdf)$/"
+                                  update="@parent"
+                                  label="Seleccionar"
+                                  sizeLimit="16000000"
+                                  invalidSizeMessage="Archivo demasiado grande, limite de 16MB"
+                                  invalidFileMessage="Solo se puede cargar archivos pdf"/>                      
+                </div>
+                <div class="form-group col-sm-3">
+                    <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{updateRequerimentsView.reloadWrittenRequest()}">
+                        <p:fileDownload value="#{updateRequerimentsView.writtenRequestStream}" contentDisposition="inline"/>
+                    </h:commandLink>
+                </div>                
+            </div>
+            <div class="row">
+                <div class="form-group col-sm-3">
+                    <p:outputLabel for="inscriptionConstancy" value="Constancia de Inscripción:"/>
+                </div>
+                <div class="form-group col-sm-3" jsf:rendered="#{updateRequerimentsView.flagStudent}">
+                    <p:fileUpload id="inscriptionConstancy" fileUploadListener="#{updateRequerimentsView.handleInscriptionConstancy}" 
+                                  required="true"   
+                                  styleClass="in-dialog"
+                                  skinSimple="true" auto="true" allowTypes="/(\.|\/)(pdf)$/"
+                                  update="@parent"
+                                  label="Seleccionar"
+                                  sizeLimit="16000000"
+                                  invalidSizeMessage="Archivo demasiado grande, limite de 16MB"
+                                  invalidFileMessage="Solo se puede cargar archivos pdf"/>                      
+                </div>          
+                <div class="form-group col-sm-3">
+                    <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{updateRequerimentsView.reloadInscriptionConstancy()}">
+                        <p:fileDownload value="#{updateRequerimentsView.inscriptionConstancyStream}" contentDisposition="inline"/>
+                    </h:commandLink>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-sm-3">
+                    <p:outputLabel for="pensumeClosure" value="Constancia de Cierre de Pensum:"/>
+                </div>
+                <div class="form-group col-sm-3" jsf:rendered="#{updateRequerimentsView.flagStudent}">
+                    <p:fileUpload id="pensumeClosure" fileUploadListener="#{updateRequerimentsView.handlePensumeClosure}"
+                                  required="true"   
+                                  styleClass="in-dialog"
+                                  skinSimple="true" auto="true" allowTypes="/(\.|\/)(pdf)$/"
+                                  update="@parent"
+                                  label="Seleccionar"
+                                  sizeLimit="16000000"
+                                  invalidSizeMessage="Archivo demasiado grande, limite de 16MB"
+                                  invalidFileMessage="Solo se puede cargar archivos pdf"/>                      
+                </div>
+                <div class="form-group col-sm-3">
+                    <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{updateRequerimentsView.reloadPensumeClosure()}">
+                        <p:fileDownload value="#{updateRequerimentsView.pensumeClosureStream}" contentDisposition="inline"/>
+                    </h:commandLink>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-sm-3">
+                    <p:outputLabel for="propedeuticConstancy" value="Constancia de Propedeutico:"/>
+                </div>
+                <div class="form-group col-sm-3" jsf:rendered="#{updateRequerimentsView.flagStudent}">
+                    <p:fileUpload id="propedeuticConstancy" fileUploadListener="#{updateRequerimentsView.handlePropedeuticConstancy}"
+                                  required="true"   
+                                  styleClass="in-dialog"
+                                  skinSimple="true" auto="true" allowTypes="/(\.|\/)(pdf)$/"
+                                  update="@parent"
+                                  label="Seleccionar"
+                                  sizeLimit="16000000"
+                                  invalidSizeMessage="Archivo demasiado grande, limite de 16MB"
+                                  invalidFileMessage="Solo se puede cargar archivos pdf"/>                        
+                </div>                
+                <div class="form-group col-sm-3">
+                    <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{updateRequerimentsView.reloadPropedeuticConstancy()}">
+                        <p:fileDownload value="#{updateRequerimentsView.propedeuticConstancyStream}" contentDisposition="inline"/>
+                    </h:commandLink>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-sm-3">
+                    <p:outputLabel for="epsPreProject"  value="Constancia de Pre Proyecto:"/>
+                </div>
+                <div class="form-group col-sm-3" jsf:rendered="#{updateRequerimentsView.flagStudent}">
+                    <p:fileUpload id="epsPreProject" fileUploadListener="#{updateRequerimentsView.handleEpsPreProject}"
+                                  required="true"  
+                                  styleClass="in-dialog"
+                                  skinSimple="true" auto="true" allowTypes="/(\.|\/)(pdf)$/"
+                                  update="@parent"
+                                  label="Seleccionar"
+                                  sizeLimit="16000000"
+                                  invalidSizeMessage="Archivo demasiado grande, limite de 16MB"
+                                  invalidFileMessage="Solo se puede cargar archivos pdf"/>                    
+                </div>
+                <div class="form-group col-sm-3">
+                    <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{updateRequerimentsView.reloadEpsPreProjec()}">
+                        <p:fileDownload value="#{updateRequerimentsView.epsPreProjectStream}" contentDisposition="inline"/>
+                    </h:commandLink>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-sm-3">
+                    <p:outputLabel for="aeio" value="Documento Finiquito de AEIO:"/>
+                </div>
+                <div class="form-group col-sm-3" jsf:rendered="#{updateRequerimentsView.flagStudent}">
+                    <p:fileUpload id="aeio" fileUploadListener="#{updateRequerimentsView.handleAeioSettlement}" 
+                                  styleClass="in-dialog"
+                                  skinSimple="true" auto="true" allowTypes="/(\.|\/)(pdf)$/"
+                                  update="@form"
+                                  label="Seleccionar"
+                                  sizeLimit="16000000"
+                                  invalidSizeMessage="Archivo demasiado grande, limite de 16MB"
+                                  invalidFileMessage="Solo se puede cargar archivos pdf"/>                    
+                </div>
+                <div class="form-group col-sm-1" jsf:rendered="#{updateRequerimentsView.showAeioSettlement}">
+                    <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{updateRequerimentsView.reloadAeioSettlemen()}">
+                        <p:fileDownload value="#{updateRequerimentsView.aeioSettlementStream}" contentDisposition="inline"/>
+                    </h:commandLink>
+                </div>
+                <div class="form-group col-sm-3" jsf:rendered="#{updateRequerimentsView.flagStudent}">
+                    <p:commandLink id="deleteAEIO" styleClass="btn btn-danger"
+                                   update="@form"
+                                   actionListener="#{updateRequerimentsView.deleteAeioSettlemen()}">
+                        <span class="glyphicon glyphicon-trash"></span>
+                    </p:commandLink>
+                    <p:tooltip id="toolTipFade" for="deleteAEIO" value="Eliminar Finiquito de AEIO" position="top"/>
+                </div>
+            </div>
+            <br/>
+            <div class="btn-toolbar" jsf:rendered="#{updateRequerimentsView.flagStudent}">
+                <div class="btn-group mr-2">
+                    <p:commandLink styleClass="btn btn-success"
+                                   update="@form,:growl" 
+                                   onstart="PF('progressBar').show();"
+                                   onsuccess="PF('progressBar').hide();"
+                                   actionListener="#{updateRequerimentsView.save()}">
+                        <p:confirm header="Actualizar Requerimientos" message="¿Desea actualizar los Requerimientos?" icon="pi pi-exclamation-triangle" />
+                        <span class="glyphicon glyphicon-floppy-saved"></span> Guardar
+                    </p:commandLink>
+                </div>
+                <div class="btn-group mr-2">
+                    <p:commandLink styleClass="btn btn-primary"
+                                   update="@form,:growl" 
+                                   onstart="PF('progressBar').show();"
+                                   onsuccess="PF('progressBar').hide();"
+                                   actionListener="#{updateRequerimentsView.loadDocumentsMessage()}"
+                                   >
+                        <span class="glyphicon glyphicon-refresh"></span> Restablecer
+                    </p:commandLink>
+                </div>
+                <div class="btn-group mr-2">
+                    <p:commandLink styleClass="btn btn-primary" oncomplete="PF('dlgEdit').show();"
+                                   update=":#{p:component('dlgEdit')}"
+                                   >
+                        <span class="glyphicon glyphicon-eye-open"></span> Observaciones
+                    </p:commandLink>
+                </div>
+            </div>
+            <div class="btn-toolbar" jsf:rendered="#{!updateRequerimentsView.flagStudent}">
+                <div class="btn-group mr-2">
+                    <p:commandLink styleClass="btn btn-primary" oncomplete="PF('dlgEdit').show();"
+                                   update=":#{p:component('dlgEdit')}"
+                                   >
+                        <span class="glyphicon glyphicon-pencil"></span> Realizar Observaciones
+                    </p:commandLink>
+                </div>
+            </div>
+
         </h:form>
+        <p:dialog header="Observaciones" id="dlgEdit" widgetVar="dlgEdit"
+                  fitViewport="true" modal="true" closeOnEscape="true">
+            <h:form>
+                <div class="modal-body">
+                    <fieldset>
+                        <div>
+                            <p:dataTable id="observationTable" 
+                                         var="observation" 
+                                         value="#{updateRequerimentsView.getRequerimentsObservations(updateRequerimentsView.requeriment.id)}" 
+                                         reflow="true"
+                                         emptyMessage="Registro Vacío"
+                                         >
+                                <p:column headerText="Fecha">
+                                    <h:outputText value="#{observation.date}"/>
+                                </p:column>
+                                <p:column headerText="Usuario">
+                                    <h:outputText value="#{observation.user.firstName} #{observation.user.lastName}"/>
+                                </p:column>
+                                <p:column headerText="Observación">
+                                    <h:outputText value="#{observation.text}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </div>
+                        <div class="row form-group" jsf:rendered="#{!updateRequerimentsView.flagStudent}">
+                            <p:inputTextarea  value="#{updateRequerimentsView.observation}" 
+                                              rows="10" 
+                                              cols="50" 
+                                              counter="display" 
+                                              maxlength="500" 
+                                              counterTemplate="{0} Caracteres Restantes" 
+                                              autoResize="false" 
+                                              styleClass="form-control" 
+                                              pt:placeholder="Observación"/>
+                            <br/>
+                            <h:outputText id="display" />
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="modal-footer" jsf:rendered="#{!updateRequerimentsView.flagStudent}">
+                    <p:commandLink styleClass="btn btn-warning btn-lg" style="width: 100%;"
+                                   onstart="PF('progressBar').show();"
+                                   onsuccess="PF('progressBar').hide();"
+                                   update="@form,:#{p:component('growl')}"
+                                   actionListener="#{updateRequerimentsView.saveObservation()}"
+                                   >
+                        <span class="glyphicon glyphicon-plus"></span>Agregar Observación
+                    </p:commandLink>
+                </div>
+            </h:form>
+        </p:dialog>
+        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" >
+            <div class="col text-center">
+                <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" />
+            </div>
+        </p:confirmDialog>
+        <p:dialog id="progressBar" widgetVar="progressBar" closable="false" width="20%" showHeader="false" resizable="false"
+                  modal="true" closeOnEscape="true">
+            <p:ajax event="close" update="@this" />
+            <div align="center">
+                <p:outputLabel>Realizando operación, espere un momento.</p:outputLabel>
+            </div>
+            <div class="form-group col-md-12" align="center">
+                <p:progressBar id="progressBarIndeterminate" style="height:6px" mode="indeterminate"/>
+            </div>
+        </p:dialog>
     </ui:define>
 
 </ui:composition>
-
-

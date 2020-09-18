@@ -6,8 +6,10 @@ import gt.edu.usac.cunoc.ingenieria.eps.exception.ValidationException;
 import User.exception.UserException;
 import gt.edu.usac.cunoc.ingenieria.eps.configuration.mail.MailService;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Appointment;
+import gt.edu.usac.cunoc.ingenieria.eps.process.StateProcess;
 import static gt.edu.usac.cunoc.ingenieria.eps.process.appointmentState.*;
 import gt.edu.usac.cunoc.ingenieria.eps.process.repository.ProcessRepository;
+import gt.edu.usac.cunoc.ingenieria.eps.property.repository.PropertyRepository;
 import gt.edu.usac.cunoc.ingenieria.eps.user.Career;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import gt.edu.usac.cunoc.ingenieria.eps.user.UserCareer;
@@ -26,36 +28,48 @@ import javax.persistence.PersistenceContext;
 @Stateless
 @LocalBean
 public class ProcessService {
-    
+
     @PersistenceContext(name = PERSISTENCE_UNIT_NAME)
     private EntityManager entityManager;
-    
+
     @EJB
     private ProcessRepository processRepository;
-    
+
     @EJB
     private UserRepository userRepository;
-    
+
     @EJB
     private UserService userService;
-    
+
     @EJB
     private AppointmentService appointmentService;
-    
+
     @EJB
     private MailService mailService;
-    
-    public Process createProcess(Process process) {
-        UserCareer userCareer = process.getUserCareer();
-        userCareer.setProcess(process);
-        if (userCareer.getId() != null) {
-            entityManager.merge(userCareer);
-        } else {
+
+    public Process createProcess(Process process) throws ValidationException {
+        if (!LocalDate.now().isBefore(PropertyRepository.DEADLINE_TO_SUBMIT_DOCUMENT.getValueDate().plusDays(1))){
+            throw new ValidationException("Ya se alcanzo la Fecha Limite para Recepción de Documentos");
+        }
+        if (process.getUserCareer().getProcess() != null) {
+            if (process.getUserCareer().getProcess().getState().equals(StateProcess.RECHAZADO)
+                    || process.getUserCareer().getProcess().getState().equals(StateProcess.INACTIVO)) {
+                process.setUserCareer(new UserCareer(process.getUserCareer().getCAREERcodigo(), process.getUserCareer().getUSERuserId()));
+            } else {
+                throw new ValidationException("Ya existe un Proceso Activo con la carrera seleccionada");
+            }
+        }
+        List<User> coordinadors = userRepository.getCareerCoordinator(process);
+        if (coordinadors != null && !coordinadors.isEmpty()) {
+            UserCareer userCareer = process.getUserCareer();
+            userCareer.setProcess(process);
             entityManager.persist(userCareer);
+        } else {
+            throw new ValidationException("No se pudo crear el proceso debido que no hay ningun coordinador para la carrera seleccionada");
         }
         return process;
     }
-    
+
     public Process updateProcess(Process process) {
         entityManager.merge(process);
         return process;
@@ -70,64 +84,59 @@ public class ProcessService {
      */
     public void assignEPSSUpervisorToProcess(Career career, Process process) throws ValidationException {
         List<User> supervisorEPS = userRepository.getSupervisorEPSbyCareer(career);
-        User supervisorEPSToAssign;
         if (supervisorEPS.size() > 1) {
-            User currentUser;
+            User supervisorEPSToAssign = supervisorEPS.get(0);
             User nextUser;
-            for (int i = 0; i < supervisorEPS.size() - 1; i++) {
-                currentUser = supervisorEPS.get(i);
-                nextUser = supervisorEPS.get(i + 1);
-                long countProcessesCurrentUser = userRepository.getNumberProcessesBySupervisorEPS(currentUser);
+            for (int i = 1; i < supervisorEPS.size(); i++) {
+                nextUser = supervisorEPS.get(i);
+                long countProcessesCurrentUser = userRepository.getNumberProcessesBySupervisorEPS(supervisorEPSToAssign);
                 long countProcessesNextUser = userRepository.getNumberProcessesBySupervisorEPS(nextUser);
                 if (countProcessesCurrentUser > countProcessesNextUser) {
                     supervisorEPSToAssign = nextUser;
-                } else {
-                    supervisorEPSToAssign = currentUser;
-                }
-                process.setSupervisor_EPS(supervisorEPSToAssign);
+                } 
             }
-        } else if (supervisorEPS.size() == 1) {
-            supervisorEPSToAssign = supervisorEPS.get(0);
             process.setSupervisor_EPS(supervisorEPSToAssign);
+        } else if (supervisorEPS.size() == 1) {
+            process.setSupervisor_EPS(supervisorEPS.get(0));
         } else {
             throw new ValidationException("No existe Supervisor de EPS para su Carrera");
         }
         updateProcess(process);
     }
-    
+
     public Process sendAppointmentToSupervisor(Process process) throws UserException, ValidationException {
         Optional<User> actualUser = Optional.ofNullable(userService.getAuthenticatedUser().get(0));
         Optional<Process> resultProcess;
         Appointment appointment;
-        
+
         if (process != null && actualUser.isPresent() && process.getAppointmentId() != null
                 && process.getUserCareer().getUSERuserId().getUserId().equals(actualUser.get().getUserId())) {
-            
+
             resultProcess = processRepository.findProcessById(process.getId());
-            
+
             if (resultProcess.isPresent()) {
                 if (resultProcess.get().getAppointmentId() == null) {
                     appointment = new Appointment();
                 } else {
                     appointment = resultProcess.get().getAppointmentId();
                 }
-                
+
                 if (appointment != null && process.getAppointmentId().getUserAdviser() != null
                         && process.getAppointmentId().getUserReviewer() != null) {
-                    
+
                     if (process.getAppointmentId().getAdviserState() != null && process.getAppointmentId().getAdviserState() == REVIEW) {
-                        
+
                         if (!existsUser(process.getAppointmentId().getUserAdviser())) {
                             appointment.setUserAdviser(userService.createTempUser(process.getAppointmentId().getUserAdviser()));
                         } else {
                             appointment.setUserAdviser(process.getAppointmentId().getUserAdviser());
                         }
                         appointment.setAdviserState(REVIEW);
-                        
+
                     }
-                    
+
                     if (process.getAppointmentId().getReviewerState() != null && process.getAppointmentId().getReviewerState() == REVIEW) {
-                        
+
                         if (!existsUser(process.getAppointmentId().getUserReviewer())) {
                             appointment.setUserReviewer(userService.createTempUser(process.getAppointmentId().getUserReviewer()));
                         } else {
@@ -135,16 +144,16 @@ public class ProcessService {
                         }
                         appointment.setReviewerState(REVIEW);
                     }
-                    
+
                     if (appointment.getReviewerState() != null && appointment.getAdviserState() != null
                             && appointment.getAdviserState() == REVIEW || appointment.getAdviserState() == APPROVED
                             || appointment.getAdviserState() == ELECTION
                             && appointment.getReviewerState() == REVIEW || appointment.getReviewerState() == APPROVED
                             || appointment.getReviewerState() == ELECTION
                             && appointment.getUserAdviser() != null && appointment.getUserReviewer() != null) {
-                        
+
                         appointment.setDateAction(LocalDateTime.now());
-                        
+
                         if (resultProcess.get().getAppointmentId() == null) {
                             appointment = appointmentService.createAppointment(appointment);
                             resultProcess.get().setAppointmentId(appointment);
@@ -176,23 +185,23 @@ public class ProcessService {
             throw new ValidationException("Debe elegir un proceso");
         }
     }
-    
+
     public Process returnAppointmentToStudente(Process process) throws ValidationException, UserException {
         Optional<User> actualUser = Optional.ofNullable(userService.getAuthenticatedUser().get(0));
         Optional<Process> resultProcess;
-        
+
         if (process != null && process.getAppointmentId() != null && actualUser.isPresent()
                 && process.getSupervisor_EPS() != null && process.getSupervisor_EPS().getUserId().equals(actualUser.get().getUserId())) {
-            
+
             resultProcess = processRepository.findProcessById(process.getId());
-            
+
             if (resultProcess.isPresent() && resultProcess.get().getAppointmentId() != null) {
 
                 //Advisor
                 if (resultProcess.get().getAppointmentId().getAdviserState() == REVIEW && process.getAppointmentId().getAdviserState() != REVIEW) {
                     if (process.getAppointmentId().getAdviserState() == APPROVED
                             && resultProcess.get().getAppointmentId().getUserAdviser().getUserId().equals(process.getAppointmentId().getUserAdviser().getUserId())) {
-                        
+
                         if (resultProcess.get().getAppointmentId().getUserAdviser().getRemovable()) {
                             resultProcess.get().getAppointmentId().setUserAdviser(
                                     userService.aproveUser(
@@ -203,17 +212,17 @@ public class ProcessService {
                             );
                         }
                         resultProcess.get().getAppointmentId().setAdviserState(APPROVED);
-                        
+
                     } else if (process.getAppointmentId().getAdviserState() == CHANGE
                             && resultProcess.get().getAppointmentId().getUserAdviser() != null
                             && process.getAppointmentId().getUserAdviser() == null) {
-                        
+
                         if (resultProcess.get().getAppointmentId().getUserAdviser().getRemovable()) {
                             userService.deleteUser(resultProcess.get().getAppointmentId().getUserAdviser());
                         }
                         resultProcess.get().getAppointmentId().setUserAdviser(null);
                         resultProcess.get().getAppointmentId().setAdviserState(CHANGE);
-                        
+
                     } else if (process.getAppointmentId().getAdviserState() == ELECTION
                             && !resultProcess.get().getAppointmentId().getUserAdviser().getUserId().equals(process.getAppointmentId().getUserAdviser().getUserId())) {
                         if (resultProcess.get().getAppointmentId().getUserAdviser().getRemovable()) {
@@ -221,21 +230,21 @@ public class ProcessService {
                         }
                         resultProcess.get().getAppointmentId().setUserAdviser(process.getAppointmentId().getUserAdviser());
                         resultProcess.get().getAppointmentId().setAdviserState(ELECTION);
-                        
+
                         mailService.emailNotifyAdvisorOrReviewer(
                                 resultProcess.get().getAppointmentId().getUserAdviser(),
                                 resultProcess.get().getProject().getTitle(),
                                 resultProcess.get().getUserCareer().getUSERuserId().getFirstName().concat(" ").concat(process.getUserCareer().getUSERuserId().getLastName())
                         );
                     }
-                    
+
                 }
 
                 //Reviewer
                 if (resultProcess.get().getAppointmentId().getReviewerState() == REVIEW && process.getAppointmentId().getReviewerState() != REVIEW) {
                     if (process.getAppointmentId().getReviewerState() == APPROVED
                             && resultProcess.get().getAppointmentId().getUserReviewer().getUserId().equals(process.getAppointmentId().getUserReviewer().getUserId())) {
-                        
+
                         if (resultProcess.get().getAppointmentId().getUserReviewer().getRemovable()) {
                             resultProcess.get().getAppointmentId().setUserReviewer(
                                     userService.aproveUser(
@@ -246,17 +255,17 @@ public class ProcessService {
                             );
                         }
                         resultProcess.get().getAppointmentId().setReviewerState(APPROVED);
-                        
+
                     } else if (process.getAppointmentId().getReviewerState() == CHANGE
                             && resultProcess.get().getAppointmentId().getUserReviewer() != null
                             && process.getAppointmentId().getUserReviewer() == null) {
-                        
+
                         if (resultProcess.get().getAppointmentId().getUserReviewer().getRemovable()) {
                             userService.deleteUser(resultProcess.get().getAppointmentId().getUserReviewer());
                         }
                         resultProcess.get().getAppointmentId().setUserReviewer(null);
                         resultProcess.get().getAppointmentId().setReviewerState(CHANGE);
-                        
+
                     } else if (process.getAppointmentId().getReviewerState() == ELECTION
                             && !resultProcess.get().getAppointmentId().getUserReviewer().getUserId().equals(process.getAppointmentId().getUserReviewer().getUserId())) {
                         if (resultProcess.get().getAppointmentId().getUserReviewer().getRemovable()) {
@@ -264,24 +273,24 @@ public class ProcessService {
                         }
                         resultProcess.get().getAppointmentId().setUserReviewer(process.getAppointmentId().getUserReviewer());
                         resultProcess.get().getAppointmentId().setReviewerState(ELECTION);
-                        
+
                         mailService.emailNotifyAdvisorOrReviewer(
                                 resultProcess.get().getAppointmentId().getUserReviewer(),
                                 resultProcess.get().getProject().getTitle(),
                                 resultProcess.get().getUserCareer().getUSERuserId().getFirstName().concat(" ").concat(process.getUserCareer().getUSERuserId().getLastName())
                         );
                     }
-                    
+
                 }
-                
+
                 if ((resultProcess.get().getAppointmentId().getAdviserState() == APPROVED || resultProcess.get().getAppointmentId().getAdviserState() == CHANGE
                         || resultProcess.get().getAppointmentId().getAdviserState() == ELECTION) && (resultProcess.get().getAppointmentId().getReviewerState() == APPROVED
                         || resultProcess.get().getAppointmentId().getReviewerState() == CHANGE || resultProcess.get().getAppointmentId().getReviewerState() == ELECTION)) {
-                    
+
                     if ((resultProcess.get().getAppointmentId().getAdviserState() == APPROVED || resultProcess.get().getAppointmentId().getAdviserState() == ELECTION)
                             && (resultProcess.get().getAppointmentId().getReviewerState() == APPROVED || resultProcess.get().getAppointmentId().getReviewerState() == ELECTION)) {
                     }
-                    
+
                     resultProcess = Optional.ofNullable(updateProcess(resultProcess.get()));
                     mailService.emailNotifyStudent(
                             resultProcess.get().getAppointmentId().getUserAdviser(),
@@ -309,15 +318,15 @@ public class ProcessService {
             }
         }
     }
-    
+
     public Process sendCompanySupervisorToSupervisor(Process process) throws ValidationException, UserException {
         Optional<User> actualUser = Optional.ofNullable(userService.getAuthenticatedUser().get(0));
         Optional<Process> resultProcess;
         Appointment appointment;
-        
+
         if (process != null && actualUser.isPresent() && process.getAppointmentId() != null
                 && process.getUserCareer().getUSERuserId().getUserId().equals(actualUser.get().getUserId())) {
-            
+
             resultProcess = processRepository.findProcessById(process.getId());
             if (resultProcess.isPresent()) {
                 if (resultProcess.get().getAppointmentId() == null) {
@@ -325,14 +334,14 @@ public class ProcessService {
                 } else {
                     appointment = resultProcess.get().getAppointmentId();
                 }
-                
+
                 if (appointment != null && process.getAppointmentId().getCompanySupervisor() != null) {
                     if (!existsUser(process.getAppointmentId().getCompanySupervisor())) {
                         appointment.setCompanySupervisor(userService.createTempUser(process.getAppointmentId().getCompanySupervisor()));
                     } else {
                         appointment.setCompanySupervisor(process.getAppointmentId().getCompanySupervisor());
                     }
-                    
+
                     if (resultProcess.get().getAppointmentId() == null) {
                         appointment.setDateAction(LocalDateTime.now());
                         appointment = appointmentService.createAppointment(appointment);
@@ -341,7 +350,7 @@ public class ProcessService {
                     } else {
                         resultProcess = Optional.of(updateProcess(resultProcess.get()));
                     }
-                    
+
                     mailService.emailNotifyNewCompanySupervisor(
                             resultProcess.get().getSupervisor_EPS(),
                             resultProcess.get().getAppointmentId(),
@@ -349,7 +358,7 @@ public class ProcessService {
                             resultProcess.get().getUserCareer().getUSERuserId()
                     );
                     return resultProcess.get();
-                    
+
                 } else {
                     throw new UserException("Debe indicar un usuario");
                 }
@@ -360,14 +369,14 @@ public class ProcessService {
             throw new UserException("Usuario invalido");
         }
     }
-    
+
     public Process enableCompanySupervisor(Process process) throws ValidationException, UserException {
         Optional<User> actualUser = Optional.ofNullable(userService.getAuthenticatedUser().get(0));
         Optional<Process> resultProcess;
-        
+
         if (process != null && process.getAppointmentId() != null && actualUser.isPresent()
                 && process.getSupervisor_EPS() != null && process.getSupervisor_EPS().getUserId().equals(actualUser.get().getUserId())) {
-            
+
             resultProcess = processRepository.findProcessById(process.getId());
             if (resultProcess.isPresent() && resultProcess.get().getAppointmentId() != null && resultProcess.get().getAppointmentId().getCompanySupervisor() != null) {
                 if (resultProcess.get().getAppointmentId().getCompanySupervisor().getRemovable()) {
@@ -387,13 +396,13 @@ public class ProcessService {
             throw new ValidationException("Usuario Invalido");
         }
     }
-    
+
     private boolean existsUser(User user) throws UserException {
         User search = new User();
-        search.setrOLid(user.getROLid());
+        search.setROLid(user.getROLid());
         search.setDpi(user.getDpi());
-        
+
         return (!userRepository.getUser(search).isEmpty());
     }
-    
+
 }

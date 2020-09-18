@@ -91,7 +91,7 @@ public class UserFacade implements UserFacadeLocal {
     @Override
     public User createTempUser(User user) throws UserException {
         User search = new User();
-        search.setrOLid(user.getROLid());
+        search.setROLid(user.getROLid());
         search.setDpi(user.getDpi());
 
         List<User> result = userRepository.getUser(search);
@@ -99,7 +99,7 @@ public class UserFacade implements UserFacadeLocal {
         if (result.isEmpty()) {
             return userService.createTempUser(user);
         } else {
-            throw new UserException("El " + user.getrOLid().getName() + " ya existe");
+            throw new UserException("El " + user.getROLid().getName() + " ya existe");
         }
 
     }

@@ -1,0 +1,395 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="../templates/template-one.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:o="http://omnifaces.org/ui"
+                xmlns:cmp="http://xmlns.jcp.org/jsf/composite/components"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core" 
+                xmlns:jsf="http://xmlns.jcp.org/jsf">
+    <f:metadata>
+        <o:viewParam name="idProcess" required="true" 
+                     value="#{projectReviewView.processId}"
+                     requiredMessage="Ningun valor">
+            <o:viewParamValidationFailed sendError="404" message="Error parametro"/>
+        </o:viewParam>
+        <o:viewAction action="#{projectReviewView.loadCurrentProject()}" />
+    </f:metadata>
+
+    <ui:define name="head">
+        Revisión #{projectReviewView.titlePage()}
+    </ui:define>
+
+    <ui:define name="title">
+        Revisión #{projectReviewView.titlePage()}
+    </ui:define>
+
+    <ui:define name="content">
+        <h:outputScript library="js" name="calendar_es.js" />
+        <h:form id="proyect" class="bg-modal">
+            <fieldset>
+                <legend>Revisión #{projectReviewView.titlePage()}</legend>
+                <div class="row" jsf:rendered="#{projectReviewView.renderWarningCoordinator()}">
+                    <div class="form-group col-md-8">
+                        <p:staticMessage severity="warn" 
+                                         summary="Advertencia! " 
+                                         detail="No se puede revisar este proyecto debido a que no es el primero en la cola de revisión."  
+                                         />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-md-8">
+                        <p:panel id="titlePr" header="Título">
+                            <div class="row">
+                                <div class="form-group col-md-8">
+                                    <h:outputText value="#{projectReviewView.actualProcess.project.title}"/>
+                                </div>
+                            </div>
+                            <p:commandLink class="btn btn-primary btn-xs"
+                                           title="Realizar Comentario"
+                                           oncomplete="PF('observ').show();"
+                                           update=":#{p:component('observ')}"
+                                           actionListener="#{projectReviewView.titleComments()}" >
+                                <span class="glyphicon glyphicon-eye-open"></span> Correcciones
+                            </p:commandLink>
+                        </p:panel>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-md-8">
+                        <p:panel header="Objetivos Generales" id="generalObjectives" >
+                            <p:dataView value="#{projectReviewView.actualProcess.project.objectives}" var="generalObjective" >
+                                <p:dataViewListItem>
+                                    <div class="row">
+                                        <div class="form-group col-sm-10" jsf:rendered="#{projectReviewView.isGeneralObjective(generalObjective)}">
+                                            <h:outputText value="#{generalObjective.text}" 
+                                                          />
+                                        </div>
+                                    </div>    
+                                </p:dataViewListItem>
+                            </p:dataView>
+                            <br/>
+                            <p:commandLink class="btn btn-primary btn-xs"
+                                           title="Realizar Comentario"
+                                           oncomplete="PF('observ').show();"
+                                           update=":#{p:component('observ')}"
+                                           actionListener="#{projectReviewView.generalObjComments()}" >
+                                <span class="glyphicon glyphicon-eye-open"></span> Correcciones
+                            </p:commandLink>
+                        </p:panel>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-md-8">
+                        <p:panel header="Objetivos Específicos" id="especificObjectives" >
+                            <p:dataView value="#{projectReviewView.actualProcess.project.objectives}" var="especificOb" >
+                                <p:dataViewListItem>
+                                    <div class="row">
+                                        <div class="form-group col-sm-10" jsf:rendered="#{!projectReviewView.isGeneralObjective(especificOb)}">
+                                            <h:outputText value="#{especificOb.text}" 
+                                                          />
+                                        </div>
+                                    </div>    
+                                </p:dataViewListItem>
+                            </p:dataView>
+                            <br/>
+                            <p:commandLink class="btn btn-primary btn-xs"
+                                           title="Realizar Comentario"
+                                           oncomplete="PF('observ').show();"
+                                           update=":#{p:component('observ')}"
+                                           actionListener="#{projectReviewView.specificObjComments()}" >
+                                <span class="glyphicon glyphicon-eye-open"></span> Correcciones
+                            </p:commandLink>
+                        </p:panel>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-md-8">
+                        <p:panel id="listSections" header="Secciones">
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    <p:dataView value="#{projectReviewView.actualProcess.project.sections}" var="section">
+                                        <p:dataViewListItem>
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <p:panel id="Section">
+                                                        <div class="row">
+                                                            <div class="form-group col-md-12">
+                                                                <p:outputLabel value="Titulo:"/>
+                                                                &nbsp;
+                                                                <h:outputText value="#{section.title.name}"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="form-group col-md-12">
+                                                                <h:outputText value="#{section.title.texto.text}" escape="false"/>                                                       
+                                                            </div>                                                        
+                                                        </div>
+                                                        <p:commandLink class="btn btn-primary btn-xs"
+                                                                       title="Realizar Comentario"
+                                                                       oncomplete="PF('observ').show();"
+                                                                       update=":#{p:component('observ')}"
+                                                                       actionListener="#{projectReviewView.sectionComments(section)}" >
+                                                            <span class="glyphicon glyphicon-eye-open"></span> Correcciones
+                                                        </p:commandLink>
+                                                        <br/>
+                                                    </p:panel>
+                                                </div>
+                                            </div>
+                                        </p:dataViewListItem>
+                                    </p:dataView>
+                                </div>
+                            </div>
+                        </p:panel>
+                    </div>
+                </div>
+
+                <div class="row" >
+                    <div class="form-group col-md-8" >
+                        <p:panel id="coordinatesDecimal" header="Coordenadas Decimales">
+                            <p:dataTable id="coordinates" var="coordinate" 
+                                         value="#{projectReviewView.actualProcess.project.decimalCoordinates}">
+                                <p:column headerText="Latitud">
+                                    <h:outputText value="#{coordinate.latitude}"/>
+                                </p:column>
+                                <p:column headerText="Longitud">
+                                    <h:outputText value="#{coordinate.longitude}"/>
+                                </p:column>
+                            </p:dataTable>
+                            <p:commandLink class="btn btn-primary btn-xs"
+                                           title="Realizar Comentario"
+                                           oncomplete="PF('observ').show();"
+                                           update=":#{p:component('observ')}"
+                                           actionListener="#{projectReviewView.coordinatesComments()}" >
+                                <span class="glyphicon glyphicon-eye-open"></span> Correcciones
+                            </p:commandLink>
+                        </p:panel>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-sm-8">
+                        <p:outputLabel for="labelSchedule" value="Calendario: "/>
+                        <h:commandLink id="labelSchedule" value="#{projectReviewView.scheduleFileName}" class="text-primary"
+                                       target="_blank" actionListener="#{projectReviewView.reloadSchedule()}">
+                            <p:fileDownload value="#{projectReviewView.scheduleStream}" contentDisposition="inline"/>
+                        </h:commandLink>
+                        <br/>
+                        <p:commandLink class="btn btn-primary btn-xs"
+                                       title="Realizar Comentario"
+                                       oncomplete="PF('observ').show();"
+                                       update=":#{p:component('observ')}"
+                                       actionListener="#{projectReviewView.calendarComments()}" >
+                            <span class="glyphicon glyphicon-eye-open"></span> Correcciones
+                        </p:commandLink>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-sm-8">
+                        <p:outputLabel for="labelInvestmentPlan" value="Plan de Inversión: "/>
+                        <h:commandLink id="labelInvestmentPlan" value="#{projectReviewView.investmentPlanFileName}" class="text-primary"
+                                       target="_blank" actionListener="#{projectReviewView.reloadInvestmentPlan()}">
+                            <p:fileDownload value="#{projectReviewView.investmentPlanStream}" contentDisposition="inline"/>
+                        </h:commandLink>
+                        <br/>
+                        <p:commandLink class="btn btn-primary btn-xs"
+                                       title="Realizar Comentario"
+                                       oncomplete="PF('observ').show();"
+                                       update=":#{p:component('observ')}"
+                                       actionListener="#{projectReviewView.inversionComments()}" >
+                            <span class="glyphicon glyphicon-eye-open"></span> Correcciones
+                        </p:commandLink>
+                    </div>                    
+                </div>
+
+                <div class="row" >
+                    <div class="form-group col-md-8" >
+                        <p:panel id="bibliografia" header="Bibliografía">
+                            <p:dataTable var="biblio" 
+                                         value="#{projectReviewView.actualProcess.project.bibliographies}">
+                                <p:column headerText="Título">
+                                    <h:outputText value="#{biblio.title}"/>
+                                </p:column>
+                                <p:column headerText="Autor">
+                                    <h:outputText value="#{biblio.author}"/>
+                                </p:column>
+                                <p:column headerText="Publicado">
+                                    <h:outputText value="#{biblio.publicactionYear}"/>
+                                </p:column>
+                                <p:column headerText="Autor">
+                                    <h:outputText value="#{biblio.author}"/>
+                                </p:column>
+                                <p:column headerText="Origen">
+                                    <h:outputText value="#{biblio.country}, #{biblio.city}"/>
+                                </p:column>
+                                <p:column headerText="Editorial">
+                                    <h:outputText value="#{biblio.editorial}"/>
+                                </p:column>
+                            </p:dataTable>
+                            <p:commandLink class="btn btn-primary btn-xs"
+                                           title="Realizar Comentario"
+                                           oncomplete="PF('observ').show();"
+                                           update=":#{p:component('observ')}"
+                                           actionListener="#{projectReviewView.bibliographyComments()}" >
+                                <span class="glyphicon glyphicon-eye-open"></span> Correcciones
+                            </p:commandLink>
+                        </p:panel>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-sm-8">
+                        <p:outputLabel for="labelAnnexed" value="Anexos"/>
+                        <h:commandLink id="labelAnnexed" value="#{projectReviewView.annexedFileName}" class="text-primary"
+                                       target="_blank" actionListener="#{projectReviewView.reloadAnnexed()}">
+                            <p:fileDownload value="#{projectReviewView.annexedStream}" contentDisposition="inline"/>
+                        </h:commandLink>
+                        <br/>
+                        <p:commandLink class="btn btn-primary btn-xs"
+                                       title="Realizar Comentario"
+                                       oncomplete="PF('observ').show();"
+                                       update=":#{p:component('observ')}"
+                                       actionListener="#{projectReviewView.anexosComments()}" >
+                            <span class="glyphicon glyphicon-eye-open"></span> Correcciones
+                        </p:commandLink>
+                    </div>
+                </div>
+                <br/>
+                <div class="btn-toolbar">
+                    <div class="btn-group mr-2">
+                        <p:commandLink styleClass="btn btn-success"
+                                       update="@form,:growl"
+                                       onstart="PF('progressBar').show();"
+                                       onsuccess="PF('progressBar').hide();"
+                                       rendered="#{!projectReviewView.renderWarningCoordinator() and projectReviewView.renderEditOption()}"
+                                       action="#{projectReviewView.aprovedProject()}">                                       
+                            <p:confirm header="Aceptar Proyecto" message="¿Esta seguro de ACEPTAR el Anteproyecto?" icon="pi pi-exclamation-triangle" />
+                            <span class="glyphicon glyphicon-check"></span> Aceptar Anteproyecto
+                        </p:commandLink>
+                    </div>
+                    <div class="btn-group mr-2">
+                        <p:commandLink styleClass="btn btn-danger"
+                                       update="@form,:growl"
+                                       oncomplete="PF('rechazar').show();"
+                                       rendered="#{!projectReviewView.renderWarningCoordinator() and projectReviewView.renderEditOption()}">
+                            <span class="glyphicon glyphicon-remove"></span> Rechazar Anteproyecto
+                        </p:commandLink>
+                    </div>
+                    <div class="btn-group mr-2">
+                        <p:commandLink styleClass="btn btn-warning"
+                                       update="@form,:growl"
+                                       onstart="PF('progressBar').show();"
+                                       onsuccess="PF('progressBar').hide();"
+                                       rendered="#{!projectReviewView.renderWarningCoordinator() and projectReviewView.renderEditOption()}"
+                                       actionListener="#{projectReviewView.returnCorrections()}"
+                                       >
+                            <p:confirm header="Correcciones" message="¿Desea enviar las correciones?" icon="pi pi-exclamation-triangle" />
+                            <span class="glyphicon glyphicon-comment"></span> Enviar Correcciones
+                        </p:commandLink>
+                    </div>
+                </div>
+                <br/>
+            </fieldset>
+        </h:form>
+        <p:dialog  header="Correcciones - #{projectReviewView.correctionTitle()}" id="observ" widgetVar="observ" appendTo="@(body)" position="center"
+                   modal="true" closeOnEscape="true" draggable="false">
+            <p:ajax event="close" listener="#{projectReviewView.cleanCorrectionList()}" update="@this" />
+            <h:form>
+                <div class="modal-body">
+                    <fieldset>
+                        <div class="row form-group">
+                            <p:dataTable id="coorrections" var="correction" 
+                                         value="#{projectReviewView.actualCorrections}">
+                                <p:column headerText="Fecha">
+                                    <h:outputText value="#{correction.date}"/>
+                                </p:column>
+                                <p:column headerText="Usuario">
+                                    <h:outputText value="#{correction.user.firstName} #{correction.user.lastName}"/>
+                                </p:column>
+                                <p:column headerText="Correccion">
+                                    <h:outputText value="#{correction.text}"/>
+                                </p:column>
+                                <p:column headerText="Estado">
+                                    <h:outputText value="#{correction.statusString}"/>
+                                </p:column>
+                            </p:dataTable>
+                        </div>
+                        <div class="row form-group" jsf:rendered="#{projectReviewView.renderEditOption()}">
+                            <p:outputLabel value="Nueva Corrección:" for="note" styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <p:inputTextarea id="note" styleClass="form-control"
+                                                 rows="4" cols="50" maxlength="10000" placeholder="Agregue su corrección"
+                                                 autoResize="false" value="#{projectReviewView.newCorrection.text}"/>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="modal-footer " jsf:rendered="#{projectReviewView.renderEditOption()}">
+                    <p:commandLink styleClass="btn btn-primary btn-xs"
+                                   update="@form,:#{p:component('growl')}"
+                                   onstart="PF('progressBar').show();"
+                                   onsuccess="PF('progressBar').hide();"
+                                   actionListener="#{projectReviewView.comment('observ')}">
+                        <span class="glyphicon glyphicon-ok-sign"></span> Comentar
+                    </p:commandLink>
+                </div>
+            </h:form>
+        </p:dialog>
+
+        <p:dialog header="#{projectReviewView.correctionTitle()}" id="rechazar" widgetVar="rechazar" 
+                  modal="true" closeOnEscape="true">
+            <p:ajax event="close" listener="#{projectReviewView.cleanCorrectionList()}" update="@this" />
+            <h:form>
+                <div class="modal-body">
+                    <fieldset>
+                        <div class="row form-group">
+                            <p:outputLabel value="Motivos del Rechazo:" for="note" styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <p:inputTextarea id="note" styleClass="form-control" required="true"
+                                                 rows="4" cols="50" maxlength="10000" placeholder="Indique los motivos"
+                                                 autoResize="false" value="#{projectReviewView.newCorrection.text}"/>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="modal-footer ">
+                    <p:commandLink styleClass="btn btn-primary btn-xs"
+                                   update="@form,:#{p:component('growl')}"
+                                   onstart="PF('progressBar').show();"
+                                   onsuccess="PF('progressBar').hide();"
+                                   actionListener="#{projectReviewView.rejectProcess()}">                                   
+                        <p:confirm header="Aceptar Proyecto" message="¿Esta seguro de RECHAZAR el Anteproyecto?" icon="pi pi-exclamation-triangle" />
+                        <span class="glyphicon glyphicon-trash"></span> Rechazar Proyecto
+                    </p:commandLink>
+                </div>
+            </h:form>
+        </p:dialog>
+
+        <p:dialog id="progressBar" widgetVar="progressBar" closable="false" width="20%" showHeader="false" resizable="false"
+                  modal="true" closeOnEscape="true">
+            <p:ajax event="close" update="@this" />
+            <div align="center">
+                <p:outputLabel>Realizando operacion, espere un momento.</p:outputLabel>
+            </div>
+            <div class="form-group col-md-12" align="center">
+                <p:progressBar id="progressBarIndeterminate" style="height:6px" mode="indeterminate"/>
+            </div>
+        </p:dialog>
+
+        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+            <div class="col text-center">
+                <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes"/>
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no"/>
+            </div>
+        </p:confirmDialog> 
+    </ui:define>
+
+</ui:composition>

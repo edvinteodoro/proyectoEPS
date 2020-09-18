@@ -8,17 +8,19 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:jsf="http://xmlns.jcp.org/jsf">
 
+    <ui:define name="head">
+        Crear Proceso
+    </ui:define>
     <ui:define name="title">
-        Agregar Requisitos
+        Crear Proceso
     </ui:define>
     <ui:define name="content">
         <h:form>
-            <p:messages  globalOnly="true"/>
             <fieldset class="center-block">
                 <legend>Agregar Requisitos</legend> 
                 <div class="row">
                     <div class="form-group col-sm-3">
-                        <p:outputLabel for="writtenRequest" value="Carta de Solicitud EPS Escritas:" />
+                        <p:outputLabel for="writtenRequest" value="Carta de Solicitud EPS Escrita:" />
                     </div>
                     <div class="form-group col-sm-5">
                         <p:fileUpload id="writtenRequest" fileUploadListener="#{createProcessView.handleWrittenRequest}"
@@ -27,6 +29,8 @@
                                       skinSimple="true" auto="true" allowTypes="/(\.|\/)(pdf)$/"
                                       update="@parent"
                                       label="Seleccionar"
+                                      sizeLimit="16000000"
+                                      invalidSizeMessage="Archivo demasiado grande, limite de 16MB"
                                       invalidFileMessage="Solo se puede cargar archivos pdf"/>
                         <h:commandLink value="#{createProcessView.nameWrittenRequest}"  target="_blank" actionListener="#{createProcessView.reloadWrittenRequest()}">
                             <p:fileDownload value="#{createProcessView.writtenRequestStream}" contentDisposition="inline"/>
@@ -35,7 +39,7 @@
                 </div>
                 <div class="row">
                     <div class="form-group col-sm-3">
-                        <p:outputLabel for="inscriptionConstancy" value="Constancia de Inscripcion:"/>
+                        <p:outputLabel for="inscriptionConstancy" value="Constancia de Inscripción:"/>
                     </div>
                     <div class="form-group col-sm-5">
                         <p:fileUpload id="inscriptionConstancy" fileUploadListener="#{createProcessView.handleInscriptionConstancy}" 
@@ -44,6 +48,8 @@
                                       skinSimple="true" auto="true" allowTypes="/(\.|\/)(pdf)$/"
                                       update="@parent"
                                       label="Seleccionar"
+                                      sizeLimit="16000000"
+                                      invalidSizeMessage="Archivo demasiado grande, limite de 16MB"
                                       invalidFileMessage="Solo se puede cargar archivos pdf"/>
                         <h:commandLink value="#{createProcessView.nameInscriptionConstancy}"  target="_blank" actionListener="#{createProcessView.reloadInscriptionConstancy()}">
                             <p:fileDownload value="#{createProcessView.inscriptionConstancyStream}" contentDisposition="inline"/>
@@ -61,6 +67,8 @@
                                       skinSimple="true" auto="true" allowTypes="/(\.|\/)(pdf)$/"
                                       update="@parent"
                                       label="Seleccionar"
+                                      sizeLimit="16000000"
+                                      invalidSizeMessage="Archivo demasiado grande, limite de 16MB"
                                       invalidFileMessage="Solo se puede cargar archivos pdf"/>
                         <h:commandLink value="#{createProcessView.namePensumeClosure}"  target="_blank" actionListener="#{createProcessView.reloadPensumeClosure()}">
                             <p:fileDownload value="#{createProcessView.pensumeClosureStream}" contentDisposition="inline"/>
@@ -69,7 +77,7 @@
                 </div>
                 <div class="row">
                     <div class="form-group col-sm-3">
-                        <p:outputLabel for="propedeuticConstancy" value="Constancia de Propedeutico:"/>
+                        <p:outputLabel for="propedeuticConstancy" value="Constancia de Propedéutico:"/>
                     </div>
                     <div class="form-group col-sm-5">
                         <p:fileUpload id="propedeuticConstancy"  fileUploadListener="#{createProcessView.handlePropedeuticConstancy}"
@@ -78,6 +86,8 @@
                                       skinSimple="true" auto="true" allowTypes="/(\.|\/)(pdf)$/"
                                       update="@parent"
                                       label="Seleccionar"
+                                      sizeLimit="16000000"
+                                      invalidSizeMessage="Archivo demasiado grande, limite de 16MB"
                                       invalidFileMessage="Solo se puede cargar archivos pdf"/>
                         <h:commandLink value="#{createProcessView.namePropedeuticConstancy}"  target="_blank" actionListener="#{createProcessView.reloadPropedeuticConstancy()}">
                             <p:fileDownload value="#{createProcessView.propedeuticConstancyStream}" contentDisposition="inline"/>
@@ -95,6 +105,8 @@
                                       skinSimple="true" auto="true" allowTypes="/(\.|\/)(pdf)$/"
                                       update="@parent"
                                       label="Seleccionar"
+                                      sizeLimit="16000000"
+                                      invalidSizeMessage="Archivo demasiado grande, limite de 16MB"
                                       invalidFileMessage="Solo se puede cargar archivos pdf"/>
                         <h:commandLink value="#{createProcessView.nameEpsPreProjec}"  target="_blank" actionListener="#{createProcessView.reloadEpsPreProjec()}">
                             <p:fileDownload value="#{createProcessView.epsPreProjectStream}" contentDisposition="inline"/>
@@ -111,10 +123,20 @@
                                       skinSimple="true" auto="true" allowTypes="/(\.|\/)(pdf)$/"
                                       update="@parent"
                                       label="Seleccionar"
+                                      sizeLimit="16000000"
+                                      invalidSizeMessage="Archivo demasiado grande, limite de 16MB"
                                       invalidFileMessage="Solo se puede cargar archivos pdf"/>
                         <h:commandLink value="#{createProcessView.nameAeioSettlemen}"  target="_blank" actionListener="#{createProcessView.reloadAeioSettlemen()}">
                             <p:fileDownload value="#{createProcessView.aeioSettlementStream}" contentDisposition="inline"/>
                         </h:commandLink>
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <p:commandLink id="deleteAEIO" styleClass="btn btn-danger"
+                                       update="@parent"
+                                       actionListener="#{createProcessView.deleteAeioSettlemen()}">
+                            <span class="glyphicon glyphicon-trash"></span>
+                        </p:commandLink>
+                        <p:tooltip id="toolTipFade" for="deleteAEIO" value="Eliminar Finiquito de AEIO" position="top"/>
                     </div>
                 </div>
                 <div class="row">
@@ -128,23 +150,30 @@
                         </p:selectOneMenu>
                     </div>
                 </div>
-                <br></br>
+                <br/>
                 <div class="row">
                     <div class="form-group col-sm-3">
                         <p:commandLink styleClass="btn btn-primary"
-                                       update="@form,:growl,progressBarIndeterminate"
-                                       onclick="$('#progress').attr('style','display:block')"
-                                       action="#{createProcessView.guardar()}">
+                                       update="@form,:growl"
+                                       onstart="PF('progressBar').show();"
+                                       onsuccess="PF('progressBar').hide();"
+                                       actionListener="#{createProcessView.guardar()}">
                             <span class="glyphicon glyphicon-log-in"></span> Crear Proceso EPS
                         </p:commandLink>
-                    </div>
-                    <div id="progress" style="display:none" class="form-group col-sm-4">
-                        <p:outputLabel value="Creando..."/>
-                        <p:progressBar id="progressBarIndeterminate" style="height:6px" mode="indeterminate"/>   
                     </div>
                 </div>
             </fieldset>
         </h:form>
+        <p:dialog id="progressBar" widgetVar="progressBar" closable="false" width="20%" showHeader="false" resizable="false"
+                  modal="true" closeOnEscape="true">
+            <p:ajax event="close" update="@this" />
+            <div align="center">
+                <p:outputLabel>Realizando operación, espere un momento.</p:outputLabel>
+            </div>
+            <div class="form-group col-md-12" align="center">
+                <p:progressBar id="progressBarIndeterminate" style="height:6px" mode="indeterminate"/>
+            </div>
+        </p:dialog>
     </ui:define>
 
 </ui:composition>

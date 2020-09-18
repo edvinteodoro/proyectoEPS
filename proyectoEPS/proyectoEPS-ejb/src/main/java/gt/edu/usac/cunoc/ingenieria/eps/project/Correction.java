@@ -17,7 +17,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "CORRECTION")
 public class Correction implements Serializable {
-
+        
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -93,12 +93,19 @@ public class Correction implements Serializable {
         this.id = id;
     }
 
-    public byte[] getText() {
-        return text;
+    public String getText() {
+        if (this.text != null){
+            String result = new String(this.text);
+            return result;
+        } else {
+            return new String();
+        }
     }
 
-    public void setText(byte[] text) {
-        this.text = text;
+    public void setText(String text) {
+        if (text != null){
+            this.text = text.getBytes();
+        }
     }
 
     public LocalDate getDate() {
@@ -128,17 +135,16 @@ public class Correction implements Serializable {
     public Boolean getStatus() {
         return status;
     }
+    
+    public String getStatusString() {
+        if (status){
+            return "Notificado";
+        }
+        return "Sin Notificar";
+    }
 
     public void setStatus(Boolean status) {
         this.status = status;
-    }
-
-    public Project getProcess() {
-        return project;
-    }
-
-    public void setProcess(Project project) {
-        this.project = project;
     }
 
     public TypeCorrection getType() {

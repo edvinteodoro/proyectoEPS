@@ -30,7 +30,7 @@ public class JournalLog implements Serializable {
     @Column(name = "dateTime")
     private LocalDate dateTime;
     @Column(name = "description")
-    private String description;
+    private byte[] description;
     @ManyToOne(fetch = FetchType.LAZY)
     private Process process;
 
@@ -72,11 +72,17 @@ public class JournalLog implements Serializable {
     }
 
     public String getDescription() {
-        return description;
+        if (this.description != null) {
+            return new String(this.description);
+        } else {
+            return new String();
+        }
     }
 
     public void setDescription(String description) {
-        this.description = description;
+        if (description != null) {
+            this.description = description.getBytes();
+        }
     }
 
     public List<Image> getImages() {
@@ -141,14 +147,14 @@ public class JournalLog implements Serializable {
         this.process = process;
     }
 
-    public boolean getEmptyImages(){
+    public boolean getEmptyImages() {
         return this.images.isEmpty();
     }
-    
-    public boolean getEmptyLinks(){
+
+    public boolean getEmptyLinks() {
         return this.links.isEmpty();
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;

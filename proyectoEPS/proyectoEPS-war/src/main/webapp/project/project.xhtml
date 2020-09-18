@@ -33,25 +33,39 @@
         <h:form id="formProject" class="bg-modal">
             <fieldset>
                 <legend>#{projectView.titlePage()}</legend> 
+                <div class="row" jsf:rendered="#{projectView.stateReject()}">
+                    <div class="form-group col-md-8">
+                        <p:staticMessage severity="warn" summary="Advertencia! " detail="No se puede editar el proyecto debido a que ha sido rechazado por el coordinador."/>
+                    </div>
+                </div> 
+                <div class="row" jsf:rendered="#{projectView.stateRevision()}">
+                    <div class="form-group col-md-8">
+                        <p:staticMessage severity="warn" summary="Advertencia! " detail="No se puede editar el proyecto debido a que se encuentra en un proceso de revision."/>
+                    </div>
+                </div> 
+                <p:outputLabel for="title" value="Titulo:"/>
                 <div class="row">
                     <div class="form-group col-md-8">
-                        <p:staticMessage severity="warn" summary="Advertencia! " detail="No se puede editar el proyecto debido a que ha sido rechazado por el coordinador." rendered="#{projectView.stateReject()}"/>
-                        <p:staticMessage severity="warn" summary="Advertencia! " detail="No se puede editar el proyecto debido a que se encuentra en un proceso de revision."  rendered="#{projectView.stateRevision()}"/><br></br>
-                        <p:outputLabel for="title" value="Titulo:"/>
-                        <p:inputText id="title" styleClass="form-control" pt:placeholder="Titulo del Proyecto"
+                        <p:inputText id="title" styleClass="form-control" pt:placeholder="Titulo del Anteproyecto"
                                      disabled="#{!projectView.editOptions()}"
                                      pt:required="true"
-                                     value="#{projectView.project.title}"/><br></br>
-
-                        <p data-placement="top" data-toggle="tooltip" title="comentar">
+                                     value="#{projectView.project.title}"/>                        
+                        <br/>
+                        <p data-placement="top" data-toggle="tooltip" title="comentar" jsf:rendered="#{projectView.renderTitleCorrections()}">
                             <p:commandLink class="btn btn-primary btn-xs"
                                            oncomplete="PF('dlgCmt').show();"
                                            update=":#{p:component('dlgCmt')}"
                                            actionListener="#{projectView.getTitleCorrections()}"
-                                           rendered="#{projectView.renderTitleCorrections()}">
-                                <span class="glyphicon glyphicon-eye-open"></span> Observaciones
+                                           >
+                                <span class="glyphicon glyphicon-eye-open"></span> Correcciones
                             </p:commandLink>
                         </p>
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <p:outputLabel id="titleHelp" styleClass="btn btn-primary">
+                            <span class="glyphicon glyphicon-info-sign"></span>
+                        </p:outputLabel>
+                        <p:tooltip for="titleHelp" value="Ayuda Titulo" position="top"/>                        
                     </div>
                 </div>
                 <div class="row">
@@ -80,20 +94,29 @@
                                     </div>    
                                 </p:dataViewListItem>
                             </p:dataView>
+                            <br/>
                             <p:commandLink styleClass="btn btn-success" actionListener="#{projectView.addGeneralObjectives()}" update="generalObjectives, growl"
                                            process="#{p:component('generalObjectives')}"
                                            rendered="#{projectView.editOptions()}"
                                            >
                                 <span class="glyphicon glyphicon-plus"></span> Agregar
                             </p:commandLink>
+                            <br/>
+                            <br/>
+                            <p:commandLink class="btn btn-primary btn-xs" 
+                                           oncomplete="PF('dlgCmt').show();"
+                                           update=":#{p:component('dlgCmt')}"
+                                           actionListener="#{projectView.getObjetivesCorrections()}"
+                                           rendered="#{projectView.renderObjetivesCorrections()}">
+                                <span class="glyphicon glyphicon-eye-open"></span> Correcciones
+                            </p:commandLink>
                         </p:panel>
-                        <br></br><p:commandLink class="btn btn-primary btn-xs" 
-                                                oncomplete="PF('dlgCmt').show();"
-                                                update=":#{p:component('dlgCmt')}"
-                                                actionListener="#{projectView.getObjetivesCorrections()}"
-                                                rendered="#{projectView.renderObjetivesCorrections()}">
-                            <span class="glyphicon glyphicon-eye-open"></span> Observaciones
-                        </p:commandLink>
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <p:outputLabel id="generalObjectiveHelp" styleClass="btn btn-primary">
+                            <span class="glyphicon glyphicon-info-sign"></span>
+                        </p:outputLabel>
+                        <p:tooltip for="generalObjectiveHelp" value="Ayuda Objetivos Generales" position="top"/>                        
                     </div>
                 </div>
                 <div class="row">
@@ -122,21 +145,30 @@
                                     </div>    
                                 </p:dataViewListItem>
                             </p:dataView>
+                            <br/>
                             <p:commandLink styleClass="btn btn-success" actionListener="#{projectView.addSpecificObjectives()}" update="specificObjectives, growl"
                                            process="#{p:component('specificObjectives')}"
                                            rendered="#{projectView.editOptions()}"
                                            >
                                 <span class="glyphicon glyphicon-plus"></span> Agregar
                             </p:commandLink>
+                            <br/>
+                            <br/>
+                            <p:commandLink class="btn btn-primary btn-xs"
+                                           title="Realizar Comentario"
+                                           oncomplete="PF('dlgCmt').show();"
+                                           update=":#{p:component('dlgCmt')}"
+                                           actionListener="#{projectView.getSpecificObjetivesCorrections()}"
+                                           rendered="#{projectView.renderSpecificObjetivesCorrections()}">
+                                <span class="glyphicon glyphicon-eye-open"></span> Correcciones
+                            </p:commandLink>
                         </p:panel>
-                        <br></br><p:commandLink class="btn btn-primary btn-xs"
-                                                title="Realizar Comentario"
-                                                oncomplete="PF('dlgCmt').show();"
-                                                update=":#{p:component('dlgCmt')}"
-                                                actionListener="#{projectView.getSpecificObjetivesCorrections()}"
-                                                rendered="#{projectView.renderSpecificObjetivesCorrections()}">
-                            <span class="glyphicon glyphicon-eye-open"></span> Observaciones
-                        </p:commandLink>
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <p:outputLabel id="specificObjectiveHelp" styleClass="btn btn-primary">
+                            <span class="glyphicon glyphicon-info-sign"></span>
+                        </p:outputLabel>
+                        <p:tooltip for="specificObjectiveHelp" value="Ayuda Objetivos Especificos" position="top"/>                        
                     </div>
                 </div>
                 <div class="row">
@@ -191,11 +223,6 @@
                                                             </div>                                                        
                                                         </div>
                                                         <div class="row">
-                                                            <div class="form-group col-md-12">
-                                                                <cmp:titleChildren parentTitle="#{section.title}"/>
-                                                            </div>                                                        
-                                                        </div>
-                                                        <div class="row">
                                                             <div class="form-group col-sm-3">
                                                                 <p:commandLink  styleClass="btn btn-danger" actionListener="#{projectView.removeSection(sectionStatus)}" 
                                                                                 update="#{p:component('listSections')}, :growl"
@@ -203,14 +230,15 @@
                                                                                 rendered="#{projectView.editOptions()}">
                                                                     <span class="glyphicon glyphicon-minus"></span> Eliminar Sección
                                                                 </p:commandLink>
-                                                                <br></br><br></br>
+                                                                <br/>
+                                                                <br/>
                                                                 <p data-placement="top" data-toggle="tooltip" title="comentar">
                                                                     <p:commandLink class="btn btn-primary btn-xs"
                                                                                    oncomplete="PF('dlgCmt').show();"
                                                                                    update=":#{p:component('dlgCmt')}"
                                                                                    actionListener="#{projectView.getSectionCorrection(section.id)}"
                                                                                    rendered="#{projectView.renderedSection(section.id)}">
-                                                                        <span class="glyphicon glyphicon-eye-open"></span> Observaciones
+                                                                        <span class="glyphicon glyphicon-eye-open"></span> Correcciones
                                                                     </p:commandLink>
                                                                 </p>
                                                             </div>
@@ -220,6 +248,7 @@
                                             </div>
                                         </p:dataViewListItem>
                                     </p:dataView>
+                                    <br/>
                                     <p:commandLink styleClass="btn btn-success" actionListener="#{projectView.project.addSection()}" update="listSections"
                                                    process="#{p:component('listSections')}"
                                                    rendered="#{projectView.editOptions()}"
@@ -229,6 +258,12 @@
                                 </div>
                             </div>
                         </p:panel>
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <p:outputLabel id="sectionHelp" styleClass="btn btn-primary">
+                            <span class="glyphicon glyphicon-info-sign"></span>
+                        </p:outputLabel>
+                        <p:tooltip for="sectionHelp" value="Ayuda Secciones" position="top"/>                        
                     </div>
                 </div>
                 <div class="row" >
@@ -240,6 +275,8 @@
                                         <div class="form-group col-sm-4">
                                             <p:inputNumber placeholder="Latitud" 
                                                            readonly="#{!projectView.editOptions()}"
+                                                           minValue="-90.9999"
+                                                           maxValue="90.9999"
                                                            decimalPlaces="4" 
                                                            value="#{decimalCoordinate.latitude}"                                                      
                                                            >
@@ -248,6 +285,8 @@
                                         <div class="form-group col-sm-4">
                                             <p:inputNumber placeholder="Longitud" 
                                                            decimalPlaces="4"
+                                                           minValue="-180.9999"
+                                                           maxValue="180.9999"
                                                            readonly="#{!projectView.editOptions()}"
                                                            value="#{decimalCoordinate.longitude}"
                                                            >
@@ -265,35 +304,44 @@
                                     </div> 
                                 </p:dataViewListItem>
                             </p:dataView>
+                            <br/>
                             <p:commandLink styleClass="btn btn-success" actionListener="#{projectView.project.addDecimalCoordinates()}" update="coordinatesDecimal"
                                            process="#{p:component('coordinatesDecimal')}"
                                            rendered="#{projectView.editOptions()}">
                                 <span class="glyphicon glyphicon-plus"></span> Agregar
                             </p:commandLink>
+                            <br/>
+                            <br/>
+                            <p:commandLink class="btn btn-primary btn-xs"                                               
+                                           title="Realizar Comentario"
+                                           oncomplete="PF('dlgCmt').show();"
+                                           update=":#{p:component('dlgCmt')}"
+                                           actionListener="#{projectView.getCoordenteCorrections()}"
+                                           rendered="#{projectView.renderCoordinateCorrections()}">
+                                <span class="glyphicon glyphicon-eye-open"></span> Correcciones
+                            </p:commandLink>
                         </p:panel>
-                        <br></br><p:commandLink class="btn btn-primary btn-xs"                                               
-                                                title="Realizar Comentario"
-                                                oncomplete="PF('dlgCmt').show();"
-                                                update=":#{p:component('dlgCmt')}"
-                                                actionListener="#{projectView.getCoordenteCorrections()}"
-                                                rendered="#{projectView.renderCoordinateCorrections()}">
-                            <span class="glyphicon glyphicon-eye-open"></span> Observaciones
-                        </p:commandLink>
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <p:outputLabel id="decimalCoordinateHelp" styleClass="btn btn-primary">
+                            <span class="glyphicon glyphicon-info-sign"></span>
+                        </p:outputLabel>
+                        <p:tooltip for="decimalCoordinateHelp" value="Ayuda Coordenadas Decimales" position="top"/>                        
                     </div>
                 </div>
 
+                <p:outputLabel for="schedule" value="Calendario"/>
                 <div class="row">
-                    <div class="form-group col-sm-8">
-                        <p:outputLabel for="schedule" value="Calendario"/>
+                    <div class="form-group col-sm-8">                        
                         <p:fileUpload id="schedule" fileUploadListener="#{projectView.handleSchedule}"
                                       rendered="#{projectView.editOptions()}"
                                       skinSimple="true" auto="true"
                                       label="Seleccionar"
                                       update="labelSchedule"
-                                      sizeLimit="15000000"
+                                      sizeLimit="16000000"
                                       allowTypes="/(\.|\/)(pdf)$/"
                                       invalidFileMessage="Solo se puede cargar archivos pdf"
-                                      invalidSizeMessage="Archivo demasiado grande, limite de 15MB"
+                                      invalidSizeMessage="Archivo demasiado grande, limite de 16MB"
                                       >                                       
                         </p:fileUpload>
                         <h:commandLink id="labelSchedule" value="#{projectView.sheduleFileName}" class="text-primary"
@@ -306,23 +354,29 @@
                                                          update=":#{p:component('dlgCmt')}"
                                                          actionListener="#{projectView.getCalendarCorrections()}"
                                                          rendered="#{projectView.renderCalendarCorrections()}">
-                            <span class="glyphicon glyphicon-eye-open"></span> Observaciones
+                            <span class="glyphicon glyphicon-eye-open"></span> Correcciones
                         </p:commandLink>
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <p:outputLabel id="scheduleHelp" styleClass="btn btn-primary">
+                            <span class="glyphicon glyphicon-info-sign"></span>
+                        </p:outputLabel>
+                        <p:tooltip for="scheduleHelp" value="Ayuda Calendario" position="top"/>                        
                     </div>
                 </div>
 
+                <p:outputLabel for="investmentPlan" value="Plan de Inversión"/>
                 <div class="row">
-                    <div class="form-group col-sm-8">
-                        <p:outputLabel for="investmentPlan" value="Plan de Inversión"/>
+                    <div class="form-group col-sm-8">                        
                         <p:fileUpload id="investmentPlan" fileUploadListener="#{projectView.handleInvestmentPlan}"
                                       rendered="#{projectView.editOptions()}"
                                       skinSimple="true" auto="true"
                                       label="Seleccionar"
                                       update="labelInvestmentPlan"
-                                      sizeLimit="15000000"
+                                      sizeLimit="16000000"
                                       allowTypes="/(\.|\/)(pdf)$/"
                                       invalidFileMessage="Solo se puede cargar archivos pdf"
-                                      invalidSizeMessage="Archivo demasiado grande, limite de 14MB"
+                                      invalidSizeMessage="Archivo demasiado grande, limite de 16MB"
                                       >                                       
                         </p:fileUpload>
                         <h:commandLink id="labelInvestmentPlan" value="#{projectView.investmentPlanFileName}" class="text-primary"
@@ -335,9 +389,15 @@
                                                          update=":#{p:component('dlgCmt')}"
                                                          actionListener="#{projectView.getPlanCorrections()}"
                                                          rendered="#{projectView.renderPlanCorrections()}">
-                            <span class="glyphicon glyphicon-eye-open"></span> Observaciones
+                            <span class="glyphicon glyphicon-eye-open"></span> Correcciones
                         </p:commandLink>
-                    </div>                    
+                    </div>        
+                    <div class="form-group col-sm-3">
+                        <p:outputLabel id="investmentPlanHelp" styleClass="btn btn-primary">
+                            <span class="glyphicon glyphicon-info-sign"></span>
+                        </p:outputLabel>
+                        <p:tooltip for="investmentPlanHelp" value="Ayuda plan de Inversión" position="top"/>                        
+                    </div>
                 </div>
 
                 <div class="row">
@@ -352,6 +412,7 @@
                                         <div class="form-group col-sm-4">
                                             <p:calendar id="expirationDate" pt:placeholder="Fecha Publicación"
                                                         readonly="#{!projectView.editOptions()}"
+                                                        disabled="#{!projectView.editOptions()}"
                                                         pattern="dd/MM/yyyy" 
                                                         locale="es"
                                                         value="#{bibliography.publicactionYear}"
@@ -386,82 +447,115 @@
                                     </div>
                                 </p:dataViewListItem>
                             </p:dataView>
+                            <br/>
                             <p:commandLink styleClass="btn btn-success" actionListener="#{projectView.project.addBibliography}" update="biblioghraphies"
                                            process="#{p:component('biblioghraphies')}"
                                            rendered="#{projectView.editOptions()}">
                                 <span class="glyphicon glyphicon-plus"></span> Agregar
                             </p:commandLink>
+                            <br/>
+                            <br/>
+                            <p:commandLink class="btn btn-primary btn-xs"
+                                           title="Realizar Comentario"
+                                           oncomplete="PF('dlgCmt').show();"
+                                           update=":#{p:component('dlgCmt')}"
+                                           actionListener="#{projectView.getBibliographyCorrections()}"
+                                           rendered="#{projectView.renderBibligraphyCorrections()}">
+                                <span class="glyphicon glyphicon-eye-open"></span> Correcciones
+                            </p:commandLink><br></br><br></br>
                         </p:panel>
-                        <br></br><p:commandLink class="btn btn-primary btn-xs"
-                                                title="Realizar Comentario"
-                                                oncomplete="PF('dlgCmt').show();"
-                                                update=":#{p:component('dlgCmt')}"
-                                                actionListener="#{projectView.getBibliographyCorrections()}"
-                                                rendered="#{projectView.renderBibligraphyCorrections()}">
-                            <span class="glyphicon glyphicon-eye-open"></span> Observaciones
-                        </p:commandLink><br></br><br></br>
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <p:outputLabel id="bibliographyHelp" styleClass="btn btn-primary">
+                            <span class="glyphicon glyphicon-info-sign"></span>
+                        </p:outputLabel>
+                        <p:tooltip for="bibliographyHelp" value="Ayuda Bibliografica" position="top"/>                        
                     </div>
                 </div>
+                <p:outputLabel for="annexed" value="Anexos"/>
                 <div class="row">
-                    <div class="form-group col-sm-8">
-                        <p:outputLabel for="annexed" value="Anexos"/>
+                    <div class="form-group col-sm-8">                        
                         <p:fileUpload id="annexed" fileUploadListener="#{projectView.handleAnnexed}"
                                       skinSimple="true" auto="true"
                                       rendered="#{projectView.editOptions()}"
                                       label="Seleccionar"
                                       update="labelAnnexed"
-                                      sizeLimit="15000000"
+                                      sizeLimit="16000000"
                                       allowTypes="/(\.|\/)(pdf)$/"
                                       invalidFileMessage="Solo se puede cargar archivos pdf"
-                                      invalidSizeMessage="Archivo demasiado grande, limite de 14MB"
+                                      invalidSizeMessage="Archivo demasiado grande, limite de 16MB"
                                       >                                       
                         </p:fileUpload>
                         <h:commandLink id="labelAnnexed" value="#{projectView.annexedFileName}" class="text-primary"
                                        target="_blank" actionListener="#{projectView.reloadAnnexed()}">
                             <p:fileDownload value="#{projectView.annexedStream}" contentDisposition="inline"/>
-                        </h:commandLink>
+                        </h:commandLink>                        
                         <br></br><p:commandLink class="btn btn-primary btn-xs"
                                                 title="Realizar Comentario"
                                                 oncomplete="PF('dlgCmt').show();"
                                                 update=":#{p:component('dlgCmt')}"
                                                 actionListener="#{projectView.getAnexoCorrections()}"
                                                 rendered="#{projectView.renderAnexoCorrections()}">
-                            <span class="glyphicon glyphicon-eye-open"></span> Observaciones
-                        </p:commandLink><br></br><br></br>
+                            <span class="glyphicon glyphicon-eye-open"></span> Correcciones
+                        </p:commandLink>
+                        <br></br><br></br>
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <p:outputLabel id="annexedHelp" styleClass="btn btn-primary">
+                            <span class="glyphicon glyphicon-info-sign"></span>
+                        </p:outputLabel>
+                        <p:tooltip for="annexedHelp" value="Ayuda Anexos" position="top"/>                        
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <p:commandLink id="deleteAEIO" styleClass="btn btn-danger"
+                                       update="labelAnnexed"
+                                       rendered="#{projectView.editOptions()}"
+                                       actionListener="#{projectView.deleteAnnexed()}">
+                            <span class="glyphicon glyphicon-trash"></span>
+                        </p:commandLink>
+                        <p:tooltip id="toolTipFade" for="deleteAEIO" value="Eliminar Anexos" position="top"/>                        
                     </div>
                 </div>
-                <div class="row">
-                    <div class="form-group col-sm-2">
+                <div class="btn-toolbar">
+                    <div class="btn-group mr-2">
                         <p:commandLink styleClass="btn btn-primary"
                                        update="@form,:growl" 
                                        rendered="#{projectView.editOptions()}"
                                        onstart="PF('progressBar').show();"
-                                       oncomplete="PF('progressBar').close();"
-                                       action="#{projectView.uploadCreate('progressBar')}">
-                            <span class="glyphicon glyphicon-floppy-disk"></span> Guardar Proyecto EPS
+                                       onsuccess="PF('progressBar').hide();"
+                                       actionListener="#{projectView.uploadCreate()}">
+                            <span class="glyphicon glyphicon-floppy-disk"></span> Guardar
                         </p:commandLink>
                     </div>
 
-                    <div class="form-group col-sm-2">
-                        <p:commandLink styleClass="btn btn-info"
-                                       actionListener="#{projectView.createPDF()}"
-                                       rendered="#{projectView.editOptions()}"
-                                       update="openFile, :growl">
-                            <span class="glyphicon glyphicon-file"></span> Generar Archivo PDF
-                        </p:commandLink>
-                    </div>
-                    <div class="form-group col-sm-2">
+                    <div class="btn-group mr-2">
                         <p:commandLink styleClass="btn btn-success"
                                        update="@form,:growl"
                                        rendered="#{projectView.editOptions()}"
-                                       action="#{projectView.reviewRequeried()}">
-                            <p:confirm header="Solicitar Revision" message="Al solicitar la revision ya no se podra editar el proyecto. ¿quieres solicitar revision?" icon="pi pi-exclamation-triangle" />
+                                       actionListener="#{projectView.reviewRequeried()}"
+                                       onstart="PF('progressBar').show();"
+                                       onsuccess="PF('progressBar').hide();"
+                                       >
+                            <p:confirm header="Solicitar Revisión" message="Al solicitar revisión ya no se podrá editar el Anteproyecto. ¿Quieres solicitar revisión?" icon="pi pi-exclamation-triangle" />
                             <span class="glyphicon glyphicon-check"></span> Solicitar Revisión
                         </p:commandLink>
                     </div>
-                    <div jsf:id="openFile" class="form-group col-sm-2">
+
+                    <div class="btn-group mr-2">
+                        <p:commandLink styleClass="btn btn-info"
+                                       actionListener="#{projectView.createPDF()}"
+                                       rendered="#{projectView.editOptions()}"
+                                       update="openFile, :growl"
+                                       onstart="PF('progressBar').show();"
+                                       onsuccess="PF('progressBar').hide();"
+                                       >
+                            <span class="glyphicon glyphicon-file"></span> Generar Archivo PDF
+                        </p:commandLink>
+                    </div>
+
+                    <div jsf:id="openFile" class="btn-group mr-2">
                         <h:commandLink id="openPDF" 
-                                       styleClass="btn btn-success"
+                                       styleClass="btn btn-info"
                                        target="_blank"
                                        rendered="#{projectView.pdfFile!=null}"
                                        >
@@ -470,9 +564,11 @@
                         </h:commandLink>
                     </div>
                 </div>
+                <br/>
             </fieldset>
         </h:form>
-        <p:dialog  header="Comentarios" id="dlgCmt" widgetVar="dlgCmt"
+
+        <p:dialog  header="Correciones" id="dlgCmt" widgetVar="dlgCmt"
                    fitViewport="true" modal="true" closeOnEscape="true" position="center">
             <p:ajax event="close" update="@this" listener="#{projectView.clearCorrectionSelected()}"/>
             <h:form>
@@ -492,10 +588,10 @@
                                                     <h:outputText value="#{correction.user.ROLid.name}"/>
                                                 </p:column>
                                                 <p:column headerText="Usuario">
-                                                    <h:outputText value="#{correction.user.firstName}"/>
+                                                    <h:outputText value="#{correction.user.firstName} #{correction.user.lastName}"/>
                                                 </p:column>
                                                 <p:column headerText="Correccion">
-                                                    <h:outputText value="#{projectView.arrayToString(correction.text)}"/>
+                                                    <h:outputText value="#{correction.text}"/>
                                                 </p:column>
                                             </p:dataTable>
                                         </div>
@@ -507,12 +603,14 @@
                 </div>
             </h:form>
         </p:dialog>
+
         <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" >
             <div class="col text-center">
-                <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
-                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+                <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" />
             </div>
         </p:confirmDialog>
+
         <p:dialog id="progressBar" widgetVar="progressBar" closable="false" width="20%" showHeader="false" resizable="false"
                   modal="true" closeOnEscape="true">
             <p:ajax event="close" update="@this" />
@@ -523,5 +621,6 @@
                 <p:progressBar id="progressBarIndeterminate" style="height:6px" mode="indeterminate"/>
             </div>
         </p:dialog>
+
     </ui:define>
 </ui:composition>

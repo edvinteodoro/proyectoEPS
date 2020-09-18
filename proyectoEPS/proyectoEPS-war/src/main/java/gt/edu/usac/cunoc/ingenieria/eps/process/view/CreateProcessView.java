@@ -1,10 +1,11 @@
 package gt.edu.usac.cunoc.ingenieria.eps.process.view;
 
+import User.exception.UserException;
+import gt.edu.usac.cunoc.ingenieria.eps.exception.ValidationException;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Requeriment;
 import gt.edu.usac.cunoc.ingenieria.eps.process.StateProcess;
 import gt.edu.usac.cunoc.ingenieria.eps.process.facade.ProcessFacadeLocal;
-import gt.edu.usac.cunoc.ingenieria.eps.user.Career;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import gt.edu.usac.cunoc.ingenieria.eps.user.UserCareer;
 import gt.edu.usac.cunoc.ingenieria.eps.user.facade.UserFacadeLocal;
@@ -60,8 +61,6 @@ public class CreateProcessView implements Serializable {
 
     private List<UserCareer> userCareers;
 
-    private Boolean creando;
-
     String nameWrittenRequest = "";
     String nameInscriptionConstancy = "";
     String namePensumeClosure = "";
@@ -72,11 +71,10 @@ public class CreateProcessView implements Serializable {
     @PostConstruct
     public void init() {
         try {
-            creando = false;
             user = userFacade.getAuthenticatedUser().get(0);
             userCareers = new ArrayList<>();
             setCarrerToList();
-        } catch (Exception e) {
+        } catch (UserException e) {
             System.out.println("No se pudo obtener usuario" + e);
         }
     }
@@ -124,20 +122,9 @@ public class CreateProcessView implements Serializable {
         this.user = user;
     }
 
-    private Boolean crearProceso() {
-        Boolean value = false;
-        if (getProcess().getUserCareer().getProcess() == null) {
-            value = true;
-        } else if (getProcess().getUserCareer().getProcess().getState().equals(StateProcess.RECHAZADO)) {
-            getProcess().setUserCareer(new UserCareer(getProcess().getUserCareer().getCAREERcodigo(), getProcess().getUserCareer().getUSERuserId()));
-            value = true;
-        }
-        return value;
-    }
-
     public void guardar() throws IOException {
         if (!nullFiles()) {
-            if (crearProceso()) {
+            try {
                 getProcess().setApprovedEPSDevelopment(false);
                 getProcess().setState(StateProcess.ACTIVO);
                 getProcess().setProgress(0);
@@ -151,27 +138,13 @@ public class CreateProcessView implements Serializable {
                 if (aeioSettlement != null) {
                     getRequeriment().setAEIOsettlement(aeioSettlement.getContents());
                 }
-                List<User> coordinadors = userFacade.getCareerCoordinator(getProcess());
-                if (coordinadors != null && !coordinadors.isEmpty()) {
-                    processFacade.createProcess(getProcess());
-                    MessageUtils.addSuccessMessage("Se ha creado registrado el proceso");
-                    redirectToProcesses();
-                } else {
-                    MessageUtils.addErrorMessage("No se pudo crear el proceso debido que no hay ningun coordinador para la carrera seleccionada");
-                }
-            } else {
-                MessageUtils.addErrorMessage("Ya se tiene un proceso de Eps con la carrera");
+                processFacade.createProcess(getProcess());
+                MessageUtils.addSuccessMessage("Se ha creado el proceso");
+                redirectToProcesses();
+            } catch (ValidationException ex) {
+                MessageUtils.addErrorMessage(ex.getMessage());
             }
         }
-    }
-
-    public void actualizar() throws IOException {
-        setCreando(true);
-        new Thread() {
-            public void funcion() throws IOException {
-                guardar();
-            }
-        }.start();
     }
 
     public UploadedFile getFileInputStream() {
@@ -275,7 +248,7 @@ public class CreateProcessView implements Serializable {
     }
 
     private void redirectToProcesses() throws IOException {
-        externalContext.redirect(externalContext.getRequestContextPath() + "/process/processes.xhtml");
+        externalContext.redirect(externalContext.getRequestContextPath() + "/process/myProcesses.xhtml");
     }
 
     public StreamedContent getWrittenRequestStream() {
@@ -331,23 +304,23 @@ public class CreateProcessView implements Serializable {
     }
 
     public void reloadInscriptionConstancy() {
-        writtenRequestStream = new DefaultStreamedContent(new ByteArrayInputStream(writtenRequest.getContents()), "application/pdf", "Solicitud Escrita.pdf");
+        inscriptionConstancyStream = new DefaultStreamedContent(new ByteArrayInputStream(inscriptionConstancy.getContents()), "application/pdf", "Solicitud Escrita.pdf");
     }
 
     public void reloadPensumeClosure() {
-        writtenRequestStream = new DefaultStreamedContent(new ByteArrayInputStream(writtenRequest.getContents()), "application/pdf", "Solicitud Escrita.pdf");
+        pensumeClosureStream = new DefaultStreamedContent(new ByteArrayInputStream(pensumeClosure.getContents()), "application/pdf", "Solicitud Escrita.pdf");
     }
 
     public void reloadPropedeuticConstancy() {
-        writtenRequestStream = new DefaultStreamedContent(new ByteArrayInputStream(writtenRequest.getContents()), "application/pdf", "Solicitud Escrita.pdf");
+        propedeuticConstancyStream = new DefaultStreamedContent(new ByteArrayInputStream(propedeuticConstancy.getContents()), "application/pdf", "Solicitud Escrita.pdf");
     }
 
     public void reloadEpsPreProjec() {
-        writtenRequestStream = new DefaultStreamedContent(new ByteArrayInputStream(writtenRequest.getContents()), "application/pdf", "Solicitud Escrita.pdf");
+        epsPreProjectStream = new DefaultStreamedContent(new ByteArrayInputStream(epsPreProject.getContents()), "application/pdf", "Solicitud Escrita.pdf");
     }
 
     public void reloadAeioSettlemen() {
-        writtenRequestStream = new DefaultStreamedContent(new ByteArrayInputStream(writtenRequest.getContents()), "application/pdf", "Solicitud Escrita.pdf");
+        aeioSettlementStream = new DefaultStreamedContent(new ByteArrayInputStream(aeioSettlement.getContents()), "application/pdf", "Solicitud Escrita.pdf");
     }
 
     public List<UserCareer> getUserCareers() {
@@ -357,21 +330,11 @@ public class CreateProcessView implements Serializable {
     public void setUserCareers(List<UserCareer> userCareers) {
         this.userCareers = userCareers;
     }
-
-    public Boolean getCreando() {
-        return creando;
+    
+    public void deleteAeioSettlemen(){
+        this.aeioSettlement = null;
+        this.aeioSettlementStream = null;
+        this.nameAeioSettlemen = "";
     }
 
-    public void setCreando(Boolean creando) {
-        this.creando = creando;
-    }
-
-    private boolean existeProcess() {
-        for (int i = 0; i < userCareers.size(); i++) {
-            if (userCareers.get(i) == getProcess().getUserCareer()) {
-                return true;
-            }
-        }
-        return false;
-    }
 }

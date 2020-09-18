@@ -28,7 +28,7 @@ import javax.persistence.criteria.Root;
 public class UserRepository {
 
     public static final String GET_USER_CAREER_ROL = "SELECT u.uSERuserId FROM UserCareer u WHERE u.uSERuserId.status=TRUE AND u.cAREERcodigo.codigo=:codigo AND u.uSERuserId.rOLid.name=:rolName";
-    public static final String GET_NUMBER_PROCESSES_SUPERVISOR_EPS = "SELECT COUNT(c.id) FROM Process c WHERE c.supervisor_EPS.userId=:userIdSupervisorEPS AND (c.state != :RECHAZADO OR c.state != :INACTIVO)";
+    public static final String GET_NUMBER_PROCESSES_SUPERVISOR_EPS = "SELECT COUNT(c.id) FROM Process c WHERE c.supervisor_EPS.userId=:userIdSupervisorEPS AND (c.state != :RECHAZADO AND c.state != :INACTIVO)";
 
     @PersistenceContext(name = PERSISTENCE_UNIT_NAME)
     private EntityManager entityManager;
@@ -128,8 +128,8 @@ public class UserRepository {
         if (user.getEpsCommittee() != null) {
             predicates.add(criteriaBuilder.equal(userR.get("epsCommittee"), user.getEpsCommittee()));
         }
-        if (user.getrOLid() != null && user.getrOLid().getName() != null && !user.getrOLid().getName().replace(" ", "").isEmpty()) {
-            predicates.add(criteriaBuilder.equal(userR.get("rOLid").get("name"), user.getrOLid().getName()));
+        if (user.getROLid()!= null && user.getROLid().getName() != null && !user.getROLid().getName().replace(" ", "").isEmpty()) {
+            predicates.add(criteriaBuilder.equal(userR.get("rOLid").get("name"), user.getROLid().getName()));
         }
 
         criteriaQuery.where(predicates.stream().toArray(Predicate[]::new));

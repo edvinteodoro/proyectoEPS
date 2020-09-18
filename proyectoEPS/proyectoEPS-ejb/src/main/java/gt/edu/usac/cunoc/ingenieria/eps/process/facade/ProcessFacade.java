@@ -2,8 +2,10 @@ package gt.edu.usac.cunoc.ingenieria.eps.process.facade;
 
 import User.exception.UserException;
 import gt.edu.usac.cunoc.ingenieria.eps.configuration.mail.MailService;
+import gt.edu.usac.cunoc.ingenieria.eps.exception.MandatoryException;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.ValidationException;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Appointment;
+import gt.edu.usac.cunoc.ingenieria.eps.process.Observation;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Requeriment;
 import gt.edu.usac.cunoc.ingenieria.eps.process.repository.ProcessRepository;
 import gt.edu.usac.cunoc.ingenieria.eps.process.repository.RequerimentRepository;
@@ -13,9 +15,10 @@ import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import static gt.edu.usac.cunoc.ingenieria.eps.process.StateProcess.ACTIVO;
 import static gt.edu.usac.cunoc.ingenieria.eps.process.StateProcess.RECHAZADO;
 import static gt.edu.usac.cunoc.ingenieria.eps.process.StateProcess.REVISION;
-import static gt.edu.usac.cunoc.ingenieria.eps.process.appointmentState.*;
 import gt.edu.usac.cunoc.ingenieria.eps.process.repository.AppointmentRepository;
+import gt.edu.usac.cunoc.ingenieria.eps.process.repository.ObservationRepository;
 import gt.edu.usac.cunoc.ingenieria.eps.process.service.AppointmentService;
+import gt.edu.usac.cunoc.ingenieria.eps.process.service.ObservationService;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Correction;
 import gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection;
 import gt.edu.usac.cunoc.ingenieria.eps.project.facade.ProjectFacadeLocal;
@@ -25,7 +28,6 @@ import gt.edu.usac.cunoc.ingenieria.eps.user.Career;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import gt.edu.usac.cunoc.ingenieria.eps.user.facade.UserFacade;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import javax.ejb.EJB;
@@ -62,6 +64,12 @@ public class ProcessFacade implements ProcessFacadeLocal {
 
     @EJB
     private AppointmentService appointmentService;
+    
+    @EJB
+    private ObservationService observationService;
+    
+    @EJB
+    private ObservationRepository observationRepository;
 
     @EJB
     MailService mailService;
@@ -97,7 +105,7 @@ public class ProcessFacade implements ProcessFacadeLocal {
     }
 
     @Override
-    public Process createProcess(Process process) {
+    public Process createProcess(Process process)throws ValidationException {
         return processService.createProcess(process);
     }
 
@@ -162,8 +170,7 @@ public class ProcessFacade implements ProcessFacadeLocal {
                     result.get().setState(ACTIVO);
                     updateProcess(result.get());
                     tailCommitteeEPSFacadeLocal.deleteTailCommitteeEPS(result.get());
-
-                    //Falta enviar notificacion por correo
+                    processRepository.sendEmailStudentCommitteeEPS(result.get().getUserCareer().getUSERuserId(), "Revisión Proceso Eps", "Su Anteproyecto ha sido revisado por el Comite EPS, ya es posible editar el documento y realizar los cambios solicitados.");                    
                     return result;
                 }
             } else {
@@ -189,10 +196,8 @@ public class ProcessFacade implements ProcessFacadeLocal {
                     result.get().setState(REVISION);
                     result.get().setApprovalEPSCommission(true);
                     updateProcess(result.get());
-                    tailCommitteeEPSFacadeLocal.deleteTailCommitteeEPS(result.get());
-                    //Metodo para enviar agregar a siguiente etapa
-
-                    //Falta enviar notificacion por correo
+                    tailCommitteeEPSFacadeLocal.deleteTailCommitteeEPS(result.get());                    
+                    processRepository.sendEmailStudentCommitteeEPS(result.get().getUserCareer().getUSERuserId(), "Proceso EPS Aceptado", "Su Anteproyecto ha sido aceptado por la Comisión EPS");                    
                     return result;
                 }
             } else {
@@ -209,7 +214,7 @@ public class ProcessFacade implements ProcessFacadeLocal {
      * {@inheritDoc}
      */
     @Override
-    public Optional<Process> EPSCommitteeRejectProyect(Integer id, User user, String message) throws UserException {
+    public Optional<Process> EPSCommitteeRejectProyect(Integer id, User user, String message) throws UserException, MandatoryException {
         List<Process> processes = tailCommitteeEPSFacadeLocal.getTailCommitteeEPS();
         Optional<Process> result = ProcessAvailableToEPSCommittee(id);
 
@@ -221,8 +226,8 @@ public class ProcessFacade implements ProcessFacadeLocal {
                     updateProcess(result.get());
                     tailCommitteeEPSFacadeLocal.deleteTailCommitteeEPS(result.get());
                     projectFacade.createCorrection(new Correction(LocalDate.now(), user, TypeCorrection.REJECTED, result.get().getProject(), null, message.getBytes()));
-
-                    //Falta enviar notificacion por correo
+                    processRepository.sendEmailStudentCommitteeEPS(result.get().getUserCareer().getUSERuserId(), "Proceso EPS Rechazado", "Su Anteproyecto ha sido Rechazado por la Comisión EPS. <br/>" + message);                    
+                    
                     return result;
                 }
             } else {
@@ -253,7 +258,7 @@ public class ProcessFacade implements ProcessFacadeLocal {
 
     private boolean existsUser(User user) throws UserException {
         User search = new User();
-        search.setrOLid(user.getROLid());
+        search.setROLid(user.getROLid());
         search.setDpi(user.getDpi());
 
         return (!userFacade.getUser(search).isEmpty());
@@ -294,6 +299,16 @@ public class ProcessFacade implements ProcessFacadeLocal {
     @Override
     public Process sendCompanySupervisorToSupervisor(Process process) throws ValidationException, UserException {
         return processService.sendCompanySupervisorToSupervisor(process);
+    }
+
+    @Override
+    public void createObservation(Observation newObservation) throws MandatoryException {
+       observationService.createObservation(newObservation);
+    }
+
+    @Override
+    public List<Observation> getRequerimentsObservations(Integer requerimentId) {
+        return observationRepository.getRequerimentsObservations(requerimentId);
     }
 
 }

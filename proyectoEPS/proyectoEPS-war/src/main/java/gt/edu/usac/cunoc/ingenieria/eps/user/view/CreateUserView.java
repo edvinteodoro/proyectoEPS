@@ -11,19 +11,27 @@ import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.SECRETARI
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.SECRETARIA_EPS;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.SUPERVISOR_EMPRESA;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.SUPERVISOR_EPS;
+import gt.edu.usac.cunoc.ingenieria.eps.exception.HttpClientException;
+import gt.edu.usac.cunoc.ingenieria.eps.thirdparty.studentdata.StudentData;
 import gt.edu.usac.cunoc.ingenieria.eps.user.Career;
 import gt.edu.usac.cunoc.ingenieria.eps.user.Rol;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import gt.edu.usac.cunoc.ingenieria.eps.user.UserCareer;
 import gt.edu.usac.cunoc.ingenieria.eps.user.facade.UserFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.utils.MessageUtils;
+import java.io.ByteArrayInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
+import org.primefaces.model.UploadedFile;
 
 @Named
 @ViewScoped
@@ -43,13 +51,21 @@ public class CreateUserView implements Serializable {
     private Boolean personalCodeFlag;
     private Boolean academicRegisterFlag;
     private Boolean careerSelectionFlag;
+    private Boolean personalResumeFlag;
+
+    private Boolean searchStudent;
+
+    private StreamedContent personalResumeStream;
+    private UploadedFile personalResume;
+    private String personalResumeFileName = "";
 
     @PostConstruct
     public void init() {
         try {
             loginUser = userFacade.getAuthenticatedUser().get(0);
             rolUsers = userFacade.getAllRolUser();
-            switch (loginUser.getROLid().getName()){
+            eliminatedRolByName(SUPERVISOR_EMPRESA);
+            switch (loginUser.getROLid().getName()) {
                 case COORDINADOR_EPS:
                     eliminatedRolByName(DIRECTOR);
                     eliminatedRolByName(COORDINADOR_EPS);
@@ -71,8 +87,8 @@ public class CreateUserView implements Serializable {
                     eliminatedRolByName(REVISOR);
                     eliminatedRolByName(ASESOR);
                     eliminatedRolByName(SUPERVISOR_EPS);
-                    eliminatedRolByName(SUPERVISOR_EMPRESA);
-                    break;    
+                    
+                    break;
             }
             careers = userFacade.getAllCareer();
             verifyView();
@@ -80,17 +96,17 @@ public class CreateUserView implements Serializable {
             System.out.println(ex.getMessage());
         }
     }
-    
-    private void eliminatedRolByName(String rolName){
+
+    private void eliminatedRolByName(String rolName) {
         boolean flagRemove = false;
         int indexRolUser = 0;
         for (int i = 0; i < rolUsers.size(); i++) {
-            if (rolUsers.get(i).getName().equalsIgnoreCase(rolName)){
+            if (rolUsers.get(i).getName().equalsIgnoreCase(rolName)) {
                 indexRolUser = i;
                 flagRemove = true;
             }
         }
-        if (flagRemove){
+        if (flagRemove) {
             rolUsers.remove(indexRolUser);
         }
     }
@@ -178,16 +194,37 @@ public class CreateUserView implements Serializable {
         this.careerSelectionFlag = careerSelectionFlag;
     }
 
+    public Boolean getPersonalResumeFlag() {
+        return personalResumeFlag;
+    }
+
+    public void setPersonalResumeFlag(Boolean personalResumeFlag) {
+        this.personalResumeFlag = personalResumeFlag;
+    }
+
+    public Boolean getSearchStudent() {
+        return searchStudent;
+    }
+
+    public void setSearchStudent(Boolean searchStudent) {
+        this.searchStudent = searchStudent;
+    }
+
     public void createUser() {
         try {
+            getUserCareers().clear();
             for (int i = 0; i < getSelectedCareers().size(); i++) {
                 getUserCareers().add(new UserCareer(getSelectedCareers().get(i), getUser()));
             }
             getUser().setUserCareers(getUserCareers());
+            if (personalResume != null){
+                getUser().setPersonalResume(personalResume.getContents());
+            }
             userFacade.createUser(getUser());
             MessageUtils.addSuccessMessage("Se ha registrado el usuario correctamente");
-            cleanUser();
-        } catch (Exception ex) {
+            cleanNewUser();
+            verifyView();
+        } catch (UserException ex) {
             MessageUtils.addErrorMessage(ex.getMessage());
         }
     }
@@ -199,34 +236,118 @@ public class CreateUserView implements Serializable {
                     personalCodeFlag = false;
                     academicRegisterFlag = true;
                     careerSelectionFlag = true;
+                    searchStudent = true;                    
+                    personalResumeFlag = false;
                     break;
                 case Constants.COORDINADOR_CARRERA:
-                case Constants.REVISOR:
-                case Constants.ASESOR:
                 case Constants.SUPERVISOR_EPS:
                     personalCodeFlag = true;
                     academicRegisterFlag = false;
                     careerSelectionFlag = true;
+                    searchStudent = false;                    
+                    personalResumeFlag = false;
+                    break;
+                case Constants.REVISOR:
+                case Constants.ASESOR:
+                    personalCodeFlag = true;
+                    academicRegisterFlag = false;
+                    careerSelectionFlag = true;
+                    searchStudent = false;                    
+                    personalResumeFlag = true;
                     break;
                 case Constants.SUPERVISOR_EMPRESA:
                     personalCodeFlag = false;
                     academicRegisterFlag = false;
                     careerSelectionFlag = false;
+                    searchStudent = false;                    
+                    personalResumeFlag = false;
                     break;
                 default:
                     personalCodeFlag = true;
                     academicRegisterFlag = false;
                     careerSelectionFlag = false;
+                    searchStudent = false;
+                    personalResumeFlag = false;
             }
+            cleanUser();
         } else {
             personalCodeFlag = false;
             academicRegisterFlag = true;
             careerSelectionFlag = true;
+            searchStudent = true;
         }
     }
 
-    private void cleanUser() {
+    public void fillStudent() {
+        try {
+            Optional<StudentData> data = userFacade.getStudentData(user.getAcademicRegister());
+            if (data.isPresent()) {
+                user.setDpi(data.get().getCui());
+                user.setFirstName(data.get().getNombres());
+                user.setLastName(data.get().getApellidos());
+                MessageUtils.addSuccessMessage("Estudiante encontrado");
+            } else {
+                cleanUser();
+                MessageUtils.addErrorMessage("No se encontró el Estudiante");
+            }
+        } catch (HttpClientException ex) {
+            MessageUtils.addErrorMessage(ex.getMessage() + "\nIngrese los datos Manualmente");
+            searchStudent = false;
+        }
+    }
+
+    public void handlePersonalResume(FileUploadEvent event) {
+        this.personalResume = event.getFile();
+        this.personalResumeFileName = event.getFile().getFileName();
+        this.personalResumeStream = new DefaultStreamedContent(new ByteArrayInputStream(personalResume.getContents()), "application/pdf", "Curriculum.pdf");
+    }
+
+    public String getPersonalResumeFileName() {
+        return personalResumeFileName;
+    }
+
+    public void setPersonalResumeFileName(String personalResumeFileName) {
+        this.personalResumeFileName = personalResumeFileName;
+    }
+
+    public StreamedContent getPersonalResumeStream() {
+        return personalResumeStream;
+    }
+
+    public void setPersonalResumeStream(StreamedContent personalResumeStream) {
+        this.personalResumeStream = personalResumeStream;
+    }
+
+    public void reloadPersonalResume() {
+        this.personalResumeStream = new DefaultStreamedContent(new ByteArrayInputStream(personalResume.getContents()), "application/pdf", "Curriculum.pdf");
+    }
+
+    private void cleanNewUser() {
         user = null;
+        personalResume = null;
+        personalResumeFileName = "";
+        getSelectedCareers().clear();
+        getUserCareers().clear();
+    }
+
+    private void cleanUser() {
+        getUser().setUserId("");
+        getUser().setDpi("");
+        getUser().setAcademicRegister("");
+        getUser().setCodePersonal("");
+        getUser().setFirstName("");
+        getUser().setLastName("");
+        getUser().setEmail("");
+        getUser().setPhone1("");
+        getUser().setPhone2("");
+        getUser().setPassword("");
+        getUser().setDirection("");
+        getUser().setNameCompanyWork("");
+        getUser().setDirectionCompanyWork("");
+        getUser().setPhoneCompanyWork("");
+        getUser().setPersonalResume(new byte[0]);
+        personalResume = null;
+        personalResumeFileName = "";
         getSelectedCareers().clear();
         getUserCareers().clear();
     }

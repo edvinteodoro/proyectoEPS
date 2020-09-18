@@ -19,8 +19,6 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -167,11 +165,11 @@ public class advisorReviewerView implements Serializable {
             if (advisor && processSelected.getAppointmentId().getUserAdviser() == null) {
 
                 actualUser = new User();
-                actualUser.setrOLid(userFacade.getRolUser(new Rol(null, ASESOR)).get(0));
+                actualUser.setROLid(userFacade.getRolUser(new Rol(null, ASESOR)).get(0));
             } else if (!advisor && processSelected.getAppointmentId().getUserReviewer() == null) {
 
                 actualUser = new User();
-                actualUser.setrOLid(userFacade.getRolUser(new Rol(null, REVISOR)).get(0));
+                actualUser.setROLid(userFacade.getRolUser(new Rol(null, REVISOR)).get(0));
             } else {
                 clean();
                 MessageUtils.addErrorMessage("El usuario ya existe");
@@ -191,16 +189,20 @@ public class advisorReviewerView implements Serializable {
             if (existsUser(actualUser)) {
                 MessageUtils.addErrorMessage("El usuario ya existe con ese cargo");
             } else {
-                if (isAdvisor) {
-                    processSelected.getAppointmentId().setUserAdviser(actualUser);
-                    processSelected.getAppointmentId().setAdviserState(REVIEW);
+                if (personalResume != null) {
+                    if (isAdvisor) {
+                        processSelected.getAppointmentId().setUserAdviser(actualUser);
+                        processSelected.getAppointmentId().setAdviserState(REVIEW);
+                    } else {
+                        processSelected.getAppointmentId().setUserReviewer(actualUser);
+                        processSelected.getAppointmentId().setReviewerState(REVIEW);
+                    }
+                    PrimeFaces.current().executeScript("PF('" + modalIdToClose + "').hide()");
+                    MessageUtils.addSuccessMessage("Usuario agregado");
+                    clean();
                 } else {
-                    processSelected.getAppointmentId().setUserReviewer(actualUser);
-                    processSelected.getAppointmentId().setReviewerState(REVIEW);
+                    MessageUtils.addErrorMessage("Falta Curriculum");
                 }
-                PrimeFaces.current().executeScript("PF('" + modalIdToClose + "').hide()");
-                MessageUtils.addSuccessMessage("Usuario agregado");
-                clean();
             }
         } catch (UserException e) {
             MessageUtils.addErrorMessage(e.getMessage());
@@ -266,7 +268,7 @@ public class advisorReviewerView implements Serializable {
             processFacade.returnAppointmentToStudent(processSelected);
             init();
             PrimeFaces.current().executeScript("PF('" + modalIdToClose + "').hide()");
-            MessageUtils.addSuccessMessage("Se ha notificado a los interesados de la desición");
+            MessageUtils.addSuccessMessage("Se ha notificado a los interesados de la decisión");
         } catch (UserException | ValidationException e) {
             MessageUtils.addErrorMessage(e.getMessage());
         }
@@ -294,7 +296,7 @@ public class advisorReviewerView implements Serializable {
 
     private boolean existsUser(User user) throws UserException {
         User search = new User();
-        search.setrOLid(user.getROLid());
+        search.setROLid(user.getROLid());
         search.setDpi(user.getDpi());
 
         return (!userFacade.getUser(search).isEmpty());

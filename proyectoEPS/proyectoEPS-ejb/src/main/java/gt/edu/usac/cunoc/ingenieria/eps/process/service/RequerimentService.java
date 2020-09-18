@@ -23,6 +23,8 @@ public class RequerimentService {
         Requeriment updateRequeriment = entityManager.find(Requeriment.class, requeriment.getId());
         if(requeriment.getAEIOsettlement()!=null){
             updateRequeriment.setAEIOsettlement(requeriment.getAEIOsettlement());
+        } else {
+            updateRequeriment.setAEIOsettlement(null);
         }
         if(requeriment.getEPSpreproject()!=null){
             updateRequeriment.setEPSpreproject(requeriment.getEPSpreproject());
@@ -38,7 +40,7 @@ public class RequerimentService {
         }
         if(requeriment.getWrittenRequest()!=null){
             updateRequeriment.setWrittenRequest(requeriment.getWrittenRequest());
-        }
+        } 
         entityManager.merge(updateRequeriment);
         return updateRequeriment;
     }

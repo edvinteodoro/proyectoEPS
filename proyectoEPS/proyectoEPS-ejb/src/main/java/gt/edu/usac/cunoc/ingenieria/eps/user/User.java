@@ -285,14 +285,6 @@ public class User implements Serializable {
         this.personalResume = personalResume;
     }
 
-    public Rol getrOLid() {
-        return rOLid;
-    }
-
-    public void setrOLid(Rol rOLid) {
-        this.rOLid = rOLid;
-    }
-
     public List<UserCareer> getUserCareers() {
         return userCareers;
     }

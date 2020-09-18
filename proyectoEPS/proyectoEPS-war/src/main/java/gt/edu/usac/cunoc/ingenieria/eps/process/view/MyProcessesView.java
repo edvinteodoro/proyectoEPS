@@ -7,19 +7,17 @@ import gt.edu.usac.cunoc.ingenieria.eps.process.Appointment;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import gt.edu.usac.cunoc.ingenieria.eps.process.appointmentState;
 import gt.edu.usac.cunoc.ingenieria.eps.process.facade.ProcessFacadeLocal;
-import gt.edu.usac.cunoc.ingenieria.eps.tail.facade.TailFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.user.Rol;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import gt.edu.usac.cunoc.ingenieria.eps.user.facade.UserFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.utils.MessageUtils;
 import java.io.ByteArrayInputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.faces.context.ExternalContext;
 import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
 import javax.inject.Named;
 import org.primefaces.PrimeFaces;
 import org.primefaces.model.DefaultStreamedContent;
@@ -27,10 +25,7 @@ import org.primefaces.model.StreamedContent;
 
 @Named
 @ViewScoped
-public class ProcessesView implements Serializable {
-
-    @Inject
-    private ExternalContext externalContext;
+public class MyProcessesView implements Serializable {
 
     @EJB
     private ProcessFacadeLocal processFacade;
@@ -38,41 +33,25 @@ public class ProcessesView implements Serializable {
     @EJB
     private UserFacadeLocal userFacade;
 
-    @EJB
-    private TailFacadeLocal tailFacade;
-
     private List<Process> processes;
-    private Boolean careerCoordinator;
 
-    private User user;
+    private User userLogged;
     private Appointment appointment;
     private StreamedContent adviserResumeStream;
     private StreamedContent reviewerResumeStream;
 
     private Process processSelected;
     private User companySupervisor;
+    private User supervisorEPS;
 
     @PostConstruct
     public void init() {
-        try {
-            careerCoordinator = false;
-            user = userFacade.getAuthenticatedUser().get(0);
-            switch (user.getROLid().getName()) {
-                case ESTUDIANTE:
-                    processes = processFacade.getProcessUser(user);
-                    break;
-                case COORDINADOR_CARRERA:
-                    processes = tailFacade.getProcessByCoordinator(user);
-                    careerCoordinator = true;
-                    break;
-            }
-            if (processes != null) {
-                if (processes.get(0) == null) {
-                    processes = null;
-                }
-            }
-        } catch (Exception e) {
-            System.out.println("Erro+-------------------------------------------\n" + e);
+        try {            
+            processes = new ArrayList<>();
+            userLogged = userFacade.getAuthenticatedUser().get(0);
+            processes = processFacade.getProcessUser(userLogged);            
+        } catch (UserException e) {
+            System.out.println("Error de Autenticación del Usuario: " + e);
         }
     }
 
@@ -82,46 +61,6 @@ public class ProcessesView implements Serializable {
 
     public void setProcesses(List<Process> processes) {
         this.processes = processes;
-    }
-
-    public void goToProcess(Process process) {
-
-    }
-
-    public Boolean isCareerCoordinator() {
-        return careerCoordinator;
-    }
-
-    public String redirectProcessTo() {
-        String value = "";
-        switch (user.getROLid().getName()) {
-            case ESTUDIANTE:
-                value = "project";
-                break;
-            case COORDINADOR_CARRERA:
-                value = "projectReview";
-                break;
-        }
-        return value;
-    }
-
-    public String redirectJournalTo() {
-        String value = "";
-        switch (user.getROLid().getName()) {
-            case ESTUDIANTE:
-                value = "journal";
-                break;
-            case SUPERVISOR_EPS:
-            case REVISOR:
-            case ASESOR:
-                value = "journalReview";
-                break;
-        }
-        return value;
-    }
-
-    public Boolean getIsFirst(Integer id) {
-        return (id == getProcesses().get(0).getId());
     }
 
     public Boolean studentAppointmentApproved(Process process) {
@@ -149,7 +88,7 @@ public class ProcessesView implements Serializable {
             if (processSelected.getAppointmentId().getCompanySupervisor() == null) {
 
                 companySupervisor = new User();
-                companySupervisor.setrOLid(userFacade.getRolUser(new Rol(null, SUPERVISOR_EMPRESA)).get(0));
+                companySupervisor.setROLid(userFacade.getRolUser(new Rol(null, SUPERVISOR_EMPRESA)).get(0));
             } else {
                 clean();
                 MessageUtils.addErrorMessage("El usuario ya existe");
@@ -201,7 +140,7 @@ public class ProcessesView implements Serializable {
 
     private boolean existsUser(User user) throws UserException {
         User search = new User();
-        search.setrOLid(user.getROLid());
+        search.setROLid(user.getROLid());
         search.setDpi(user.getDpi());
 
         return (!userFacade.getUser(search).isEmpty());
@@ -239,11 +178,21 @@ public class ProcessesView implements Serializable {
         this.companySupervisor = companySupervisor;
     }
 
+    public User getSupervisorEPS() {
+        return supervisorEPS;
+    }
+
+    public void setSupervisorEPS(User supervisorEPS) {
+        this.supervisorEPS = supervisorEPS;
+    }
+
     public void clean() {
         adviserResumeStream = null;
         reviewerResumeStream = null;
         appointment = null;
         processSelected = null;
         companySupervisor = null;
+        supervisorEPS = null;
     }
+    
 }

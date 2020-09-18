@@ -4,6 +4,7 @@ import User.exception.UserException;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.LimitException;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.MandatoryException;
+import gt.edu.usac.cunoc.ingenieria.eps.exception.ValidationException;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Project;
 import gt.edu.usac.cunoc.ingenieria.eps.project.Correction;
 import gt.edu.usac.cunoc.ingenieria.eps.project.TypeCorrection;
@@ -22,9 +23,13 @@ public interface ProjectFacadeLocal {
 
     public Project getProject(Process process);
 
-    public Correction createCorrection(Correction correction) throws UserException;
+    public Correction createCorrection(Correction correction) throws UserException, MandatoryException;
 
-    public List<Correction> getCorrections(TypeCorrection typeCorrection, Integer projectID, Integer section);
+    public List<Correction> getCorrections(TypeCorrection typeCorrection, Integer projectID, Integer section, Boolean status);
+    
+    public void returnCorrections(Project project)throws MandatoryException;
 
-    public InputStream createPDF(Project project, UserCareer userCareer) throws IOException;
+    public InputStream createPDF(Project project, UserCareer userCareer) throws IOException, ValidationException, MandatoryException, LimitException;
+
+    public void searchUnnotifiedCorrections(Project project) throws ValidationException;
 }

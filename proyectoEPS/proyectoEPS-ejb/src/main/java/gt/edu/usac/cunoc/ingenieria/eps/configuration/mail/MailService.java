@@ -78,14 +78,14 @@ public class MailService {
      * @param studentName
      */
     public void emailApprovedAdvisorOrReviewer(String password, User user, String processName, String studentName) {
-        String message = ("<h1><strong>Se le ha aprovado como " + user.getrOLid().getName() + "</strong></h1>"
+        String message = ("<h1><strong>Se le ha aprovado como " + user.getROLid().getName() + "</strong></h1>"
                 + "<p>Se le ha habilitado un usuario y contrase&ntilde;a dentro del Sistema de EPS de la Divisi&oacute;n de Ciencias de la Ingenier&iacute;a</p>"
-                + "<p>Se le ha aprovado como " + user.getrOLid().getName() + " del EPS <strong>" + processName + "</strong>.</p>"
+                + "<p>Se le ha aprovado como " + user.getROLid().getName() + " del EPS <strong>" + processName + "</strong>.</p>"
                 + "<p>Se le habilito con el Usuario <strong>" + user.getUserId() + "</strong> y contrase&ntilde;a <strong><span style=\"color: #ff0000;\">" + password + "</span></strong>.&nbsp;</p>"
                 + "<p>Se recomienda cambiar su contrase&ntilde;a inmediatamente luego de ingresar al portal, ingresando por el menu en <strong>Usuario -&gt; Mi Perfil</strong></p>"
                 + "<h3><strong>Divisi&oacute;n de Ciencias de la Ingenier&iacute;a - Centro Universitario de Occidente</strong></h3>");
 
-        sendEmail(user.getEmail(), user.getrOLid().getName() + " de EPS", message);
+        sendEmail(user.getEmail(), user.getROLid().getName() + " de EPS", message);
     }
 
     /**
@@ -97,12 +97,12 @@ public class MailService {
      * @param studentName
      */
     public void emailNotifyAdvisorOrReviewer(User user, String processName, String studentName) {
-        String text = ("<h1><strong>Se le ha aprovado como " + user.getrOLid().getName() + "</strong></h1>"
+        String text = ("<h1><strong>Se le ha aprovado como " + user.getROLid().getName() + "</strong></h1>"
                 + "<p>Se le ha aprovado como Asesor del tema <strong>" + processName + "</strong> del estudiante <strong>" + studentName + "</strong>.</p>"
                 + "<p>Ingrese con su usuario <strong>" + user.getUserId() + "</strong></p>"
                 + "<h3><strong>Divisi&oacute;n de Ciencias de la Ingenier&iacute;a - Centro Universitario de Occidente</strong></h3>");
 
-        sendEmail(user.getEmail(), user.getrOLid().getName() + " de EPS", text);
+        sendEmail(user.getEmail(), user.getROLid().getName() + " de EPS", text);
     }
 
     /**
@@ -123,25 +123,25 @@ public class MailService {
 
         switch (advisorState) {
             case APPROVED:
-                message += "<p>Se ha aprovado al Asesor <strong>" + advisor.getFirstName() + ", " + advisor.getLastName() + ".</strong></p>";
+                message += "<p>Se ha aprobado al Asesor <strong>" + advisor.getFirstName() + ", " + advisor.getLastName() + ".</strong></p>";
                 break;
             case CHANGE:
                 message += "<p>Se ha <strong>ELIMINADO</strong> al Asesor, por lo que debe proponer una nuevo o elegir entre los asesores disponible en el Sistema.</p>";
                 break;
             case ELECTION:
-                message += "<p>El Supervisor no ha aprovado al Asesor, y ha elegido a <strong>" + advisor.getFirstName() + ", " + advisor.getLastName() + "</strong>para tomar el cargo.</p>";
+                message += "<p>El Supervisor no ha aprobado al Asesor, y ha elegido a <strong>" + advisor.getFirstName() + ", " + advisor.getLastName() + "</strong>para tomar el cargo.</p>";
                 break;
         }
 
         switch (reviewerState) {
             case APPROVED:
-                message += "<p>Se ha aprovado al Revisor <strong>" + reviewer.getFirstName() + ", " + reviewer.getLastName() + ".</strong></p>";
+                message += "<p>Se ha aprobado al Revisor <strong>" + reviewer.getFirstName() + ", " + reviewer.getLastName() + ".</strong></p>";
                 break;
             case CHANGE:
                 message += "<p>Se ha <strong>ELIMINADO</strong> al Revisor, por lo que debe proponer una nuevo o elegir entre los revisores disponible en el Sistema.</p>";
                 break;
             case ELECTION:
-                message += "<p>El Supervisor no ha aprovado al Revisor, y ha elegido a <strong>" + reviewer.getFirstName() + ", " + reviewer.getLastName() + "</strong>para tomar el cargo.</p>";
+                message += "<p>El Supervisor no ha aprobado al Revisor, y ha elegido a <strong>" + reviewer.getFirstName() + ", " + reviewer.getLastName() + "</strong>para tomar el cargo.</p>";
                 break;
         }
 

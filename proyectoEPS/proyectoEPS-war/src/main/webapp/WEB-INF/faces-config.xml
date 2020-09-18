@@ -3,7 +3,8 @@
               xmlns="http://xmlns.jcp.org/xml/ns/javaee"
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_3.xsd">
-    <navigation-rule>       
+    <navigation-rule>   
+            
         <navigation-case>
             <from-outcome>login</from-outcome>
             <to-view-id>/login.xhtml</to-view-id>
@@ -14,29 +15,16 @@
             <to-view-id>/logout.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
+        
         <navigation-case>
-            <from-outcome>requerimentReview</from-outcome>
-            <to-view-id>/process/requerimentReview.xhtml</to-view-id>
+            <from-outcome>configurationEPS</from-outcome>
+            <to-view-id>/configuration/configurationEPS.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
+        
         <navigation-case>
-            <from-outcome>updateRequeriment</from-outcome>
-            <to-view-id>/process/updateRequeriments.xhtml</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>createProcess</from-outcome>
-            <to-view-id>/process/createProcess.xhtml</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>processes</from-outcome>
-            <to-view-id>/process/processes.xhtml</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
-            <from-outcome>project</from-outcome>
-            <to-view-id>/project/project.xhtml</to-view-id>
+            <from-outcome>profile</from-outcome>
+            <to-view-id>/user/userProfile.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
         <navigation-case>
@@ -49,51 +37,66 @@
             <to-view-id>/user/users.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
-        <navigation-case>
-            <from-outcome>profile</from-outcome>
-            <to-view-id>/user/userProfile.xhtml</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
+         <navigation-case>
             <from-outcome>EPSCommittee</from-outcome>
             <to-view-id>/user/editEPSCommittee.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
+        
         <navigation-case>
-            <from-outcome>projectReview</from-outcome>
-            <to-view-id>/process/projectReview.xhtml</to-view-id>
+            <from-outcome>createProcess</from-outcome>
+            <to-view-id>/process/createProcess.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
         <navigation-case>
-            <from-outcome>adviserReviewer</from-outcome>
-            <to-view-id>/process/advisorReviewer.xhtml</to-view-id>
+            <from-outcome>updateRequeriments</from-outcome>
+            <to-view-id>/process/updateRequeriments.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
         <navigation-case>
-            <from-outcome>tailEPSCommittee</from-outcome>
-            <to-view-id>/committeeEPS/processesCommitteeEPS.xhtml</to-view-id>
+            <from-outcome>myProcesses</from-outcome>
+            <to-view-id>/process/myProcesses.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
+        <navigation-case>
+            <from-outcome>processesReview</from-outcome>
+            <to-view-id>/process/processesReview.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>        
         <navigation-case>
             <from-outcome>assignedProcesses</from-outcome>
             <to-view-id>/process/assignedProcesses.xhtml</to-view-id>
             <redirect/>
-        </navigation-case>
+        </navigation-case>        
+        
         <navigation-case>
-            <from-outcome>journalReview</from-outcome>
-            <to-view-id>/journal/journalReview.xhtml</to-view-id>
+            <from-outcome>project</from-outcome>
+            <to-view-id>/project/project.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
+        <navigation-case>
+            <from-outcome>projectReview</from-outcome>
+            <to-view-id>/project/projectReview.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+        
+        <navigation-case>
+            <from-outcome>advisorReviewer</from-outcome>
+            <to-view-id>/process/advisorReviewer.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>        
+        
         <navigation-case>
             <from-outcome>journal</from-outcome>
             <to-view-id>/journal/journal.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
         <navigation-case>
-            <from-outcome>configurationEPS</from-outcome>
-            <to-view-id>/configuration/configurationEPS.xhtml</to-view-id>
+            <from-outcome>journalReview</from-outcome>
+            <to-view-id>/journal/journalReview.xhtml</to-view-id>
             <redirect/>
-        </navigation-case>
+        </navigation-case>        
+        
     </navigation-rule>
     <application>                           
         <locale-config>

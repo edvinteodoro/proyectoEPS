@@ -1,8 +1,10 @@
 package gt.edu.usac.cunoc.ingenieria.eps.process.facade;
 
 import User.exception.UserException;
+import gt.edu.usac.cunoc.ingenieria.eps.exception.MandatoryException;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.ValidationException;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Appointment;
+import gt.edu.usac.cunoc.ingenieria.eps.process.Observation;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Requeriment;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import gt.edu.usac.cunoc.ingenieria.eps.tail.TailCoordinator;
@@ -73,8 +75,9 @@ public interface ProcessFacadeLocal {
      * @param message
      * @return
      * @throws UserException
+     * @throws MandatoryException
      */
-    public Optional<Process> EPSCommitteeRejectProyect(Integer id, User user, String message) throws UserException;
+    public Optional<Process> EPSCommitteeRejectProyect(Integer id, User user, String message) throws UserException, MandatoryException;
 
     public List<Process> getProcess(Process process);
 
@@ -88,7 +91,7 @@ public interface ProcessFacadeLocal {
 
     public Optional<Appointment> findAppointmentById(Integer id);
 
-    public Process createProcess(Process process);
+    public Process createProcess(Process process)throws ValidationException;
 
     public List<Process> getProcessUser(User user);
 
@@ -152,4 +155,8 @@ public interface ProcessFacadeLocal {
     public Process sendCompanySupervisorToSupervisor(Process process) throws ValidationException, UserException;
     
     public boolean isAssignedAdvisorReviewer(Process process);
+    
+    public void createObservation(Observation newObservation) throws MandatoryException;
+    
+    public List<Observation> getRequerimentsObservations(Integer requerimentId);
 }

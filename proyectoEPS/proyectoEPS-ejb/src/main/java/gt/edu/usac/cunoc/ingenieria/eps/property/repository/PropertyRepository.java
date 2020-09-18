@@ -12,7 +12,6 @@ import javax.persistence.PersistenceContext;
 @Startup
 public class PropertyRepository {
 
-    public static Property MAXIMUM_SUPERVISOR_WORKLOAD;
     public static Property VALIDATION_PERCENTAGE_EXTENSION;
     public static Property REVIEW_TIME_DAYS;
     public static Property TIME_OF_PROCESS_WITHOUT_MOVEMENT;
@@ -38,7 +37,6 @@ public class PropertyRepository {
     }
 
     public void loadProperties() {
-        MAXIMUM_SUPERVISOR_WORKLOAD = entityManager.createQuery("SELECT p FROM Property p WHERE p.name = 'MAXIMUM_SUPERVISOR_WORKLOAD'", Property.class).getSingleResult();
         VALIDATION_PERCENTAGE_EXTENSION = entityManager.createQuery("SELECT p FROM Property p WHERE p.name = 'VALIDATION_PERCENTAGE_EXTENSION'", Property.class).getSingleResult();
         REVIEW_TIME_DAYS = entityManager.createQuery("SELECT p FROM Property p WHERE p.name = 'REVIEW_TIME_DAYS'", Property.class).getSingleResult();
         TIME_OF_PROCESS_WITHOUT_MOVEMENT = entityManager.createQuery("SELECT p FROM Property p WHERE p.name = 'TIME_OF_PROCESS_WITHOUT_MOVEMENT'", Property.class).getSingleResult();

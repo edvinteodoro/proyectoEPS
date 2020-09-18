@@ -52,7 +52,6 @@ public class CreateUserView implements Serializable {
     private Boolean academicRegisterFlag;
     private Boolean careerSelectionFlag;
     private Boolean personalResumeFlag;
-    private Boolean createCompanySupervisorFlag;
 
     private Boolean searchStudent;
 
@@ -65,6 +64,7 @@ public class CreateUserView implements Serializable {
         try {
             loginUser = userFacade.getAuthenticatedUser().get(0);
             rolUsers = userFacade.getAllRolUser();
+            eliminatedRolByName(SUPERVISOR_EMPRESA);
             switch (loginUser.getROLid().getName()) {
                 case COORDINADOR_EPS:
                     eliminatedRolByName(DIRECTOR);
@@ -87,7 +87,7 @@ public class CreateUserView implements Serializable {
                     eliminatedRolByName(REVISOR);
                     eliminatedRolByName(ASESOR);
                     eliminatedRolByName(SUPERVISOR_EPS);
-                    eliminatedRolByName(SUPERVISOR_EMPRESA);
+                    
                     break;
             }
             careers = userFacade.getAllCareer();
@@ -202,14 +202,6 @@ public class CreateUserView implements Serializable {
         this.personalResumeFlag = personalResumeFlag;
     }
 
-    public Boolean getCreateCompanySupervisorFlag() {
-        return createCompanySupervisorFlag;
-    }
-
-    public void setCreateCompanySupervisorFlag(Boolean createCompanySupervisorFlag) {
-        this.createCompanySupervisorFlag = createCompanySupervisorFlag;
-    }
-
     public Boolean getSearchStudent() {
         return searchStudent;
     }
@@ -244,8 +236,7 @@ public class CreateUserView implements Serializable {
                     personalCodeFlag = false;
                     academicRegisterFlag = true;
                     careerSelectionFlag = true;
-                    searchStudent = true;
-                    createCompanySupervisorFlag = false;
+                    searchStudent = true;                    
                     personalResumeFlag = false;
                     break;
                 case Constants.COORDINADOR_CARRERA:
@@ -253,8 +244,7 @@ public class CreateUserView implements Serializable {
                     personalCodeFlag = true;
                     academicRegisterFlag = false;
                     careerSelectionFlag = true;
-                    searchStudent = false;
-                    createCompanySupervisorFlag = false;
+                    searchStudent = false;                    
                     personalResumeFlag = false;
                     break;
                 case Constants.REVISOR:
@@ -262,16 +252,14 @@ public class CreateUserView implements Serializable {
                     personalCodeFlag = true;
                     academicRegisterFlag = false;
                     careerSelectionFlag = true;
-                    searchStudent = false;
-                    createCompanySupervisorFlag = false;
+                    searchStudent = false;                    
                     personalResumeFlag = true;
                     break;
                 case Constants.SUPERVISOR_EMPRESA:
                     personalCodeFlag = false;
                     academicRegisterFlag = false;
                     careerSelectionFlag = false;
-                    searchStudent = false;
-                    createCompanySupervisorFlag = true;
+                    searchStudent = false;                    
                     personalResumeFlag = false;
                     break;
                 default:
@@ -279,7 +267,6 @@ public class CreateUserView implements Serializable {
                     academicRegisterFlag = false;
                     careerSelectionFlag = false;
                     searchStudent = false;
-                    createCompanySupervisorFlag = false;
                     personalResumeFlag = false;
             }
             cleanUser();

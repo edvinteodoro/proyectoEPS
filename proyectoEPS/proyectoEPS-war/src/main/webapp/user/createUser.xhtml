@@ -11,6 +11,10 @@
     <ui:define name="head">
         Registrar Usuario
     </ui:define>
+    
+    <ui:define name="title">
+        Registrar Usuario
+    </ui:define>
 
     <ui:define name="content"> 
         <h:form>     
@@ -148,36 +152,6 @@
                     </div>
                 </div>
 
-                <div class="row" jsf:rendered="#{createUserView.createCompanySupervisorFlag}">
-                    <div class="form-group col-sm-2">
-                        <p:outputLabel for="companyName" value="Nombre Empresa:" />
-                    </div>
-                    <div class="form-group col-sm-4">
-                        <p:inputText id="companyName" styleClass="form-control" pt:placeholder="Nombre Empresa" required="true"
-                                     pt:required="true" value="#{createUserView.user.nameCompanyWork}"/>
-                    </div>
-                </div>
-
-                <div class="row" jsf:rendered="#{createUserView.createCompanySupervisorFlag}">
-                    <div class="form-group col-sm-2">
-                        <p:outputLabel for="companyPhone" value="Teléfono Empresa:" />
-                    </div>
-                    <div class="form-group col-sm-4">
-                        <p:inputText id="companyPhone" styleClass="form-control" pt:placeholder="Teléfono Empresa" required="true"
-                                     pt:required="true" value="#{createUserView.user.phoneCompanyWork}"/>
-                    </div>
-                </div>
-
-                <div class="row" jsf:rendered="#{createUserView.createCompanySupervisorFlag}"> 
-                    <div class="form-group col-sm-2">
-                        <p:outputLabel for="companyDirection" value="Dirección Empresa:" />
-                    </div>
-                    <div class="form-group col-sm-4">
-                        <p:inputText id="companyDirection" styleClass="form-control" pt:placeholder="Dirección Empresa" required="true"
-                                     pt:required="true" value="#{createUserView.user.directionCompanyWork}"/>
-                    </div>
-                </div>
-
                 <div class="row" jsf:rendered="#{createUserView.personalResumeFlag}">
                     <div class="form-group col-sm-2">
                         <p:outputLabel for="personalResume" value="Curriculum" />
@@ -228,7 +202,7 @@
                                        onstart="PF('progressBar').show();"
                                        onsuccess="PF('progressBar').hide();"
                                        action="#{createUserView.createUser()}">
-                            <span class="glyphicon glyphicon-log-in"></span> Registrar Usuario
+                            <span class="glyphicon glyphicon-log-in"></span>  Registrar Usuario
                         </p:commandLink>
                     </div>
                 </div>

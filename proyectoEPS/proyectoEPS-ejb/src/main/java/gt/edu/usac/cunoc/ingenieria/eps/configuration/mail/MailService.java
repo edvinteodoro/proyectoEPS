@@ -123,25 +123,25 @@ public class MailService {
 
         switch (advisorState) {
             case APPROVED:
-                message += "<p>Se ha aprovado al Asesor <strong>" + advisor.getFirstName() + ", " + advisor.getLastName() + ".</strong></p>";
+                message += "<p>Se ha aprobado al Asesor <strong>" + advisor.getFirstName() + ", " + advisor.getLastName() + ".</strong></p>";
                 break;
             case CHANGE:
                 message += "<p>Se ha <strong>ELIMINADO</strong> al Asesor, por lo que debe proponer una nuevo o elegir entre los asesores disponible en el Sistema.</p>";
                 break;
             case ELECTION:
-                message += "<p>El Supervisor no ha aprovado al Asesor, y ha elegido a <strong>" + advisor.getFirstName() + ", " + advisor.getLastName() + "</strong>para tomar el cargo.</p>";
+                message += "<p>El Supervisor no ha aprobado al Asesor, y ha elegido a <strong>" + advisor.getFirstName() + ", " + advisor.getLastName() + "</strong>para tomar el cargo.</p>";
                 break;
         }
 
         switch (reviewerState) {
             case APPROVED:
-                message += "<p>Se ha aprovado al Revisor <strong>" + reviewer.getFirstName() + ", " + reviewer.getLastName() + ".</strong></p>";
+                message += "<p>Se ha aprobado al Revisor <strong>" + reviewer.getFirstName() + ", " + reviewer.getLastName() + ".</strong></p>";
                 break;
             case CHANGE:
                 message += "<p>Se ha <strong>ELIMINADO</strong> al Revisor, por lo que debe proponer una nuevo o elegir entre los revisores disponible en el Sistema.</p>";
                 break;
             case ELECTION:
-                message += "<p>El Supervisor no ha aprovado al Revisor, y ha elegido a <strong>" + reviewer.getFirstName() + ", " + reviewer.getLastName() + "</strong>para tomar el cargo.</p>";
+                message += "<p>El Supervisor no ha aprobado al Revisor, y ha elegido a <strong>" + reviewer.getFirstName() + ", " + reviewer.getLastName() + "</strong>para tomar el cargo.</p>";
                 break;
         }
 

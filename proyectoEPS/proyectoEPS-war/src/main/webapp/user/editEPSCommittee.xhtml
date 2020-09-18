@@ -10,12 +10,14 @@
     <ui:define name="head">
         Comisión EPS
     </ui:define>
+    
+    <ui:define name="title">
+        Comisión EPS
+    </ui:define>
 
-    <ui:define name="content">
-
-        <p:messages  globalOnly="true"/>
+    <ui:define name="content">        
         <fieldset>
-            <legend>Usuarios para la Comisión</legend>
+            <legend>Usuarios - Comisión EPS</legend>
             <p:dataTable id="usersTable" var="user" value="#{editEPSCommitteeView.users}"
                          reflow="true">
                 <p:column headerText="ID">

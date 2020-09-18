@@ -61,47 +61,7 @@
                     <f:setPropertyActionListener value="#{process.supervisor_EPS}" target="#{myProcessesView.supervisorEPS}"/>
                     <span class="glyphicon glyphicon-eye-open"></span>
                 </p:commandLink>
-            </p:column>
-            <p:column headerText="Asesor y Revisor" styleClass="text-center">
-                <p:commandLink styleClass="btn btn-primary btn-xs"
-                               oncomplete="PF('infoAbout').show();" 
-                               update=":#{p:component('infoAbout')}"
-                               rendered="#{myProcessesView.studentAppointmentApproved(process)}">
-                    <f:setPropertyActionListener value="#{process.appointmentId}" target="#{myProcessesView.appointment}"/>
-                    <span class="glyphicon glyphicon-eye-open"></span>
-                </p:commandLink>
-                <p:commandLink styleClass="btn btn-success btn-xs"
-                               action="adviserReviewer"
-                               rendered="#{!myProcessesView.studentAppointmentApproved(process)}">
-                    <span class="glyphicon glyphicon-log-in"></span>
-                </p:commandLink>
-            </p:column>
-            <p:column headerText="Supervisor Empresa" styleClass="text-center">
-                <p:commandLink styleClass="btn btn-warning btn-xs"
-                               oncomplete="PF('newUser').show();" 
-                               update=":#{p:component('newUser')}"
-                               rendered="#{!myProcessesView.companySupervisorExist(process) and myProcessesView.canAddCompanySupervisor(process)}"
-                               actionListener="#{myProcessesView.createNewUser(process)}">
-                    <span class="glyphicon glyphicon-plus"></span> Nuevo
-                </p:commandLink>
-                <p:commandLink styleClass="btn btn-primary btn-xs"
-                               oncomplete="PF('infoAbout2').show();" 
-                               update=":#{p:component('infoAbout2')}"
-                               rendered="#{myProcessesView.companySupervisorExist(process)}">
-                    <f:setPropertyActionListener value="#{process.appointmentId}" target="#{myProcessesView.appointment}"/>
-                    <span class="glyphicon glyphicon-eye-open"></span>
-                </p:commandLink>
-            </p:column>
-            <p:column headerText="Bitácora" styleClass="text-center">
-                <p data-placement="top" data-toggle="tooltip" title="Bitácora">
-                    <button jsf:outcome="journal" 
-                            styleClass="btn btn-success btn-xs" 
-                            >
-                        <f:param name="idProcess" value="#{process.id}"/>
-                        <span class="glyphicon glyphicon-log-in"></span>
-                    </button>
-                </p>
-            </p:column>
+            </p:column>            
         </p:dataTable>
 
         <p:dialog header="Supervisor EPS" id="infoSupervisorEPS" widgetVar="infoSupervisorEPS"

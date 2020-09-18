@@ -8,8 +8,6 @@ import gt.edu.usac.cunoc.ingenieria.eps.utils.MessageUtils;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.view.ViewScoped;
@@ -28,7 +26,6 @@ public class ConfigurationView implements Serializable {
     private Property maximumExecutionMonth;
     private Property timeProcessWithoutMovement;
 
-    private Property workload;
     private Property reviewTimeDays;
 
     private Property characterLimitTitle;
@@ -81,14 +78,6 @@ public class ConfigurationView implements Serializable {
         this.timeProcessWithoutMovement = timeProcessWithoutMovement;
     }
 
-    public Property getWorkload() {
-        return workload;
-    }
-
-    public void setWorkload(Property workload) {
-        this.workload = workload;
-    }
-
     public Property getReviewTimeDays() {
         return reviewTimeDays;
     }
@@ -136,7 +125,6 @@ public class ConfigurationView implements Serializable {
         this.minimumExecutionMonth = (Property) PropertyRepository.MINIMUN_EXECUTION_MONTHS.clone();
         this.maximumExecutionMonth = (Property) PropertyRepository.MAXIMUN_EXECUTION_MONTHS.clone();
         this.timeProcessWithoutMovement = (Property) PropertyRepository.TIME_OF_PROCESS_WITHOUT_MOVEMENT.clone();
-        this.workload = (Property) PropertyRepository.MAXIMUM_SUPERVISOR_WORKLOAD.clone();
         this.reviewTimeDays = (Property) PropertyRepository.REVIEW_TIME_DAYS.clone();
         this.characterLimitTitle = (Property) PropertyRepository.CHARACTER_LIMIT_TITLE.clone();
         this.characterLimitJustification = (Property) PropertyRepository.CHARACTER_LIMIT_JUSTIFICATION.clone();
@@ -157,7 +145,6 @@ public class ConfigurationView implements Serializable {
             properties.add(minimumExecutionMonth);
             properties.add(maximumExecutionMonth);
             properties.add(timeProcessWithoutMovement);
-            properties.add(workload);
             properties.add(reviewTimeDays);
             properties.add(characterLimitTitle);
             properties.add(characterLimitJustification);

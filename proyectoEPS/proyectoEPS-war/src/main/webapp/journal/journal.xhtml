@@ -127,14 +127,34 @@
                     <div class="row form-group">
                         <p:outputLabel for="description" value="Descripción" styleClass="col-md-4 control-label"/>
                         <div class="col-md-8">
-                            <p:inputTextarea id="description" counter="display" maxlength="200" 
-                                             counterTemplate="{0} Caracteres Restantes." autoResize="false"
-                                             placeholder="Descripción"
-                                             required="true"
-                                             style="width: 100%;"
-                                             value="#{journalView.newJournalLog.description}"/>
-                            <br />
-                            <h:outputText id="display" />
+                            <p:textEditor id="description"
+                                          style="width: 100%;"                                                                                     
+                                          placeholder="Ingrese su Descripción"
+                                          value="#{journalView.newJournalLog.description}"
+                                          >
+                                <f:facet name="toolbar">
+                                    <span class="ql-formats">
+                                        <button class="ql-bold"></button>
+                                        <button class="ql-italic"></button>
+                                        <button class="ql-underline"></button>
+                                        <button class="ql-strike"></button>
+                                    </span>
+                                    <span class="ql-formats">
+                                        <select class="ql-color" />
+                                        <select class="ql-background" />
+                                    </span>
+                                    <span class="ql-formats">
+                                        <button class="ql-script" value="sub" />
+                                        <button class="ql-script" value="super" />
+                                    </span>
+                                    <span class="ql-formats">
+                                        <button class="ql-list" value="ordered" />
+                                        <button class="ql-list" value="bullet" />
+                                        <button class="ql-indent" value="-1" />
+                                        <button class="ql-indent" value="+1" />
+                                    </span>
+                                </f:facet>
+                            </p:textEditor>                                   
                         </div>
                     </div>
 

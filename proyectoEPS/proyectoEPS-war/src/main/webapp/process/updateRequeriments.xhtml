@@ -45,7 +45,9 @@
                                   label="Seleccionar"
                                   sizeLimit="16000000"
                                   invalidSizeMessage="Archivo demasiado grande, limite de 16MB"
-                                  invalidFileMessage="Solo se puede cargar archivos pdf"/>  
+                                  invalidFileMessage="Solo se puede cargar archivos pdf"/>                      
+                </div>
+                <div class="form-group col-sm-3">
                     <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{updateRequerimentsView.reloadWrittenRequest()}">
                         <p:fileDownload value="#{updateRequerimentsView.writtenRequestStream}" contentDisposition="inline"/>
                     </h:commandLink>
@@ -64,11 +66,13 @@
                                   label="Seleccionar"
                                   sizeLimit="16000000"
                                   invalidSizeMessage="Archivo demasiado grande, limite de 16MB"
-                                  invalidFileMessage="Solo se puede cargar archivos pdf"/>  
+                                  invalidFileMessage="Solo se puede cargar archivos pdf"/>                      
+                </div>          
+                <div class="form-group col-sm-3">
                     <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{updateRequerimentsView.reloadInscriptionConstancy()}">
                         <p:fileDownload value="#{updateRequerimentsView.inscriptionConstancyStream}" contentDisposition="inline"/>
                     </h:commandLink>
-                </div>                
+                </div>
             </div>
 
             <div class="row">
@@ -84,8 +88,9 @@
                                   label="Seleccionar"
                                   sizeLimit="16000000"
                                   invalidSizeMessage="Archivo demasiado grande, limite de 16MB"
-                                  invalidFileMessage="Solo se puede cargar archivos pdf"/>  
-
+                                  invalidFileMessage="Solo se puede cargar archivos pdf"/>                      
+                </div>
+                <div class="form-group col-sm-3">
                     <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{updateRequerimentsView.reloadPensumeClosure()}">
                         <p:fileDownload value="#{updateRequerimentsView.pensumeClosureStream}" contentDisposition="inline"/>
                     </h:commandLink>
@@ -104,11 +109,13 @@
                                   label="Seleccionar"
                                   sizeLimit="16000000"
                                   invalidSizeMessage="Archivo demasiado grande, limite de 16MB"
-                                  invalidFileMessage="Solo se puede cargar archivos pdf"/>    
+                                  invalidFileMessage="Solo se puede cargar archivos pdf"/>                        
+                </div>                
+                <div class="form-group col-sm-3">
                     <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{updateRequerimentsView.reloadPropedeuticConstancy()}">
                         <p:fileDownload value="#{updateRequerimentsView.propedeuticConstancyStream}" contentDisposition="inline"/>
                     </h:commandLink>
-                </div>                
+                </div>
             </div>
             <div class="row">
                 <div class="form-group col-sm-3">
@@ -123,8 +130,9 @@
                                   label="Seleccionar"
                                   sizeLimit="16000000"
                                   invalidSizeMessage="Archivo demasiado grande, limite de 16MB"
-                                  invalidFileMessage="Solo se puede cargar archivos pdf"/>
-
+                                  invalidFileMessage="Solo se puede cargar archivos pdf"/>                    
+                </div>
+                <div class="form-group col-sm-3">
                     <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{updateRequerimentsView.reloadEpsPreProjec()}">
                         <p:fileDownload value="#{updateRequerimentsView.epsPreProjectStream}" contentDisposition="inline"/>
                     </h:commandLink>
@@ -138,18 +146,20 @@
                     <p:fileUpload id="aeio" fileUploadListener="#{updateRequerimentsView.handleAeioSettlement}" 
                                   styleClass="in-dialog"
                                   skinSimple="true" auto="true" allowTypes="/(\.|\/)(pdf)$/"
-                                  update="@parent"
+                                  update="@form"
                                   label="Seleccionar"
                                   sizeLimit="16000000"
                                   invalidSizeMessage="Archivo demasiado grande, limite de 16MB"
-                                  invalidFileMessage="Solo se puede cargar archivos pdf"/>
-                    <h:commandLink value="Ver Documento"  target="_blank" rendered="#{updateRequerimentsView.showAeioSettlement}" actionListener="#{updateRequerimentsView.reloadAeioSettlemen()}">
+                                  invalidFileMessage="Solo se puede cargar archivos pdf"/>                    
+                </div>
+                <div class="form-group col-sm-1" jsf:rendered="#{updateRequerimentsView.showAeioSettlement}">
+                    <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{updateRequerimentsView.reloadAeioSettlemen()}">
                         <p:fileDownload value="#{updateRequerimentsView.aeioSettlementStream}" contentDisposition="inline"/>
                     </h:commandLink>
                 </div>
                 <div class="form-group col-sm-3" jsf:rendered="#{updateRequerimentsView.flagStudent}">
                     <p:commandLink id="deleteAEIO" styleClass="btn btn-danger"
-                                   update="@parent"
+                                   update="@form"
                                    actionListener="#{updateRequerimentsView.deleteAeioSettlemen()}">
                         <span class="glyphicon glyphicon-trash"></span>
                     </p:commandLink>

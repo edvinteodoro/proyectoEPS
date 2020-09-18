@@ -189,16 +189,20 @@ public class advisorReviewerView implements Serializable {
             if (existsUser(actualUser)) {
                 MessageUtils.addErrorMessage("El usuario ya existe con ese cargo");
             } else {
-                if (isAdvisor) {
-                    processSelected.getAppointmentId().setUserAdviser(actualUser);
-                    processSelected.getAppointmentId().setAdviserState(REVIEW);
+                if (personalResume != null) {
+                    if (isAdvisor) {
+                        processSelected.getAppointmentId().setUserAdviser(actualUser);
+                        processSelected.getAppointmentId().setAdviserState(REVIEW);
+                    } else {
+                        processSelected.getAppointmentId().setUserReviewer(actualUser);
+                        processSelected.getAppointmentId().setReviewerState(REVIEW);
+                    }
+                    PrimeFaces.current().executeScript("PF('" + modalIdToClose + "').hide()");
+                    MessageUtils.addSuccessMessage("Usuario agregado");
+                    clean();
                 } else {
-                    processSelected.getAppointmentId().setUserReviewer(actualUser);
-                    processSelected.getAppointmentId().setReviewerState(REVIEW);
+                    MessageUtils.addErrorMessage("Falta Curriculum");
                 }
-                PrimeFaces.current().executeScript("PF('" + modalIdToClose + "').hide()");
-                MessageUtils.addSuccessMessage("Usuario agregado");
-                clean();
             }
         } catch (UserException e) {
             MessageUtils.addErrorMessage(e.getMessage());
@@ -264,7 +268,7 @@ public class advisorReviewerView implements Serializable {
             processFacade.returnAppointmentToStudent(processSelected);
             init();
             PrimeFaces.current().executeScript("PF('" + modalIdToClose + "').hide()");
-            MessageUtils.addSuccessMessage("Se ha notificado a los interesados de la desición");
+            MessageUtils.addSuccessMessage("Se ha notificado a los interesados de la decisión");
         } catch (UserException | ValidationException e) {
             MessageUtils.addErrorMessage(e.getMessage());
         }
@@ -546,7 +550,7 @@ public class advisorReviewerView implements Serializable {
     public boolean isIsAdvisor() {
         return isAdvisor;
     }
-    
+
     /**
      * Clean the advisors and reviewers list, setting them at null
      */

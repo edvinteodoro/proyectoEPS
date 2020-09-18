@@ -10,13 +10,13 @@ public enum appointmentState {
     public String stateToText() {
         switch (this) {
             case APPROVED:
-                return "Aprovado";
+                return "Aprobado";
             case CHANGE:
                 return "Cambiar";
             case REVIEW:
                 return "En revisión";
             case ELECTION:
-                return "Eleccion Supervisor";
+                return "Elección Supervisor";
         }
         return null;
     }

@@ -1,6 +1,7 @@
 package gt.edu.usac.cunoc.ingenieria.eps.journal;
 
 import gt.edu.usac.cunoc.ingenieria.eps.exception.MandatoryException;
+import gt.edu.usac.cunoc.ingenieria.eps.exception.ValidationException;
 import gt.edu.usac.cunoc.ingenieria.eps.journal.facade.CommentaryFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.journal.facade.JournalLogFacadeLocal;
 import java.io.Serializable;
@@ -13,6 +14,8 @@ import gt.edu.usac.cunoc.ingenieria.eps.user.facade.UserFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.utils.MessageUtils;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 
 @Named
@@ -27,7 +30,7 @@ public class JournalReview implements Serializable {
 
     @EJB
     private JournalLogFacadeLocal journalFacade;
-    
+
     @EJB
     private CommentaryFacadeLocal commentaryFacade;
 
@@ -112,13 +115,15 @@ public class JournalReview implements Serializable {
     }
 
     public void enableJournal() {
-        this.process.setApprovedEPSDevelopment(Boolean.TRUE);
-        this.process.setDateApproveddEpsDevelopment(LocalDate.now());
-        processFacade.updateProcess(process);
-        MessageUtils.addSuccessMessage("Bitácora Habilitada");
+        try {
+            journalFacade.enableJournal(process);
+            MessageUtils.addSuccessMessage("Bitácora Habilitada");
+        } catch (ValidationException ex) {
+            MessageUtils.addErrorMessage(ex.getMessage());
+        }
     }
-    
-    public List<Commentary> getCommentariesByJournal(Integer journalId){
+
+    public List<Commentary> getCommentariesByJournal(Integer journalId) {
         return commentaryFacade.getCommentariesByJournalId(journalId);
     }
 

@@ -68,7 +68,7 @@
                                update=":#{p:component('infoAbout')}"
                                rendered="#{myProcessesView.studentAppointmentApproved(process)}">
                     <f:setPropertyActionListener value="#{process.appointmentId}" target="#{myProcessesView.appointment}"/>
-                    <span class="glyphicon glyphicon-eye-open"></span> Ver
+                    <span class="glyphicon glyphicon-eye-open"></span>
                 </p:commandLink>
                 <p:commandLink styleClass="btn btn-success btn-xs"
                                action="adviserReviewer"
@@ -89,7 +89,7 @@
                                update=":#{p:component('infoAbout2')}"
                                rendered="#{myProcessesView.companySupervisorExist(process)}">
                     <f:setPropertyActionListener value="#{process.appointmentId}" target="#{myProcessesView.appointment}"/>
-                    <span class="glyphicon glyphicon-eye-open"></span> Ver
+                    <span class="glyphicon glyphicon-eye-open"></span>
                 </p:commandLink>
             </p:column>
             <p:column headerText="Bitácora" styleClass="text-center">
@@ -200,9 +200,11 @@
                                 </div>
                                 <div class="row form-group">
                                     <p:outputLabel value="Curriculum:" styleClass="col-md-4 control-label"/>
-                                    <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{myProcessesView.reloadAdviserResume()}">
-                                        <p:fileDownload value="#{myProcessesView.adviserResumeStream}" contentDisposition="inline"/>
-                                    </h:commandLink>
+                                    <div class="col-md-8">
+                                        <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{myProcessesView.reloadAdviserResume()}">
+                                            <p:fileDownload value="#{myProcessesView.adviserResumeStream}" contentDisposition="inline"/>
+                                        </h:commandLink>
+                                    </div>                                    
                                 </div>
                             </p:tab>
                             <p:tab title="Revisor">
@@ -256,9 +258,11 @@
                                 </div>
                                 <div class="row form-group">
                                     <p:outputLabel value="Curriculum:" styleClass="col-md-4 control-label"/>
-                                    <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{myProcessesView.reloadReviewerResume()}">
-                                        <p:fileDownload value="#{myProcessesView.reviewerResumeStream}" contentDisposition="inline"/>
-                                    </h:commandLink>
+                                    <div class="col-md-8">
+                                        <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{myProcessesView.reloadReviewerResume()}">
+                                            <p:fileDownload value="#{myProcessesView.reviewerResumeStream}" contentDisposition="inline"/>
+                                        </h:commandLink>
+                                    </div>                                    
                                 </div>
                             </p:tab>
                         </p:tabView>
@@ -267,7 +271,7 @@
             </h:form>
         </p:dialog>
 
-        <p:dialog header="Suervisor de la Empresa" id="infoAbout2" widgetVar="infoAbout2"
+        <p:dialog header="Supervisor de la Empresa" id="infoAbout2" widgetVar="infoAbout2"
                   modal="true" closeOnEscape="true">
             <p:ajax event="close" listener="#{myProcessesView.clean()}" update="@this" />
             <h:form>

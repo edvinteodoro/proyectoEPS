@@ -327,6 +327,7 @@ public class updateRequerimentsView implements Serializable {
         requeriment.setAEIOsettlement(aeioSettlement.getContents());
         nameAeioSettlemen = event.getFile().getFileName();
         aeioSettlementStream = new DefaultStreamedContent(new ByteArrayInputStream(aeioSettlement.getContents()), "application/pdf", "Solicitud Escrita.pdf");
+        showAeioSettlement = true;
     }
     
     public void reloadWrittenRequest() {
@@ -381,7 +382,7 @@ public class updateRequerimentsView implements Serializable {
         this.aeioSettlement = null;
         this.aeioSettlementStream = null;
         this.nameAeioSettlemen = "";
-        this.showAeioSettlement = false;
+        this.showAeioSettlement = false;        
     }
     
 }

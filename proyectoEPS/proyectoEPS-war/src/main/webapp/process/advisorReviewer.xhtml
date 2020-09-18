@@ -171,7 +171,7 @@
                                              value="#{advisorReviewerView.actualUser.firstName}"/>
                             </div>
                         </div>
-                        
+
                         <div class="row form-group">
                             <p:outputLabel for="lastName" value="Apellidos: " styleClass="col-md-4 control-label"/>
                             <div class="col-md-8">
@@ -180,7 +180,7 @@
                                              value="#{advisorReviewerView.actualUser.lastName}"/>
                             </div>
                         </div>
-                        
+
                         <div class="row form-group">
                             <p:outputLabel for="dpi" value="DPI: " styleClass="col-md-4 control-label"/>
                             <div class="col-md-8">
@@ -189,7 +189,7 @@
                                              value="#{advisorReviewerView.actualUser.dpi}"/>
                             </div>
                         </div>
-                        
+
                         <div class="row form-group">
                             <p:outputLabel for="email" value="Correo: " styleClass="col-md-4 control-label"/>
                             <div class="col-md-8">
@@ -198,7 +198,7 @@
                                              value="#{advisorReviewerView.actualUser.email}"/>
                             </div>
                         </div>
-                        
+
                         <div class="row form-group">
                             <p:outputLabel for="phone" value="Telefono: " styleClass="col-md-4 control-label"/>
                             <div class="col-md-8">
@@ -207,7 +207,7 @@
                                              value="#{advisorReviewerView.actualUser.phone1}"/>
                             </div>
                         </div>
-                        
+
                         <div class="row form-group">
                             <p:outputLabel for="direction" value="Dirección: " styleClass="col-md-4 control-label"/>
                             <div class="col-md-8">
@@ -216,7 +216,7 @@
                                              value="#{advisorReviewerView.actualUser.direction}"/>
                             </div>
                         </div>
-                        
+
                         <div class="row form-group">
                             <p:outputLabel for="nameCompany" value="Nombre de la Empresa: " styleClass="col-md-4 control-label"/>
                             <div class="col-md-8">
@@ -225,7 +225,7 @@
                                              value="#{advisorReviewerView.actualUser.nameCompanyWork}"/>
                             </div>
                         </div>
-                        
+
                         <div class="row form-group">
                             <p:outputLabel for="phoneCompany" value="Teléfono de la Empresa: " styleClass="col-md-4 control-label"/>
                             <div class="col-md-8">
@@ -234,7 +234,7 @@
                                              value="#{advisorReviewerView.actualUser.phoneCompanyWork}"/>
                             </div>
                         </div>
-                        
+
                         <div class="row form-group">
                             <p:outputLabel for="directionCompany" value="Dirección de la Empresa: " styleClass="col-md-4 control-label"/>
                             <div class="col-md-8">
@@ -243,7 +243,7 @@
                                              value="#{advisorReviewerView.actualUser.directionCompanyWork}"/>
                             </div>
                         </div>
-                        
+
                     </fieldset>
                 </div>
                 <div class="modal-footer ">
@@ -369,11 +369,13 @@
                         </div>
                         <div class="row form-group">
                             <p:outputLabel value="Curriculum:" styleClass="col-md-4 control-label"/>
-                            <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{advisorReviewerView.reloadPersonalResume()}">
-                                <p:fileDownload value="#{advisorReviewerView.personalResumeStream}" contentDisposition="inline"/>
-                            </h:commandLink>
+                            <div class="col-md-8">
+                                <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{advisorReviewerView.reloadPersonalResume()}">
+                                    <p:fileDownload value="#{advisorReviewerView.personalResumeStream}" contentDisposition="inline"/>
+                                </h:commandLink>
+                            </div>                            
                         </div>
-                        <div class="row form-group" >
+                        <div class="btn-toolbar" >
                             <p:commandLink styleClass="btn btn-danger"
                                            rendered="#{advisorReviewerView.pendingReview()}"
                                            update=":#{p:component('processesTable')},:#{p:component('growl')}"

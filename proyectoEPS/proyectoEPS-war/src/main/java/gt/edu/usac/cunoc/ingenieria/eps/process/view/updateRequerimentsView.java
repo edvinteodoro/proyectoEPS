@@ -19,8 +19,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.context.ExternalContext;
@@ -164,6 +162,8 @@ public class updateRequerimentsView implements Serializable {
         }
         if (aeioSettlement != null) {
             getRequeriment().setAEIOsettlement(aeioSettlement.getContents());
+        } else {
+            getRequeriment().setAEIOsettlement(null);
         }
         processFacade.updaterequeriment(getRequeriment());
         MessageUtils.addSuccessMessage("Cambios Realizados");
@@ -375,6 +375,13 @@ public class updateRequerimentsView implements Serializable {
     
     public void setObservation(String observation) {
         this.observation = observation;
+    }
+    
+    public void deleteAeioSettlemen(){
+        this.aeioSettlement = null;
+        this.aeioSettlementStream = null;
+        this.nameAeioSettlemen = "";
+        this.showAeioSettlement = false;
     }
     
 }

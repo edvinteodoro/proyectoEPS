@@ -391,6 +391,8 @@ public class ProjectView implements Serializable {
         }
         if (annexed != null) {
             getProject().setAnnexed(annexed.getContents());
+        } else {
+            getProject().setAnnexed(null);
         }
     }
 
@@ -561,5 +563,11 @@ public class ProjectView implements Serializable {
             }
         }
         return value;
+    }
+    
+    public void deleteAnnexed(){
+        this.annexed = null;
+        this.annexedFileName = "";
+        this.annexedStream = null;
     }
 }

@@ -290,13 +290,13 @@
                             <br/>
                             <br/>
                             <p:commandLink class="btn btn-primary btn-xs"                                               
-                                                title="Realizar Comentario"
-                                                oncomplete="PF('dlgCmt').show();"
-                                                update=":#{p:component('dlgCmt')}"
-                                                actionListener="#{projectView.getCoordenteCorrections()}"
-                                                rendered="#{projectView.renderCoordinateCorrections()}">
-                            <span class="glyphicon glyphicon-eye-open"></span> Correcciones
-                        </p:commandLink>
+                                           title="Realizar Comentario"
+                                           oncomplete="PF('dlgCmt').show();"
+                                           update=":#{p:component('dlgCmt')}"
+                                           actionListener="#{projectView.getCoordenteCorrections()}"
+                                           rendered="#{projectView.renderCoordinateCorrections()}">
+                                <span class="glyphicon glyphicon-eye-open"></span> Correcciones
+                            </p:commandLink>
                         </p:panel>
                     </div>
                 </div>
@@ -415,20 +415,20 @@
                             <br/>
                             <br/>
                             <p:commandLink class="btn btn-primary btn-xs"
-                                                title="Realizar Comentario"
-                                                oncomplete="PF('dlgCmt').show();"
-                                                update=":#{p:component('dlgCmt')}"
-                                                actionListener="#{projectView.getBibliographyCorrections()}"
-                                                rendered="#{projectView.renderBibligraphyCorrections()}">
-                            <span class="glyphicon glyphicon-eye-open"></span> Correcciones
-                        </p:commandLink><br></br><br></br>
+                                           title="Realizar Comentario"
+                                           oncomplete="PF('dlgCmt').show();"
+                                           update=":#{p:component('dlgCmt')}"
+                                           actionListener="#{projectView.getBibliographyCorrections()}"
+                                           rendered="#{projectView.renderBibligraphyCorrections()}">
+                                <span class="glyphicon glyphicon-eye-open"></span> Correcciones
+                            </p:commandLink><br></br><br></br>
                         </p:panel>
-                        
+
                     </div>
                 </div>
+                <p:outputLabel for="annexed" value="Anexos"/>
                 <div class="row">
-                    <div class="form-group col-sm-8">
-                        <p:outputLabel for="annexed" value="Anexos"/>
+                    <div class="form-group col-sm-8">                        
                         <p:fileUpload id="annexed" fileUploadListener="#{projectView.handleAnnexed}"
                                       skinSimple="true" auto="true"
                                       rendered="#{projectView.editOptions()}"
@@ -443,7 +443,7 @@
                         <h:commandLink id="labelAnnexed" value="#{projectView.annexedFileName}" class="text-primary"
                                        target="_blank" actionListener="#{projectView.reloadAnnexed()}">
                             <p:fileDownload value="#{projectView.annexedStream}" contentDisposition="inline"/>
-                        </h:commandLink>
+                        </h:commandLink>                        
                         <br></br><p:commandLink class="btn btn-primary btn-xs"
                                                 title="Realizar Comentario"
                                                 oncomplete="PF('dlgCmt').show();"
@@ -451,7 +451,17 @@
                                                 actionListener="#{projectView.getAnexoCorrections()}"
                                                 rendered="#{projectView.renderAnexoCorrections()}">
                             <span class="glyphicon glyphicon-eye-open"></span> Correcciones
-                        </p:commandLink><br></br><br></br>
+                        </p:commandLink>
+                        <br></br><br></br>
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <p:commandLink id="deleteAEIO" styleClass="btn btn-danger"
+                                       update="@parent"
+                                       rendered="#{projectView.editOptions()}"
+                                       actionListener="#{projectView.deleteAnnexed()}">
+                            <span class="glyphicon glyphicon-trash"></span>
+                        </p:commandLink>
+                        <p:tooltip id="toolTipFade" for="deleteAEIO" value="Eliminar Anexos" position="top"/>                        
                     </div>
                 </div>
                 <div class="btn-toolbar">

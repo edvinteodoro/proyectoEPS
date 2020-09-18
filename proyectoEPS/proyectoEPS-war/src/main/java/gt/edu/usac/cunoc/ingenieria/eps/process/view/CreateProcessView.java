@@ -330,5 +330,11 @@ public class CreateProcessView implements Serializable {
     public void setUserCareers(List<UserCareer> userCareers) {
         this.userCareers = userCareers;
     }
+    
+    public void deleteAeioSettlemen(){
+        this.aeioSettlement = null;
+        this.aeioSettlementStream = null;
+        this.nameAeioSettlemen = "";
+    }
 
 }

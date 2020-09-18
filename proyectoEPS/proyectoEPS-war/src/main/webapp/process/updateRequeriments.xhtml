@@ -46,10 +46,10 @@
                                   sizeLimit="16000000"
                                   invalidSizeMessage="Archivo demasiado grande, limite de 16MB"
                                   invalidFileMessage="Solo se puede cargar archivos pdf"/>  
-                </div>
-                <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{updateRequerimentsView.reloadWrittenRequest()}">
-                    <p:fileDownload value="#{updateRequerimentsView.writtenRequestStream}" contentDisposition="inline"/>
-                </h:commandLink>
+                    <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{updateRequerimentsView.reloadWrittenRequest()}">
+                        <p:fileDownload value="#{updateRequerimentsView.writtenRequestStream}" contentDisposition="inline"/>
+                    </h:commandLink>
+                </div>                
             </div>
             <div class="row">
                 <div class="form-group col-sm-3">
@@ -65,10 +65,10 @@
                                   sizeLimit="16000000"
                                   invalidSizeMessage="Archivo demasiado grande, limite de 16MB"
                                   invalidFileMessage="Solo se puede cargar archivos pdf"/>  
-                </div>
-                <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{updateRequerimentsView.reloadInscriptionConstancy()}">
-                    <p:fileDownload value="#{updateRequerimentsView.inscriptionConstancyStream}" contentDisposition="inline"/>
-                </h:commandLink>
+                    <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{updateRequerimentsView.reloadInscriptionConstancy()}">
+                        <p:fileDownload value="#{updateRequerimentsView.inscriptionConstancyStream}" contentDisposition="inline"/>
+                    </h:commandLink>
+                </div>                
             </div>
 
             <div class="row">
@@ -85,10 +85,11 @@
                                   sizeLimit="16000000"
                                   invalidSizeMessage="Archivo demasiado grande, limite de 16MB"
                                   invalidFileMessage="Solo se puede cargar archivos pdf"/>  
+
+                    <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{updateRequerimentsView.reloadPensumeClosure()}">
+                        <p:fileDownload value="#{updateRequerimentsView.pensumeClosureStream}" contentDisposition="inline"/>
+                    </h:commandLink>
                 </div>
-                <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{updateRequerimentsView.reloadPensumeClosure()}">
-                    <p:fileDownload value="#{updateRequerimentsView.pensumeClosureStream}" contentDisposition="inline"/>
-                </h:commandLink>
             </div>
             <div class="row">
                 <div class="form-group col-sm-3">
@@ -104,10 +105,10 @@
                                   sizeLimit="16000000"
                                   invalidSizeMessage="Archivo demasiado grande, limite de 16MB"
                                   invalidFileMessage="Solo se puede cargar archivos pdf"/>    
-                </div>
-                <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{updateRequerimentsView.reloadPropedeuticConstancy()}">
-                    <p:fileDownload value="#{updateRequerimentsView.propedeuticConstancyStream}" contentDisposition="inline"/>
-                </h:commandLink>
+                    <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{updateRequerimentsView.reloadPropedeuticConstancy()}">
+                        <p:fileDownload value="#{updateRequerimentsView.propedeuticConstancyStream}" contentDisposition="inline"/>
+                    </h:commandLink>
+                </div>                
             </div>
             <div class="row">
                 <div class="form-group col-sm-3">
@@ -123,10 +124,11 @@
                                   sizeLimit="16000000"
                                   invalidSizeMessage="Archivo demasiado grande, limite de 16MB"
                                   invalidFileMessage="Solo se puede cargar archivos pdf"/>
+
+                    <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{updateRequerimentsView.reloadEpsPreProjec()}">
+                        <p:fileDownload value="#{updateRequerimentsView.epsPreProjectStream}" contentDisposition="inline"/>
+                    </h:commandLink>
                 </div>
-                <h:commandLink value="Ver Documento"  target="_blank" actionListener="#{updateRequerimentsView.reloadEpsPreProjec()}">
-                    <p:fileDownload value="#{updateRequerimentsView.epsPreProjectStream}" contentDisposition="inline"/>
-                </h:commandLink>
             </div>
             <div class="row">
                 <div class="form-group col-sm-3">
@@ -141,10 +143,18 @@
                                   sizeLimit="16000000"
                                   invalidSizeMessage="Archivo demasiado grande, limite de 16MB"
                                   invalidFileMessage="Solo se puede cargar archivos pdf"/>
+                    <h:commandLink value="Ver Documento"  target="_blank" rendered="#{updateRequerimentsView.showAeioSettlement}" actionListener="#{updateRequerimentsView.reloadAeioSettlemen()}">
+                        <p:fileDownload value="#{updateRequerimentsView.aeioSettlementStream}" contentDisposition="inline"/>
+                    </h:commandLink>
                 </div>
-                <h:commandLink value="Ver Documento"  target="_blank" rendered="#{updateRequerimentsView.showAeioSettlement}" actionListener="#{updateRequerimentsView.reloadAeioSettlemen()}">
-                    <p:fileDownload value="#{updateRequerimentsView.aeioSettlementStream}" contentDisposition="inline"/>
-                </h:commandLink>
+                <div class="form-group col-sm-3" jsf:rendered="#{updateRequerimentsView.flagStudent}">
+                    <p:commandLink id="deleteAEIO" styleClass="btn btn-danger"
+                                   update="@parent"
+                                   actionListener="#{updateRequerimentsView.deleteAeioSettlemen()}">
+                        <span class="glyphicon glyphicon-trash"></span>
+                    </p:commandLink>
+                    <p:tooltip id="toolTipFade" for="deleteAEIO" value="Eliminar Finiquito de AEIO" position="top"/>
+                </div>
             </div>
             <br/>
             <div class="btn-toolbar" jsf:rendered="#{updateRequerimentsView.flagStudent}">
@@ -155,7 +165,7 @@
                                    onsuccess="PF('progressBar').hide();"
                                    actionListener="#{updateRequerimentsView.save()}">
                         <p:confirm header="Actualizar Requerimientos" message="¿Desea actualizar los Requerimientos?" icon="pi pi-exclamation-triangle" />
-                        <span class="glyphicon glyphicon-floppy-saved"></span> Guardar Cambios
+                        <span class="glyphicon glyphicon-floppy-saved"></span> Guardar
                     </p:commandLink>
                 </div>
                 <div class="btn-group mr-2">

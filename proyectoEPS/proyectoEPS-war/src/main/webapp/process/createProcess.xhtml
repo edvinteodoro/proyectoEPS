@@ -130,6 +130,14 @@
                             <p:fileDownload value="#{createProcessView.aeioSettlementStream}" contentDisposition="inline"/>
                         </h:commandLink>
                     </div>
+                    <div class="form-group col-sm-3">
+                        <p:commandLink id="deleteAEIO" styleClass="btn btn-danger"
+                                       update="@parent"
+                                       actionListener="#{createProcessView.deleteAeioSettlemen()}">
+                            <span class="glyphicon glyphicon-trash"></span>
+                        </p:commandLink>
+                        <p:tooltip id="toolTipFade" for="deleteAEIO" value="Eliminar Finiquito de AEIO" position="top"/>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-sm-3">

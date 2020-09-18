@@ -109,14 +109,17 @@ public class updateRequerimentsView implements Serializable {
         List<Process> assignedProcesses;
         switch (userlogged.getROLid().getName()) {
             case ESTUDIANTE:
-                 return process.getUserCareer().getUSERuserId().equals(this.loggedUser);                 
+                flagStudent = true;
+                return currentProcess.getUserCareer().getUSERuserId().equals(userlogged);
             case COORDINADOR_CARRERA:
+                flagStudent = false;
                 assignedProcesses = tailFacade.getProcessByCoordinator(userlogged);
                 if (!existProcessOnList(currentProcess, assignedProcesses)) {
                     return false;
                 }
                 return true;
             case COORDINADOR_EPS:
+                flagStudent = false;
                 if (userlogged.getEpsCommittee()) {
                     assignedProcesses = tailCommitteeEPSFacade.getTailCommitteeEPS();
                     return existProcessOnList(currentProcess, assignedProcesses);
@@ -124,9 +127,11 @@ public class updateRequerimentsView implements Serializable {
                     return false;
                 }
             case SUPERVISOR_EPS:
+                flagStudent = false;
                 if (userlogged.getEpsCommittee()) {
                     assignedProcesses = tailCommitteeEPSFacade.getTailCommitteeEPS();
-                    return existProcessOnList(currentProcess, assignedProcesses);
+                    return existProcessOnList(currentProcess, assignedProcesses) 
+                            || currentProcess.getSupervisor_EPS().getUserId().equals(userlogged.getUserId());
                 } else {
                     if (currentProcess.getSupervisor_EPS() != null) {
                         return currentProcess.getSupervisor_EPS().getUserId().equals(userlogged.getUserId());

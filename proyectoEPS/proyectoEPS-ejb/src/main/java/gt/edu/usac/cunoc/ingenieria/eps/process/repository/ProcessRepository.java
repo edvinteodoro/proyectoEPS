@@ -160,6 +160,15 @@ public class ProcessRepository {
         }
     }
 
+    public boolean sendEmailStudentCommitteeEPS(User student, String Title, String msg) {
+        try {
+            sendEmail(student.getEmail(), Title, emailBodyCommitteeEPS(Title, msg));
+            return true;
+        } catch (Exception e){
+            return false;
+        }
+    }
+
     @Asynchronous
     private Future<Void> sendEmail(final String to, final String subject, final String body) {
         try {
@@ -178,6 +187,12 @@ public class ProcessRepository {
         return ("<h2><strong>" + title + "</strong></h2>"
                 + "<p>" + tailCoordinator.getUserCareer().getUSERuserId().getROLid().getName() + ": " + tailCoordinator.getUserCareer().getCAREERcodigo().getName() + "</p>"
                 + "<p>" + tailCoordinator.getUserCareer().getUSERuserId().getFirstName() + " " + tailCoordinator.getUserCareer().getUSERuserId().getLastName() + "</p>"
+                + "<p><span style=\"color: #000000;\">" + mensaje + "</span></p>"
+                + "<p>Divisi&oacute;n de Ciencias de la Ingenieria - Centro Universitario de Occidente</p>");
+    }
+    
+    private String emailBodyCommitteeEPS(String title, String mensaje){
+        return ("<h2><strong>" + title + "</strong></h2>"
                 + "<p><span style=\"color: #000000;\">" + mensaje + "</span></p>"
                 + "<p>Divisi&oacute;n de Ciencias de la Ingenieria - Centro Universitario de Occidente</p>");
     }

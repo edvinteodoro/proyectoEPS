@@ -170,8 +170,7 @@ public class ProcessFacade implements ProcessFacadeLocal {
                     result.get().setState(ACTIVO);
                     updateProcess(result.get());
                     tailCommitteeEPSFacadeLocal.deleteTailCommitteeEPS(result.get());
-
-                    //Falta enviar notificacion por correo
+                    processRepository.sendEmailStudentCommitteeEPS(result.get().getUserCareer().getUSERuserId(), "Revisión Proceso Eps", "Su Anteproyecto ha sido revisado por el Comite EPS, ya es posible editar el documento y realizar los cambios solicitados.");                    
                     return result;
                 }
             } else {
@@ -197,10 +196,8 @@ public class ProcessFacade implements ProcessFacadeLocal {
                     result.get().setState(REVISION);
                     result.get().setApprovalEPSCommission(true);
                     updateProcess(result.get());
-                    tailCommitteeEPSFacadeLocal.deleteTailCommitteeEPS(result.get());
-                    //Metodo para enviar agregar a siguiente etapa
-
-                    //Falta enviar notificacion por correo
+                    tailCommitteeEPSFacadeLocal.deleteTailCommitteeEPS(result.get());                    
+                    processRepository.sendEmailStudentCommitteeEPS(result.get().getUserCareer().getUSERuserId(), "Proceso EPS Aceptado", "Su Anteproyecto ha sido aceptado por la Comisión EPS");                    
                     return result;
                 }
             } else {
@@ -229,8 +226,8 @@ public class ProcessFacade implements ProcessFacadeLocal {
                     updateProcess(result.get());
                     tailCommitteeEPSFacadeLocal.deleteTailCommitteeEPS(result.get());
                     projectFacade.createCorrection(new Correction(LocalDate.now(), user, TypeCorrection.REJECTED, result.get().getProject(), null, message.getBytes()));
-
-                    //Falta enviar notificacion por correo
+                    processRepository.sendEmailStudentCommitteeEPS(result.get().getUserCareer().getUSERuserId(), "Proceso EPS Rechazado", "Su Anteproyecto ha sido Rechazado por la Comisión EPS. <br/>" + message);                    
+                    
                     return result;
                 }
             } else {

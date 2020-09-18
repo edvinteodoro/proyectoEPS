@@ -75,6 +75,7 @@ public interface ProcessFacadeLocal {
      * @param message
      * @return
      * @throws UserException
+     * @throws MandatoryException
      */
     public Optional<Process> EPSCommitteeRejectProyect(Integer id, User user, String message) throws UserException, MandatoryException;
 

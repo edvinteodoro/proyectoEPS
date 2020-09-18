@@ -178,7 +178,7 @@ public class ProjectReviewView implements Serializable {
         try {
             projectFacade.searchUnnotifiedCorrections(actualProcess.getProject());
             if (getActualProcess().getApprovedCareerCoordinator() == null) {
-                processFacade.rejectProcess(tailFacade.getTailCoordinator(getActualProcess()), "Proceso Eps Aceptado", "Su projecto ha sido aceptado por el coordinador de carrera.");
+                processFacade.rejectProcess(tailFacade.getTailCoordinator(getActualProcess()), "Proceso Eps Aceptado", "Su Anteproyecto ha sido aceptado por el coordinador de carrera.");
                 tailFacade.deleteTailCoordinatod(getActualProcess());
                 getActualProcess().setState(StateProcess.REVISION);
                 getActualProcess().setApprovedCareerCoordinator(true);
@@ -225,7 +225,7 @@ public class ProjectReviewView implements Serializable {
     public void returnCorrections() {
         try {
             if (getActualProcess().getApprovedCareerCoordinator() == null) {
-                processFacade.rejectProcess(tailFacade.getTailCoordinator(getActualProcess()), "Revisión Proceso Eps", "Su projecto ha sido revisado, ya es posible editar el documento y realizar los cambios solicitados.");
+                processFacade.rejectProcess(tailFacade.getTailCoordinator(getActualProcess()), "Revisión Proceso Eps", "Su Anteproyecto ha sido revisado por el Coordinador de Carrera, ya es posible editar el documento y realizar los cambios solicitados.");
                 tailFacade.deleteTailCoordinatod(getActualProcess());
                 getActualProcess().setState(StateProcess.ACTIVO);
                 processFacade.updateProcess(getActualProcess());

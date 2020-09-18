@@ -37,14 +37,14 @@
             <p:column headerText="Aprobacion de Comite EPS">
                 <h:outputText value="#{process.approvedEPSMessage}" />
             </p:column>
-            <p:column headerText="Requisitos" styleClass="text-center">
+            <p:column headerText="Requerimientos" styleClass="text-center">
                 <p data-placement="top" data-toggle="tooltip" title="Requisitos">
-                    <button jsf:outcome="updateRequeriment" styleClass="btn btn-success btn-xs">
-                        <f:param name="idRequeriment" value="#{process.requeriment.id}"/>
+                    <button jsf:outcome="updateRequeriments" styleClass="btn btn-success btn-xs">
+                        <f:param name="idProcess" value="#{process.id}"/>
                         <span class="glyphicon glyphicon-log-in"></span>
                     </button>
                 </p>
-            </p:column>
+            </p:column>            
             <p:column headerText="Anteproyecto" styleClass="text-center">
                 <p data-placement="top" data-toggle="tooltip" title="Anteproyecto">
                     <button jsf:outcome="projectReview" styleClass="btn btn-success btn-xs" >
@@ -52,39 +52,7 @@
                         <span class="glyphicon glyphicon-log-in"></span>
                     </button>
                 </p>
-            </p:column>
-            <p:column headerText="Asesor y Revisor" styleClass="text-center">
-                <p:commandLink styleClass="btn btn-primary btn-xs"
-                               oncomplete="PF('infoAbout').show();" 
-                               update=":#{p:component('infoAbout')}"
-                               rendered="#{assignedProcessesView.studentAppointmentApproved(process)}">
-                    <f:setPropertyActionListener value="#{process.appointmentId}" target="#{assignedProcessesView.appointment}"/>
-                    <span class="glyphicon glyphicon-eye-open"></span>
-                </p:commandLink>
-                <p:commandLink styleClass="btn btn-success btn-xs"
-                               action="adviserReviewer"
-                               rendered="#{!assignedProcessesView.studentAppointmentApproved(process)}">
-                    <span class="glyphicon glyphicon-log-in"></span>
-                </p:commandLink>
-            </p:column>
-            <p:column headerText="Supervisor Empresa" styleClass="text-center" rendered="#{p:ifGranted(constantsRol.SUPERVISOR_EPS())}">
-                <p:commandLink styleClass="btn btn-primary btn-xs"
-                               oncomplete="PF('infoAbout2').show();" 
-                               update=":#{p:component('infoAbout2')}"
-                               rendered="#{assignedProcessesView.companySupervisorExist(process)}">
-                    <f:setPropertyActionListener value="#{process}" target="#{assignedProcessesView.processSelected}"/>
-                    <span class="glyphicon glyphicon-eye-open"></span>
-                </p:commandLink>
-            </p:column>
-            <p:column headerText="Bitacora" styleClass="text-center">
-                <p data-placement="top" data-toggle="tooltip" title="Bitacora">
-                    <button jsf:outcome="journalReview" 
-                            styleClass="btn btn-success btn-xs" >
-                        <f:param name="idProcess" value="#{process.id}"/>
-                        <span class="glyphicon glyphicon-log-in"></span>
-                    </button>
-                </p>
-            </p:column>
+            </p:column>            
         </p:dataTable>
 
         <p:dialog header="Asesor y Revisor" id="infoAbout" widgetVar="infoAbout"

@@ -34,8 +34,6 @@ import org.primefaces.model.StreamedContent;
 import gt.edu.usac.cunoc.ingenieria.eps.tail.facade.TailCoordinatorFacadeLocal;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import org.primefaces.PrimeFaces;
 
@@ -93,8 +91,7 @@ public class ProjectReviewView implements Serializable {
             isFirstProcess = false;
             user = userFacade.getAuthenticatedUser().get(0);
             actualProcess = processFacade.getProcess(new Process(processId)).get(0);
-            validateUser(actualProcess, user);
-            if (actualProcess != null) {
+            if (validateUser(actualProcess, user)) {
                 scheduleStream = new DefaultStreamedContent(new ByteArrayInputStream(actualProcess.getProject().getSchedule()), "application/pdf", "Calendario.pdf");
                 scheduleFileName = scheduleStream.getName();
                 investmentPlanStream = new DefaultStreamedContent(new ByteArrayInputStream(actualProcess.getProject().getInvestmentPlan()), "application/pdf", "Plan de Inversion.pdf");
@@ -104,6 +101,8 @@ public class ProjectReviewView implements Serializable {
                     annexedFileName = annexedStream.getName();
                 }
                 validateFirsProcess();
+            } else {
+                externalContext.redirect(externalContext.getRequestContextPath() + "/error/error-403.xhtml");
             }
         } catch (UserException e) {
             MessageUtils.addErrorMessage(e.getMessage());
@@ -112,38 +111,58 @@ public class ProjectReviewView implements Serializable {
         }
     }
 
-    private void validateUser(Process currentProcess, User userlogged) throws IOException {
+    private boolean validateUser(Process currentProcess, User userlogged) throws IOException {
+        List<Process> assignedProcesses;
         switch (userlogged.getROLid().getName()) {
             case COORDINADOR_CARRERA:
-                List<Process> assignedProcess = tailFacade.getProcessByCoordinator(user);
-                boolean flagOk = false;
-                for (Process assignedProces : assignedProcess) {
-                    if (currentProcess.getId().compareTo(assignedProces.getId()) == 0) {
-                        flagOk = true;
-                    }
+                assignedProcesses = tailFacade.getProcessByCoordinator(userlogged);
+                if (!existProcessOnList(currentProcess, assignedProcesses)) {
+                    return false;
                 }
-                if (!flagOk) {
-                    externalContext.redirect(externalContext.getRequestContextPath() + "/error/error-403.xhtml");
-                }
-                break;
+                return true;
             case COORDINADOR_EPS:
-                break;
+                if (userlogged.getEpsCommittee()) {
+                    assignedProcesses = tailCommitteeEPSFacade.getTailCommitteeEPS();
+                    return existProcessOnList(currentProcess, assignedProcesses);
+                } else {
+                    return false;
+                }
             case SUPERVISOR_EPS:
-                break;
+                if (userlogged.getEpsCommittee()) {
+                    assignedProcesses = tailCommitteeEPSFacade.getTailCommitteeEPS();
+                    return existProcessOnList(currentProcess, assignedProcesses);
+                } else {
+                    if (currentProcess.getSupervisor_EPS() != null){
+                        return currentProcess.getSupervisor_EPS().getUserId().equals(userlogged.getUserId());
+                    } else {
+                        return false;
+                    }                   
+                }
             default:
-                externalContext.redirect(externalContext.getRequestContextPath() + "/error/error-403.xhtml");
+                return false;
         }
+    }
+
+    private boolean existProcessOnList(Process process, List<Process> processes) {
+        return processes.stream().anyMatch(assignedProcess -> (process.getId().compareTo(assignedProcess.getId()) == 0));
     }
 
     private void validateFirsProcess() {
         Process firstProcess;
-        if (getActualProcess().getApprovedCareerCoordinator() == null) {
-            firstProcess = tailFacade.getProcessByCoordinator(user).get(0);
-        } else {
-            firstProcess = tailCommitteeEPSFacade.getTailCommitteeEPS().get(0);
-        }
-        if (getActualProcess().equals(firstProcess)) {
+        if (getActualProcess().getApprovedCareerCoordinator() != null
+                && getActualProcess().getApprovalEPSCommission() != null
+                && getActualProcess().getApprovedCareerCoordinator()
+                && getActualProcess().getApprovalEPSCommission()) {
             this.isFirstProcess = true;
+        } else {
+            if (getActualProcess().getApprovedCareerCoordinator() == null) {
+                firstProcess = tailFacade.getProcessByCoordinator(user).get(0);
+            } else {
+                firstProcess = tailCommitteeEPSFacade.getTailCommitteeEPS().get(0);
+            }
+            if (getActualProcess().equals(firstProcess)) {
+                this.isFirstProcess = true;
+            }
         }
     }
 

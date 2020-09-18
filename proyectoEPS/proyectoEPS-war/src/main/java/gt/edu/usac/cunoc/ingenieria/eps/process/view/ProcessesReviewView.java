@@ -34,23 +34,31 @@ public class ProcessesReviewView implements Serializable {
 
     private Process processSelected;
     private User supervisorEPS;
-    
+
     private boolean committeeEPS;
 
+    private boolean viewProcesses;
+    
     @PostConstruct
     public void init() {
         try {
-            processes = new ArrayList<>();            
+            processes = new ArrayList<>();
             userLogged = userFacade.getAuthenticatedUser().get(0);
             switch (userLogged.getROLid().getName()) {
                 case COORDINADOR_EPS:
                 case SUPERVISOR_EPS:
-                    this.processes = tailCommitteeEPSFacade.getTailCommitteeEPS();
-                    committeeEPS = true;
+                    if (userLogged.getEpsCommittee()) {
+                        this.processes = tailCommitteeEPSFacade.getTailCommitteeEPS();
+                        committeeEPS = true;
+                        viewProcesses = true;
+                    } else {
+                        viewProcesses = false;
+                    }
                     break;
                 case COORDINADOR_CARRERA:
                     this.processes = tailFacade.getProcessByCoordinator(userLogged);
                     committeeEPS = false;
+                    viewProcesses = true;
                     break;
             }
         } catch (UserException e) {
@@ -100,6 +108,14 @@ public class ProcessesReviewView implements Serializable {
 
     public void setCommitteeEPS(boolean committeeEPS) {
         this.committeeEPS = committeeEPS;
+    }
+
+    public boolean isViewProcesses() {
+        return viewProcesses;
+    }
+
+    public void setViewProcesses(boolean viewProcesses) {
+        this.viewProcesses = viewProcesses;
     }
 
     public void clean() {

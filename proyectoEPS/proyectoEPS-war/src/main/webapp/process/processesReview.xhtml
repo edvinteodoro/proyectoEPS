@@ -21,6 +21,11 @@
         <fieldset>
             <legend>#{processesReviewView.getTitle()}</legend> 
         </fieldset>
+        <div class="row" jsf:rendered="#{!processesReviewView.viewProcesses}">
+                    <div class="form-group col-md-12">
+                        <p:staticMessage severity="warn" summary="Advertencia! " detail="No pertenece al Comité EPS, no puede visualizar los Anteproyectos para Revisión"/>
+                    </div>
+                </div> 
         <p:dataTable id="processesTable" var="process" value="#{processesReviewView.processes}" 
                      reflow="true" emptyMessage="Registro Vacío">
             <p:column headerText="Nombres">

@@ -269,7 +269,7 @@
                                        update="@form,:growl"
                                        onstart="PF('progressBar').show();"
                                        onsuccess="PF('progressBar').hide();"
-                                       rendered="#{!projectReviewView.renderWarningCoordinator()}"
+                                       rendered="#{!projectReviewView.renderWarningCoordinator() and projectReviewView.renderEditOption()}"
                                        action="#{projectReviewView.aprovedProject()}">                                       
                             <p:confirm header="Aceptar Proyecto" message="¿Esta seguro de ACEPTAR el Anteproyecto?" icon="pi pi-exclamation-triangle" />
                             <span class="glyphicon glyphicon-check"></span> Aceptar Anteproyecto
@@ -279,7 +279,7 @@
                         <p:commandLink styleClass="btn btn-danger"
                                        update="@form,:growl"
                                        oncomplete="PF('rechazar').show();"
-                                       rendered="#{!projectReviewView.renderWarningCoordinator()}">
+                                       rendered="#{!projectReviewView.renderWarningCoordinator() and projectReviewView.renderEditOption()}">
                             <span class="glyphicon glyphicon-remove"></span> Rechazar Anteproyecto
                         </p:commandLink>
                     </div>
@@ -288,7 +288,7 @@
                                        update="@form,:growl"
                                        onstart="PF('progressBar').show();"
                                        onsuccess="PF('progressBar').hide();"
-                                       rendered="#{!projectReviewView.renderWarningCoordinator()}"
+                                       rendered="#{!projectReviewView.renderWarningCoordinator() and projectReviewView.renderEditOption()}"
                                        actionListener="#{projectReviewView.returnCorrections()}"
                                        >
                             <p:confirm header="Correcciones" message="¿Desea enviar las correciones?" icon="pi pi-exclamation-triangle" />
@@ -322,7 +322,7 @@
                                 </p:column>
                             </p:dataTable>
                         </div>
-                        <div class="row form-group">
+                        <div class="row form-group" jsf:rendered="#{projectReviewView.renderEditOption()}">
                             <p:outputLabel value="Nueva Corrección:" for="note" styleClass="col-md-4 control-label"/>
                             <div class="col-md-8">
                                 <p:inputTextarea id="note" styleClass="form-control"
@@ -332,7 +332,7 @@
                         </div>
                     </fieldset>
                 </div>
-                <div class="modal-footer ">
+                <div class="modal-footer " jsf:rendered="#{projectReviewView.renderEditOption()}">
                     <p:commandLink styleClass="btn btn-primary btn-xs"
                                    update="@form,:#{p:component('growl')}"
                                    onstart="PF('progressBar').show();"

@@ -287,6 +287,17 @@ public class ProjectReviewView implements Serializable {
         }
         return value;
     }
+    
+    public Boolean renderEditOption(){
+        if (getActualProcess().getApprovedCareerCoordinator() != null
+                && getActualProcess().getApprovalEPSCommission() != null
+                && getActualProcess().getApprovedCareerCoordinator()
+                && getActualProcess().getApprovalEPSCommission()){
+            return false;
+        } else {
+            return true;
+        }
+    }
 
     public boolean isGeneralObjective(Objectives objective) {
         return objective.getType().equals(GENERAL_OBJETICVE);

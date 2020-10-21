@@ -58,46 +58,244 @@
                 <p:commandLink styleClass="btn btn-primary btn-xs"
                                oncomplete="PF('infoSupervisorEPS').show();" 
                                update=":#{p:component('infoSupervisorEPS')}">
-                    <f:setPropertyActionListener value="#{process.supervisor_EPS}" target="#{myProcessesView.supervisorEPS}"/>
+                    <f:setPropertyActionListener value="#{process}" target="#{myProcessesView.processSelected}"/>
                     <span class="glyphicon glyphicon-eye-open"></span>
                 </p:commandLink>
-            </p:column>            
+            </p:column>
+            <p:column headerText="Asesor y Revisor" styleClass="text-center">
+                <p:commandLink styleClass="btn btn-primary btn-xs"
+                               oncomplete="PF('infoAbout').show();" 
+                               update=":#{p:component('infoAbout')}"
+                               rendered="#{myProcessesView.studentAppointmentApproved(process)}">
+                    <f:setPropertyActionListener value="#{process.appointmentId}" target="#{myProcessesView.appointment}"/>
+                    <span class="glyphicon glyphicon-eye-open"></span>
+                </p:commandLink>
+                <p:commandLink styleClass="btn btn-success btn-xs"
+                               action="advisorReviewer"
+                               rendered="#{!myProcessesView.studentAppointmentApproved(process)}">
+                    <span class="glyphicon glyphicon-log-in"></span>
+                </p:commandLink>
+            </p:column>
+            <p:column headerText="Supervisor Empresa" styleClass="text-center">
+                <p:commandLink styleClass="btn btn-primary btn-xs"
+                               oncomplete="PF('infoSupervisorOrg').show();" 
+                               update=":#{p:component('infoSupervisorOrg')}">
+                    <f:setPropertyActionListener value="#{process}" target="#{myProcessesView.processSelected}"/>
+                    <span class="glyphicon glyphicon-eye-open"></span>
+                </p:commandLink>
+            </p:column>
         </p:dataTable>
 
         <p:dialog header="Supervisor EPS" id="infoSupervisorEPS" widgetVar="infoSupervisorEPS"
                   modal="true" closeOnEscape="true">
             <p:ajax event="close" listener="#{myProcessesView.clean()}" update="@this" />
             <h:form>
-                <div class="modal-header" jsf:rendered="#{myProcessesView.supervisorEPS == null}">
+                <div class="modal-header" jsf:rendered="#{myProcessesView.processSelected.supervisor_EPS == null}">
                     <p:staticMessage severity="warn" summary="Advertencia! " detail="Se asignará al Supervisor EPS cuando el Coordinador de Carrera apruebe el anteproyecto" />
                 </div>
-                <div class="modal-body" jsf:rendered="#{myProcessesView.supervisorEPS != null}">
+                <div class="modal-body" jsf:rendered="#{myProcessesView.processSelected.supervisor_EPS != null}">
                     <fieldset>
                         <div class="row form-group">
                             <p:outputLabel value="Nombre:" styleClass="col-md-4 control-label"/>
                             <div class="col-md-8">
-                                <h:outputText value="#{myProcessesView.supervisorEPS.firstName}, #{myProcessesView.supervisorEPS.lastName}"/>
+                                <h:outputText value="#{myProcessesView.processSelected.supervisor_EPS.firstName}, #{myProcessesView.processSelected.supervisor_EPS.lastName}"/>
                             </div>
                         </div>
                         <div class="row form-group">
                             <p:outputLabel value="Correo Electrónico:" styleClass="col-md-4 control-label"/>
                             <div class="col-md-8">
-                                <h:outputText value="#{myProcessesView.supervisorEPS.email}" />
+                                <h:outputText value="#{myProcessesView.processSelected.supervisor_EPS.email}" />
                             </div>
                         </div>
                         <div class="row form-group">
                             <p:outputLabel value="Telefono:" styleClass="col-md-4 control-label"/>
                             <div class="col-md-8">
-                                <h:outputText value="#{myProcessesView.supervisorEPS.phone1}" />
+                                <h:outputText value="#{myProcessesView.processSelected.supervisor_EPS.phone1}" />
                             </div>
                         </div>
                         <div class="row form-group">
                             <p:outputLabel value="Telefono:" styleClass="col-md-4 control-label"/>
                             <div class="col-md-8">
-                                <h:outputText value="#{myProcessesView.supervisorEPS.phone2}" />
+                                <h:outputText value="#{myProcessesView.processSelected.supervisor_EPS.phone2}" />
                             </div>
                         </div>
                     </fieldset>
+                </div>
+            </h:form>
+        </p:dialog>
+
+        <p:dialog header="Supervisor de la Empresa" id="infoSupervisorOrg" widgetVar="infoSupervisorOrg"
+                  modal="true" closeOnEscape="true">
+            <p:ajax event="close" listener="#{myProcessesView.clean()}" update="@this" />
+            <h:form>
+                <div class="modal-header" jsf:rendered="#{!myProcessesView.canAddCompanySupervisor() and !myProcessesView.companySupervisorExist()}">
+                    <p:staticMessage severity="warn" summary="Advertencia! " detail="Podrá crear al Supervisor de la empresa cuando el Comité EPS apruebe el anteproyecto" />
+                </div>
+                <div class="modal-body" jsf:rendered="#{myProcessesView.companySupervisorExist()}">
+                    <fieldset>
+                        <div class="row form-group">
+                            <p:outputLabel value="DPI:" styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <h:outputText value="#{myProcessesView.processSelected.appointmentId.companySupervisor.dpi}"/>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <p:outputLabel value="Nombre:" styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <h:outputText value="#{myProcessesView.processSelected.appointmentId.companySupervisor.firstName}, #{myProcessesView.processSelected.appointmentId.companySupervisor.lastName}"/>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <p:outputLabel value="Correo Electrónico:" styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <h:outputText value="#{myProcessesView.processSelected.appointmentId.companySupervisor.email}" />
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <p:outputLabel value="Telefono:" styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <h:outputText value="#{myProcessesView.processSelected.appointmentId.companySupervisor.phone1}" />
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <p:outputLabel value="Telefono Extra:" styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <h:outputText value="#{myProcessesView.processSelected.appointmentId.companySupervisor.phone2}" />
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <p:outputLabel value="Estado:" styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <p:selectBooleanCheckbox value="#{myProcessesView.processSelected.appointmentId.companySupervisor.status}"  disabled="true"/>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <p:outputLabel value="Nombre de la Empresa:" styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <h:outputText value="#{myProcessesView.processSelected.appointmentId.companySupervisor.nameCompanyWork}"/>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <p:outputLabel value="Telefono de la Empresa:" styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <h:outputText value="#{myProcessesView.processSelected.appointmentId.companySupervisor.phoneCompanyWork}" />
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <p:outputLabel value="Dirección de la Empresa:" styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <h:outputText value="#{myProcessesView.processSelected.appointmentId.companySupervisor.directionCompanyWork}" />
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="modal-footer" jsf:rendered="#{myProcessesView.canAddCompanySupervisor() and !myProcessesView.companySupervisorExist()}">
+                    <p:commandLink styleClass="btn btn-warning btn-xs"
+                                   oncomplete="PF('newUser').show();" 
+                                   update=":#{p:component('newUser')}"
+                                   actionListener="#{myProcessesView.createNewUser()}">
+                        <span class="glyphicon glyphicon-plus"></span> Nuevo
+                    </p:commandLink>
+
+                </div>
+            </h:form>
+        </p:dialog>
+
+        <p:dialog header="Agregar Supervisor de la Empresa" id="newUser" widgetVar="newUser"
+                  modal="true" closeOnEscape="true">
+            <p:ajax event="close" listener="#{myProcessesView.cleanNewCompanySupervisor()}" update="@this" />
+            <h:form>
+                <div class="modal-body">
+                    <fieldset>
+                        <div class="row form-group">
+                            <p:outputLabel for="name" value="Nombres: " styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <p:inputText id="name" styleClass="form-control" pt:placeholder="Nombres"
+                                             pt:required="true" maxlength="100" required="true"
+                                             value="#{myProcessesView.newCompanySupervisor.firstName}"/>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <p:outputLabel for="lastName" value="Apellidos: " styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <p:inputText id="lastName" styleClass="form-control" pt:placeholder="Apellidos"
+                                             pt:required="true" maxlength="100" required="true"
+                                             value="#{myProcessesView.newCompanySupervisor.lastName}"/>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <p:outputLabel for="dpi" value="DPI: " styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <p:inputText id="dpi" styleClass="form-control" pt:placeholder="DPI"
+                                             pt:required="true" maxlength="45" required="true"
+                                             value="#{myProcessesView.newCompanySupervisor.dpi}"/>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <p:outputLabel for="email" value="Correo: " styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <p:inputText id="email" styleClass="form-control" pt:placeholder="Correo"
+                                             pt:required="true" maxlength="45" required="true"
+                                             value="#{myProcessesView.newCompanySupervisor.email}"/>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <p:outputLabel for="phone" value="Telefono: " styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <p:inputText id="phone" styleClass="form-control" pt:placeholder="Telefono del Usuario"
+                                             pt:required="true" maxlength="45" required="true"
+                                             value="#{myProcessesView.newCompanySupervisor.phone1}"/>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <p:outputLabel for="phone2" value="Telefono Extra: " styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <p:inputText id="phone2" styleClass="form-control" pt:placeholder="Telefono del Usuario" 
+                                             maxlength="45" value="#{myProcessesView.newCompanySupervisor.phone2}"/>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <p:outputLabel for="direction" value="Dirección: " styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <p:inputText id="direction" styleClass="form-control" 
+                                             pt:placeholder="Direccion del Usuario" maxlength="100"
+                                             value="#{myProcessesView.newCompanySupervisor.direction}"/>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <p:outputLabel for="nameCompany" value="Nombre de la Empresa: " styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <p:inputText id="nameCompany" styleClass="form-control" pt:placeholder="Nombre de la Empresa en la que labora"
+                                             pt:required="true" maxlength="100" required="true"
+                                             value="#{myProcessesView.newCompanySupervisor.nameCompanyWork}"/>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <p:outputLabel for="phoneCompany" value="Teléfono de la Empresa: " styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <p:inputText id="phoneCompany" styleClass="form-control" pt:placeholder="Telefono de la empresa donde labora"
+                                             pt:required="true" maxlength="45" required="true"
+                                             value="#{myProcessesView.newCompanySupervisor.phoneCompanyWork}"/>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <p:outputLabel for="directionCompany" value="Dirección de la Empresa: " styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <p:inputText id="directionCompany" styleClass="form-control" pt:placeholder="Direccion de la Empresa donde labora"
+                                             pt:required="true" maxlength="45" required="true"
+                                             value="#{myProcessesView.newCompanySupervisor.directionCompanyWork}"/>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="modal-footer ">
+                    <p:commandLink styleClass="btn btn-warning btn-lg" style="width: 100%;"
+                                   update="@form,:#{p:component('infoSupervisorOrg')},:#{p:component('processesTable')},:#{p:component('growl')}"
+                                   onstart="PF('progressBar').show();"
+                                   onsuccess="PF('progressBar').hide();"
+                                   actionListener="#{myProcessesView.saveNewUser('newUser')}">
+                        <span class="glyphicon glyphicon-ok-sign"></span> Guardar
+                    </p:commandLink>
                 </div>
             </h:form>
         </p:dialog>
@@ -231,167 +429,17 @@
             </h:form>
         </p:dialog>
 
-        <p:dialog header="Supervisor de la Empresa" id="infoAbout2" widgetVar="infoAbout2"
+        <p:dialog id="progressBar" widgetVar="progressBar" closable="false" width="20%" showHeader="false" resizable="false"
                   modal="true" closeOnEscape="true">
-            <p:ajax event="close" listener="#{myProcessesView.clean()}" update="@this" />
-            <h:form>
-                <div class="modal-body">
-                    <fieldset>
-                        <div class="row form-group">
-                            <p:outputLabel value="DPI:" styleClass="col-md-4 control-label"/>
-                            <div class="col-md-8">
-                                <h:outputText value="#{myProcessesView.appointment.companySupervisor.dpi}"/>
-                            </div>
-                        </div>
-                        <div class="row form-group">
-                            <p:outputLabel value="Nombre:" styleClass="col-md-4 control-label"/>
-                            <div class="col-md-8">
-                                <h:outputText value="#{myProcessesView.appointment.companySupervisor.firstName}, #{myProcessesView.appointment.companySupervisor.lastName}"/>
-                            </div>
-                        </div>
-                        <div class="row form-group">
-                            <p:outputLabel value="Correo Electrónico:" styleClass="col-md-4 control-label"/>
-                            <div class="col-md-8">
-                                <h:outputText value="#{myProcessesView.appointment.companySupervisor.email}" />
-                            </div>
-                        </div>
-                        <div class="row form-group">
-                            <p:outputLabel value="Telefono:" styleClass="col-md-4 control-label"/>
-                            <div class="col-md-8">
-                                <h:outputText value="#{myProcessesView.appointment.companySupervisor.phone1}" />
-                            </div>
-                        </div>
-                        <div class="row form-group">
-                            <p:outputLabel value="Telefono Extra:" styleClass="col-md-4 control-label"/>
-                            <div class="col-md-8">
-                                <h:outputText value="#{myProcessesView.appointment.companySupervisor.phone2}" />
-                            </div>
-                        </div>
-                        <div class="row form-group">
-                            <p:outputLabel value="Estado:" styleClass="col-md-4 control-label"/>
-                            <div class="col-md-8">
-                                <p:selectBooleanCheckbox value="#{myProcessesView.appointment.companySupervisor.status}"  disabled="true"/>
-                            </div>
-                        </div>
-                        <div class="row form-group">
-                            <p:outputLabel value="Nombre de la Empresa:" styleClass="col-md-4 control-label"/>
-                            <div class="col-md-8">
-                                <h:outputText value="#{myProcessesView.appointment.companySupervisor.nameCompanyWork}"/>
-                            </div>
-                        </div>
-                        <div class="row form-group">
-                            <p:outputLabel value="Telefono de la Empresa:" styleClass="col-md-4 control-label"/>
-                            <div class="col-md-8">
-                                <h:outputText value="#{myProcessesView.appointment.companySupervisor.phoneCompanyWork}" />
-                            </div>
-                        </div>
-                        <div class="row form-group">
-                            <p:outputLabel value="Dirección de la Empresa:" styleClass="col-md-4 control-label"/>
-                            <div class="col-md-8">
-                                <h:outputText value="#{myProcessesView.appointment.companySupervisor.directionCompanyWork}" />
-                            </div>
-                        </div>
-                    </fieldset>
-                </div>
-            </h:form>
+            <p:ajax event="close" update="@this" />
+            <div align="center">
+                <p:outputLabel>Realizando operación, espere un momento.</p:outputLabel>
+            </div>
+            <div class="form-group col-md-12" align="center">
+                <p:progressBar id="progressBarIndeterminate" style="height:6px" mode="indeterminate"/>
+            </div>
         </p:dialog>
 
-        <p:dialog header="Agregar Supervisor de la Empresa" id="newUser" widgetVar="newUser"
-                  modal="true" closeOnEscape="true">
-            <p:ajax event="close" listener="#{myProcessesView.clean()}" update="@this" />
-            <h:form>
-                <div class="modal-body">
-                    <fieldset>
-                        <div class="row form-group">
-                            <p:outputLabel for="name" value="Nombres: " styleClass="col-md-4 control-label"/>
-                            <div class="col-md-8">
-                                <p:inputText id="name" styleClass="form-control" pt:placeholder="Nombres"
-                                             pt:required="true" maxlength="100" required="true"
-                                             value="#{myProcessesView.companySupervisor.firstName}"/>
-                            </div>
-                        </div>
-                        <div class="row form-group">
-                            <p:outputLabel for="lastName" value="Apellidos: " styleClass="col-md-4 control-label"/>
-                            <div class="col-md-8">
-                                <p:inputText id="lastName" styleClass="form-control" pt:placeholder="Apellidos"
-                                             pt:required="true" maxlength="100" required="true"
-                                             value="#{myProcessesView.companySupervisor.lastName}"/>
-                            </div>
-                        </div>
-                        <div class="row form-group">
-                            <p:outputLabel for="dpi" value="DPI: " styleClass="col-md-4 control-label"/>
-                            <div class="col-md-8">
-                                <p:inputText id="dpi" styleClass="form-control" pt:placeholder="DPI"
-                                             pt:required="true" maxlength="45" required="true"
-                                             value="#{myProcessesView.companySupervisor.dpi}"/>
-                            </div>
-                        </div>
-                        <div class="row form-group">
-                            <p:outputLabel for="email" value="Correo: " styleClass="col-md-4 control-label"/>
-                            <div class="col-md-8">
-                                <p:inputText id="email" styleClass="form-control" pt:placeholder="Correo"
-                                             pt:required="true" maxlength="45" required="true"
-                                             value="#{myProcessesView.companySupervisor.email}"/>
-                            </div>
-                        </div>
-                        <div class="row form-group">
-                            <p:outputLabel for="phone" value="Telefono: " styleClass="col-md-4 control-label"/>
-                            <div class="col-md-8">
-                                <p:inputText id="phone" styleClass="form-control" pt:placeholder="Telefono del Usuario"
-                                             pt:required="true" maxlength="45" required="true"
-                                             value="#{myProcessesView.companySupervisor.phone1}"/>
-                            </div>
-                        </div>
-                        <div class="row form-group">
-                            <p:outputLabel for="phone2" value="Telefono Extra: " styleClass="col-md-4 control-label"/>
-                            <div class="col-md-8">
-                                <p:inputText id="phone2" styleClass="form-control" pt:placeholder="Telefono del Usuario" 
-                                             maxlength="45" value="#{myProcessesView.companySupervisor.phone2}"/>
-                            </div>
-                        </div>
-                        <div class="row form-group">
-                            <p:outputLabel for="direction" value="Dirección: " styleClass="col-md-4 control-label"/>
-                            <div class="col-md-8">
-                                <p:inputText id="direction" styleClass="form-control" 
-                                             pt:placeholder="Direccion del Usuario" maxlength="100"
-                                             value="#{myProcessesView.companySupervisor.direction}"/>
-                            </div>
-                        </div>
-                        <div class="row form-group">
-                            <p:outputLabel for="nameCompany" value="Nombre de la Empresa: " styleClass="col-md-4 control-label"/>
-                            <div class="col-md-8">
-                                <p:inputText id="nameCompany" styleClass="form-control" pt:placeholder="Nombre de la Empresa en la que labora"
-                                             pt:required="true" maxlength="100" required="true"
-                                             value="#{myProcessesView.companySupervisor.nameCompanyWork}"/>
-                            </div>
-                        </div>
-                        <div class="row form-group">
-                            <p:outputLabel for="phoneCompany" value="Teléfono de la Empresa: " styleClass="col-md-4 control-label"/>
-                            <div class="col-md-8">
-                                <p:inputText id="phoneCompany" styleClass="form-control" pt:placeholder="Telefono de la empresa donde labora"
-                                             pt:required="true" maxlength="45" required="true"
-                                             value="#{myProcessesView.companySupervisor.phoneCompanyWork}"/>
-                            </div>
-                        </div>
-                        <div class="row form-group">
-                            <p:outputLabel for="directionCompany" value="Dirección de la Empresa: " styleClass="col-md-4 control-label"/>
-                            <div class="col-md-8">
-                                <p:inputText id="directionCompany" styleClass="form-control" pt:placeholder="Direccion de la Empresa donde labora"
-                                             pt:required="true" maxlength="45" required="true"
-                                             value="#{myProcessesView.companySupervisor.directionCompanyWork}"/>
-                            </div>
-                        </div>
-                    </fieldset>
-                </div>
-                <div class="modal-footer ">
-                    <p:commandLink styleClass="btn btn-warning btn-lg" style="width: 100%;"
-                                   update="@form,:#{p:component('processesTable')},:#{p:component('growl')}"
-                                   actionListener="#{myProcessesView.saveNewUser('newUser')}">
-                        <span class="glyphicon glyphicon-ok-sign"></span> Guardar
-                    </p:commandLink>
-                </div>
-            </h:form>
-        </p:dialog>
     </ui:define>
 </ui:composition>
 

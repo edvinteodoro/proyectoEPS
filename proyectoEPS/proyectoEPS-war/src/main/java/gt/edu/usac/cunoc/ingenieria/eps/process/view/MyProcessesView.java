@@ -41,8 +41,8 @@ public class MyProcessesView implements Serializable {
     private StreamedContent reviewerResumeStream;
 
     private Process processSelected;
-    private User companySupervisor;
-    private User supervisorEPS;
+    
+    private User newCompanySupervisor;
 
     @PostConstruct
     public void init() {
@@ -53,14 +53,6 @@ public class MyProcessesView implements Serializable {
         } catch (UserException e) {
             System.out.println("Error de Autenticación del Usuario: " + e);
         }
-    }
-
-    public List<Process> getProcesses() {
-        return processes;
-    }
-
-    public void setProcesses(List<Process> processes) {
-        this.processes = processes;
     }
 
     public Boolean studentAppointmentApproved(Process process) {
@@ -78,17 +70,15 @@ public class MyProcessesView implements Serializable {
      *
      * @param process
      */
-    public void createNewUser(Process process) {
-        processSelected = process;
+    public void createNewUser() {
         if (processSelected.getAppointmentId() == null) {
             processSelected.setAppointmentId(new Appointment());
         }
 
         try {
             if (processSelected.getAppointmentId().getCompanySupervisor() == null) {
-
-                companySupervisor = new User();
-                companySupervisor.setROLid(userFacade.getRolUser(new Rol(null, SUPERVISOR_EMPRESA)).get(0));
+                newCompanySupervisor = new User();
+                newCompanySupervisor.setROLid(userFacade.getRolUser(new Rol(null, SUPERVISOR_EMPRESA)).get(0));
             } else {
                 clean();
                 MessageUtils.addErrorMessage("El usuario ya existe");
@@ -105,10 +95,10 @@ public class MyProcessesView implements Serializable {
      */
     public void saveNewUser(final String modalIdToClose) {
         try {
-            if (existsUser(companySupervisor)) {
+            if (existsUser(newCompanySupervisor)) {
                 MessageUtils.addErrorMessage("El usuario ya existe con ese cargo");
             } else {
-                processSelected.getAppointmentId().setCompanySupervisor(companySupervisor);
+                processSelected.getAppointmentId().setCompanySupervisor(newCompanySupervisor);
                 processSelected = processFacade.sendCompanySupervisorToSupervisor(processSelected);
                 PrimeFaces.current().executeScript("PF('" + modalIdToClose + "').hide()");
                 MessageUtils.addSuccessMessage("Usuario agregado");
@@ -119,15 +109,15 @@ public class MyProcessesView implements Serializable {
         }
     }
 
-    public Boolean canAddCompanySupervisor(Process process) {
-        return (process.getApprovalEPSCommission() != null && process.getApprovedCareerCoordinator() != null
-                && process.getApprovalEPSCommission() && process.getApprovedCareerCoordinator());
+    public Boolean companySupervisorExist() {
+        return (processSelected != null && processSelected.getApprovalEPSCommission() != null && processSelected.getApprovedCareerCoordinator() != null
+                && processSelected.getApprovalEPSCommission() && processSelected.getApprovedCareerCoordinator()
+                && processSelected.getAppointmentId() != null && processSelected.getAppointmentId().getCompanySupervisor() != null);
     }
-
-    public Boolean companySupervisorExist(Process process) {
-        return (process.getApprovalEPSCommission() != null && process.getApprovedCareerCoordinator() != null
-                && process.getApprovalEPSCommission() && process.getApprovedCareerCoordinator()
-                && process.getAppointmentId() != null && process.getAppointmentId().getCompanySupervisor() != null);
+    
+    public Boolean canAddCompanySupervisor() {
+        return (processSelected != null && processSelected.getApprovalEPSCommission() != null && processSelected.getApprovedCareerCoordinator() != null
+                && processSelected.getApprovalEPSCommission() && processSelected.getApprovedCareerCoordinator());
     }
 
     public void reloadAdviserResume() {
@@ -146,10 +136,26 @@ public class MyProcessesView implements Serializable {
         return (!userFacade.getUser(search).isEmpty());
     }
 
+    public List<Process> getProcesses() {
+        return processes;
+    }
+
+    public void setProcesses(List<Process> processes) {
+        this.processes = processes;
+    }
+
+    public Process getProcessSelected() {
+        return processSelected;
+    }
+
+    public void setProcessSelected(Process processSelected) {
+        this.processSelected = processSelected;
+    }
+    
     public Appointment getAppointment() {
         return appointment;
     }
-
+    
     public void setAppointment(Appointment appointment) {
         this.appointment = appointment;
     }
@@ -170,20 +176,15 @@ public class MyProcessesView implements Serializable {
         this.reviewerResumeStream = reviewerResumeStream;
     }
 
-    public User getCompanySupervisor() {
-        return companySupervisor;
+    public User getNewCompanySupervisor() {
+        if (newCompanySupervisor == null){
+            return new User();
+        }
+        return newCompanySupervisor;
     }
 
-    public void setCompanySupervisor(User companySupervisor) {
-        this.companySupervisor = companySupervisor;
-    }
-
-    public User getSupervisorEPS() {
-        return supervisorEPS;
-    }
-
-    public void setSupervisorEPS(User supervisorEPS) {
-        this.supervisorEPS = supervisorEPS;
+    public void setNewCompanySupervisor(User newCompanySupervisor) {
+        this.newCompanySupervisor = newCompanySupervisor;
     }
 
     public void clean() {
@@ -191,8 +192,11 @@ public class MyProcessesView implements Serializable {
         reviewerResumeStream = null;
         appointment = null;
         processSelected = null;
-        companySupervisor = null;
-        supervisorEPS = null;
+        newCompanySupervisor = null;
+    }
+    
+    public void cleanNewCompanySupervisor(){
+        newCompanySupervisor = null;
     }
     
 }

@@ -48,7 +48,7 @@ public class ProcessService {
     private MailService mailService;
 
     public Process createProcess(Process process) throws ValidationException {
-        if (!LocalDate.now().isBefore(PropertyRepository.DEADLINE_TO_SUBMIT_DOCUMENT.getValueDate().plusDays(1))){
+        if (!LocalDate.now().isBefore(PropertyRepository.DEADLINE_TO_SUBMIT_DOCUMENT.getValueDate().plusDays(1))) {
             throw new ValidationException("Ya se alcanzo la Fecha Limite para Recepción de Documentos");
         }
         if (process.getUserCareer().getProcess() != null) {
@@ -93,7 +93,7 @@ public class ProcessService {
                 long countProcessesNextUser = userRepository.getNumberProcessesBySupervisorEPS(nextUser);
                 if (countProcessesCurrentUser > countProcessesNextUser) {
                     supervisorEPSToAssign = nextUser;
-                } 
+                }
             }
             process.setSupervisor_EPS(supervisorEPSToAssign);
         } else if (supervisorEPS.size() == 1) {
@@ -109,8 +109,15 @@ public class ProcessService {
         Optional<Process> resultProcess;
         Appointment appointment;
 
-        if (process != null && actualUser.isPresent() && process.getAppointmentId() != null
-                && process.getUserCareer().getUSERuserId().getUserId().equals(actualUser.get().getUserId())) {
+        if (process == null) {
+            throw new ValidationException("Debe elegir un proceso");
+        } 
+        
+        if (process.getAppointmentId() == null){
+            throw new ValidationException("Debe agregar un Asesor y Revisor a la Solicitud");
+        }
+
+        if (actualUser.isPresent() && process.getUserCareer().getUSERuserId().getUserId().equals(actualUser.get().getUserId())) {
 
             resultProcess = processRepository.findProcessById(process.getId());
 
@@ -179,10 +186,10 @@ public class ProcessService {
                     }
                 }
             } else {
-                throw new ValidationException("El Proyecto no existe");
+                throw new ValidationException("El Proceso no existe");
             }
         } else {
-            throw new ValidationException("Debe elegir un proceso");
+            throw new ValidationException("El proceso no pertenece al Usuario");
         }
     }
 
@@ -223,8 +230,7 @@ public class ProcessService {
                         resultProcess.get().getAppointmentId().setUserAdviser(null);
                         resultProcess.get().getAppointmentId().setAdviserState(CHANGE);
 
-                    } else if (process.getAppointmentId().getAdviserState() == ELECTION
-                            && !resultProcess.get().getAppointmentId().getUserAdviser().getUserId().equals(process.getAppointmentId().getUserAdviser().getUserId())) {
+                    } else if (process.getAppointmentId().getAdviserState() == ELECTION) {
                         if (resultProcess.get().getAppointmentId().getUserAdviser().getRemovable()) {
                             userService.deleteUser(resultProcess.get().getAppointmentId().getUserAdviser());
                         }
@@ -266,8 +272,7 @@ public class ProcessService {
                         resultProcess.get().getAppointmentId().setUserReviewer(null);
                         resultProcess.get().getAppointmentId().setReviewerState(CHANGE);
 
-                    } else if (process.getAppointmentId().getReviewerState() == ELECTION
-                            && !resultProcess.get().getAppointmentId().getUserReviewer().getUserId().equals(process.getAppointmentId().getUserReviewer().getUserId())) {
+                    } else if (process.getAppointmentId().getReviewerState() == ELECTION) {
                         if (resultProcess.get().getAppointmentId().getUserReviewer().getRemovable()) {
                             userService.deleteUser(resultProcess.get().getAppointmentId().getUserReviewer());
                         }
@@ -286,10 +291,6 @@ public class ProcessService {
                 if ((resultProcess.get().getAppointmentId().getAdviserState() == APPROVED || resultProcess.get().getAppointmentId().getAdviserState() == CHANGE
                         || resultProcess.get().getAppointmentId().getAdviserState() == ELECTION) && (resultProcess.get().getAppointmentId().getReviewerState() == APPROVED
                         || resultProcess.get().getAppointmentId().getReviewerState() == CHANGE || resultProcess.get().getAppointmentId().getReviewerState() == ELECTION)) {
-
-                    if ((resultProcess.get().getAppointmentId().getAdviserState() == APPROVED || resultProcess.get().getAppointmentId().getAdviserState() == ELECTION)
-                            && (resultProcess.get().getAppointmentId().getReviewerState() == APPROVED || resultProcess.get().getAppointmentId().getReviewerState() == ELECTION)) {
-                    }
 
                     resultProcess = Optional.ofNullable(updateProcess(resultProcess.get()));
                     mailService.emailNotifyStudent(

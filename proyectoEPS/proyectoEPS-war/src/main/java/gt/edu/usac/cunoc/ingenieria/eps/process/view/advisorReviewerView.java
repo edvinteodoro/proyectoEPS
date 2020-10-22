@@ -8,6 +8,7 @@ import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.REVISOR;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.ValidationException;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Appointment;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
+import gt.edu.usac.cunoc.ingenieria.eps.process.StateProcess;
 import static gt.edu.usac.cunoc.ingenieria.eps.process.appointmentState.*;
 import gt.edu.usac.cunoc.ingenieria.eps.process.facade.ProcessFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.user.Rol;
@@ -86,8 +87,12 @@ public class advisorReviewerView implements Serializable {
         for (Process proces : process) {
             if ((proces.getApprovedCareerCoordinator() != null && proces.getApprovedCareerCoordinator())
                     && (proces.getApprovalEPSCommission() != null && proces.getApprovalEPSCommission())
+                    && (proces.getState() != StateProcess.RECHAZADO && proces.getState() != StateProcess.INACTIVO)
                     && (proces.getAppointmentId() == null || (proces.getAppointmentId().getAdviserState() == CHANGE)
-                    || (proces.getAppointmentId().getReviewerState() == CHANGE))) {
+                        || (proces.getAppointmentId().getReviewerState() == CHANGE)
+                        || (proces.getAppointmentId().getCompanySupervisor() != null && proces.getAppointmentId().getReviewerState() == null && proces.getAppointmentId().getAdviserState() == null))
+                    
+                    ) {
                 result.add(proces);
             }
         }

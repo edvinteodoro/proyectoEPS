@@ -55,14 +55,14 @@ public class MyProcessesView implements Serializable {
         }
     }
 
-    public Boolean studentAppointmentApproved(Process process) {
-        return (process != null && process.getAppointmentId() != null
-                && process.getAppointmentId().getAdviserState() != null
-                && process.getAppointmentId().getReviewerState() != null
-                && (process.getAppointmentId().getAdviserState() == appointmentState.APPROVED
-                || process.getAppointmentId().getAdviserState() == appointmentState.ELECTION)
-                && (process.getAppointmentId().getReviewerState() == appointmentState.APPROVED
-                || process.getAppointmentId().getReviewerState() == appointmentState.ELECTION));
+    public Boolean studentAppointmentApproved() {
+        return (processSelected != null && processSelected.getAppointmentId() != null
+                && processSelected.getAppointmentId().getAdviserState() != null
+                && processSelected.getAppointmentId().getReviewerState() != null
+                && (processSelected.getAppointmentId().getAdviserState() == appointmentState.APPROVED
+                || processSelected.getAppointmentId().getAdviserState() == appointmentState.ELECTION)
+                && (processSelected.getAppointmentId().getReviewerState() == appointmentState.APPROVED
+                || processSelected.getAppointmentId().getReviewerState() == appointmentState.ELECTION));
     }
 
     /**
@@ -119,13 +119,18 @@ public class MyProcessesView implements Serializable {
         return (processSelected != null && processSelected.getApprovalEPSCommission() != null && processSelected.getApprovedCareerCoordinator() != null
                 && processSelected.getApprovalEPSCommission() && processSelected.getApprovedCareerCoordinator());
     }
+    
+    public Boolean canRequestAdvisorReviewer(){
+        return (processSelected != null && processSelected.getApprovalEPSCommission() != null && processSelected.getApprovedCareerCoordinator() != null
+                && processSelected.getApprovalEPSCommission() && processSelected.getApprovedCareerCoordinator());
+    }
 
     public void reloadAdviserResume() {
-        adviserResumeStream = new DefaultStreamedContent(new ByteArrayInputStream(appointment.getUserAdviser().getPersonalResume()), "application/pdf", "Curriculum.pdf");
+        adviserResumeStream = new DefaultStreamedContent(new ByteArrayInputStream(processSelected.getAppointmentId().getUserAdviser().getPersonalResume()), "application/pdf", "Curriculum.pdf");
     }
 
     public void reloadReviewerResume() {
-        reviewerResumeStream = new DefaultStreamedContent(new ByteArrayInputStream(appointment.getUserReviewer().getPersonalResume()), "application/pdf", "Curriculum.pdf");
+        reviewerResumeStream = new DefaultStreamedContent(new ByteArrayInputStream(processSelected.getAppointmentId().getUserReviewer().getPersonalResume()), "application/pdf", "Curriculum.pdf");
     }
 
     private boolean existsUser(User user) throws UserException {
@@ -134,6 +139,14 @@ public class MyProcessesView implements Serializable {
         search.setDpi(user.getDpi());
 
         return (!userFacade.getUser(search).isEmpty());
+    }
+    
+    public Boolean isRequestAdvisorReviewerReviewState(){
+        return (processSelected != null && processSelected.getAppointmentId() != null
+                && processSelected.getAppointmentId().getAdviserState() != null
+                && processSelected.getAppointmentId().getReviewerState() != null
+                && processSelected.getAppointmentId().getAdviserState() == appointmentState.REVIEW
+                && processSelected.getAppointmentId().getReviewerState() == appointmentState.REVIEW);
     }
 
     public List<Process> getProcesses() {

@@ -27,7 +27,8 @@
     <ui:define name="content">
         <h:outputScript library="js" name="calendar_es.js" />
         <h:form id="principal">
-            <p:staticMessage severity="warn" detail="Bitácora inhabilitada" rendered="#{!journalView.process.approvedEPSDevelopment}"/>
+            <p:staticMessage severity="warn" detail="Bitácora inhabilitada: Proceso EPS no autorizado para desarrollo (Asesor y Revisor no asignados y/o Supervisor de Empresa no confirmado)" rendered="#{!journalView.process.approvedEPSDevelopment and !journalView.canEnableJournalSupervisorEPS()}"/>
+            <p:staticMessage severity="warn" detail="Bitácora inhabilitada: Comuniquese con su Supervisor EPS para habilitación" rendered="#{journalView.canEnableJournalSupervisorEPS() and !journalView.process.approvedEPSDevelopment}"/>
             <p:staticMessage severity="info" detail="Registro de Bitácora Vacio" rendered="#{(journalView.journals.size() eq 0) and journalView.process.approvedEPSDevelopment}"/>
             <p:accordionPanel id="journalTable" value="#{journalView.journals}" var="journalLog" activeIndex="-2">
                 <p:tab id="JournalLog" title="Fecha - #{journalLog.dateTime.dayOfMonth} / #{journalLog.dateTime.monthValue} / #{journalLog.dateTime.year}" >

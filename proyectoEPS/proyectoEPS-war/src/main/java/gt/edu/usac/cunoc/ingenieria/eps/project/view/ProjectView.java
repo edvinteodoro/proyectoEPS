@@ -99,6 +99,35 @@ public class ProjectView implements Serializable {
         }
     }
 
+    public void loadCurrentProject() throws IOException {
+        try {
+            corrections = new ArrayList<>();
+            this.user = userFacade.getAuthenticatedUser().get(0);
+            this.process = processFacade.getProcess(new Process(processId)).get(0);
+            if (this.process.getUserCareer().getUSERuserId().equals(this.user)) {
+                flagUpdate = false;
+                if (getProject().getId() != null) {
+                    this.corrections = getProject().getCorrections();
+                    loadDocumentsView();
+                    flagUpdate = true;
+                    for (int i = 0; i < getProject().getObjectives().size(); i++) {
+                        if (Objects.equals(getProject().getObjectives().get(i).getType(), Objectives.GENERAL_OBJETICVE)) {
+                            generalObjectves.add(getProject().getObjectives().get(i));
+                        } else {
+                            specificObjectives.add(getProject().getObjectives().get(i));
+                        }
+                    }
+                }
+            } else {
+                externalContext.redirect(externalContext.getRequestContextPath() + "/error/error-403.xhtml");
+            }
+        } catch (UserException ex) {
+            externalContext.redirect(externalContext.getRequestContextPath() + "/error/error-403.xhtml");
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            externalContext.redirect(externalContext.getRequestContextPath() + "/error/error-404.xhtml");
+        }
+    }
+
     public TypeCorrection getTypeCorrectionCurrent() {
         return typeCorrectionCurrent;
     }
@@ -218,12 +247,12 @@ public class ProjectView implements Serializable {
     }
 
     public List<Correction> getSectionCorrection(Integer section) {
-        this.currentCorrections = projectFacade.getCorrections(TypeCorrection.SECTION, getProject().getId(), section,true);
+        this.currentCorrections = projectFacade.getCorrections(TypeCorrection.SECTION, getProject().getId(), section, true);
         return this.currentCorrections;
     }
 
     public List<Correction> getCurrentCorrections(TypeCorrection type) {
-        this.currentCorrections = projectFacade.getCorrections(type, getProject().getId(), null, true);; 
+        this.currentCorrections = projectFacade.getCorrections(type, getProject().getId(), null, true);;
         return this.currentCorrections;
     }
 
@@ -423,35 +452,6 @@ public class ProjectView implements Serializable {
         getProject().setObjectives(objectivesList);
     }
 
-    public void loadCurrentProject() throws IOException {
-        try {
-            corrections = new ArrayList<>();
-            this.user = userFacade.getAuthenticatedUser().get(0);
-            this.process = processFacade.getProcess(new Process(processId)).get(0);
-            if (this.process.getUserCareer().getUSERuserId().equals(this.user)) {
-                flagUpdate = false;
-                if (getProject().getId() != null) {
-                    this.corrections = getProject().getCorrections();
-                    loadDocumentsView();
-                    flagUpdate = true;
-                    for (int i = 0; i < getProject().getObjectives().size(); i++) {
-                        if (Objects.equals(getProject().getObjectives().get(i).getType(), Objectives.GENERAL_OBJETICVE)) {
-                            generalObjectves.add(getProject().getObjectives().get(i));
-                        } else {
-                            specificObjectives.add(getProject().getObjectives().get(i));
-                        }
-                    }
-                }
-            } else {
-                externalContext.redirect(externalContext.getRequestContextPath() + "/error/error-403.xhtml");
-            }
-        } catch (UserException ex) {
-            externalContext.redirect(externalContext.getRequestContextPath() + "/error/error-403.xhtml");
-        } catch (ArrayIndexOutOfBoundsException ex){
-            externalContext.redirect(externalContext.getRequestContextPath() + "/error/error-404.xhtml");
-        }
-    }
-
     public void removeSection(Integer indexSection) {
         try {
             getProject().removeSection(indexSection);
@@ -499,9 +499,9 @@ public class ProjectView implements Serializable {
             pdfFile = null;
             MessageUtils.addSuccessMessage("La solicitud de revision se ha realizado exitosamente.");
         } catch (ValidationException | MandatoryException | LimitException ex) {
-            
+
             MessageUtils.addErrorMessage(ex.getMessage());
-        } 
+        }
     }
 
     public String titlePage() {
@@ -564,8 +564,8 @@ public class ProjectView implements Serializable {
         }
         return value;
     }
-    
-    public void deleteAnnexed(){
+
+    public void deleteAnnexed() {
         this.annexed = null;
         this.annexedFileName = "";
         this.annexedStream = null;

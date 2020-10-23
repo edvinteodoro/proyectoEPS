@@ -78,6 +78,15 @@
                     <span class="glyphicon glyphicon-eye-open"></span>
                 </p:commandLink>
             </p:column>
+            <p:column headerText="Bitácora" styleClass="text-center">
+                <p data-placement="top" data-toggle="tooltip" title="Bitácora">
+                    <button jsf:outcome="journal" 
+                            styleClass="btn btn-success btn-xs">
+                        <f:param name="idProcess" value="#{process.id}"/>
+                        <span class="glyphicon glyphicon-log-in"></span>
+                    </button>
+                </p>
+            </p:column>
         </p:dataTable>
 
         <p:dialog header="Supervisor EPS" id="infoSupervisorEPS" widgetVar="infoSupervisorEPS"

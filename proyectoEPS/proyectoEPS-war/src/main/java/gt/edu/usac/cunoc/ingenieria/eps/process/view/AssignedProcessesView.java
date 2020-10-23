@@ -114,6 +114,11 @@ public class AssignedProcessesView implements Serializable {
                 && processSelected.getApprovalEPSCommission() && processSelected.getApprovedCareerCoordinator()
                 && processSelected.getAppointmentId() != null && processSelected.getAppointmentId().getCompanySupervisor() != null);
     }
+    
+    public Boolean informedCompanySupervisor(){
+        return (processSelected != null && processSelected.getAppointmentId() != null
+                && processSelected.getAppointmentId().getCompanySupervisor() != null && !processSelected.getAppointmentId().getCompanySupervisor().getRemovable());
+    }
 
     public Boolean canAddCompanySupervisor() {
         return (processSelected != null && processSelected.getApprovalEPSCommission() != null && processSelected.getApprovedCareerCoordinator() != null

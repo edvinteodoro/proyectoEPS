@@ -23,12 +23,13 @@
     </ui:define>
     <ui:define name="content">
         <h:form>
-            <p:staticMessage severity="info" detail="Registro de Bitácora Vacio" rendered="#{journalReview.journals.size() eq 0}"/>
+            <p:staticMessage severity="info" detail="Registro de Bitácora Vacio" rendered="#{journalReview.journals.size() eq 0 and journalReview.process.approvedEPSDevelopment}"/>
+            <p:staticMessage severity="warn" detail="Bitácora inhabilitada: Proceso EPS no autorizado para desarrollo (Asesor y Revisor no asignados y/o Supervisor de Empresa no confirmado)" rendered="#{!journalReview.process.approvedEPSDevelopment and !journalReview.canEnableJournalSupervisorEPS()}"/>
             <br/>
             <p:commandLink styleClass="btn btn-warning" 
                            actionListener="#{journalReview.enableJournal()}"
                            update="@form,:growl"
-                           rendered="#{!journalReview.process.approvedEPSDevelopment}">
+                           rendered="#{!journalReview.process.approvedEPSDevelopment and journalReview.canEnableJournalSupervisorEPS()}">
                 <p:confirm header="Habilitar Bitácora" message="¿Desea habilitar la Bitácora?" icon="pi pi-exclamation-triangle" />
                 <span class="glyphicon glyphicon-ok-sign"></span> Habilitar Bitácora
             </p:commandLink>

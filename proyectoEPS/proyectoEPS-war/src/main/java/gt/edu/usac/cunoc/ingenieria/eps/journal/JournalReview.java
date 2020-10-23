@@ -8,14 +8,13 @@ import java.io.Serializable;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
+import gt.edu.usac.cunoc.ingenieria.eps.process.appointmentState;
 import gt.edu.usac.cunoc.ingenieria.eps.process.facade.ProcessFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import gt.edu.usac.cunoc.ingenieria.eps.user.facade.UserFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.utils.MessageUtils;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.EJB;
 
 @Named
@@ -127,4 +126,10 @@ public class JournalReview implements Serializable {
         return commentaryFacade.getCommentariesByJournalId(journalId);
     }
 
+    public Boolean canEnableJournalSupervisorEPS(){
+        return process.getAppointmentId() != null 
+                && process.getAppointmentId().getCompanySupervisor() != null && process.getAppointmentId().getCompanySupervisor().getStatus()
+                && process.getAppointmentId().getAdviserState() != appointmentState.CHANGE && process.getAppointmentId().getAdviserState() != appointmentState.REVIEW
+                && process.getAppointmentId().getReviewerState()!= appointmentState.CHANGE && process.getAppointmentId().getReviewerState()!= appointmentState.REVIEW;
+    }
 }

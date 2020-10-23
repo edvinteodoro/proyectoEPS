@@ -14,13 +14,11 @@ import gt.edu.usac.cunoc.ingenieria.eps.requeriment.RequerimentResource;
 import gt.edu.usac.cunoc.ingenieria.eps.tail.TailCoordinator;
 import gt.edu.usac.cunoc.ingenieria.eps.tail.facade.TailCommitteeEPSFacade;
 import gt.edu.usac.cunoc.ingenieria.eps.tail.facade.TailFacade;
-import gt.edu.usac.cunoc.ingenieria.eps.tail.facade.TailFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import gt.edu.usac.cunoc.ingenieria.eps.user.facade.UserFacadeLocal;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.ejb.EJB;
-import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.PATCH;
@@ -166,7 +164,7 @@ public class ProcessResource {
     }
 
     @Path("/{projectId}/journals")
-    public JournalResource getJournalResource() {
+    public JournalResource whi() {
         return journalResource;
     }
     

@@ -4,7 +4,7 @@ import gt.edu.usac.cunoc.ingenieria.eps.process.Requeriment;
 import gt.edu.usac.cunoc.ingenieria.eps.process.facade.ProcessFacadeLocal;
 import javax.ejb.EJB;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
-import gt.edu.usac.cunoc.ingenieria.eps.project.RequerimentDto;
+import gt.edu.usac.cunoc.ingenieria.eps.projectDto.RequerimentDto;
 import javax.ws.rs.GET;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;

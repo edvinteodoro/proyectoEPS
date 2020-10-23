@@ -1,4 +1,4 @@
-package gt.edu.usac.cunoc.ingenieria.eps.project;
+package gt.edu.usac.cunoc.ingenieria.eps.projectDto;
 
 import gt.edu.usac.cunoc.ingenieria.eps.process.Requeriment;
 

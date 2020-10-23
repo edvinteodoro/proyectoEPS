@@ -31,7 +31,6 @@ public class UserDto  implements Serializable{
     private Boolean epsCommittee;
     
     private String rol;
-    private List<UserCareerDto> careers;
 
     public UserDto() {
     }
@@ -50,9 +49,6 @@ public class UserDto  implements Serializable{
         this.status = user.getStatus();
         this.epsCommittee = user.getEpsCommittee();
         this.rol = user.getROLid().getName();
-        this.careers = user.getUserCareers().stream()
-                .map(UserCareerDto::new)
-                .collect(Collectors.toList());
     }
 
     public String getId() {
@@ -157,14 +153,6 @@ public class UserDto  implements Serializable{
 
     public void setRol(String rol) {
         this.rol = rol;
-    }
-
-    public List<UserCareerDto> getCareers() {
-        return careers;
-    }
-
-    public void setCareers(List<UserCareerDto> careers) {
-        this.careers = careers;
     }
     
 }

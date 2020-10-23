@@ -28,6 +28,12 @@ public class ProjectResource {
     
     @Inject
     CorrectionResource correctionResource;
+    
+    @Inject
+    SectionResource sectionResource;
+    
+    @Inject
+    ObjectivesResource objectivesResource;
 
     @GET
     public Response getProject(@PathParam("processId") Integer processId) {
@@ -50,7 +56,14 @@ public class ProjectResource {
         return correctionResource;
     }
     
+    @Path("/{projectId}/sections")
+    public SectionResource getSectionResource(){
+        return sectionResource;
+    }
     
-    
+    @Path("/{projectId}/objectives")
+    public ObjectivesResource getObjectivesResource(){
+        return objectivesResource;
+    }
     
 }

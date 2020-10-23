@@ -36,7 +36,7 @@ public class MyProcessesView implements Serializable {
     private List<Process> processes;
 
     private User userLogged;
-    private Appointment appointment;
+    
     private StreamedContent adviserResumeStream;
     private StreamedContent reviewerResumeStream;
 
@@ -164,14 +164,6 @@ public class MyProcessesView implements Serializable {
     public void setProcessSelected(Process processSelected) {
         this.processSelected = processSelected;
     }
-    
-    public Appointment getAppointment() {
-        return appointment;
-    }
-    
-    public void setAppointment(Appointment appointment) {
-        this.appointment = appointment;
-    }
 
     public StreamedContent getAdviserResumeStream() {
         return adviserResumeStream;
@@ -203,7 +195,6 @@ public class MyProcessesView implements Serializable {
     public void clean() {
         adviserResumeStream = null;
         reviewerResumeStream = null;
-        appointment = null;
         processSelected = null;
         newCompanySupervisor = null;
     }

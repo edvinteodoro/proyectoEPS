@@ -52,63 +52,84 @@
                         <span class="glyphicon glyphicon-log-in"></span>
                     </button>
                 </p>
-            </p:column>            
+            </p:column>     
+            <p:column headerText="Asesor y Revisor" styleClass="text-center">
+                <p:commandLink styleClass="btn btn-primary btn-xs"
+                               oncomplete="PF('infoAdvisorReviewer').show();" 
+                               update=":#{p:component('infoAdvisorReviewer')}">
+                    <f:setPropertyActionListener value="#{process}" target="#{assignedProcessesView.processSelected}"/>
+                    <span class="glyphicon glyphicon-eye-open"></span>
+                </p:commandLink>
+            </p:column>
+            <p:column headerText="Supervisor Empresa" styleClass="text-center">
+                <p:commandLink styleClass="btn btn-primary btn-xs"
+                               oncomplete="PF('infoSupervisorOrg').show();" 
+                               update=":#{p:component('infoSupervisorOrg')}">
+                    <f:setPropertyActionListener value="#{process}" target="#{assignedProcessesView.processSelected}"/>
+                    <span class="glyphicon glyphicon-eye-open"></span>
+                </p:commandLink>
+            </p:column>
         </p:dataTable>
 
-        <p:dialog header="Asesor y Revisor" id="infoAbout" widgetVar="infoAbout"
+        <p:dialog header="Asesor y Revisor" id="infoAdvisorReviewer" widgetVar="infoAdvisorReviewer"
                   modal="true" closeOnEscape="true">
             <p:ajax event="close" listener="#{assignedProcessesView.clean()}" update="@this" />
             <h:form>
-                <div class="modal-body">
+                <div class="modal-header">
+                    <p:staticMessage rendered="#{!assignedProcessesView.canRequestAdvisorReviewer()}" severity="warn" summary="Advertencia! " detail="El estudiante no puede solicitar Asesor y Revisor, el Comité EPS aun no aprueba el anteproyecto" />
+                    <p:staticMessage rendered="#{assignedProcessesView.canRequestAdvisorReviewer() and !assignedProcessesView.studentAppointmentApproved() and !myProcessesView.isRequestAdvisorReviewerReviewState()}" severity="warn" summary="Advertencia! " detail="A espera de solicitud de Asesor y Revisor para el Proceso EPS" />
+                    <p:staticMessage rendered="#{assignedProcessesView.isRequestAdvisorReviewerReviewState()}" severity="warn" summary="Advertencia! " detail="Solicitud de Asesor y Revisor en Revisión" />
+                </div>
+                <div class="modal-body" jsf:rendered="#{assignedProcessesView.studentAppointmentApproved()}">
                     <fieldset>
                         <p:tabView>
                             <p:tab title="Asesor">
                                 <div class="row form-group">
                                     <p:outputLabel value="DPI:" styleClass="col-md-4 control-label"/>
                                     <div class="col-md-8">
-                                        <h:outputText value="#{assignedProcessesView.appointment.userAdviser.dpi}"/>
+                                        <h:outputText value="#{assignedProcessesView.processSelected.appointmentId.userAdviser.dpi}"/>
                                     </div>
                                 </div>
                                 <div class="row form-group">
                                     <p:outputLabel value="Nombre:" styleClass="col-md-4 control-label"/>
                                     <div class="col-md-8">
-                                        <h:outputText value="#{assignedProcessesView.appointment.userAdviser.firstName}, #{assignedProcessesView.appointment.userAdviser.lastName}"/>
+                                        <h:outputText value="#{assignedProcessesView.processSelected.appointmentId.userAdviser.firstName}, #{assignedProcessesView.processSelected.appointmentId.userAdviser.lastName}"/>
                                     </div>
                                 </div>
                                 <div class="row form-group">
                                     <p:outputLabel value="Correo Electrónico:" styleClass="col-md-4 control-label"/>
                                     <div class="col-md-8">
-                                        <h:outputText value="#{assignedProcessesView.appointment.userAdviser.email}" />
+                                        <h:outputText value="#{assignedProcessesView.processSelected.appointmentId.userAdviser.email}" />
                                     </div>
                                 </div>
                                 <div class="row form-group">
                                     <p:outputLabel value="Telefono:" styleClass="col-md-4 control-label"/>
                                     <div class="col-md-8">
-                                        <h:outputText value="#{assignedProcessesView.appointment.userAdviser.phone1}" />
+                                        <h:outputText value="#{assignedProcessesView.processSelected.appointmentId.userAdviser.phone1}" />
                                     </div>
                                 </div>
                                 <div class="row form-group">
                                     <p:outputLabel value="Estado:" styleClass="col-md-4 control-label"/>
                                     <div class="col-md-8">
-                                        <p:selectBooleanCheckbox value="#{assignedProcessesView.appointment.userAdviser.status}"  disabled="true"/>
+                                        <p:selectBooleanCheckbox value="#{assignedProcessesView.processSelected.appointmentId.userAdviser.status}"  disabled="true"/>
                                     </div>
                                 </div>
                                 <div class="row form-group">
                                     <p:outputLabel value="Nombre de la Empresa:" styleClass="col-md-4 control-label"/>
                                     <div class="col-md-8">
-                                        <h:outputText value="#{assignedProcessesView.appointment.userAdviser.nameCompanyWork}"/>
+                                        <h:outputText value="#{assignedProcessesView.processSelected.appointmentId.userAdviser.nameCompanyWork}"/>
                                     </div>
                                 </div>
                                 <div class="row form-group">
                                     <p:outputLabel value="Telefono de la Empresa:" styleClass="col-md-4 control-label"/>
                                     <div class="col-md-8">
-                                        <h:outputText value="#{assignedProcessesView.appointment.userAdviser.phoneCompanyWork}" />
+                                        <h:outputText value="#{assignedProcessesView.processSelected.appointmentId.userAdviser.phoneCompanyWork}" />
                                     </div>
                                 </div>
                                 <div class="row form-group">
                                     <p:outputLabel value="Dirección de la Empresa:" styleClass="col-md-4 control-label"/>
                                     <div class="col-md-8">
-                                        <h:outputText value="#{assignedProcessesView.appointment.userAdviser.directionCompanyWork}" />
+                                        <h:outputText value="#{assignedProcessesView.processSelected.appointmentId.userAdviser.directionCompanyWork}" />
                                     </div>
                                 </div>
                                 <div class="row form-group">
@@ -124,49 +145,49 @@
                                 <div class="row form-group">
                                     <p:outputLabel value="DPI:" styleClass="col-md-4 control-label"/>
                                     <div class="col-md-8">
-                                        <h:outputText value="#{assignedProcessesView.appointment.userReviewer.dpi}"/>
+                                        <h:outputText value="#{assignedProcessesView.processSelected.appointmentId.userReviewer.dpi}"/>
                                     </div>
                                 </div>
                                 <div class="row form-group">
                                     <p:outputLabel value="Nombre:" styleClass="col-md-4 control-label"/>
                                     <div class="col-md-8">
-                                        <h:outputText value="#{assignedProcessesView.appointment.userReviewer.firstName}, #{assignedProcessesView.appointment.userReviewer.lastName}"/>
+                                        <h:outputText value="#{assignedProcessesView.processSelected.appointmentId.userReviewer.firstName}, #{assignedProcessesView.processSelected.appointmentId.userReviewer.lastName}"/>
                                     </div>
                                 </div>
                                 <div class="row form-group">
                                     <p:outputLabel value="Correo Electrónico:" styleClass="col-md-4 control-label"/>
                                     <div class="col-md-8">
-                                        <h:outputText value="#{assignedProcessesView.appointment.userReviewer.email}" />
+                                        <h:outputText value="#{assignedProcessesView.processSelected.appointmentId.userReviewer.email}" />
                                     </div>
                                 </div>
                                 <div class="row form-group">
                                     <p:outputLabel value="Telefono:" styleClass="col-md-4 control-label"/>
                                     <div class="col-md-8">
-                                        <h:outputText value="#{assignedProcessesView.appointment.userReviewer.phone1}" />
+                                        <h:outputText value="#{assignedProcessesView.processSelected.appointmentId.userReviewer.phone1}" />
                                     </div>
                                 </div>
                                 <div class="row form-group">
                                     <p:outputLabel value="Estado:" styleClass="col-md-4 control-label"/>
                                     <div class="col-md-8">
-                                        <p:selectBooleanCheckbox value="#{assignedProcessesView.appointment.userReviewer.status}"  disabled="true"/>
+                                        <p:selectBooleanCheckbox value="#{assignedProcessesView.processSelected.appointmentId.userReviewer.status}"  disabled="true"/>
                                     </div>
                                 </div>
                                 <div class="row form-group">
                                     <p:outputLabel value="Nombre de la Empresa:" styleClass="col-md-4 control-label"/>
                                     <div class="col-md-8">
-                                        <h:outputText value="#{assignedProcessesView.appointment.userReviewer.nameCompanyWork}"/>
+                                        <h:outputText value="#{assignedProcessesView.processSelected.appointmentId.userReviewer.nameCompanyWork}"/>
                                     </div>
                                 </div>
                                 <div class="row form-group">
                                     <p:outputLabel value="Telefono de la Empresa:" styleClass="col-md-4 control-label"/>
                                     <div class="col-md-8">
-                                        <h:outputText value="#{assignedProcessesView.appointment.userReviewer.phoneCompanyWork}" />
+                                        <h:outputText value="#{assignedProcessesView.processSelected.appointmentId.userReviewer.phoneCompanyWork}" />
                                     </div>
                                 </div>
                                 <div class="row form-group">
                                     <p:outputLabel value="Dirección de la Empresa:" styleClass="col-md-4 control-label"/>
                                     <div class="col-md-8">
-                                        <h:outputText value="#{assignedProcessesView.appointment.userReviewer.directionCompanyWork}" />
+                                        <h:outputText value="#{assignedProcessesView.processSelected.appointmentId.userReviewer.directionCompanyWork}" />
                                     </div>
                                 </div>
                                 <div class="row form-group">
@@ -179,18 +200,20 @@
                                 </div>
                             </p:tab>
                         </p:tabView>
-
-
                     </fieldset>
                 </div>
             </h:form>
         </p:dialog>
-
-        <p:dialog header="Supervisor de la Empresa" id="infoAbout2" widgetVar="infoAbout2"
+        
+        <p:dialog header="Supervisor de la Empresa" id="infoSupervisorOrg" widgetVar="infoSupervisorOrg"
                   modal="true" closeOnEscape="true">
             <p:ajax event="close" listener="#{assignedProcessesView.clean()}" update="@this" />
             <h:form>
-                <div class="modal-body">
+                <div class="modal-header">
+                    <p:staticMessage rendered="#{!assignedProcessesView.canAddCompanySupervisor() and !assignedProcessesView.companySupervisorExist()}" severity="warn" summary="Advertencia! " detail="El estudiante no puede registrar al supervisor de la empresa, el Comité EPS aun no aprueba el anteproyectoPodrá" />
+                    <p:staticMessage rendered="#{assignedProcessesView.canAddCompanySupervisor() and !assignedProcessesView.companySupervisorExist()}" severity="warn" summary="Advertencia! " detail="El estudiante aun no registra al Supervisor de la empresa" />
+                </div>
+                <div class="modal-body" jsf:rendered="#{assignedProcessesView.companySupervisorExist()}">
                     <fieldset>
                         <div class="row form-group">
                             <p:outputLabel value="DPI:" styleClass="col-md-4 control-label"/>
@@ -246,17 +269,10 @@
                                 <h:outputText value="#{assignedProcessesView.processSelected.appointmentId.companySupervisor.directionCompanyWork}" />
                             </div>
                         </div>
-                        <div class="btn-toolbar" >
-                            <p:commandLink styleClass="btn btn-success"
-                                           rendered="#{assignedProcessesView.processSelected.appointmentId.companySupervisor.removable}"
-                                           update=":#{p:component('processTable')},:#{p:component('growl')}"
-                                           actionListener="#{assignedProcessesView.aproveCompanySupervisor('infoAbout2')}">
-                                <span class="glyphicon glyphicon-ok-sign"></span> Enterado
-                            </p:commandLink>
-                        </div>
                     </fieldset>
                 </div>
             </h:form>
         </p:dialog>
+
     </ui:define>
 </ui:composition>

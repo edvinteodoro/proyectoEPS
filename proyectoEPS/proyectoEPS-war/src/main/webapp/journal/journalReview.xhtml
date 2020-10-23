@@ -36,7 +36,7 @@
             </p:commandLink>
             
             <p:accordionPanel value="#{journalReviewView.journals}" var="journalLog" activeIndex="-2">
-                <p:tab id="JournalLog" title="Fecha - #{journalLog.dateTime.dayOfMonth} / #{journalLog.dateTime.monthValue} / #{journalLog.dateTime.year}" >
+                <p:tab id="JournalLog" title="Fecha - #{journalLog.dateText}" >
                     <div>
                         <h4 class="text-primary">Actividad:</h4>
                     </div>
@@ -47,13 +47,13 @@
                         <h4 class="text-primary">Descripcion:</h4>
                     </div>
                     <div>
-                        <h:outputLabel value="#{journalLog.description}"/>
+                        <h:outputLabel value="#{journalLog.description}" escape="false"/>
                     </div>
                     <div>
                         <h4 class="text-primary">Imagenes:</h4>
                     </div>
                     <div>
-                        <p:galleria value="#{journalLog.images}" var="imagen" >
+                        <p:galleria value="#{journalLog.images}" var="imagen" rendered="#{!journalLog.emptyImages}">
                             <o:graphicImage value="#{imagen.image}" dataURI="true" height="450" width="600"/>
                         </p:galleria>
                     </div>
@@ -61,7 +61,7 @@
                         <h4 class="text-primary">Links:</h4>
                     </div>
                     <div>
-                        <p:dataView value="#{journalLog.links}" var="link" >
+                        <p:dataView value="#{journalLog.links}" var="link" rendered="#{!journalLog.emptyLinks}">
                             <p:dataViewListItem>
                                 <div>
                                     <a href="#{link.linkText}" target="_blank">#{link.linkText}</a>
@@ -74,7 +74,7 @@
                                                 update=":#{p:component('comentar')}"
                                                 oncomplete="PF('comentar').show();">
                             <f:setPropertyActionListener value="#{journalLog}" target="#{journalReviewView.journalSelected}"/>
-                            <span class="glyphicon glyphicon-comment"></span> Comentar
+                            <span class="glyphicon glyphicon-comment"></span> Nuevo Comentario
                         </p:commandLink>
                     </div>
                 </p:tab>
@@ -103,14 +103,14 @@
                         </div>
                         <div>
                             <p:inputTextarea id="note" styleClass="form-control" required="true"
-                                             rows="4" cols="50" maxlength="10000" placeholder="Indique los motivos"
+                                             rows="4" cols="50" maxlength="10000" placeholder="Comentario"
                                              autoResize="false" value="#{journalReviewView.commentText}"/>
                         </div>
                         <div>
                             <br></br><p:commandLink styleClass="btn btn-primary btn-xs"
                                                     update="@form,:#{p:component('growl')}"
                                                     actionListener="#{journalReviewView.comment()}">
-                                <span class="glyphicon glyphicon-trash"></span> Comentar
+                                <span class="glyphicon glyphicon-plus"></span> Comentar
                             </p:commandLink>
                         </div>
                     </div>

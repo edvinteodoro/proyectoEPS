@@ -126,6 +126,7 @@ public class JournalReviewView implements Serializable {
             newCommentary.setText(commentText);
             commentaryFacade.createCommentary(newCommentary);
             MessageUtils.addSuccessMessage("Comentario Realizado");
+            setCommentText("");
         } catch (MandatoryException ex) {
             MessageUtils.addErrorMessage(ex.getMessage());
         }
@@ -168,4 +169,5 @@ public class JournalReviewView implements Serializable {
                 && process.getAppointmentId().getAdviserState() != appointmentState.CHANGE && process.getAppointmentId().getAdviserState() != appointmentState.REVIEW
                 && process.getAppointmentId().getReviewerState() != appointmentState.CHANGE && process.getAppointmentId().getReviewerState() != appointmentState.REVIEW;
     }
+    
 }

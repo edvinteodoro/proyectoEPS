@@ -1,5 +1,6 @@
 package gt.edu.usac.cunoc.ingenieria.eps.process;
 
+import gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -95,9 +96,8 @@ public class Appointment implements Serializable {
         return dateAction;
     }
     
-    public String getDateActionText(){
-        DateTimeFormatter destFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy-HH.mm");
-        return dateAction.format(destFormatter);
+    public String getDateActionText(){        
+        return dateAction.format(Constants.DATE_FORMAT_2);
     }
 
     public void setDateAction(LocalDateTime dateAction) {

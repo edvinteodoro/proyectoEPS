@@ -18,21 +18,23 @@
         </o:viewParam>
         <o:viewAction action="#{journalReviewView.loadCurrentProject()}" />
     </f:metadata>
+    
     <ui:define name="title">
         Bitacora
     </ui:define>
     <ui:define name="content">
-        <h:form>
-            <p:staticMessage severity="info" detail="Registro de Bitácora Vacio" rendered="#{journalReviewView.journals.size() eq 0 and journalReviewView.process.approvedEPSDevelopment}"/>
-            <p:staticMessage severity="warn" detail="Bitácora inhabilitada: Proceso EPS no autorizado para desarrollo (Asesor y Revisor no asignados y/o Supervisor de Empresa no confirmado)" rendered="#{!journalReviewView.process.approvedEPSDevelopment and !journalReviewView.canEnableJournalSupervisorEPS()}"/>
+        <h:form id="principalForm">
+            <p:staticMessage severity="info" detail="Registro de Bitácora Vacio" rendered="#{journalReviewView.emptyJournal()}"/>
+            <p:staticMessage severity="warn" detail="Bitácora inhabilitada: Proceso EPS no autorizado para desarrollo (Asesor y Revisor no asignados y/o Supervisor de Empresa no confirmado)" rendered="#{journalReviewView.isDisableJournal()}"/>
             <br/>
             <p:commandLink styleClass="btn btn-warning" 
                            actionListener="#{journalReviewView.enableJournal()}"
-                           update="@form,:growl"
-                           rendered="#{!journalReviewView.process.approvedEPSDevelopment and journalReviewView.canEnableJournalSupervisorEPS()}">
+                           update=":#{p:component('principalForm')},:growl"
+                           rendered="#{journalReviewView.viewButtonEneable()}">
                 <p:confirm header="Habilitar Bitácora" message="¿Desea habilitar la Bitácora?" icon="pi pi-exclamation-triangle" />
                 <span class="glyphicon glyphicon-ok-sign"></span> Habilitar Bitácora
             </p:commandLink>
+            
             <p:accordionPanel value="#{journalReviewView.journals}" var="journalLog" activeIndex="-2">
                 <p:tab id="JournalLog" title="Fecha - #{journalLog.dateTime.dayOfMonth} / #{journalLog.dateTime.monthValue} / #{journalLog.dateTime.year}" >
                     <div>
@@ -79,10 +81,11 @@
             </p:accordionPanel>
 
         </h:form>
+        
         <p:dialog header="Comentarios" id="comentar" widgetVar="comentar" 
                   modal="true" closeOnEscape="true">
             <p:ajax event="close" listener="#{journalReviewView.cleanJournalSelected()}" update="@this" />
-            <h:form>
+            <h:form id="commentayForm">
                 <fieldset>
                     <div class="col-md-12">
                         <div>

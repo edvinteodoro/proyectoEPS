@@ -136,9 +136,10 @@ public class JournalReviewView implements Serializable {
         setJournalSelected(null);
     }
 
-    public void enableJournal() {
+    public void enableJournal() throws IOException {
         try {
             journalFacade.enableJournal(process);
+            externalContext.redirect(externalContext.getRequestContextPath() + "/process/assignedProcesses.xhtml");
             MessageUtils.addSuccessMessage("Bitácora Habilitada");
         } catch (ValidationException ex) {
             MessageUtils.addErrorMessage(ex.getMessage());
@@ -147,6 +148,18 @@ public class JournalReviewView implements Serializable {
 
     public List<Commentary> getCommentariesByJournal(Integer journalId) {
         return commentaryFacade.getCommentariesByJournalId(journalId);
+    }
+
+    public Boolean viewButtonEneable() {
+        return !process.getApprovedEPSDevelopment() && canEnableJournalSupervisorEPS();
+    }
+
+    public Boolean emptyJournal() {
+        return journals.isEmpty() && process.getApprovedEPSDevelopment();
+    }
+
+    public Boolean isDisableJournal() {
+        return !process.getApprovedEPSDevelopment() && !canEnableJournalSupervisorEPS();
     }
 
     public Boolean canEnableJournalSupervisorEPS() {

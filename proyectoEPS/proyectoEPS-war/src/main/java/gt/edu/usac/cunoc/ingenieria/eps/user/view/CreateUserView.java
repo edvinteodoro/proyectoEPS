@@ -220,7 +220,7 @@ public class CreateUserView implements Serializable {
             if (personalResume != null){
                 getUser().setPersonalResume(personalResume.getContents());
             }
-            userFacade.createUser(getUser());
+            userFacade.createAndActivateUser(getUser());
             MessageUtils.addSuccessMessage("Se ha registrado el usuario correctamente");
             cleanNewUser();
             verifyView();

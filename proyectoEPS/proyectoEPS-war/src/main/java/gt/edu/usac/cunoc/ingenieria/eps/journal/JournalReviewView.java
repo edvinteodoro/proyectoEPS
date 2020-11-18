@@ -1,6 +1,9 @@
 package gt.edu.usac.cunoc.ingenieria.eps.journal;
 
 import User.exception.UserException;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.ASESOR;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.REVISOR;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.SUPERVISOR_EMPRESA;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.SUPERVISOR_EPS;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.MandatoryException;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.ValidationException;
@@ -69,12 +72,26 @@ public class JournalReviewView implements Serializable {
     }
 
     private boolean validateUser(Process currentProcess, User userlogged) throws IOException {
+        List<Process> assignedProcesses;
         switch (userlogged.getROLid().getName()) {
             case SUPERVISOR_EPS:
                 return currentProcess.getSupervisor_EPS().equals(userlogged);
+            case ASESOR:
+                assignedProcesses = processFacade.getProcessByAdviser(userlogged);
+                return existProcessOnList(currentProcess, assignedProcesses);
+            case REVISOR:
+                assignedProcesses = processFacade.getProcessByReviewer(userlogged);
+                return existProcessOnList(currentProcess, assignedProcesses);
+            case SUPERVISOR_EMPRESA:
+                assignedProcesses = processFacade.getProcessByCompanySupervisor(userlogged);
+                return existProcessOnList(currentProcess, assignedProcesses);
             default:
                 return false;
         }
+    }
+
+    private boolean existProcessOnList(Process process, List<Process> processes) {
+        return processes.stream().anyMatch(assignedProcess -> (process.getId().compareTo(assignedProcess.getId()) == 0));
     }
 
     public Integer getProcessId() {
@@ -168,6 +185,10 @@ public class JournalReviewView implements Serializable {
                 && process.getAppointmentId().getCompanySupervisor() != null && process.getAppointmentId().getCompanySupervisor().getStatus()
                 && process.getAppointmentId().getAdviserState() != appointmentState.CHANGE && process.getAppointmentId().getAdviserState() != appointmentState.REVIEW
                 && process.getAppointmentId().getReviewerState() != appointmentState.CHANGE && process.getAppointmentId().getReviewerState() != appointmentState.REVIEW;
+    }
+    
+    public Boolean isUserLoggedSupervisorEPS(){
+        return userLogged.getROLid().getName().equals(SUPERVISOR_EPS);
     }
     
 }

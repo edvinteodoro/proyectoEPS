@@ -159,4 +159,10 @@ public interface ProcessFacadeLocal {
     public void createObservation(Observation newObservation) throws MandatoryException;
     
     public List<Observation> getRequerimentsObservations(Integer requerimentId);
+    
+    public List<Process> getProcessByAdviser(User adviser);
+    
+    public List<Process> getProcessByReviewer(User reviewer);
+    
+    public List<Process> getProcessByCompanySupervisor(User companySupervisor);
 }

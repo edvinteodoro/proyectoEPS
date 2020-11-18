@@ -292,7 +292,7 @@ public class advisorReviewerView implements Serializable {
             clean();
             init();
             PrimeFaces.current().executeScript("PF('" + modalIdToClose + "').hide()");
-            MessageUtils.addSuccessMessage("Se ha enviado a su supervisor");
+            MessageUtils.addSuccessMessage("Se ha enviado la solicitud al supervisor EPS");
         } catch (UserException | ValidationException e) {
             MessageUtils.addErrorMessage(e.getMessage());
         }

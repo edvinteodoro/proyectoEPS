@@ -311,4 +311,19 @@ public class ProcessFacade implements ProcessFacadeLocal {
         return observationRepository.getRequerimentsObservations(requerimentId);
     }
 
+    @Override
+    public List<Process> getProcessByAdviser(User adviser) {
+        return processRepository.getProcessByAdviser(adviser);
+    }
+
+    @Override
+    public List<Process> getProcessByReviewer(User reviewer) {
+        return processRepository.getProcessByReviewer(reviewer);
+    }
+
+    @Override
+    public List<Process> getProcessByCompanySupervisor(User companySupervisor) {
+        return processRepository.getProcessByCompanySupervisor(companySupervisor);
+    }
+
 }

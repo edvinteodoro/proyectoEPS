@@ -18,7 +18,8 @@
     </ui:define>
 
     <ui:define name="content">
-        <p:dataTable id="processTable" var="process" value="#{assignedProcessesView.processes}" reflow="true">
+        <p:dataTable id="processTable" var="process" value="#{assignedProcessesView.processes}" reflow="true"
+                     emptyMessage="Registro vacío">
             <p:column headerText="Registro Académico">
                 <h:outputText value="#{process.userCareer.USERuserId.academicRegister}"/> 
             </p:column>
@@ -52,7 +53,15 @@
                         <span class="glyphicon glyphicon-log-in"></span>
                     </button>
                 </p>
-            </p:column>     
+            </p:column> 
+            <p:column headerText="Supervisor EPS" styleClass="text-center" rendered="#{!assignedProcessesView.verifyShowSupervisorEPSInfo()}">
+                <p:commandLink styleClass="btn btn-primary btn-xs"
+                               oncomplete="PF('infoSupervisorEPS').show();" 
+                               update=":#{p:component('infoSupervisorEPS')}">
+                    <f:setPropertyActionListener value="#{process}" target="#{assignedProcessesView.processSelected}"/>
+                    <span class="glyphicon glyphicon-eye-open"></span>
+                </p:commandLink>
+            </p:column>
             <p:column headerText="Asesor y Revisor" styleClass="text-center">
                 <p:commandLink styleClass="btn btn-primary btn-xs"
                                oncomplete="PF('infoAdvisorReviewer').show();" 
@@ -79,6 +88,44 @@
                 </p>
             </p:column>
         </p:dataTable>
+        
+        <p:dialog header="Supervisor EPS" id="infoSupervisorEPS" widgetVar="infoSupervisorEPS"
+                  modal="true" closeOnEscape="true">
+            <p:ajax event="close" listener="#{assignedProcessesView.clean()}" update="@this" />
+            <h:form>
+                <div class="modal-header" jsf:rendered="#{assignedProcessesView.processSelected.supervisor_EPS == null}">
+                    <p:staticMessage severity="warn" summary="Advertencia! " detail="Se asignará al Supervisor EPS cuando el Coordinador de Carrera apruebe el anteproyecto" />
+                </div>
+                <div class="modal-body" jsf:rendered="#{assignedProcessesView.processSelected.supervisor_EPS != null}">
+                    <fieldset>
+                        <div class="row form-group">
+                            <p:outputLabel value="Nombre:" styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <h:outputText value="#{assignedProcessesView.processSelected.supervisor_EPS.firstName}, #{assignedProcessesView.processSelected.supervisor_EPS.lastName}"/>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <p:outputLabel value="Correo Electrónico:" styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <h:outputText value="#{assignedProcessesView.processSelected.supervisor_EPS.email}" />
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <p:outputLabel value="Telefono:" styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <h:outputText value="#{assignedProcessesView.processSelected.supervisor_EPS.phone1}" />
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <p:outputLabel value="Telefono:" styleClass="col-md-4 control-label"/>
+                            <div class="col-md-8">
+                                <h:outputText value="#{assignedProcessesView.processSelected.supervisor_EPS.phone2}" />
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </h:form>
+        </p:dialog>
 
         <p:dialog header="Asesor y Revisor" id="infoAdvisorReviewer" widgetVar="infoAdvisorReviewer"
                   modal="true" closeOnEscape="true">
@@ -86,7 +133,7 @@
             <h:form>
                 <div class="modal-header">
                     <p:staticMessage rendered="#{!assignedProcessesView.canRequestAdvisorReviewer()}" severity="warn" summary="Advertencia! " detail="El estudiante no puede solicitar Asesor y Revisor, el Comité EPS aun no aprueba el anteproyecto" />
-                    <p:staticMessage rendered="#{assignedProcessesView.canRequestAdvisorReviewer() and !assignedProcessesView.studentAppointmentApproved() and !myProcessesView.isRequestAdvisorReviewerReviewState()}" severity="warn" summary="Advertencia! " detail="A espera de solicitud de Asesor y Revisor para el Proceso EPS" />
+                    <p:staticMessage rendered="#{assignedProcessesView.canRequestAdvisorReviewer() and !assignedProcessesView.studentAppointmentApproved() and !assignedProcessesView.isRequestAdvisorReviewerReviewState()}" severity="warn" summary="Advertencia! " detail="A espera de solicitud de Asesor y Revisor para el Proceso EPS" />
                     <p:staticMessage rendered="#{assignedProcessesView.isRequestAdvisorReviewerReviewState()}" severity="warn" summary="Advertencia! " detail="Solicitud de Asesor y Revisor en Revisión" />
                 </div>
                 <div class="modal-body" jsf:rendered="#{assignedProcessesView.studentAppointmentApproved()}">
@@ -280,7 +327,7 @@
                         </div>
                     </fieldset>
                 </div>
-                <div class="modal-footer" jsf:rendered="#{assignedProcessesView.processSelected.appointmentId.companySupervisor.removable}">
+                <div class="modal-footer" jsf:rendered="#{assignedProcessesView.processSelected.appointmentId.companySupervisor.removable and assignedProcessesView.isUserLoggedSupervisorEPS()}">
                     <p:commandLink styleClass="btn btn-success"
                                    update=":#{p:component('processTable')},:#{p:component('growl')}"
                                    onstart="PF('progressBar').show();"

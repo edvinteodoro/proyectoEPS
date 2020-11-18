@@ -1,9 +1,12 @@
 package gt.edu.usac.cunoc.ingenieria.eps.process.view;
 
 import User.exception.UserException;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.ASESOR;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.COORDINADOR_CARRERA;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.COORDINADOR_EPS;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.ESTUDIANTE;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.REVISOR;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.SUPERVISOR_EMPRESA;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.SUPERVISOR_EPS;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.MandatoryException;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Observation;
@@ -139,6 +142,18 @@ public class updateRequerimentsView implements Serializable {
                         return false;
                     }
                 }
+                case ASESOR:
+                    flagStudent = false;
+                    assignedProcesses = processFacade.getProcessByAdviser(userlogged);
+                    return existProcessOnList(currentProcess, assignedProcesses);
+                case REVISOR:
+                    flagStudent = false;
+                    assignedProcesses = processFacade.getProcessByReviewer(userlogged);
+                    return existProcessOnList(currentProcess, assignedProcesses);
+                case SUPERVISOR_EMPRESA:
+                    flagStudent = false;
+                    assignedProcesses = processFacade.getProcessByCompanySupervisor(userlogged);
+                    return existProcessOnList(currentProcess, assignedProcesses);
             default:
                 return false;
         }

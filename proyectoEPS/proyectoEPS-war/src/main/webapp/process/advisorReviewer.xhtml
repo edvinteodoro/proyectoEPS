@@ -290,7 +290,7 @@
                         <p:column headerText="Direccion Empresa">
                             <h:outputText value="#{user.directionCompanyWork}" />
                         </p:column>
-                        <p:column headerText="Información" styleClass="text-center">
+                        <p:column headerText="Elegir" styleClass="text-center">
                             <p:commandLink styleClass="btn btn-primary btn-xs"
                                            rendered="#{p:ifGranted(constantsRol.ESTUDIANTE())}"
                                            update="@form,:#{p:component('processesTable')},:#{p:component('growl')}"

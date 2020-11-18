@@ -1,6 +1,10 @@
 package gt.edu.usac.cunoc.ingenieria.eps.process.view;
 
 import User.exception.UserException;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.ASESOR;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.REVISOR;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.SUPERVISOR_EMPRESA;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.SUPERVISOR_EPS;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.ValidationException;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
@@ -10,6 +14,7 @@ import gt.edu.usac.cunoc.ingenieria.eps.user.facade.UserFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.utils.MessageUtils;
 import java.io.ByteArrayInputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -32,11 +37,37 @@ public class AssignedProcessesView implements Serializable {
     private List<Process> processes;
 
     private User user;
-    
+
     private StreamedContent adviserResumeStream;
     private StreamedContent reviewerResumeStream;
-    
+
     private Process processSelected;
+
+    @PostConstruct
+    public void init() {
+        try {
+            user = userFacade.getAuthenticatedUser().get(0);
+            setProcesses(searchProcesses(user));
+        } catch (UserException ex) {
+            System.out.println("Error Autenticación");
+        }
+    }
+
+    public List<Process> searchProcesses(User userLogged) {
+        List<Process> assignedProcesses = new ArrayList<>();
+        switch (userLogged.getROLid().getName()) {
+            case SUPERVISOR_EPS:
+                return processFacade.getProcessBySupervisorEPS(userLogged);
+            case ASESOR:
+                return processFacade.getProcessByAdviser(userLogged);
+            case REVISOR:
+                return processFacade.getProcessByReviewer(userLogged);
+            case SUPERVISOR_EMPRESA:
+                return processFacade.getProcessByCompanySupervisor(userLogged);
+            default:
+                return assignedProcesses;
+        }
+    }
 
     public List<Process> getProcesses() {
         return processes;
@@ -44,16 +75,6 @@ public class AssignedProcessesView implements Serializable {
 
     public void setProcesses(List<Process> processes) {
         this.processes = processes;
-    }
-
-    @PostConstruct
-    public void init() {
-        try {
-            user = userFacade.getAuthenticatedUser().get(0);
-            setProcesses(processFacade.getProcessBySupervisorEPS(user));
-        } catch (UserException ex) {
-            System.out.println("Error Autenticación");
-        }
     }
 
     /**
@@ -114,8 +135,8 @@ public class AssignedProcessesView implements Serializable {
                 && processSelected.getApprovalEPSCommission() && processSelected.getApprovedCareerCoordinator()
                 && processSelected.getAppointmentId() != null && processSelected.getAppointmentId().getCompanySupervisor() != null);
     }
-    
-    public Boolean informedCompanySupervisor(){
+
+    public Boolean informedCompanySupervisor() {
         return (processSelected != null && processSelected.getAppointmentId() != null
                 && processSelected.getAppointmentId().getCompanySupervisor() != null && !processSelected.getAppointmentId().getCompanySupervisor().getRemovable());
     }
@@ -125,6 +146,10 @@ public class AssignedProcessesView implements Serializable {
                 && processSelected.getApprovalEPSCommission() && processSelected.getApprovedCareerCoordinator());
     }
 
+    public Boolean verifyShowSupervisorEPSInfo(){
+        return user.getROLid().getName().equals(SUPERVISOR_EPS);
+    }
+    
     public StreamedContent getAdviserResumeStream() {
         return adviserResumeStream;
     }
@@ -149,6 +174,10 @@ public class AssignedProcessesView implements Serializable {
         this.processSelected = processSelected;
     }
 
+    public boolean isUserLoggedSupervisorEPS(){
+        return (user.getROLid().getName().equals(SUPERVISOR_EPS));
+    }
+    
     public void clean() {
         adviserResumeStream = null;
         reviewerResumeStream = null;

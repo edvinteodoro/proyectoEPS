@@ -26,11 +26,12 @@
         <h:form id="principalForm">
             <p:staticMessage severity="info" detail="Registro de Bitácora Vacio" rendered="#{journalReviewView.emptyJournal()}"/>
             <p:staticMessage severity="warn" detail="Bitácora inhabilitada: Proceso EPS no autorizado para desarrollo (Asesor y Revisor no asignados y/o Supervisor de Empresa no confirmado)" rendered="#{journalReviewView.isDisableJournal()}"/>
+            <p:staticMessage severity="warn" detail="Bitácora inhabilitada: Supervisor EPS aún no habilita la bitácora" rendered="#{journalReviewView.canEnableJournalSupervisorEPS() and !journalReviewView.process.approvedEPSDevelopment and !journalReviewView.isUserLoggedSupervisorEPS()}"/>
             <br/>
             <p:commandLink styleClass="btn btn-warning" 
                            actionListener="#{journalReviewView.enableJournal()}"
                            update=":#{p:component('principalForm')},:growl"
-                           rendered="#{journalReviewView.viewButtonEneable()}">
+                           rendered="#{journalReviewView.viewButtonEneable() and journalReviewView.isUserLoggedSupervisorEPS()}">
                 <p:confirm header="Habilitar Bitácora" message="¿Desea habilitar la Bitácora?" icon="pi pi-exclamation-triangle" />
                 <span class="glyphicon glyphicon-ok-sign"></span> Habilitar Bitácora
             </p:commandLink>

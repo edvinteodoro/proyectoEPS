@@ -66,6 +66,9 @@
             <role-name>Director</role-name>
             <role-name>Coordinador_EPS</role-name>
             <role-name>Supervisor_EPS</role-name>
+            <role-name>Revisor</role-name>
+            <role-name>Asesor</role-name>
+            <role-name>Supervisor_ORG</role-name>
             <role-name>Coordinador_Carrera</role-name>
             <role-name>Secretaria_EPS</role-name>
             <role-name>Estudiante</role-name>
@@ -123,6 +126,9 @@
             <role-name>Coordinador_Carrera</role-name>
             <role-name>Supervisor_EPS</role-name>
             <role-name>Coordinador_EPS</role-name>
+            <role-name>Revisor</role-name>
+            <role-name>Asesor</role-name>
+            <role-name>Supervisor_ORG</role-name>
         </auth-constraint>
     </security-constraint>
     
@@ -160,7 +166,10 @@
         </web-resource-collection>
         <auth-constraint>
             <description>Allowed users</description>
-            <role-name>Supervisor_EPS</role-name>
+            <role-name>Supervisor_EPS</role-name>            
+            <role-name>Revisor</role-name>        
+            <role-name>Asesor</role-name>
+            <role-name>Supervisor_ORG</role-name>
         </auth-constraint>
     </security-constraint>
     
@@ -187,6 +196,9 @@
             <role-name>Coordinador_Carrera</role-name>
             <role-name>Coordinador_EPS</role-name>
             <role-name>Supervisor_EPS</role-name>
+            <role-name>Revisor</role-name>
+            <role-name>Asesor</role-name>
+            <role-name>Supervisor_ORG</role-name>
         </auth-constraint>
     </security-constraint> 
     
@@ -225,6 +237,9 @@
             <description>Allowed users</description>
             <role-name>Coordinador_EPS</role-name>
             <role-name>Supervisor_EPS</role-name>
+            <role-name>Revisor</role-name>
+            <role-name>Asesor</role-name>
+            <role-name>Supervisor_ORG</role-name>
         </auth-constraint>
     </security-constraint> 
     
@@ -247,6 +262,15 @@
     </security-role>
     <security-role>
         <role-name>Supervisor_EPS</role-name>
+    </security-role>
+    <security-role>
+        <role-name>Revisor</role-name>
+    </security-role>
+    <security-role>
+        <role-name>Asesor</role-name>
+    </security-role>
+    <security-role>
+        <role-name>Supervisor_ORG</role-name>
     </security-role>
     <security-role>
         <role-name>Coordinador_Carrera</role-name>

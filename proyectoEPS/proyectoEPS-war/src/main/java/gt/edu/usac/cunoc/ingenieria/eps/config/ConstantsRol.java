@@ -1,11 +1,15 @@
 package gt.edu.usac.cunoc.ingenieria.eps.config;
 
+import gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.ASESOR;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.COORDINADOR_CARRERA;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.COORDINADOR_EPS;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.SECRETARIA_COORDINACION;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.SECRETARIA_EPS;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.DIRECTOR;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.ESTUDIANTE;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.REVISOR;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.SUPERVISOR_EMPRESA;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.SUPERVISOR_EPS;
 import java.io.Serializable;
 import javax.faces.view.ViewScoped;
@@ -103,6 +107,10 @@ public class ConstantsRol implements Serializable {
         return SUPERVISOR_EPS;
     }
 
+    public String ASSIGNED_PROCESS_USERS(){
+        return SUPERVISOR_EPS + "," + ASESOR + "," + REVISOR + "," + SUPERVISOR_EMPRESA;
+    }
+    
     public String COMMITTEE_EPS() {
         return COORDINADOR_EPS + "," + SUPERVISOR_EPS;
     }

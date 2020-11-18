@@ -57,7 +57,7 @@
                                     <p:link  outcome="advisorReviewer" value="Solicitud Asesor y Revisor" rendered="#{p:ifAnyGranted(constantsRol.ADVISOR_REVIEWER_EDITORS())}"/>
                                 </li> 
                                 <li>
-                                    <p:link outcome="assignedProcesses" value="Procesos Asignados" rendered="#{p:ifGranted(constantsRol.SUPERVISOR_EPS())}"/>
+                                    <p:link outcome="assignedProcesses" value="Procesos Asignados" rendered="#{p:ifAnyGranted(constantsRol.ASSIGNED_PROCESS_USERS())}"/>
                                 </li>                                
                             </ul>
                         </li>

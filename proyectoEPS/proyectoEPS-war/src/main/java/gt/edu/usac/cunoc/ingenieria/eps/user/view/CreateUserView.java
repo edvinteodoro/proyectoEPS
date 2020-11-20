@@ -51,7 +51,7 @@ public class CreateUserView implements Serializable {
     private Boolean personalCodeFlag;
     private Boolean academicRegisterFlag;
     private Boolean careerSelectionFlag;
-    private Boolean personalResumeFlag;
+    private Boolean userAdviserReviewerFlag;
 
     private Boolean searchStudent;
 
@@ -194,12 +194,12 @@ public class CreateUserView implements Serializable {
         this.careerSelectionFlag = careerSelectionFlag;
     }
 
-    public Boolean getPersonalResumeFlag() {
-        return personalResumeFlag;
+    public Boolean getUserAdviserReviewerFlag() {
+        return userAdviserReviewerFlag;
     }
 
-    public void setPersonalResumeFlag(Boolean personalResumeFlag) {
-        this.personalResumeFlag = personalResumeFlag;
+    public void setUserAdviserReviewerFlag(Boolean userAdviserReviewerFlag) {
+        this.userAdviserReviewerFlag = userAdviserReviewerFlag;
     }
 
     public Boolean getSearchStudent() {
@@ -237,7 +237,7 @@ public class CreateUserView implements Serializable {
                     academicRegisterFlag = true;
                     careerSelectionFlag = true;
                     searchStudent = true;                    
-                    personalResumeFlag = false;
+                    userAdviserReviewerFlag = false;
                     break;
                 case Constants.COORDINADOR_CARRERA:
                 case Constants.SUPERVISOR_EPS:
@@ -245,7 +245,7 @@ public class CreateUserView implements Serializable {
                     academicRegisterFlag = false;
                     careerSelectionFlag = true;
                     searchStudent = false;                    
-                    personalResumeFlag = false;
+                    userAdviserReviewerFlag = false;
                     break;
                 case Constants.REVISOR:
                 case Constants.ASESOR:
@@ -253,21 +253,21 @@ public class CreateUserView implements Serializable {
                     academicRegisterFlag = false;
                     careerSelectionFlag = true;
                     searchStudent = false;                    
-                    personalResumeFlag = true;
+                    userAdviserReviewerFlag = true;
                     break;
                 case Constants.SUPERVISOR_EMPRESA:
                     personalCodeFlag = false;
                     academicRegisterFlag = false;
                     careerSelectionFlag = false;
                     searchStudent = false;                    
-                    personalResumeFlag = false;
+                    userAdviserReviewerFlag = false;
                     break;
                 default:
                     personalCodeFlag = true;
                     academicRegisterFlag = false;
                     careerSelectionFlag = false;
                     searchStudent = false;
-                    personalResumeFlag = false;
+                    userAdviserReviewerFlag = false;
             }
             cleanUser();
         } else {

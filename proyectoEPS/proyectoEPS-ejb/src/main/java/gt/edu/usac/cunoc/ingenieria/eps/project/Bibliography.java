@@ -1,6 +1,7 @@
 
 package gt.edu.usac.cunoc.ingenieria.eps.project;
 
+import gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants;
 import java.io.Serializable;
 import java.time.LocalDate;
 import javax.persistence.Column;
@@ -73,6 +74,10 @@ public class Bibliography implements Serializable {
 
     public LocalDate getPublicactionYear() {
         return publicactionYear;
+    }
+    
+    public String getPublicationYearText(){
+        return getPublicactionYear().format(Constants.DATE_FORMAT_1);
     }
 
     public void setPublicactionYear(LocalDate publicactionYear) {

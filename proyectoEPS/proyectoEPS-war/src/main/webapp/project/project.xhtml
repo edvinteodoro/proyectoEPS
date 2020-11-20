@@ -580,9 +580,10 @@
                                     <fieldset>
                                         <div class="row form-group">
                                             <p:dataTable id="coorrections" var="correction" 
-                                                         value="#{projectView.getCurrentCorrections()}">
+                                                         value="#{projectView.getCurrentCorrections()}"
+                                                         emptyMessage="Registro vacío">
                                                 <p:column headerText="Fecha">
-                                                    <h:outputText value="#{correction.date}"/>
+                                                    <h:outputText value="#{correction.dateText}"/>
                                                 </p:column>
                                                 <p:column headerText="Tipo Usuario:">
                                                     <h:outputText value="#{correction.user.ROLid.name}"/>

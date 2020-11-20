@@ -67,9 +67,9 @@
                     <div>
                         <h4 class="text-primary">Comentarios:</h4>
                     </div>
-                    <p:dataTable var="commentary" value="#{journalView.getCommentariesJournal(journalLog.id)}" emptyMessage="Sin Comentarios">
+                    <p:dataTable var="commentary" value="#{journalView.getCommentariesJournal(journalLog.id)}" emptyMessage="Sin comentarios">
                         <p:column headerText="Fecha">
-                            <h:outputText value="#{commentary.date}" />
+                            <h:outputText value="#{commentary.dateText}" />
                         </p:column>
                         <p:column headerText="Comentario">
                             <h:outputText value="#{commentary.text}" />

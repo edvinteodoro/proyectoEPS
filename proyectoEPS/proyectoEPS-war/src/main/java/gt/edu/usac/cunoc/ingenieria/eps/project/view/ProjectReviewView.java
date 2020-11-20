@@ -131,9 +131,6 @@ public class ProjectReviewView implements Serializable {
                     return false;
                 }
             case SUPERVISOR_EPS:
-                if (currentProcess.getSupervisor_EPS().getUserId().equals(userlogged.getUserId())){
-                    this.isFirstProcess = true;
-                }
                 if (userlogged.getEpsCommittee()) {
                     assignedProcesses = tailCommitteeEPSFacade.getTailCommitteeEPS();
                     return existProcessOnList(currentProcess, assignedProcesses)

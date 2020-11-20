@@ -183,6 +183,7 @@ public class JournalReviewView implements Serializable {
     public Boolean canEnableJournalSupervisorEPS() {
         return process.getAppointmentId() != null
                 && process.getAppointmentId().getCompanySupervisor() != null && process.getAppointmentId().getCompanySupervisor().getStatus()
+                && process.getAppointmentId().getUserReviewer()!= null && process.getAppointmentId().getUserAdviser() != null
                 && process.getAppointmentId().getAdviserState() != appointmentState.CHANGE && process.getAppointmentId().getAdviserState() != appointmentState.REVIEW
                 && process.getAppointmentId().getReviewerState() != appointmentState.CHANGE && process.getAppointmentId().getReviewerState() != appointmentState.REVIEW;
     }

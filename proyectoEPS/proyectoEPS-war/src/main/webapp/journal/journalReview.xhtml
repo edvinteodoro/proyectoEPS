@@ -90,9 +90,10 @@
                 <fieldset>
                     <div class="col-md-12">
                         <div>
-                            <p:dataTable id="commenTable" var="commentary" value="#{journalReviewView.getCommentariesByJournal(journalReviewView.journalSelected.id)}" reflow="true">
+                            <p:dataTable id="commenTable" var="commentary" value="#{journalReviewView.getCommentariesByJournal(journalReviewView.journalSelected.id)}" reflow="true"
+                                         emptyMessage="Sin comentarios">
                                 <p:column headerText="Fecha">
-                                    <h:outputText value="#{commentary.date}"/>
+                                    <h:outputText value="#{commentary.dateText}"/>
                                 </p:column>
                                 <p:column headerText="Por">
                                     <h:outputText value="#{commentary.user.firstName} #{commentary.user.lastName}"/>

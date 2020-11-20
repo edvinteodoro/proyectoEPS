@@ -1,5 +1,6 @@
 package gt.edu.usac.cunoc.ingenieria.eps.project;
 
+import gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -17,7 +18,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "CORRECTION")
 public class Correction implements Serializable {
-        
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -94,7 +95,7 @@ public class Correction implements Serializable {
     }
 
     public String getText() {
-        if (this.text != null){
+        if (this.text != null) {
             String result = new String(this.text);
             return result;
         } else {
@@ -103,13 +104,17 @@ public class Correction implements Serializable {
     }
 
     public void setText(String text) {
-        if (text != null){
+        if (text != null) {
             this.text = text.getBytes();
         }
     }
 
     public LocalDate getDate() {
         return date;
+    }
+
+    public String getDateText() {
+        return getDate().format(Constants.DATE_FORMAT_1);
     }
 
     public void setDate(LocalDate date) {
@@ -135,9 +140,9 @@ public class Correction implements Serializable {
     public Boolean getStatus() {
         return status;
     }
-    
+
     public String getStatusString() {
-        if (status){
+        if (status) {
             return "Notificado";
         }
         return "Sin Notificar";

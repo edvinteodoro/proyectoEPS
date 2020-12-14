@@ -1,5 +1,6 @@
 package gt.edu.usac.cunoc.ingenieria.eps.journal;
 
+import gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -12,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import jdk.vm.ci.meta.Constant;
 
 @Entity
 @Table(name = "COMMENTARY")
@@ -74,6 +76,10 @@ public class Commentary implements Serializable {
         this.date = date;
     }
 
+    public String getDateText(){
+        return getDate().format(Constants.DATE_FORMAT_1);
+    }
+    
     public JournalLog getJournal_Log() {
         return journal_Log;
     }

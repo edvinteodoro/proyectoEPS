@@ -1,5 +1,7 @@
 package gt.edu.usac.cunoc.ingenieria.eps.configuration;
 
+import java.time.format.DateTimeFormatter;
+
 public class Constants {
 
     //Application constants
@@ -18,5 +20,8 @@ public class Constants {
     public static final String REVISOR = "Revisor";
     public static final String ASESOR = "Asesor";
     public static final String SUPERVISOR_EMPRESA = "Supervisor_ORG";
+    
+    public static final DateTimeFormatter DATE_FORMAT_1 = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    public static final DateTimeFormatter DATE_FORMAT_2 = DateTimeFormatter.ofPattern("dd-MM-yyyy-HH.mm");
 
 }

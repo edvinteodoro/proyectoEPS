@@ -48,22 +48,17 @@ public class UserService {
         this.entityManager = entityManager;
     }
 
-    public User createUser(User user) throws UserException {
-        if (user == null) {
-            throw new UserException("User is null");
-        }
-        user.setPassword(encryptPass(user.getPassword()));
-        try {
-            if (user.getROLid().getName().equals(Constants.COORDINADOR_EPS)) {
-                user.setEpsCommittee(Boolean.TRUE);
-            } else {
-                user.setEpsCommittee(Boolean.FALSE);
-            }
-            
-            if (!userRepository.getUser(new User(user.getUserId())).isEmpty()){
-                throw new UserException("Ya existe ese Nombre de Usuario");
-            }
+    public User createAndActivateUser(User user) throws UserException {
+        user = validateUser(user);
+        user.setStatus(Boolean.TRUE);
+        user.setRemovable(Boolean.FALSE);
+        entityManager.persist(user);
+        return user;
+    }
 
+    public User createUser(User user) throws UserException {
+        user = validateUser(user);
+        try {
             if (user.getROLid().getName().equals(Constants.SUPERVISOR_EMPRESA)
                     || user.getROLid().getName().equals(Constants.REVISOR)
                     || user.getROLid().getName().equals(Constants.ASESOR)) {
@@ -79,6 +74,23 @@ public class UserService {
             for (ConstraintViolation actual : e.getConstraintViolations()) {
                 System.out.println(actual.toString());
             }
+        }
+        return user;
+    }
+
+    private User validateUser(User user) throws UserException {
+        if (user == null) {
+            throw new UserException("User is null");
+        }
+        user.setPassword(encryptPass(user.getPassword()));
+        if (user.getROLid().getName().equals(Constants.COORDINADOR_EPS)) {
+            user.setEpsCommittee(Boolean.TRUE);
+        } else {
+            user.setEpsCommittee(Boolean.FALSE);
+        }
+
+        if (!userRepository.getUser(new User(user.getUserId())).isEmpty()) {
+            throw new UserException("Ya existe ese Nombre de Usuario");
         }
         return user;
     }

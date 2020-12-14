@@ -1,5 +1,6 @@
 package gt.edu.usac.cunoc.ingenieria.eps.process;
 
+import gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -72,6 +73,10 @@ public class Observation implements Serializable {
 
     public void setDate(LocalDate date) {
         this.date = date;
+    }
+    
+    public String getDateText(){
+        return getDate().format(Constants.DATE_FORMAT_1);
     }
 
     public User getUser() {

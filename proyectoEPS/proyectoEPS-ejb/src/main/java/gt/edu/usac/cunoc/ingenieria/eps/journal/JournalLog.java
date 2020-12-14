@@ -1,8 +1,10 @@
 package gt.edu.usac.cunoc.ingenieria.eps.journal;
 
+import gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants;
 import java.io.Serializable;
 import java.time.LocalDate;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -65,6 +67,10 @@ public class JournalLog implements Serializable {
 
     public LocalDate getDateTime() {
         return dateTime;
+    }
+    
+    public String getDateText(){
+        return getDateTime().format(Constants.DATE_FORMAT_1);
     }
 
     public void setDateTime(LocalDate dateTime) {

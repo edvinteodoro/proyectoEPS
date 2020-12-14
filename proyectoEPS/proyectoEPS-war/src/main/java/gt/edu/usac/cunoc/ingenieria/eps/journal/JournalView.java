@@ -1,5 +1,6 @@
 package gt.edu.usac.cunoc.ingenieria.eps.journal;
 
+import User.exception.UserException;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.LimitException;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.MandatoryException;
 import gt.edu.usac.cunoc.ingenieria.eps.journal.facade.CommentaryFacadeLocal;
@@ -10,11 +11,17 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import gt.edu.usac.cunoc.ingenieria.eps.journal.facade.JournalLogFacadeLocal;
+import gt.edu.usac.cunoc.ingenieria.eps.process.appointmentState;
+import gt.edu.usac.cunoc.ingenieria.eps.user.User;
+import gt.edu.usac.cunoc.ingenieria.eps.user.facade.UserFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.utils.MessageUtils;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import javax.annotation.PostConstruct;
+import javax.faces.context.ExternalContext;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import org.primefaces.PrimeFaces;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
@@ -22,6 +29,12 @@ import org.primefaces.model.UploadedFile;
 @Named
 @ViewScoped
 public class JournalView implements Serializable {
+
+    @Inject
+    private ExternalContext externalContext;
+
+    @EJB
+    private UserFacadeLocal userFacade;
 
     @EJB
     private JournalLogFacadeLocal journalFacade;
@@ -31,7 +44,7 @@ public class JournalView implements Serializable {
 
     @EJB
     private CommentaryFacadeLocal commentaryFacade;
-    
+
     private Integer processId;
     private Process process;
 
@@ -42,10 +55,30 @@ public class JournalView implements Serializable {
     private List<UploadedFile> imagesUploadedFile;
     private List<JournalLog> journals;
 
+    private User userLogged;
+
     @PostConstruct
     public void init() {
         this.imagesUploadedFile = new ArrayList<>();
         this.journals = new ArrayList<>();
+    }
+
+    public void loadCurrentJournal() throws IOException {
+        try {
+            this.userLogged = userFacade.getAuthenticatedUser().get(0);
+            this.process = processFacade.getProcess(new Process(processId)).get(0);
+            if (this.process.getUserCareer().getUSERuserId().equals(this.userLogged)) {
+                this.journals = journalFacade.getJournal(processId);
+                cleanNewJournalLog();
+                this.imagesUploadedFile.clear();
+            } else {
+                externalContext.redirect(externalContext.getRequestContextPath() + "/error/error-403.xhtml");
+            }
+        } catch (UserException ex) {
+            externalContext.redirect(externalContext.getRequestContextPath() + "/error/error-403.xhtml");
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            externalContext.redirect(externalContext.getRequestContextPath() + "/error/error-404.xhtml");
+        }
     }
 
     public List<JournalLog> getJournals() {
@@ -108,14 +141,7 @@ public class JournalView implements Serializable {
         this.linkStringNewJournalLog = linkStringNewJournalLog;
     }
 
-    public void loadCurrentJournal() {
-        this.process = processFacade.getProcess(new Process(processId)).get(0);
-        this.journals = journalFacade.getJournal(processId);
-        cleanNewJournalLog();
-        this.imagesUploadedFile.clear();
-    }
-
-    public void createJournalLog(final String modalIdToClose) {
+    public void createJournalLog(final String modalIdToClose) throws IOException {
         try {
             newJournalLog.setProcess(process);
             convertFilesUploadedToImages();
@@ -162,8 +188,15 @@ public class JournalView implements Serializable {
             MessageUtils.addErrorMessage("No existe enlace a cargar");
         }
     }
-    
-    public List<Commentary> getCommentariesJournal(Integer JournalId){
+
+    public List<Commentary> getCommentariesJournal(Integer JournalId) {
         return commentaryFacade.getCommentariesByJournalId(JournalId);
+    }
+    
+    public Boolean canEnableJournalSupervisorEPS(){
+        return process.getAppointmentId() != null 
+                && process.getAppointmentId().getCompanySupervisor() != null && process.getAppointmentId().getCompanySupervisor().getStatus()
+                && process.getAppointmentId().getAdviserState() != appointmentState.CHANGE && process.getAppointmentId().getAdviserState() != appointmentState.REVIEW
+                && process.getAppointmentId().getReviewerState()!= appointmentState.CHANGE && process.getAppointmentId().getReviewerState()!= appointmentState.REVIEW;
     }
 }

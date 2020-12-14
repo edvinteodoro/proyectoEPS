@@ -84,6 +84,11 @@ public class UserFacade implements UserFacadeLocal {
     public User createUser(User user) throws UserException {
         return userService.createUser(user);
     }
+    
+    @Override
+    public User createAndActivateUser(User user) throws UserException{
+        return userService.createAndActivateUser(user);
+    }
 
     /**
      * {@inheritDoc}

@@ -78,9 +78,9 @@ public class MailService {
      * @param studentName
      */
     public void emailApprovedAdvisorOrReviewer(String password, User user, String processName, String studentName) {
-        String message = ("<h1><strong>Se le ha aprovado como " + user.getROLid().getName() + "</strong></h1>"
+        String message = ("<h1><strong>Se le ha aprobado como " + user.getROLid().getName() + "</strong></h1>"
                 + "<p>Se le ha habilitado un usuario y contrase&ntilde;a dentro del Sistema de EPS de la Divisi&oacute;n de Ciencias de la Ingenier&iacute;a</p>"
-                + "<p>Se le ha aprovado como " + user.getROLid().getName() + " del EPS <strong>" + processName + "</strong>.</p>"
+                + "<p>Se le ha aprobado como " + user.getROLid().getName() + " del EPS <strong>" + processName + "</strong>.</p>"
                 + "<p>Se le habilito con el Usuario <strong>" + user.getUserId() + "</strong> y contrase&ntilde;a <strong><span style=\"color: #ff0000;\">" + password + "</span></strong>.&nbsp;</p>"
                 + "<p>Se recomienda cambiar su contrase&ntilde;a inmediatamente luego de ingresar al portal, ingresando por el menu en <strong>Usuario -&gt; Mi Perfil</strong></p>"
                 + "<h3><strong>Divisi&oacute;n de Ciencias de la Ingenier&iacute;a - Centro Universitario de Occidente</strong></h3>");
@@ -97,8 +97,8 @@ public class MailService {
      * @param studentName
      */
     public void emailNotifyAdvisorOrReviewer(User user, String processName, String studentName) {
-        String text = ("<h1><strong>Se le ha aprovado como " + user.getROLid().getName() + "</strong></h1>"
-                + "<p>Se le ha aprovado como Asesor del tema <strong>" + processName + "</strong> del estudiante <strong>" + studentName + "</strong>.</p>"
+        String text = ("<h1><strong>Se le ha aprobado como " + user.getROLid().getName() + "</strong></h1>"
+                + "<p>Se le ha aprobado como Asesor del tema <strong>" + processName + "</strong> del estudiante <strong>" + studentName + "</strong>.</p>"
                 + "<p>Ingrese con su usuario <strong>" + user.getUserId() + "</strong></p>"
                 + "<h3><strong>Divisi&oacute;n de Ciencias de la Ingenier&iacute;a - Centro Universitario de Occidente</strong></h3>");
 

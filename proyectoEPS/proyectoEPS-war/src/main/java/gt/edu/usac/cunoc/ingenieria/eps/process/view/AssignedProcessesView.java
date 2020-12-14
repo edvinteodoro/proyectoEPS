@@ -1,8 +1,11 @@
 package gt.edu.usac.cunoc.ingenieria.eps.process.view;
 
 import User.exception.UserException;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.ASESOR;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.REVISOR;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.SUPERVISOR_EMPRESA;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.SUPERVISOR_EPS;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.ValidationException;
-import gt.edu.usac.cunoc.ingenieria.eps.process.Appointment;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
 import gt.edu.usac.cunoc.ingenieria.eps.process.appointmentState;
@@ -11,6 +14,7 @@ import gt.edu.usac.cunoc.ingenieria.eps.user.facade.UserFacadeLocal;
 import gt.edu.usac.cunoc.ingenieria.eps.utils.MessageUtils;
 import java.io.ByteArrayInputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -33,10 +37,37 @@ public class AssignedProcessesView implements Serializable {
     private List<Process> processes;
 
     private User user;
-    private Appointment appointment;
+
     private StreamedContent adviserResumeStream;
     private StreamedContent reviewerResumeStream;
+
     private Process processSelected;
+
+    @PostConstruct
+    public void init() {
+        try {
+            user = userFacade.getAuthenticatedUser().get(0);
+            setProcesses(searchProcesses(user));
+        } catch (UserException ex) {
+            System.out.println("Error Autenticación");
+        }
+    }
+
+    public List<Process> searchProcesses(User userLogged) {
+        List<Process> assignedProcesses = new ArrayList<>();
+        switch (userLogged.getROLid().getName()) {
+            case SUPERVISOR_EPS:
+                return processFacade.getProcessBySupervisorEPS(userLogged);
+            case ASESOR:
+                return processFacade.getProcessByAdviser(userLogged);
+            case REVISOR:
+                return processFacade.getProcessByReviewer(userLogged);
+            case SUPERVISOR_EMPRESA:
+                return processFacade.getProcessByCompanySupervisor(userLogged);
+            default:
+                return assignedProcesses;
+        }
+    }
 
     public List<Process> getProcesses() {
         return processes;
@@ -44,16 +75,6 @@ public class AssignedProcessesView implements Serializable {
 
     public void setProcesses(List<Process> processes) {
         this.processes = processes;
-    }
-
-    @PostConstruct
-    public void init() {
-        try {
-            user = userFacade.getAuthenticatedUser().get(0);
-            setProcesses(processFacade.getProcessBySupervisorEPS(user));
-        } catch (UserException ex) {
-            System.out.println("Error Autenticación");
-        }
     }
 
     /**
@@ -72,22 +93,22 @@ public class AssignedProcessesView implements Serializable {
         }
     }
 
-    public Boolean studentAppointmentApproved(Process process) {
-        return (process != null && process.getAppointmentId() != null
-                && process.getAppointmentId().getAdviserState() != null
-                && process.getAppointmentId().getReviewerState() != null
-                && (process.getAppointmentId().getAdviserState() == appointmentState.APPROVED
-                || process.getAppointmentId().getAdviserState() == appointmentState.ELECTION)
-                && (process.getAppointmentId().getReviewerState() == appointmentState.APPROVED
-                || process.getAppointmentId().getReviewerState() == appointmentState.ELECTION));
+    public Boolean studentAppointmentApproved() {
+        return (processSelected != null && processSelected.getAppointmentId() != null
+                && processSelected.getAppointmentId().getAdviserState() != null
+                && processSelected.getAppointmentId().getReviewerState() != null
+                && (processSelected.getAppointmentId().getAdviserState() == appointmentState.APPROVED
+                || processSelected.getAppointmentId().getAdviserState() == appointmentState.ELECTION)
+                && (processSelected.getAppointmentId().getReviewerState() == appointmentState.APPROVED
+                || processSelected.getAppointmentId().getReviewerState() == appointmentState.ELECTION));
     }
 
     public void reloadAdviserResume() {
-        adviserResumeStream = new DefaultStreamedContent(new ByteArrayInputStream(appointment.getUserAdviser().getPersonalResume()), "application/pdf", "Curriculum.pdf");
+        adviserResumeStream = new DefaultStreamedContent(new ByteArrayInputStream(processSelected.getAppointmentId().getUserAdviser().getPersonalResume()), "application/pdf", "Curriculum.pdf");
     }
 
     public void reloadReviewerResume() {
-        reviewerResumeStream = new DefaultStreamedContent(new ByteArrayInputStream(appointment.getUserReviewer().getPersonalResume()), "application/pdf", "Curriculum.pdf");
+        reviewerResumeStream = new DefaultStreamedContent(new ByteArrayInputStream(processSelected.getAppointmentId().getUserReviewer().getPersonalResume()), "application/pdf", "Curriculum.pdf");
     }
 
     public Boolean companySupervisorExist(Process process) {
@@ -96,14 +117,39 @@ public class AssignedProcessesView implements Serializable {
                 && process.getAppointmentId() != null && process.getAppointmentId().getCompanySupervisor() != null);
     }
 
-    public Appointment getAppointment() {
-        return appointment;
+    public Boolean isRequestAdvisorReviewerReviewState() {
+        return (processSelected != null && processSelected.getAppointmentId() != null
+                && processSelected.getAppointmentId().getAdviserState() != null
+                && processSelected.getAppointmentId().getReviewerState() != null
+                && processSelected.getAppointmentId().getAdviserState() == appointmentState.REVIEW
+                && processSelected.getAppointmentId().getReviewerState() == appointmentState.REVIEW);
     }
 
-    public void setAppointment(Appointment appointment) {
-        this.appointment = appointment;
+    public Boolean canRequestAdvisorReviewer() {
+        return (processSelected != null && processSelected.getApprovalEPSCommission() != null && processSelected.getApprovedCareerCoordinator() != null
+                && processSelected.getApprovalEPSCommission() && processSelected.getApprovedCareerCoordinator());
     }
 
+    public Boolean companySupervisorExist() {
+        return (processSelected != null && processSelected.getApprovalEPSCommission() != null && processSelected.getApprovedCareerCoordinator() != null
+                && processSelected.getApprovalEPSCommission() && processSelected.getApprovedCareerCoordinator()
+                && processSelected.getAppointmentId() != null && processSelected.getAppointmentId().getCompanySupervisor() != null);
+    }
+
+    public Boolean informedCompanySupervisor() {
+        return (processSelected != null && processSelected.getAppointmentId() != null
+                && processSelected.getAppointmentId().getCompanySupervisor() != null && !processSelected.getAppointmentId().getCompanySupervisor().getRemovable());
+    }
+
+    public Boolean canAddCompanySupervisor() {
+        return (processSelected != null && processSelected.getApprovalEPSCommission() != null && processSelected.getApprovedCareerCoordinator() != null
+                && processSelected.getApprovalEPSCommission() && processSelected.getApprovedCareerCoordinator());
+    }
+
+    public Boolean verifyShowSupervisorEPSInfo(){
+        return user.getROLid().getName().equals(SUPERVISOR_EPS);
+    }
+    
     public StreamedContent getAdviserResumeStream() {
         return adviserResumeStream;
     }
@@ -128,14 +174,14 @@ public class AssignedProcessesView implements Serializable {
         this.processSelected = processSelected;
     }
 
+    public boolean isUserLoggedSupervisorEPS(){
+        return (user.getROLid().getName().equals(SUPERVISOR_EPS));
+    }
+    
     public void clean() {
         adviserResumeStream = null;
         reviewerResumeStream = null;
-        appointment = null;
         processSelected = null;
     }
-    
-    public boolean isAssignedAdviserReviewer(Process process){
-        return processFacade.isAssignedAdvisorReviewer(process);
-    }
+
 }

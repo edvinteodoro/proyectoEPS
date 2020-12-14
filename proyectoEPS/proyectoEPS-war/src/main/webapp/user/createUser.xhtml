@@ -152,7 +152,7 @@
                     </div>
                 </div>
 
-                <div class="row" jsf:rendered="#{createUserView.personalResumeFlag}">
+                <div class="row" jsf:rendered="#{createUserView.userAdviserReviewerFlag}">
                     <div class="form-group col-sm-2">
                         <p:outputLabel for="personalResume" value="Curriculum" />
                     </div>
@@ -174,12 +174,42 @@
                     </div>     
                 </div>
 
+                <div class="row" jsf:rendered="#{createUserView.userAdviserReviewerFlag}">
+                    <div class="form-group col-sm-2">
+                        <p:outputLabel for="companyName" value="Nombre de la Empresa:" />
+                    </div>
+                    <div class="form-group col-sm-4">
+                        <p:inputText id="companyName" styleClass="form-control" pt:placeholder="Nombre de la Empresa" required="true"
+                                     pt:required="true" value="#{createUserView.user.nameCompanyWork}"/>
+                    </div>
+                </div>
+                
+                <div class="row" jsf:rendered="#{createUserView.userAdviserReviewerFlag}">
+                    <div class="form-group col-sm-2">
+                        <p:outputLabel for="companyPhone" value="Teléfono de la Empresa:" />
+                    </div>
+                    <div class="form-group col-sm-4">
+                        <p:inputText id="companyPhone" styleClass="form-control" pt:placeholder="Teléfono de la Empresa" required="true"
+                                     pt:required="true" value="#{createUserView.user.phoneCompanyWork}"/>
+                    </div>
+                </div>
+                
+                <div class="row" jsf:rendered="#{createUserView.userAdviserReviewerFlag}">
+                    <div class="form-group col-sm-2">
+                        <p:outputLabel for="directionCompany" value="Dirección de la Empresa:" />
+                    </div>
+                    <div class="form-group col-sm-4">
+                        <p:inputText id="directionCompany" styleClass="form-control" pt:placeholder="Dirección de la Empresa" required="true"
+                                     pt:required="true" value="#{createUserView.user.directionCompanyWork}"/>
+                    </div>
+                </div>
+                
                 <div class="row">
                     <div class="form-group col-sm-2">
                         <p:outputLabel for="userId" value="Nombre Usuario:" />
                     </div>
                     <div class="form-group col-sm-4">
-                        <p:inputText id="userId" styleClass="form-control" pt:placeholder="Nombre Usuario:" required="true"
+                        <p:inputText id="userId" styleClass="form-control" pt:placeholder="Nombre Usuario" required="true"
                                      pt:required="true" value="#{createUserView.user.userId}"/>
                     </div>
                 </div>

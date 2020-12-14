@@ -27,10 +27,11 @@
     <ui:define name="content">
         <h:outputScript library="js" name="calendar_es.js" />
         <h:form id="principal">
-            <p:staticMessage severity="warn" detail="Bitácora inhabilitada" rendered="#{!journalView.process.approvedEPSDevelopment}"/>
+            <p:staticMessage severity="warn" detail="Bitácora inhabilitada: Proceso EPS no autorizado para desarrollo (Asesor y Revisor no asignados y/o Supervisor de Empresa no confirmado)" rendered="#{!journalView.process.approvedEPSDevelopment and !journalView.canEnableJournalSupervisorEPS()}"/>
+            <p:staticMessage severity="warn" detail="Bitácora inhabilitada: Comuniquese con su Supervisor EPS para habilitación" rendered="#{journalView.canEnableJournalSupervisorEPS() and !journalView.process.approvedEPSDevelopment}"/>
             <p:staticMessage severity="info" detail="Registro de Bitácora Vacio" rendered="#{(journalView.journals.size() eq 0) and journalView.process.approvedEPSDevelopment}"/>
             <p:accordionPanel id="journalTable" value="#{journalView.journals}" var="journalLog" activeIndex="-2">
-                <p:tab id="JournalLog" title="Fecha - #{journalLog.dateTime.dayOfMonth} / #{journalLog.dateTime.monthValue} / #{journalLog.dateTime.year}" >
+                <p:tab id="JournalLog" title="Fecha - #{journalLog.dateText}" >
                     <div>
                         <h4 class="text-primary">Actividad:</h4>
                     </div>
@@ -41,7 +42,7 @@
                         <h4 class="text-primary">Descripción:</h4>
                     </div>
                     <div>
-                        <h:outputLabel value="#{journalLog.description}"/>
+                        <h:outputLabel value="#{journalLog.description}" escape="false"/>
                     </div>
                     <div>
                         <h4 class="text-primary">Imagenes:</h4>
@@ -66,19 +67,17 @@
                     <div>
                         <h4 class="text-primary">Comentarios:</h4>
                     </div>
-                    <div class="col-md-8">
-                        <p:dataTable var="commentary" value="#{journalView.getCommentariesJournal(journalLog.id)}">
-                            <p:column headerText="Fecha">
-                                <h:outputText value="#{commentary.date}" />
-                            </p:column>
-                            <p:column headerText="Comentario">
-                                <h:outputText value="#{commentary.text}" />
-                            </p:column>
-                            <p:column headerText="Por">
-                                <h:outputText value="#{commentary.user.firstName} #{commentary.user.lastName}"/>
-                            </p:column>
-                        </p:dataTable>
-                    </div>
+                    <p:dataTable var="commentary" value="#{journalView.getCommentariesJournal(journalLog.id)}" emptyMessage="Sin comentarios">
+                        <p:column headerText="Fecha">
+                            <h:outputText value="#{commentary.dateText}" />
+                        </p:column>
+                        <p:column headerText="Comentario">
+                            <h:outputText value="#{commentary.text}" />
+                        </p:column>
+                        <p:column headerText="Por">
+                            <h:outputText value="#{commentary.user.firstName} #{commentary.user.lastName}"/>
+                        </p:column>
+                    </p:dataTable>
                 </p:tab>
             </p:accordionPanel>
 
@@ -94,117 +93,134 @@
                 </p:commandLink>
             </div>    
         </h:form>
+
         <p:dialog header="Nuevo Registro" id="dlgNew" widgetVar="dlgNew" 
-                  modal="true" closeOnEscape="true" position="center">
+                  modal="true" closeOnEscape="true" position="center" width="45%" resizable="true" height="45%">
             <p:ajax event="close" listener="#{journalView.cleanNewJournalLog()}" update="@this" />
-            <h:form>
-                <div class="modal-header">
-                    <p:staticMessage severity="warn" summary="Advertencia! " detail="No se puede crear mas de un registro con la misma fecha" />
-                </div>
-                <div class="modal-body">
-                    <div class="row form-group">
-                        <p:outputLabel for="dateLog" value="Fecha" styleClass="col-md-4 control-label"/>
-                        <div class="col-md-8">
-                            <p:calendar id="dateLog" pt:placeholder="Fecha"
-                                        pattern="dd/MM/yyyy" 
-                                        locale="es"
-                                        required="true"
-                                        value="#{journalView.newJournalLog.dateTime}"
-                                        >
-                                <f:convertDateTime type="localDate" pattern="dd/MM/yyyy" />
-                            </p:calendar>
-                        </div>
+            <p:scrollPanel style="width:250px;height:500px">
+                <h:form>
+                    <div class="modal-header">
+                        <p:staticMessage severity="warn" summary="Advertencia! " detail="No se puede crear mas de un registro con la misma fecha" />
                     </div>
-                    <div class="row form-group">
-                        <p:outputLabel for="activity" value="Actividad" styleClass="col-md-4 control-label"/>
-                        <div class="col-md-8">
-                            <p:inputText id="activity" styleClass="form-control" pt:placeholder="Actividad"
-                                         required="true"
-                                         value="#{journalView.newJournalLog.activity}"
-                                         />
+                    <div class="modal-body">
+                        <p:outputLabel for="dateLog" value="Fecha"/>
+                        <div class="row">
+                            <div class="form-group col-md-10">
+                                <p:calendar id="dateLog" pt:placeholder="Fecha"
+                                            pattern="dd/MM/yyyy" 
+                                            locale="es"
+                                            required="true"
+                                            value="#{journalView.newJournalLog.dateTime}"
+                                            >
+                                    <f:convertDateTime type="localDate" pattern="dd/MM/yyyy" />
+                                </p:calendar>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row form-group">
-                        <p:outputLabel for="description" value="Descripción" styleClass="col-md-4 control-label"/>
-                        <div class="col-md-8">
-                            <p:textEditor id="description"
-                                          style="width: 100%;"                                                                                     
-                                          placeholder="Ingrese su Descripción"
-                                          value="#{journalView.newJournalLog.description}"
-                                          >
-                                <f:facet name="toolbar">
-                                    <span class="ql-formats">
-                                        <button class="ql-bold"></button>
-                                        <button class="ql-italic"></button>
-                                        <button class="ql-underline"></button>
-                                        <button class="ql-strike"></button>
-                                    </span>
-                                    <span class="ql-formats">
-                                        <select class="ql-color" />
-                                        <select class="ql-background" />
-                                    </span>
-                                    <span class="ql-formats">
-                                        <button class="ql-script" value="sub" />
-                                        <button class="ql-script" value="super" />
-                                    </span>
-                                    <span class="ql-formats">
-                                        <button class="ql-list" value="ordered" />
-                                        <button class="ql-list" value="bullet" />
-                                        <button class="ql-indent" value="-1" />
-                                        <button class="ql-indent" value="+1" />
-                                    </span>
-                                </f:facet>
-                            </p:textEditor>                                   
-                        </div>
-                    </div>
 
-                    <div class="row form-group">
-                        <p:outputLabel for="link" value="Enlaces" styleClass="col-md-4 control-label"/>
-                        <div class="col-md-8">
-                            <p:inputText id="link" styleClass="form-control" pt:placeholder="Enlace"
-                                         value="#{journalView.linkStringNewJournalLog}"/>
+                        <p:outputLabel for="activity" value="Actividad"/>
+                        <div class="row ">
+                            <div class="form-group col-md-10">
+                                <p:inputText id="activity" styleClass="form-control" pt:placeholder="Actividad"
+                                             required="true"
+                                             value="#{journalView.newJournalLog.activity}"/>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="row form-group">
-                        <div class="col-md-4">
-                        </div>
-                        <div class="col-md-8">
-                            <p:commandLink styleClass="btn btn-success btn-lg"
-                                           actionListener="#{journalView.addLinkNewJournal()}"
-                                           update=":#{p:component('link')},:#{p:component('growl')}"
-                                           process="@this link"
-                                           >
-                                <span class="glyphicon glyphicon-plus"></span> Agregar
-                            </p:commandLink>
-                        </div>
-                    </div>
+                        <p:outputLabel for="description" value="Descripción"/>
+                        <div class="row">
+                            <div class="form-group col-md-10">
+                                <p:textEditor 
+                                    id="description"
+                                    height="140"
+                                    required="true"
+                                    style="margin-bottom:10px"                                          
+                                    placeholder="Ingrese su descripción"
+                                    value="#{journalView.newJournalLog.description}"
+                                    >
+                                    <f:facet name="toolbar">
+                                        <span class="ql-formats">
+                                            <button class="ql-bold"></button>
+                                            <button class="ql-italic"></button>
+                                            <button class="ql-underline"></button>
+                                            <button class="ql-strike"></button>
+                                        </span>
+                                        <span class="ql-formats">
+                                            <select class="ql-color" />
+                                            <select class="ql-background" />
+                                        </span>
+                                        <span class="ql-formats">
+                                            <button class="ql-script" value="sub" />
+                                            <button class="ql-script" value="super" />
+                                        </span>
+                                        <span class="ql-formats">
+                                            <button class="ql-list" value="ordered" />
+                                            <button class="ql-list" value="bullet" />
+                                            <button class="ql-indent" value="-1" />
+                                            <button class="ql-indent" value="+1" />
+                                        </span>
+                                    </f:facet>
+                                </p:textEditor> 
 
-                    <div class="row form-group">
-                        <p:outputLabel value="Imagenes" styleClass="col-md-4 control-label"/>
-                        <div class="col-md-8">
-                            <p:fileUpload id="images" 
-                                          style="width: 100%;"
-                                          skinSimple="true" auto="true"
-                                          label="Agregar"
-                                          sizeLimit="15000000"
-                                          allowTypes="/(\.|\/)(jpe?g|png)$/"
-                                          invalidFileMessage="Solo se puede cargar archivos jpe, jpeg o png"
-                                          invalidSizeMessage="Imagen demasiado grande, limite de 15MB"
-                                          fileUploadListener="#{journalView.handleFileUpload}">                                       
-                            </p:fileUpload>
+                            </div>
+                        </div>
+
+                        <p:outputLabel for="link" value="Enlaces"/>
+                        <div class="row">                        
+                            <div class="form-group col-md-10">
+                                <p:inputText id="link" styleClass="form-control" pt:placeholder="Enlace"
+                                             value="#{journalView.linkStringNewJournalLog}"/>
+                            </div>
+                            <div class="form-group col-sm-2">
+                                <p:commandLink styleClass="btn btn-success btn-sm"
+                                               actionListener="#{journalView.addLinkNewJournal()}"
+                                               update=":#{p:component('link')},:#{p:component('growl')}"
+                                               process="@this link"
+                                               >
+                                    <span class="glyphicon glyphicon-plus"></span> Agregar
+                                </p:commandLink>                     
+                            </div>
+                        </div>
+
+                        <p:outputLabel value="Imagenes"/>
+                        <div class="row ">                        
+                            <div class="form-group col-md-10">
+                                <p:fileUpload id="images" 
+                                              style="width: 100%;"
+                                              skinSimple="true" auto="true"
+                                              label="Agregar"
+                                              sizeLimit="15000000"
+                                              allowTypes="/(\.|\/)(jpe?g|png)$/"
+                                              invalidFileMessage="Solo se puede cargar archivos jpe, jpeg o png"
+                                              invalidSizeMessage="Imagen demasiado grande, limite de 15MB"
+                                              fileUploadListener="#{journalView.handleFileUpload}">                                       
+                                </p:fileUpload>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <p:commandLink styleClass="btn btn-warning btn-lg" style="width: 100%;"
-                                   actionListener="#{journalView.createJournalLog('dlgNew')}"
-                                   update="@form,:#{p:component('journalTable')},:#{p:component('principal')},:#{p:component('growl')}"
-                                   >
-                        <span class="glyphicon glyphicon-ok-sign"></span> Guardar
-                    </p:commandLink>
-                </div>
-            </h:form>
+                    <div class="modal-footer">
+                        <p:commandLink styleClass="btn btn-warning btn-lg" style="width: 100%;"
+                                       actionListener="#{journalView.createJournalLog('dlgNew')}"
+                                       update="@form,:#{p:component('journalTable')},:#{p:component('principal')},:#{p:component('growl')}"
+                                       onstart="PF('progressBar').show();"
+                                       onsuccess="PF('progressBar').hide();"
+                                       >
+                            <span class="glyphicon glyphicon-ok-sign"></span> Guardar
+                        </p:commandLink>
+                    </div>
+                </h:form>
+
+            </p:scrollPanel>
+        </p:dialog>
+
+        <p:dialog id="progressBar" widgetVar="progressBar" closable="false" width="20%" showHeader="false" resizable="false"
+                  modal="true" closeOnEscape="true">
+            <p:ajax event="close" update="@this" />
+            <div align="center">
+                <p:outputLabel>Realizando operación, espere un momento.</p:outputLabel>
+            </div>
+            <div class="form-group col-md-12" align="center">
+                <p:progressBar id="progressBarIndeterminate" style="height:6px" mode="indeterminate"/>
+            </div>
         </p:dialog>
 
     </ui:define>

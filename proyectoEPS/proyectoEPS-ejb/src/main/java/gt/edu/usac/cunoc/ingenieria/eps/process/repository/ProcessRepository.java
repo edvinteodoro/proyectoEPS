@@ -49,8 +49,12 @@ public class ProcessRepository {
     private final int LIMIT_MONTH = 6;
     private final int MONTH_DAYS = 30;
 
-    public static final String GET_PROCESSES_SUPERVISOR_EPS = "SELECT c FROM Process c WHERE c.supervisor_EPS.userId=:userIdSupervisorEPS AND (c.state != :RECHAZADO OR c.state != :INACTIVO)";
-
+    public static final String GET_PROCESSES_SUPERVISOR_EPS = "SELECT p FROM Process p WHERE p.supervisor_EPS.userId=:userIdSupervisorEPS";
+    public static final String GET_PROCESSES_ADVISER = "SELECT p FROM Process p WHERE p.appointmentId.userAdviser.userId=:userIdAdviser";
+    public static final String GET_PROCESSES_REVIEWER = "SELECT p FROM Process p WHERE p.appointmentId.userReviewer.userId=:userIdReviewer";
+    public static final String GET_PROCESSES_COMPANY_SUPERVISOR = "SELECT p FROM Process p WHERE p.appointmentId.companySupervisor.userId=:userIdCompanySupervisor";
+    
+    
     public static final String GET_APPOINTMENT_BY_PROCESS = "SELECT a FROM Appointment a WHERE a.id=:appointmentId";
 
     @EJB
@@ -164,7 +168,7 @@ public class ProcessRepository {
         try {
             sendEmail(student.getEmail(), Title, emailBodyCommitteeEPS(Title, msg));
             return true;
-        } catch (Exception e){
+        } catch (Exception e) {
             return false;
         }
     }
@@ -190,8 +194,8 @@ public class ProcessRepository {
                 + "<p><span style=\"color: #000000;\">" + mensaje + "</span></p>"
                 + "<p>Divisi&oacute;n de Ciencias de la Ingenieria - Centro Universitario de Occidente</p>");
     }
-    
-    private String emailBodyCommitteeEPS(String title, String mensaje){
+
+    private String emailBodyCommitteeEPS(String title, String mensaje) {
         return ("<h2><strong>" + title + "</strong></h2>"
                 + "<p><span style=\"color: #000000;\">" + mensaje + "</span></p>"
                 + "<p>Divisi&oacute;n de Ciencias de la Ingenieria - Centro Universitario de Occidente</p>");
@@ -200,8 +204,24 @@ public class ProcessRepository {
     public List<Process> getProcessBySupervisorEPS(User supervisorEPS) {
         Query query = entityManager.createQuery(GET_PROCESSES_SUPERVISOR_EPS);
         query.setParameter("userIdSupervisorEPS", supervisorEPS.getUserId());
-        query.setParameter("RECHAZADO", StateProcess.RECHAZADO);
-        query.setParameter("INACTIVO", StateProcess.INACTIVO);
+        return query.getResultList();
+    }
+
+    public List<Process> getProcessByAdviser(User adviser) {
+        Query query = entityManager.createQuery(GET_PROCESSES_ADVISER);
+        query.setParameter("userIdAdviser", adviser.getUserId());
+        return query.getResultList();
+    }
+
+    public List<Process> getProcessByReviewer(User reviewer) {
+        Query query = entityManager.createQuery(GET_PROCESSES_REVIEWER);
+        query.setParameter("userIdReviewer", reviewer.getUserId());
+        return query.getResultList();
+    }
+
+    public List<Process> getProcessByCompanySupervisor(User companySupervisor) {
+        Query query = entityManager.createQuery(GET_PROCESSES_COMPANY_SUPERVISOR);
+        query.setParameter("userIdCompanySupervisor", companySupervisor.getUserId());
         return query.getResultList();
     }
 

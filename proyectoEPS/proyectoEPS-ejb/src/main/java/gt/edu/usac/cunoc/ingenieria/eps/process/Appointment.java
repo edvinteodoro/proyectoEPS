@@ -1,8 +1,10 @@
 package gt.edu.usac.cunoc.ingenieria.eps.process;
 
+import gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants;
 import gt.edu.usac.cunoc.ingenieria.eps.user.User;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,7 +16,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
 /**
  *
@@ -93,6 +94,10 @@ public class Appointment implements Serializable {
 
     public LocalDateTime getDateAction() {
         return dateAction;
+    }
+    
+    public String getDateActionText(){        
+        return dateAction.format(Constants.DATE_FORMAT_2);
     }
 
     public void setDateAction(LocalDateTime dateAction) {

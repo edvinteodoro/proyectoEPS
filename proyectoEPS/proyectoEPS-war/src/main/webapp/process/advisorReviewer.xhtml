@@ -10,27 +10,31 @@
                 xmlns:o="http://omnifaces.org/ui">
 
     <ui:define name="head">
-        Asesor y Revisor
+        Solicitud Asesor y Revisor
     </ui:define>
 
     <ui:define name="title">
-        Asesor y Revisor
+        Solicitud Asesor y Revisor
     </ui:define>
 
     <ui:define name="content">
         <h:form>
             <fieldset>
-                <legend>Asesor y Revisor</legend>
+                <legend>Solicitud Asesor y Revisor</legend>
             </fieldset>                
-            <p:dataTable id="processesTable" var="process" value="#{advisorReviewerView.processAvailable}">
+            <p:dataTable id="processesTable" var="process" value="#{advisorReviewerView.processAvailable}"
+                         emptyMessage="Sin procesos disponibles">
+                <p:column headerText="Fecha" rendered="#{p:ifGranted(constantsRol.SUPERVISOR_EPS())}">
+                    <h:outputText value="#{process.appointmentId.dateActionText}" />
+                </p:column>
                 <p:column headerText="Nombre" >
                     <h:outputText value="#{process.userCareer.USERuserId.firstName} - #{process.userCareer.USERuserId.lastName}"/>
                 </p:column>
                 <p:column headerText="Carrera">
                     <h:outputText value="#{process.userCareer.CAREERcodigo.name}" />
                 </p:column>
-                <p:column headerText="Fecha de la Solicitud" rendered="#{p:ifGranted(constantsRol.SUPERVISOR_EPS())}">
-                    <h:outputText value="#{process.appointmentId.dateAction}" />
+                <p:column headerText="Titulo de proyecto">
+                    <h:outputText value="#{process.project.title}" />
                 </p:column>
                 <p:column headerText="Asesor" styleClass="text-center" rendered="#{p:ifGranted(constantsRol.ESTUDIANTE())}">
                     <p:commandLink styleClass="btn btn-primary btn-xs" 
@@ -113,10 +117,9 @@
                 <p:column headerText="Enviar" styleClass="text-center" rendered="#{p:ifGranted(constantsRol.ESTUDIANTE())}">
                     <p data-placement="top" data-toggle="tooltip" title="Enviar">
                         <p:commandLink styleClass="btn btn-warning btn-xs"
-                                       update="@form,:#{p:component('processesTable')}"
+                                       update="@form,:#{p:component('processesTable')},:#{p:component('growl')}"
                                        onstart="PF('progressBar').show();"
-
-                                       oncomplete="PF('progressBar').close();"
+                                       onsuccess="PF('progressBar').hide();"
                                        actionListener="#{advisorReviewerView.sendAppointmentToSupervisor('progressBar',process)}">
                             <span class="glyphicon glyphicon-send"></span> Enviar
                         </p:commandLink>
@@ -125,9 +128,9 @@
                 <p:column headerText="Enviar" styleClass="text-center" rendered="#{p:ifGranted(constantsRol.SUPERVISOR_EPS())}">
                     <p data-placement="top" data-toggle="tooltip" title="Enviar">
                         <p:commandLink styleClass="btn btn-warning btn-xs"
-                                       update="@form,:#{p:component('processesTable')}" 
+                                       update="@form,:#{p:component('processesTable')},:#{p:component('growl')}" 
                                        onstart="PF('progressBar').show();"
-                                       oncomplete="PF('progressBar').close();"
+                                       onsuccess="PF('progressBar').hide();"
                                        rendered="#{advisorReviewerView.appointmentAvailableToReturn(process)}"
                                        actionListener="#{advisorReviewerView.returnAppointmentToStudent('progressBar',process)}">
                             <span class="glyphicon glyphicon-send"></span> Enviar
@@ -287,7 +290,7 @@
                         <p:column headerText="Direccion Empresa">
                             <h:outputText value="#{user.directionCompanyWork}" />
                         </p:column>
-                        <p:column headerText="Información" styleClass="text-center">
+                        <p:column headerText="Elegir" styleClass="text-center">
                             <p:commandLink styleClass="btn btn-primary btn-xs"
                                            rendered="#{p:ifGranted(constantsRol.ESTUDIANTE())}"
                                            update="@form,:#{p:component('processesTable')},:#{p:component('growl')}"
@@ -398,7 +401,7 @@
                   modal="true" closeOnEscape="true">
             <p:ajax event="close" update="@this" />
             <div align="center">
-                <p:outputLabel>Realizando operacion, espere un momento.</p:outputLabel>
+                <p:outputLabel>Realizando operación, espere un momento.</p:outputLabel>
             </div>
             <div class="form-group col-md-12" align="center">
                 <p:progressBar id="progressBarIndeterminate" style="height:6px" mode="indeterminate"/>

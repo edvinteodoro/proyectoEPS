@@ -1,8 +1,11 @@
 package gt.edu.usac.cunoc.ingenieria.eps.project.view;
 
 import User.exception.UserException;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.ASESOR;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.COORDINADOR_CARRERA;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.COORDINADOR_EPS;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.REVISOR;
+import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.SUPERVISOR_EMPRESA;
 import static gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants.SUPERVISOR_EPS;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.LimitException;
 import gt.edu.usac.cunoc.ingenieria.eps.exception.MandatoryException;
@@ -91,6 +94,7 @@ public class ProjectReviewView implements Serializable {
             isFirstProcess = false;
             user = userFacade.getAuthenticatedUser().get(0);
             actualProcess = processFacade.getProcess(new Process(processId)).get(0);
+            validateFirsProcess();
             if (validateUser(actualProcess, user)) {
                 scheduleStream = new DefaultStreamedContent(new ByteArrayInputStream(actualProcess.getProject().getSchedule()), "application/pdf", "Calendario.pdf");
                 scheduleFileName = scheduleStream.getName();
@@ -99,8 +103,7 @@ public class ProjectReviewView implements Serializable {
                 if (actualProcess.getProject().getAnnexed() != null) {
                     annexedStream = new DefaultStreamedContent(new ByteArrayInputStream(actualProcess.getProject().getAnnexed()), "application/pdf", "Anexos.pdf");
                     annexedFileName = annexedStream.getName();
-                }
-                validateFirsProcess();
+                }    
             } else {
                 externalContext.redirect(externalContext.getRequestContextPath() + "/error/error-403.xhtml");
             }
@@ -134,11 +137,20 @@ public class ProjectReviewView implements Serializable {
                             || currentProcess.getSupervisor_EPS().getUserId().equals(userlogged.getUserId());
                 } else {
                     if (currentProcess.getSupervisor_EPS() != null){
-                        return currentProcess.getSupervisor_EPS().getUserId().equals(userlogged.getUserId());
+                        return currentProcess.getSupervisor_EPS().getUserId().equals(userlogged.getUserId()); 
                     } else {
                         return false;
                     }                   
-                }
+                }   
+            case ASESOR:
+                assignedProcesses = processFacade.getProcessByAdviser(userlogged);
+                return existProcessOnList(currentProcess, assignedProcesses);
+            case REVISOR:
+                assignedProcesses = processFacade.getProcessByReviewer(userlogged);
+                return existProcessOnList(currentProcess, assignedProcesses);                
+            case SUPERVISOR_EMPRESA:
+                assignedProcesses = processFacade.getProcessByCompanySupervisor(userlogged);
+                return existProcessOnList(currentProcess, assignedProcesses);
             default:
                 return false;
         }

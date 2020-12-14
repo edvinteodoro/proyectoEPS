@@ -12,28 +12,32 @@
 
     <f:metadata>
         <o:viewParam name="idProcess" required="true" 
-                     value="#{journalReview.processId}"
+                     value="#{journalReviewView.processId}"
                      requiredMessage="Ningun valor">
             <o:viewParamValidationFailed sendError="404" message="Error parametro"/>
         </o:viewParam>
-        <o:viewAction action="#{journalReview.loadCurrentProject()}" />
+        <o:viewAction action="#{journalReviewView.loadCurrentProject()}" />
     </f:metadata>
+    
     <ui:define name="title">
         Bitacora
     </ui:define>
     <ui:define name="content">
-        <h:form>
-            <p:staticMessage severity="info" detail="Registro de Bitácora Vacio" rendered="#{journalReview.journals.size() eq 0}"/>
+        <h:form id="principalForm">
+            <p:staticMessage severity="info" detail="Registro de Bitácora Vacio" rendered="#{journalReviewView.emptyJournal()}"/>
+            <p:staticMessage severity="warn" detail="Bitácora inhabilitada: Proceso EPS no autorizado para desarrollo (Asesor y Revisor no asignados y/o Supervisor de Empresa no confirmado)" rendered="#{journalReviewView.isDisableJournal()}"/>
+            <p:staticMessage severity="warn" detail="Bitácora inhabilitada: Supervisor EPS aún no habilita la bitácora" rendered="#{journalReviewView.canEnableJournalSupervisorEPS() and !journalReviewView.process.approvedEPSDevelopment and !journalReviewView.isUserLoggedSupervisorEPS()}"/>
             <br/>
             <p:commandLink styleClass="btn btn-warning" 
-                           actionListener="#{journalReview.enableJournal()}"
-                           update="@form,:growl"
-                           rendered="#{!journalReview.process.approvedEPSDevelopment}">
+                           actionListener="#{journalReviewView.enableJournal()}"
+                           update=":#{p:component('principalForm')},:growl"
+                           rendered="#{journalReviewView.viewButtonEneable() and journalReviewView.isUserLoggedSupervisorEPS()}">
                 <p:confirm header="Habilitar Bitácora" message="¿Desea habilitar la Bitácora?" icon="pi pi-exclamation-triangle" />
                 <span class="glyphicon glyphicon-ok-sign"></span> Habilitar Bitácora
             </p:commandLink>
-            <p:accordionPanel value="#{journalReview.journals}" var="journalLog" activeIndex="-2">
-                <p:tab id="JournalLog" title="Fecha - #{journalLog.dateTime.dayOfMonth} / #{journalLog.dateTime.monthValue} / #{journalLog.dateTime.year}" >
+            
+            <p:accordionPanel value="#{journalReviewView.journals}" var="journalLog" activeIndex="-2">
+                <p:tab id="JournalLog" title="Fecha - #{journalLog.dateText}" >
                     <div>
                         <h4 class="text-primary">Actividad:</h4>
                     </div>
@@ -44,13 +48,13 @@
                         <h4 class="text-primary">Descripcion:</h4>
                     </div>
                     <div>
-                        <h:outputLabel value="#{journalLog.description}"/>
+                        <h:outputLabel value="#{journalLog.description}" escape="false"/>
                     </div>
                     <div>
                         <h4 class="text-primary">Imagenes:</h4>
                     </div>
                     <div>
-                        <p:galleria value="#{journalLog.images}" var="imagen" >
+                        <p:galleria value="#{journalLog.images}" var="imagen" rendered="#{!journalLog.emptyImages}">
                             <o:graphicImage value="#{imagen.image}" dataURI="true" height="450" width="600"/>
                         </p:galleria>
                     </div>
@@ -58,7 +62,7 @@
                         <h4 class="text-primary">Links:</h4>
                     </div>
                     <div>
-                        <p:dataView value="#{journalLog.links}" var="link" >
+                        <p:dataView value="#{journalLog.links}" var="link" rendered="#{!journalLog.emptyLinks}">
                             <p:dataViewListItem>
                                 <div>
                                     <a href="#{link.linkText}" target="_blank">#{link.linkText}</a>
@@ -70,24 +74,26 @@
                         <br></br><p:commandLink styleClass="btn btn-primary"
                                                 update=":#{p:component('comentar')}"
                                                 oncomplete="PF('comentar').show();">
-                            <f:setPropertyActionListener value="#{journalLog}" target="#{journalReview.journalSelected}"/>
-                            <span class="glyphicon glyphicon-comment"></span> Comentar
+                            <f:setPropertyActionListener value="#{journalLog}" target="#{journalReviewView.journalSelected}"/>
+                            <span class="glyphicon glyphicon-comment"></span> Nuevo Comentario
                         </p:commandLink>
                     </div>
                 </p:tab>
             </p:accordionPanel>
 
         </h:form>
+        
         <p:dialog header="Comentarios" id="comentar" widgetVar="comentar" 
                   modal="true" closeOnEscape="true">
-            <p:ajax event="close" listener="#{journalReview.cleanJournalSelected()}" update="@this" />
-            <h:form>
+            <p:ajax event="close" listener="#{journalReviewView.cleanJournalSelected()}" update="@this" />
+            <h:form id="commentayForm">
                 <fieldset>
                     <div class="col-md-12">
                         <div>
-                            <p:dataTable id="commenTable" var="commentary" value="#{journalReview.getCommentariesByJournal(journalReview.journalSelected.id)}" reflow="true">
+                            <p:dataTable id="commenTable" var="commentary" value="#{journalReviewView.getCommentariesByJournal(journalReviewView.journalSelected.id)}" reflow="true"
+                                         emptyMessage="Sin comentarios">
                                 <p:column headerText="Fecha">
-                                    <h:outputText value="#{commentary.date}"/>
+                                    <h:outputText value="#{commentary.dateText}"/>
                                 </p:column>
                                 <p:column headerText="Por">
                                     <h:outputText value="#{commentary.user.firstName} #{commentary.user.lastName}"/>
@@ -99,14 +105,14 @@
                         </div>
                         <div>
                             <p:inputTextarea id="note" styleClass="form-control" required="true"
-                                             rows="4" cols="50" maxlength="10000" placeholder="Indique los motivos"
-                                             autoResize="false" value="#{journalReview.commentText}"/>
+                                             rows="4" cols="50" maxlength="10000" placeholder="Comentario"
+                                             autoResize="false" value="#{journalReviewView.commentText}"/>
                         </div>
                         <div>
                             <br></br><p:commandLink styleClass="btn btn-primary btn-xs"
                                                     update="@form,:#{p:component('growl')}"
-                                                    actionListener="#{journalReview.comment()}">
-                                <span class="glyphicon glyphicon-trash"></span> Comentar
+                                                    actionListener="#{journalReviewView.comment()}">
+                                <span class="glyphicon glyphicon-plus"></span> Comentar
                             </p:commandLink>
                         </div>
                     </div>

@@ -343,6 +343,29 @@ CREATE INDEX `fk_PROCESS_DELIVER__EPS_COMPLETION_DOCUMENT1_idx` ON `EPS_SYSTEM`.
 CREATE INDEX `fk_PROCESS_USER1_idx` ON `EPS_SYSTEM`.`PROCESS` (`SUPERVISOR_EPS_userId` ASC);
 
 -- -----------------------------------------------------
+-- Table `EPS_SYSTEM`.`MONTHLY_REPORT`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `EPS_SYSTEM`.`MONTHLY_REPORT` ;
+
+CREATE TABLE IF NOT EXISTS `EPS_SYSTEM`.`MONTHLY_REPORT` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `PROCESS_id` INT(11) NOT NULL,
+  `state_monthly_report` ENUM('ACTIVE', 'APPROVED', 'REJECTED', 'REVIEW') NOT NULL,
+  `initial_date` DATE NOT NULL,
+  `final_date` DATE NOT NULL,
+  `report` MEDIUMBLOB NOT NULL,
+  `progress_assessment` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_MONTHLY_REPORT_PROCESS1`
+    FOREIGN KEY (`PROCESS_id`)
+    REFERENCES `EPS_SYSTEM`.`PROCESS` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+CREATE INDEX `fk_MONTHLY_REPORT_PROCESS1_idx` ON `EPS_SYSTEM`.`MONTHLY_REPORT` (`PROCESS_id` ASC);
+
+-- -----------------------------------------------------
 -- Table `EPS_SYSTEM`.`JOURNAL_LOG`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `EPS_SYSTEM`.`JOURNAL_LOG` (
@@ -360,6 +383,29 @@ CREATE TABLE IF NOT EXISTS `EPS_SYSTEM`.`JOURNAL_LOG` (
 ENGINE = InnoDB;
 
 CREATE INDEX `fk_JOURNAL_LOG_PROCESS1_idx` ON `EPS_SYSTEM`.`JOURNAL_LOG` (`PROCESS_id` ASC);
+
+
+-- -----------------------------------------------------
+-- Table `EPS_SYSTEM`.`JOURNAL_LOG`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `EPS_SYSTEM`.`JOURNAL_LOG` ;
+
+CREATE TABLE IF NOT EXISTS `EPS_SYSTEM`.`JOURNAL_LOG` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `activity` VARCHAR(45) NOT NULL,
+  `dateTime` DATETIME NOT NULL,
+  `description` VARCHAR(200) NOT NULL,
+  `MONTHLY_REPORT_id` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fk_JOURNAL_LOG_MONTHLY_REPORT1`
+    FOREIGN KEY (`MONTHLY_REPORT_id`)
+    REFERENCES `EPS_SYSTEM`.`MONTHLY_REPORT` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+CREATE INDEX `fk_JOURNAL_LOG_MONTHLY_REPORT1_idx` ON `EPS_SYSTEM`.`JOURNAL_LOG` (`MONTHLY_REPORT_id` ASC);
+
 
 -- -----------------------------------------------------
 -- Table `EPS_SYSTEM`.`IMAGE`

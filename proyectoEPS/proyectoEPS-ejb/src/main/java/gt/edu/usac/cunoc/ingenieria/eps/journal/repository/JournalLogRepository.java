@@ -14,8 +14,8 @@ import javax.persistence.Query;
 @LocalBean
 public class JournalLogRepository {
 
-    private final String GET_JOURNAL_LOG_BY_PROCESS = "SELECT j FROM JournalLog j WHERE j.process.id = :idProcess ORDER BY j.dateTime";
-    private final String GET_JOURNAL_LOG_BY_DATE = "SELECT j FROM JournalLog j WHERE j.dateTime = :dateTime AND j.process.id = :idProcess";
+    private final String GET_JOURNAL_LOG_BY_MONTHLY_REPORT = "SELECT j FROM JournalLog j WHERE j.monthlyReport.id = :idMonthlyReport ORDER BY j.dateTime";
+    private final String GET_JOURNAL_LOG_BY_DATE = "SELECT j FROM JournalLog j WHERE j.dateTime = :dateTime AND j.monthlyReport.id = :idMonthlyReport";
     private EntityManager entityManager;
 
     @PersistenceContext(name = PERSISTENCE_UNIT_NAME)
@@ -25,12 +25,12 @@ public class JournalLogRepository {
 
     /**
      * This method get a List o JournalLog that belong to a Process
-     * @param processId Id from the Process owner
+     * @param monthlyReportId
      * @return List of JounalLogs
      */
-    public List<JournalLog> getJournal(Integer processId) {
-        Query query = entityManager.createQuery(GET_JOURNAL_LOG_BY_PROCESS, JournalLog.class);
-        query.setParameter("idProcess", processId);
+    public List<JournalLog> getJournal(Integer monthlyReportId) {
+        Query query = entityManager.createQuery(GET_JOURNAL_LOG_BY_MONTHLY_REPORT, JournalLog.class);
+        query.setParameter("idMonthlyReport", monthlyReportId);
         return query.getResultList();
     }
     
@@ -42,7 +42,7 @@ public class JournalLogRepository {
     public boolean verifyDateJournal(JournalLog newJournalLog){
         Query query = entityManager.createQuery(GET_JOURNAL_LOG_BY_DATE, JournalLog.class);
         query.setParameter("dateTime", newJournalLog.getDateTime());
-        query.setParameter("idProcess", newJournalLog.getProcess().getId());
+        query.setParameter("idMonthlyReport", newJournalLog.getMonthlyReport().getId());
         List<JournalLog> journals = query.getResultList();
         return journals.isEmpty();
     }

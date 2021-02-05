@@ -3,8 +3,6 @@ package gt.edu.usac.cunoc.ingenieria.eps.journal;
 import gt.edu.usac.cunoc.ingenieria.eps.configuration.Constants;
 import java.io.Serializable;
 import java.time.LocalDate;
-import gt.edu.usac.cunoc.ingenieria.eps.process.Process;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -34,7 +32,7 @@ public class JournalLog implements Serializable {
     @Column(name = "description")
     private byte[] description;
     @ManyToOne(fetch = FetchType.LAZY)
-    private Process process;
+    private MonthlyReport monthlyReport;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "journal_Log", orphanRemoval = true)
     private List<Image> images;
@@ -145,12 +143,12 @@ public class JournalLog implements Serializable {
         commentaries.remove(commentaryIndex.intValue());
     }
 
-    public Process getProcess() {
-        return process;
+    public MonthlyReport getMonthlyReport() {
+        return monthlyReport;
     }
 
-    public void setProcess(Process process) {
-        this.process = process;
+    public void setMonthlyReport(MonthlyReport monthlyReport) {
+        this.monthlyReport = monthlyReport;
     }
 
     public boolean getEmptyImages() {
